@@ -32,9 +32,10 @@ public interface MenuService {
     /**
      * 删除菜单
      *
-     * @param id 菜单编号
+     * @param id               菜单编号
+     * @param isDeleteChildren 是否删除菜单的子菜单
      */
-    void deleteMenu(Long id);
+    void deleteMenu(Long id, Boolean isDeleteChildren);
 
     /**
      * 批量删除菜单

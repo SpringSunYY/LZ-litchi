@@ -102,7 +102,7 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
         Long id = menuDO.getId();
 
         // 调用
-        menuService.deleteMenu(id);
+        menuService.deleteMenu(id, false);
         // 断言
         MenuDO dbMenuDO = menuMapper.selectById(id);
         assertNull(dbMenuDO);
@@ -111,7 +111,7 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
 
     @Test
     public void testDeleteMenu_menuNotExist() {
-        assertServiceException(() -> menuService.deleteMenu(randomLongId()),
+        assertServiceException(() -> menuService.deleteMenu(randomLongId(), false),
                 MENU_NOT_EXISTS);
     }
 
@@ -123,7 +123,7 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
         Long parentId = sonMenu.getParentId();
 
         // 调用并断言异常
-        assertServiceException(() -> menuService.deleteMenu(parentId), MENU_EXISTS_CHILDREN);
+        assertServiceException(() -> menuService.deleteMenu(parentId, false), MENU_EXISTS_CHILDREN);
     }
 
     @Test

@@ -3,6 +3,9 @@ package com.lz.module.system.service.permission;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.collect.Lists;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.system.controller.admin.permission.vo.menu.MenuListReqVO;
@@ -12,8 +15,6 @@ import com.lz.module.system.dal.mysql.permission.MenuMapper;
 import com.lz.module.system.dal.redis.RedisKeyConstants;
 import com.lz.module.system.enums.permission.MenuTypeEnum;
 import com.lz.module.system.service.tenant.TenantService;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Lists;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
@@ -89,19 +90,38 @@ public class MenuServiceImpl implements MenuService {
     @Transactional(rollbackFor = Exception.class)
     @CacheEvict(value = RedisKeyConstants.PERMISSION_MENU_ID_LIST,
             allEntries = true) // allEntries 清空所有缓存，因为此时不知道 id 对应的 permission 是多少。直接清理，简单有效
-    public void deleteMenu(Long id) {
-        // 校验是否还有子菜单
-        if (menuMapper.selectCountByParentId(id) > 0) {
-            throw exception(MENU_EXISTS_CHILDREN);
-        }
+    public void deleteMenu(Long id, Boolean isDeleteChildren) {
         // 校验删除的菜单是否存在
         if (menuMapper.selectById(id) == null) {
             throw exception(MENU_NOT_EXISTS);
+        }
+        // 校验是否还有子菜单
+        if (!isDeleteChildren && menuMapper.selectCountByParentId(id) > 0) {
+            throw exception(MENU_EXISTS_CHILDREN);
+        }
+        if (isDeleteChildren&&menuMapper.selectCountByParentId(id) > 0) {
+            List<MenuDO> menuList = new ArrayList<>();
+            selectMenuChildren(id, menuList);
+            menuList.forEach(menuDO -> {
+                menuMapper.deleteById(menuDO.getId());
+                // 删除授予给角色的权限
+                permissionService.processMenuDeleted(id);
+            });
         }
         // 标记删除
         menuMapper.deleteById(id);
         // 删除授予给角色的权限
         permissionService.processMenuDeleted(id);
+    }
+
+    public void selectMenuChildren(Long menuId, List<MenuDO> menuList) {
+        List<MenuDO> menuDOS = menuMapper.selectList(new LambdaQueryWrapper<MenuDO>().eq(MenuDO::getParentId, menuId));
+        menuList.addAll(menuDOS);
+        if (!menuDOS.isEmpty()) {
+            menuDOS.forEach(menuDO -> {
+                selectMenuChildren(menuDO.getId(), menuList);
+            });
+        }
     }
 
     @Override
@@ -138,7 +158,7 @@ public class MenuServiceImpl implements MenuService {
 
     @Override
     public List<MenuDO> filterDisableMenus(List<MenuDO> menuList) {
-        if (CollUtil.isEmpty(menuList)){
+        if (CollUtil.isEmpty(menuList)) {
             return Collections.emptyList();
         }
         Map<Long, MenuDO> menuMap = convertMap(menuList, MenuDO::getId);
