@@ -59,7 +59,7 @@ public interface AuthConvert {
         // 构建菜单树
         // 使用 LinkedHashMap 的原因，是为了排序 。实际也可以用 Stream API ，就是太丑了。
         Map<Long, AuthPermissionInfoRespVO.MenuVO> treeNodeMap = new LinkedHashMap<>();
-        menuList.forEach(menu -> treeNodeMap.put(menu.getId(), AuthConvert.INSTANCE.convertTreeNode(menu)));
+        menuList.forEach(menu -> treeNodeMap.put(menu.getId(), convertTreeNode(menu)));
         // 处理父子关系
         treeNodeMap.values().stream().filter(node -> !node.getParentId().equals(ID_ROOT)).forEach(childNode -> {
             // 获得父节点
@@ -75,8 +75,36 @@ public interface AuthConvert {
             }
             parentNode.getChildren().add(childNode);
         });
+
         // 获得到所有的根节点
-        return filterList(treeNodeMap.values(), node -> ID_ROOT.equals(node.getParentId()));
+        List<AuthPermissionInfoRespVO.MenuVO> rootNodes = filterList(treeNodeMap.values(), node -> ID_ROOT.equals(node.getParentId()));
+
+        // 递归处理隐藏逻辑：如果父节点隐藏，子节点也要隐藏
+        for (AuthPermissionInfoRespVO.MenuVO root : rootNodes) {
+            processMenuVisibility(root);
+        }
+
+        return rootNodes;
+    }
+
+    /**
+     * 递归处理菜单的隐藏逻辑
+     * 如果父节点隐藏，则子节点也要隐藏
+     */
+    default void processMenuVisibility(AuthPermissionInfoRespVO.MenuVO menu) {
+        Boolean visible = menu.getVisible();
+        List<AuthPermissionInfoRespVO.MenuVO> children = menu.getChildren();
+
+        if (children != null && !children.isEmpty()) {
+            for (AuthPermissionInfoRespVO.MenuVO child : children) {
+                // 如果父节点隐藏，子节点也要隐藏
+                if (!Boolean.TRUE.equals(visible)) {
+                    child.setVisible(false);
+                }
+                // 递归处理子节点
+                processMenuVisibility(child);
+            }
+        }
     }
 
     SocialUserBindReqDTO convert(Long userId, Integer userType, AuthSocialLoginReqVO reqVO);
