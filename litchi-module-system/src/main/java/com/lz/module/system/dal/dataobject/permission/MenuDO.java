@@ -102,8 +102,13 @@ public class MenuDO extends BaseDO {
     /**
      * 是否总是显示
      *
-     * 如果为 false 时，当该菜单只有一个子菜单时，不展示自己，直接展示子菜单
+     * 如果为 false 时，不显示菜单和他的所有子菜单
      */
     private Boolean alwaysShow;
+
+    /**
+     * 备注
+     */
+    private String remark;
 
 }

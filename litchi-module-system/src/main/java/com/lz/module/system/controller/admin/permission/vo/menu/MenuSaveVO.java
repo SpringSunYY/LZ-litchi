@@ -62,4 +62,7 @@ public class MenuSaveVO {
     @Schema(description = "是否总是显示", example = "false")
     private Boolean alwaysShow;
 
+    @Schema(description = "备注", example = "备注")
+    private String remark;
+
 }
