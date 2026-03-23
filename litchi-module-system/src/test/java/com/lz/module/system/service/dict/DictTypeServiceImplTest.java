@@ -145,7 +145,7 @@ public class DictTypeServiceImplTest extends BaseDbUnitTest {
         Long id = dbDictType.getId();
 
         // 调用
-        dictTypeService.deleteDictType(id);
+        dictTypeService.deleteDictType(id, false);
         // 校验数据不存在了
         assertNull(dictTypeMapper.selectById(id));
     }
@@ -161,7 +161,7 @@ public class DictTypeServiceImplTest extends BaseDbUnitTest {
         when(dictDataService.getDictDataCountByDictType(eq(dbDictType.getType()))).thenReturn(1L);
 
         // 调用, 并断言异常
-        assertServiceException(() -> dictTypeService.deleteDictType(id), DICT_TYPE_HAS_CHILDREN);
+        assertServiceException(() -> dictTypeService.deleteDictType(id, false), DICT_TYPE_HAS_CHILDREN);
     }
 
     @Test

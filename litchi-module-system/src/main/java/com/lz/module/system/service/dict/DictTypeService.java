@@ -32,9 +32,10 @@ public interface DictTypeService {
     /**
      * 删除字典类型
      *
-     * @param id 字典类型编号
+     * @param id               字典类型编号
+     * @param isDeleteChildren 是否删除子数据
      */
-    void deleteDictType(Long id);
+    void deleteDictType(Long id, Boolean isDeleteChildren);
 
     /**
      * 批量删除字典类型

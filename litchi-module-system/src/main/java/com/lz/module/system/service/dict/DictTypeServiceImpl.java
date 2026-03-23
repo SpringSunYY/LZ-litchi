@@ -1,6 +1,7 @@
 package com.lz.module.system.service.dict;
 
 import cn.hutool.core.util.StrUtil;
+import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.date.LocalDateTimeUtils;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -8,9 +9,9 @@ import com.lz.module.system.controller.admin.dict.vo.type.DictTypePageReqVO;
 import com.lz.module.system.controller.admin.dict.vo.type.DictTypeSaveReqVO;
 import com.lz.module.system.dal.dataobject.dict.DictTypeDO;
 import com.lz.module.system.dal.mysql.dict.DictTypeMapper;
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -75,13 +76,18 @@ public class DictTypeServiceImpl implements DictTypeService {
         dictTypeMapper.updateById(updateObj);
     }
 
+    @Transactional
     @Override
-    public void deleteDictType(Long id) {
+    public void deleteDictType(Long id, Boolean isDeleteChildren) {
         // 校验是否存在
         DictTypeDO dictType = validateDictTypeExists(id);
         // 校验是否有字典数据
-        if (dictDataService.getDictDataCountByDictType(dictType.getType()) > 0) {
+        if (!isDeleteChildren && dictDataService.getDictDataCountByDictType(dictType.getType()) > 0) {
             throw exception(DICT_TYPE_HAS_CHILDREN);
+        }
+        // 删除字典数据
+        if (isDeleteChildren){
+            dictDataService.deleteDictDataByDictType(dictType.getType());
         }
         // 删除字典类型
         dictTypeMapper.updateToDelete(id, LocalDateTime.now());

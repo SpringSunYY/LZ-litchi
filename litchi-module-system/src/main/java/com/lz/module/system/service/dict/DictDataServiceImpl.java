@@ -181,4 +181,9 @@ public class DictDataServiceImpl implements DictDataService {
         return list;
     }
 
+    @Override
+    public void deleteDictDataByDictType(String type) {
+        dictDataMapper.delete(DictDataDO::getDictType, type);
+    }
+
 }

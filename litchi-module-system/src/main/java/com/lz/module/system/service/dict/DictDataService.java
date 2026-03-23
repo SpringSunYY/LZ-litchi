@@ -114,4 +114,10 @@ public interface DictDataService {
      */
     List<DictDataDO> getDictDataListByDictType(String dictType);
 
+    /**
+     * 删除指定字典类型的所有字典数据
+     *
+     * @param type 字典类型
+     */
+    void deleteDictDataByDictType(String type);
 }

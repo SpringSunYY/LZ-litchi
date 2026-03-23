@@ -57,8 +57,9 @@ public class DictTypeController {
     @Operation(summary = "删除字典类型")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('system:dict:delete')")
-    public CommonResult<Boolean> deleteDictType(Long id) {
-        dictTypeService.deleteDictType(id);
+    public CommonResult<Boolean> deleteDictType(@RequestParam("id") Long id,
+                                                @RequestParam("isDeleteChildren") Boolean isDeleteChildren) {
+        dictTypeService.deleteDictType(id, isDeleteChildren);
         return success(true);
     }
 
