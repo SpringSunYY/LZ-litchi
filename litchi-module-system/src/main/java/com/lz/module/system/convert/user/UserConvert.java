@@ -6,6 +6,7 @@ import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.system.controller.admin.dept.vo.dept.DeptSimpleRespVO;
 import com.lz.module.system.controller.admin.dept.vo.post.PostSimpleRespVO;
 import com.lz.module.system.controller.admin.permission.vo.role.RoleSimpleRespVO;
+import com.lz.module.system.controller.admin.user.vo.UserSimplePageRespVO;
 import com.lz.module.system.controller.admin.user.vo.profile.UserProfileRespVO;
 import com.lz.module.system.controller.admin.user.vo.user.UserRespVO;
 import com.lz.module.system.controller.admin.user.vo.user.UserSimpleRespVO;
@@ -39,6 +40,14 @@ public interface UserConvert {
     default List<UserSimpleRespVO> convertSimpleList(List<AdminUserDO> list, Map<Long, DeptDO> deptMap) {
         return CollectionUtils.convertList(list, user -> {
             UserSimpleRespVO userVO = BeanUtils.toBean(user, UserSimpleRespVO.class);
+            MapUtils.findAndThen(deptMap, user.getDeptId(), dept -> userVO.setDeptName(dept.getName()));
+            return userVO;
+        });
+    }
+
+    default List<UserSimplePageRespVO> convertSimplePageList(List<AdminUserDO> list, Map<Long, DeptDO> deptMap) {
+        return CollectionUtils.convertList(list, user -> {
+            UserSimplePageRespVO userVO = BeanUtils.toBean(user, UserSimplePageRespVO.class);
             MapUtils.findAndThen(deptMap, user.getDeptId(), dept -> userVO.setDeptName(dept.getName()));
             return userVO;
         });

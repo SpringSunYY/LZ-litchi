@@ -19,7 +19,7 @@ import java.util.Map;
  * 流程任务实例 Service 接口
  *
  * @author jason
- * @author 荔枝源码
+ * @author YY
  */
 public interface BpmTaskService {
 

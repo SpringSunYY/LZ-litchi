@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * 本质上，实现和 {@link BpmParallelMultiInstanceBehavior} 一样，只是继承的类不一样
  *
- * @author 荔枝源码
+ * @author YY
  */
 @Setter
 public class BpmSequentialMultiInstanceBehavior extends SequentialMultiInstanceBehavior {
@@ -55,6 +55,7 @@ public class BpmSequentialMultiInstanceBehavior extends SequentialMultiInstanceB
             // 不使用 execution.getVariable 原因：目前依次审批任务回退后 collectionVariable 变量没有清理， 如果重新进入该任务不会重新分配审批人
             @SuppressWarnings("unchecked")
             Set<Long> assigneeUserIds = (Set<Long>) execution.getVariableLocal(super.collectionVariable, Set.class);
+
             if (assigneeUserIds == null) {
                 assigneeUserIds = taskCandidateInvoker.calculateUsersByTask(execution);
                 if (CollUtil.isEmpty(assigneeUserIds)) {
@@ -63,8 +64,28 @@ public class BpmSequentialMultiInstanceBehavior extends SequentialMultiInstanceB
                     // 用途：1）审批人为空时；2）审批类型为自动通过、自动拒绝时
                     assigneeUserIds = SetUtils.asSet((Long) null);
                 }
+
+                // 保存审批人列表到 coll_userList 变量（这样 Flowable 会使用这个列表来计算 nrOfInstances，而不是回退到 loopCardinality）
+                // 注意：必须保存两份，因为 Flowable 会从 coll_userList 读取，calculateUsersByTask 会从 collectionVariable 读取
+                execution.setVariableLocal("coll_userList", assigneeUserIds);
                 execution.setVariableLocal(super.collectionVariable, assigneeUserIds);
             }
+
+            // 强制覆盖 nrOfCompletedInstances 和 nrOfInstances，防止残留计数器导致多实例提前结束
+            // 注意：必须放在 execution 上（Local 变量），因为 Flowable 从 Parent Execution 读取这些变量
+            String activityId = execution.getCurrentActivityId();
+            String counterVar = activityId + "_nrOfCompletedInstances";
+            String nrOfInstancesVar = activityId + "_nrOfInstances";
+
+            // 每次进入多实例都强制重置，确保计数器正确（无论之前是否有值）
+            // 重要：需要同时清理带前缀和不带前缀的计数器！
+            // 因为 Flowable 在判断循环是否完成时，读取的是不带前缀的 nrOfCompletedInstances 和 nrOfInstances
+            execution.setVariableLocal(counterVar, 0);
+            execution.setVariableLocal(nrOfInstancesVar, assigneeUserIds.size());
+            // 清理不带前缀的旧计数器变量，防止残留导致多实例提前结束
+            execution.setVariableLocal("nrOfCompletedInstances", 0);
+            execution.setVariableLocal("nrOfInstances", assigneeUserIds.size());
+
             return assigneeUserIds.size();
         }
 
@@ -85,7 +106,7 @@ public class BpmSequentialMultiInstanceBehavior extends SequentialMultiInstanceB
 
     @Override
     protected void executeOriginalBehavior(DelegateExecution execution, ExecutionEntity multiInstanceRootExecution, int loopCounter) {
-        // 参见 https://gitee.com/zhijiantianya/litchi-cloud/issues/IC239F
+        // 参见 https://gitee.com/zhijiantianya/project-cloud/issues/IC239F
         super.collectionExpression = null;
         super.collectionVariable = FlowableUtils.formatExecutionCollectionVariable(execution.getCurrentActivityId());
         super.collectionElementVariable = FlowableUtils.formatExecutionCollectionElementVariable(execution.getCurrentActivityId());

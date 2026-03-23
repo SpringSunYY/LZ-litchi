@@ -17,7 +17,7 @@ import static com.lz.framework.common.util.collection.CollectionUtils.convertMap
 /**
  * 流程实例 Service 接口
  *
- * @author 荔枝源码
+ * @author YY
  */
 public interface BpmProcessInstanceService {
 

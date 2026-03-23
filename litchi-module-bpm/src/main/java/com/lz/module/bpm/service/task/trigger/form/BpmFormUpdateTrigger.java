@@ -1,6 +1,7 @@
 package com.lz.module.bpm.service.task.trigger.form;
 
 import cn.hutool.core.collection.CollUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.lz.framework.common.util.json.JsonUtils;
 import com.lz.module.bpm.controller.admin.definition.vo.model.simple.BpmSimpleModelNodeVO.TriggerSetting.FormTriggerSetting;
 import com.lz.module.bpm.enums.definition.BpmTriggerTypeEnum;
@@ -8,7 +9,6 @@ import com.lz.module.bpm.framework.flowable.core.util.BpmnModelUtils;
 import com.lz.module.bpm.framework.flowable.core.util.SimpleModelUtils;
 import com.lz.module.bpm.service.task.BpmProcessInstanceService;
 import com.lz.module.bpm.service.task.trigger.BpmTrigger;
-import com.fasterxml.jackson.core.type.TypeReference;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

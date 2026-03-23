@@ -2,7 +2,7 @@ package com.lz.module.bpm.service.task.trigger;
 
 import com.lz.module.bpm.enums.definition.BpmTriggerTypeEnum;
 
-// TODO @YY：可能会想换个包地址
+// TODO @芋艿：可能会想换个包地址
 /**
  * BPM 触发器接口
  * <p>

@@ -7,6 +7,7 @@ import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.excel.core.util.ExcelUtils;
+import com.lz.module.system.controller.admin.user.vo.UserSimplePageRespVO;
 import com.lz.module.system.controller.admin.user.vo.user.*;
 import com.lz.module.system.convert.user.UserConvert;
 import com.lz.module.system.dal.dataobject.dept.DeptDO;
@@ -109,6 +110,22 @@ public class UserController {
         Map<Long, DeptDO> deptMap = deptService.getDeptMap(
                 convertList(pageResult.getList(), AdminUserDO::getDeptId));
         return success(new PageResult<>(UserConvert.INSTANCE.convertList(pageResult.getList(), deptMap),
+                pageResult.getTotal()));
+    }
+
+    @GetMapping("/simple-page")
+    @Operation(summary = "获得用户精简信息分页列表")
+    public CommonResult<PageResult<UserSimplePageRespVO>> getSimpleUserPage(@Validated UserPageReqVO pageReqVO) {
+        // 获得用户分页列表
+        PageResult<AdminUserDO> pageResult = userService.getUserPage(pageReqVO);
+        if (CollUtil.isEmpty(pageResult.getList())) {
+            return success(new PageResult<>(pageResult.getTotal()));
+        }
+        // 拼接数据
+        Map<Long, DeptDO> deptMap = deptService.getDeptMap(
+                convertList(pageResult.getList(), AdminUserDO::getDeptId)
+        );
+        return success(new PageResult<>(UserConvert.INSTANCE.convertSimplePageList(pageResult.getList(), deptMap),
                 pageResult.getTotal()));
     }
 
