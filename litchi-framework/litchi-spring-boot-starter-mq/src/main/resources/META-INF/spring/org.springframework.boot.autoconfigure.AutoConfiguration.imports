@@ -1,0 +1,3 @@
+com.lz.framework.mq.redis.config.LitchiRedisMQProducerAutoConfiguration
+com.lz.framework.mq.redis.config.LitchiRedisMQConsumerAutoConfiguration
+com.lz.framework.mq.rabbitmq.config.LitchiRabbitMQAutoConfiguration

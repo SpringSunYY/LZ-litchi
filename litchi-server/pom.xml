@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <groupId>com.lz.litchi</groupId>
+        <artifactId>litchi</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>litchi-server</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <description>
+        后端 Server 的主项目，通过引入需要 litchi-module-xxx 的依赖，
+        从而实现提供 RESTful API 给 litchi-ui-admin、litchi-ui-user 等前端项目。
+        本质上来说，它就是个空壳（容器）！
+    </description>
+    <url>https://github.com/SpringSunYY/litchi</url>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-system</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-infra</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- 会员中心。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-member</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- 数据报表。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-report</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <!-- 工作流。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-bpm</artifactId>
+            <version>${revision}</version>
+        </dependency>
+<!--         支付服务。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-pay</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- 微信公众号模块。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-mp</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- 商城相关模块。默认注释，保证编译速度-->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-product</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-promotion</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-trade</artifactId>
+            <version>${revision}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-statistics</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- CRM 相关模块。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-crm</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- ERP 相关模块。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-erp</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+        <!-- AI 大模型相关模块。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-ai</artifactId>
+            <version>${revision}</version>
+        </dependency>
+
+
+        <!-- spring boot 配置所需依赖 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-configuration-processor</artifactId>
+            <optional>true</optional>
+        </dependency>
+
+        <!-- 服务保障相关 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-spring-boot-starter-protection</artifactId>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <!-- 设置构建的 jar 包名 -->
+        <finalName>${project.artifactId}</finalName>
+        <plugins>
+            <!-- 打包 -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal> <!-- 将引入的 jar 打入其中 -->
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

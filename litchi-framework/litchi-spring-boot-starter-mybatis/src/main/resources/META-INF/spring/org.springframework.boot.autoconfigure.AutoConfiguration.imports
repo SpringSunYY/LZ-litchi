@@ -1,0 +1,3 @@
+com.lz.framework.datasource.config.LitchiDataSourceAutoConfiguration
+com.lz.framework.mybatis.config.LitchiMybatisAutoConfiguration
+com.lz.framework.translate.config.LitchiTranslateAutoConfiguration

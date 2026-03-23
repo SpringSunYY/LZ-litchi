@@ -1,0 +1,6 @@
+com.lz.framework.apilog.config.LitchiApiLogAutoConfiguration
+com.lz.framework.jackson.config.LitchiJacksonAutoConfiguration
+com.lz.framework.swagger.config.LitchiSwaggerAutoConfiguration
+com.lz.framework.web.config.LitchiWebAutoConfiguration
+com.lz.framework.xss.config.LitchiXssAutoConfiguration
+com.lz.framework.banner.config.LitchiBannerAutoConfiguration

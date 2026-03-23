@@ -1,0 +1,3 @@
+com.lz.framework.security.config.LitchiSecurityAutoConfiguration
+com.lz.framework.security.config.LitchiWebSecurityConfigurerAdapter
+com.lz.framework.operatelog.config.LitchiOperateLogConfiguration

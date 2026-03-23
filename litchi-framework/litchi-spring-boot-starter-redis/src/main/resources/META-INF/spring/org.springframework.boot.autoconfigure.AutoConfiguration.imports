@@ -1,0 +1,2 @@
+com.lz.framework.redis.config.LitchiRedisAutoConfiguration
+com.lz.framework.redis.config.LitchiCacheAutoConfiguration

@@ -1,0 +1,2 @@
+com.lz.framework.quartz.config.LitchiQuartzAutoConfiguration
+com.lz.framework.quartz.config.LitchiAsyncAutoConfiguration

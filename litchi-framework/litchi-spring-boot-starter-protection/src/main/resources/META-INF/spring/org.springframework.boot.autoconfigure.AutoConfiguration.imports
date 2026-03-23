@@ -1,0 +1,4 @@
+com.lz.framework.idempotent.config.LitchiIdempotentConfiguration
+com.lz.framework.lock4j.config.LitchiLock4jConfiguration
+com.lz.framework.ratelimiter.config.LitchiRateLimiterConfiguration
+com.lz.framework.signature.config.LitchiApiSignatureAutoConfiguration
