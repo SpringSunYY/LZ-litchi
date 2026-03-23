@@ -2,13 +2,20 @@ package com.lz.module.system.service.notify;
 
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.enums.UserTypeEnum;
+import com.lz.module.system.dal.dataobject.notice.NoticeDO;
 import com.lz.module.system.dal.dataobject.notify.NotifyTemplateDO;
 import com.google.common.annotations.VisibleForTesting;
+import com.lz.module.system.dal.dataobject.user.AdminUserDO;
+import com.lz.module.system.enums.NotifyConstants;
+import com.lz.module.system.service.user.AdminUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import jakarta.annotation.Resource;
+
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -30,6 +37,9 @@ public class NotifySendServiceImpl implements NotifySendService {
 
     @Resource
     private NotifyMessageService notifyMessageService;
+
+    @Resource
+    private AdminUserService adminUserService;
 
     @Override
     public Long sendSingleNotifyToAdmin(Long userId, String templateCode, Map<String, Object> templateParams) {
@@ -57,13 +67,28 @@ public class NotifySendServiceImpl implements NotifySendService {
         return notifyMessageService.createNotifyMessage(userId, userType, template, content, templateParams);
     }
 
+    @Override
+    public void sendNoticeToAdmin(NoticeDO notice) {
+        //查询到所有有权限查看通知公告的用户
+        List<AdminUserDO> userListByStatus = adminUserService.getUserListByStatus(CommonStatusEnum.ENABLE.getStatus());
+        List<Long> userIds = userListByStatus.stream().map(AdminUserDO::getId).toList();
+        NotifyTemplateDO template = validateNotifyTemplate(NotifyConstants.SYSTEM_NOTICE);
+        Map<String, Object> templateParams=new HashMap<>();
+        templateParams.put("title", notice.getTitle());
+        templateParams.put("createBy", notice.getCreator());
+        // 校验参数
+        validateTemplateParams(template, templateParams);
+        String content = notifyTemplateService.formatNotifyTemplateContent(template.getContent(), templateParams);
+        notifyMessageService.createNotifyMessageToAdminByNotice(userIds,UserTypeEnum.ADMIN.getValue(),template,content,templateParams);
+    }
+
     @VisibleForTesting
     public NotifyTemplateDO validateNotifyTemplate(String templateCode) {
         // 获得站内信模板。考虑到效率，从缓存中获取
         NotifyTemplateDO template = notifyTemplateService.getNotifyTemplateByCodeFromCache(templateCode);
         // 站内信模板不存在
         if (template == null) {
-            throw exception(NOTICE_NOT_FOUND);
+            throw exception(NOTICE_NOT_TEMPLATE_EXISTS);
         }
         return template;
     }

@@ -72,4 +72,15 @@ public class NotifyMessageServiceImpl implements NotifyMessageService {
         return notifyMessageMapper.updateListRead(userId, userType);
     }
 
+    @Override
+    public void createNotifyMessageToAdminByNotice(List<Long> userIds, Integer userType, NotifyTemplateDO template, String content, Map<String, Object> templateParams) {
+        List<NotifyMessageDO> messageList = userIds.stream().map(userId -> {
+            return new NotifyMessageDO().setUserId(userId).setUserType(userType).setTemplateId(template.getId())
+                    .setTemplateCode(template.getCode()).setTemplateType(template.getType())
+                    .setTemplateNickname(template.getNickname()).setTemplateContent(content)
+                    .setTemplateParams(templateParams).setReadStatus(false);
+        }).toList();
+        notifyMessageMapper.insertBatch(messageList);
+    }
+
 }

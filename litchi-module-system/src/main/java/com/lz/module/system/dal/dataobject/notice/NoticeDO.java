@@ -1,17 +1,17 @@
 package com.lz.module.system.dal.dataobject.notice;
 
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.module.system.enums.notice.NoticeTypeEnum;
-import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
  * 通知公告表
  *
- * @author ruoyi
+ * @author YY
  */
 @TableName("system_notice")
 @KeySequence("system_notice_seq") // 用于 Oracle、PostgreSQL、Kingbase、DB2、H2 数据库的主键自增。如果是 MySQL 等数据库，可不写。
@@ -29,7 +29,7 @@ public class NoticeDO extends BaseDO {
     private String title;
     /**
      * 公告类型
-     *
+     * <p>
      * 枚举 {@link NoticeTypeEnum}
      */
     private Integer type;
@@ -38,8 +38,12 @@ public class NoticeDO extends BaseDO {
      */
     private String content;
     /**
+     * 附件
+     */
+    private String appendixUrl;
+    /**
      * 公告状态
-     *
+     * <p>
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;

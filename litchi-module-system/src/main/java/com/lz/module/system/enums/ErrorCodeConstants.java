@@ -76,6 +76,8 @@ public interface ErrorCodeConstants {
 
     // ========== 通知公告 1-002-008-000 ==========
     ErrorCode NOTICE_NOT_FOUND = new ErrorCode(1_002_008_001, "当前通知公告不存在");
+    ErrorCode NOTICE_DISABLE = new ErrorCode(1_002_008_002, "公告已关闭");
+    ErrorCode NOTICE_NOT_TEMPLATE_EXISTS = new ErrorCode(1_002_008_003, "通知公告的模板不存在");
 
     // ========== 短信渠道 1-002-011-000 ==========
     ErrorCode SMS_CHANNEL_NOT_EXISTS = new ErrorCode(1_002_011_000, "短信渠道不存在");

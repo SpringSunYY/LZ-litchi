@@ -1,5 +1,7 @@
 package com.lz.module.system.service.notify;
 
+import com.lz.module.system.dal.dataobject.notice.NoticeDO;
+
 import java.util.List;
 import java.util.Map;
 
@@ -52,4 +54,10 @@ public interface NotifySendService {
         throw new UnsupportedOperationException("暂时不支持该操作，感兴趣可以实现该功能哟！");
     }
 
+    /**
+     * 发送通知公告站内信给管理后台的用户
+     *
+     * @param notice 公告
+     */
+    void sendNoticeToAdmin(NoticeDO notice);
 }

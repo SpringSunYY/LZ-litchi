@@ -94,4 +94,15 @@ public interface NotifyMessageService {
      */
     int updateAllNotifyMessageRead(Long userId, Integer userType);
 
+    /**
+     * 创建站内信给管理员，基于公告
+     *
+     * @param userIds  用户编号集合
+     * @param userType    公告编号
+     * @param template 模版信息
+     * @param content  内容
+     * @param templateParams 模版参数
+     */
+    void createNotifyMessageToAdminByNotice(List<Long> userIds, Integer userType, NotifyTemplateDO template, String content, Map<String, Object> templateParams);
+
 }
