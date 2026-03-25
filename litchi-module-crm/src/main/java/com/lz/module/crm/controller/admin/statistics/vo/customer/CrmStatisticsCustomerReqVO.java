@@ -3,6 +3,7 @@ package com.lz.module.crm.controller.admin.statistics.vo.customer;
 import com.lz.framework.common.enums.DateIntervalEnum;
 import com.lz.framework.common.validation.InEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class CrmStatisticsCustomerReqVO {
     @Schema(description = "时间范围", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     @Size(min = 2, max = 2, message = "请选择时间范围")
+    @NotEmpty(message = "时间范围不能为空")
     private LocalDateTime[] times;
 
 }
