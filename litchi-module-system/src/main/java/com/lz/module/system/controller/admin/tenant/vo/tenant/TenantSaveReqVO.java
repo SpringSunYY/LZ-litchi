@@ -52,11 +52,6 @@ public class TenantSaveReqVO {
     @Schema(description = "绑定域名")
     private String website;
 
-
-    @Schema(description = "账号数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "9357")
-    @NotNull(message = "账号数量不能为空")
-    private Integer accountCount;
-
     // ========== 仅【创建】时，需要传递的字段 ==========
 
     @Schema(description = "用户账号", requiredMode = Schema.RequiredMode.REQUIRED, example = "litchi")
