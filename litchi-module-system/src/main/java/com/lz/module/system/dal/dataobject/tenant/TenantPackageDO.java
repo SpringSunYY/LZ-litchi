@@ -1,5 +1,6 @@
 package com.lz.module.system.dal.dataobject.tenant;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
@@ -9,6 +10,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.util.Set;
 
 /**
@@ -28,19 +30,52 @@ import java.util.Set;
 public class TenantPackageDO extends BaseDO {
 
     /**
-     * 套餐编号，自增
+     * 套餐编号
      */
+    @TableId
     private Long id;
     /**
-     * 套餐名，唯一
+     * 套餐名
      */
     private String name;
     /**
-     * 租户套餐状态
+     * 套餐编码
+     */
+    private String code;
+    /**
+     * 套餐类型
      *
-     * 枚举 {@link CommonStatusEnum}
+     */
+    private Boolean type;
+    /**
+     * LOGO
+     */
+    private String logo;
+    /**
+     * 套餐价格
+     */
+    private BigDecimal price;
+    /**
+     * 套餐描述
+     */
+    private String description;
+    /**
+     * 套餐状态
+     *
      */
     private Integer status;
+    /**
+     * 排序
+     */
+    private Integer orderNum;
+    /**
+     * 订阅数
+     */
+    private Integer subscriptionNum;
+    /**
+     * 订阅总额
+     */
+    private BigDecimal subscriptionTotalAmount;
     /**
      * 备注
      */

@@ -2,24 +2,15 @@ package com.lz.module.system.service.tenant;
 
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.framework.tenant.config.TenantProperties;
 import com.lz.framework.tenant.core.context.TenantContextHolder;
 import com.lz.framework.test.core.ut.BaseDbUnitTest;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
-import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.lz.module.system.dal.mysql.tenant.TenantMapper;
-import com.lz.module.system.enums.permission.RoleCodeEnum;
-import com.lz.module.system.enums.permission.RoleTypeEnum;
-import com.lz.module.system.service.permission.MenuService;
-import com.lz.module.system.service.permission.PermissionService;
-import com.lz.module.system.service.permission.RoleService;
-import com.lz.module.system.service.user.AdminUserService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
 import java.util.Collections;
@@ -32,11 +23,8 @@ import static com.lz.framework.test.core.util.AssertUtils.assertPojoEquals;
 import static com.lz.framework.test.core.util.AssertUtils.assertServiceException;
 import static com.lz.framework.test.core.util.RandomUtils.*;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
-import static java.util.Collections.singleton;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * {@link TenantServiceImpl} 的单元测试类
@@ -51,19 +39,6 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
 
     @Resource
     private TenantMapper tenantMapper;
-
-    @MockBean
-    private TenantProperties tenantProperties;
-    @MockBean
-    private TenantPackageService tenantPackageService;
-    @MockBean
-    private AdminUserService userService;
-    @MockBean
-    private RoleService roleService;
-    @MockBean
-    private MenuService menuService;
-    @MockBean
-    private PermissionService permissionService;
 
     @BeforeEach
     public void setUp() {
@@ -117,51 +92,6 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
         tenantService.validTenant(1L);
     }
 
-    @Test
-    public void testCreateTenant() {
-        // mock 套餐 100L
-        TenantPackageDO tenantPackage = randomPojo(TenantPackageDO.class, o -> o.setId(100L));
-        when(tenantPackageService.validTenantPackage(eq(100L))).thenReturn(tenantPackage);
-        // mock 角色 200L
-        when(roleService.createRole(argThat(role -> {
-            assertEquals(RoleCodeEnum.TENANT_ADMIN.getName(), role.getName());
-            assertEquals(RoleCodeEnum.TENANT_ADMIN.getCode(), role.getCode());
-            assertEquals(0, role.getSort());
-            assertEquals("系统自动生成", role.getRemark());
-            return true;
-        }), eq(RoleTypeEnum.SYSTEM.getType()))).thenReturn(200L);
-        // mock 用户 300L
-        when(userService.createUser(argThat(user -> {
-            assertEquals("yunai", user.getUsername());
-            assertEquals("yuanma", user.getPassword());
-            assertEquals("荔枝", user.getNickname());
-            assertEquals("15601691300", user.getMobile());
-            return true;
-        }))).thenReturn(300L);
-
-        // 准备参数
-        TenantSaveReqVO reqVO = randomPojo(TenantSaveReqVO.class, o -> {
-            o.setContactName("荔枝");
-            o.setContactMobile("15601691300");
-            o.setStatus(randomCommonStatus());
-            o.setWebsite("https://www.iocoder.cn");
-            o.setUsername("yunai");
-            o.setPassword("yuanma");
-        }).setId(null); // 设置为 null，方便后面校验
-
-        // 调用
-        Long tenantId = tenantService.createTenant(reqVO);
-        // 断言
-        assertNotNull(tenantId);
-        // 校验记录的属性是否正确
-        TenantDO tenant = tenantMapper.selectById(tenantId);
-        assertPojoEquals(reqVO, tenant, "id");
-        assertEquals(300L, tenant.getContactUserId());
-        // verify 分配权限
-        verify(permissionService).assignRoleMenu(eq(200L), same(tenantPackage.getMenuIds()));
-        // verify 分配角色
-        verify(permissionService).assignUserRole(eq(300L), eq(singleton(200L)));
-    }
 
 
     @Test

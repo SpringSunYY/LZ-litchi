@@ -20,8 +20,10 @@ public interface TenantPackageMapper extends BaseMapperX<TenantPackageDO> {
     default PageResult<TenantPackageDO> selectPage(TenantPackagePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<TenantPackageDO>()
                 .likeIfPresent(TenantPackageDO::getName, reqVO.getName())
+                .eqIfPresent(TenantPackageDO::getCode, reqVO.getCode())
+                .eqIfPresent(TenantPackageDO::getType, reqVO.getType())
+                .eqIfPresent(TenantPackageDO::getDescription, reqVO.getDescription())
                 .eqIfPresent(TenantPackageDO::getStatus, reqVO.getStatus())
-                .likeIfPresent(TenantPackageDO::getRemark, reqVO.getRemark())
                 .betweenIfPresent(TenantPackageDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TenantPackageDO::getId));
     }

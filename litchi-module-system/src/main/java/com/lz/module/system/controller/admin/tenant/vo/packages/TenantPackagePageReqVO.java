@@ -17,16 +17,22 @@ import static com.lz.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_
 @ToString(callSuper = true)
 public class TenantPackagePageReqVO extends PageParam {
 
-    @Schema(description = "套餐名", example = "VIP")
+    @Schema(description = "套餐名", example = "李四")
     private String name;
 
-    @Schema(description = "状态", example = "1")
+    @Schema(description = "套餐编码")
+    private String code;
+
+    @Schema(description = "套餐类型", example = "2")
+    private Boolean type;
+
+    @Schema(description = "套餐描述", example = "你说的对")
+    private String description;
+
+    @Schema(description = "套餐状态", example = "2")
     private Integer status;
 
-    @Schema(description = "备注", example = "好")
-    private String remark;
-
-    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     @Schema(description = "创建时间")
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 }
