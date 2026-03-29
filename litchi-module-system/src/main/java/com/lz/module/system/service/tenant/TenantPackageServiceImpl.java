@@ -59,11 +59,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         // 更新
         TenantPackageDO updateObj = BeanUtils.toBean(updateReqVO, TenantPackageDO.class);
         tenantPackageMapper.updateById(updateObj);
-        // 如果菜单发生变化，则修改每个租户的菜单
-        if (!CollUtil.isEqualList(tenantPackage.getMenuIds(), updateReqVO.getMenuIds())) {
-            List<TenantDO> tenants = tenantService.getTenantListByPackageId(tenantPackage.getId());
-            tenants.forEach(tenant -> tenantService.updateTenantRoleMenu(tenant.getId(), updateReqVO.getMenuIds()));
-        }
+//        // 如果菜单发生变化，则修改每个租户的菜单
+//        if (!CollUtil.isEqualList(tenantPackage.getMenuIds(), updateReqVO.getMenuIds())) {
+//            List<TenantDO> tenants = tenantService.getTenantListByPackageId(tenantPackage.getId());
+//            tenants.forEach(tenant -> tenantService.updateTenantRoleMenu(tenant.getId(), updateReqVO.getMenuIds()));
+//        }
     }
 
     @Override
@@ -71,7 +71,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         // 校验存在
         validateTenantPackageExists(id);
         // 校验正在使用
-        validateTenantUsed(id);
+//        validateTenantUsed(id);
         // 删除
         tenantPackageMapper.deleteById(id);
     }
@@ -79,11 +79,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     @Override
     public void deleteTenantPackageList(List<Long> ids) {
         // 1. 校验是否有租户正在使用该套餐
-        for (Long id : ids) {
-            if (tenantService.getTenantCountByPackageId(id) > 0) {
-                throw exception(TENANT_PACKAGE_USED);
-            }
-        }
+//        for (Long id : ids) {
+//            if (tenantService.getTenantCountByPackageId(id) > 0) {
+//                throw exception(TENANT_PACKAGE_USED);
+//            }
+//        }
 
         // 2. 批量删除
         tenantPackageMapper.deleteByIds(ids);
@@ -97,11 +97,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         return tenantPackage;
     }
 
-    private void validateTenantUsed(Long id) {
-        if (tenantService.getTenantCountByPackageId(id) > 0) {
-            throw exception(TENANT_PACKAGE_USED);
-        }
-    }
+//    private void validateTenantUsed(Long id) {
+//        if (tenantService.getTenantCountByPackageId(id) > 0) {
+//            throw exception(TENANT_PACKAGE_USED);
+//        }
+//    }
 
     @Override
     public TenantPackageDO getTenantPackage(Long id) {

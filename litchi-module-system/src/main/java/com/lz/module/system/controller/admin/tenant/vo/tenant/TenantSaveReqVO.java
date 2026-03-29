@@ -3,49 +3,57 @@ package com.lz.module.system.controller.admin.tenant.vo.tenant;
 import cn.hutool.core.util.ObjectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
-import java.time.LocalDateTime;
 
 @Schema(description = "管理后台 - 租户创建/修改 Request VO")
 @Data
 public class TenantSaveReqVO {
 
-    @Schema(description = "租户编号", example = "1024")
+    @Schema(description = "租户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "22788")
     private Long id;
 
-    @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝")
-    @NotNull(message = "租户名不能为空")
+    @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
+    @NotEmpty(message = "租户名不能为空")
     private String name;
 
-    @Schema(description = "联系人", requiredMode = Schema.RequiredMode.REQUIRED, example = "YY")
-    @NotNull(message = "联系人不能为空")
+    @Schema(description = "编码", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotEmpty(message = "编码不能为空")
+    private String code;
+
+    @Schema(description = "联系人的用户编号", example = "24903")
+    private Long contactUserId;
+
+    @Schema(description = "联系人", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
+    @NotEmpty(message = "联系人不能为空")
     private String contactName;
 
-    @Schema(description = "联系手机", example = "15601691300")
+    @Schema(description = "联系手机")
     private String contactMobile;
 
-    @Schema(description = "租户状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "租户状态")
-    private Integer status;
+    @Schema(description = "行业", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotNull(message = "行业不能为空")
+    private Integer industry;
 
-    @Schema(description = "绑定域名", example = "https://www.iocoder.cn")
+    @Schema(description = "类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
+    @NotNull(message = "类型不能为空")
+    private Integer type;
+
+    @Schema(description = "地区")
+    private String addressCode;
+
+    @Schema(description = "地址")
+    private String addressDetail;
+
+    @Schema(description = "相关资质")
+    private String qualifications;
+
+    @Schema(description = "绑定域名")
     private String website;
 
-    @Schema(description = "租户套餐编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    @NotNull(message = "租户套餐编号不能为空")
-    private Long packageId;
 
-    @Schema(description = "过期时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "过期时间不能为空")
-    private LocalDateTime expireTime;
-
-    @Schema(description = "账号数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    @Schema(description = "账号数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "9357")
     @NotNull(message = "账号数量不能为空")
     private Integer accountCount;
 

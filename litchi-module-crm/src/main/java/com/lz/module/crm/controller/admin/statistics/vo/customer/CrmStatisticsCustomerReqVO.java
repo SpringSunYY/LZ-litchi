@@ -42,7 +42,7 @@ public class CrmStatisticsCustomerReqVO {
     @Schema(description = "时间范围", requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     @Size(min = 2, max = 2, message = "请选择时间范围")
-    @NotEmpty(message = "时间范围不能为空")
+    @NotEmpty(message = "请选择时间范围")
     private LocalDateTime[] times;
 
 }

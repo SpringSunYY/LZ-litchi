@@ -1,14 +1,13 @@
 package com.lz.module.system.dal.dataobject.tenant;
 
-import com.lz.framework.common.enums.CommonStatusEnum;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
-import com.lz.module.system.dal.dataobject.user.AdminUserDO;
-import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 /**
  * 租户 DO
@@ -31,18 +30,22 @@ public class TenantDO extends BaseDO {
      */
     public static final Long PACKAGE_ID_SYSTEM = 0L;
 
+
     /**
-     * 租户编号，自增
+     * 租户编号
      */
+    @TableId
     private Long id;
     /**
-     * 租户名，唯一
+     * 租户名
      */
     private String name;
     /**
+     * 编码
+     */
+    private String code;
+    /**
      * 联系人的用户编号
-     *
-     * 关联 {@link AdminUserDO#getId()}
      */
     private Long contactUserId;
     /**
@@ -54,29 +57,61 @@ public class TenantDO extends BaseDO {
      */
     private String contactMobile;
     /**
-     * 租户状态
-     *
-     * 枚举 {@link CommonStatusEnum}
+     * 行业
+     */
+    private Integer industry;
+    /**
+     * 类型
+     */
+    private Integer type;
+    /**
+     * 地区
+     */
+    private String addressCode;
+    /**
+     * 地址
+     */
+    private String addressDetail;
+    /**
+     * 相关资质
+     */
+    private String qualifications;
+    /**
+     * 租户状态（0正常 1停用）
      */
     private Integer status;
+    /**
+     * 关联菜单
+     */
+    private String menuIds;
     /**
      * 绑定域名
      */
     private String website;
     /**
-     * 租户套餐编号
-     *
-     * 关联 {@link TenantPackageDO#getId()}
-     * 特殊逻辑：系统内置租户，不使用套餐，暂时使用 {@link #PACKAGE_ID_SYSTEM} 标识
+     * 充值金额
      */
-    private Long packageId;
+    private BigDecimal rechargeAmount;
     /**
-     * 过期时间
+     * 支付金额
      */
-    private LocalDateTime expireTime;
+    private BigDecimal paymentAmount;
+    /**
+     * 余额
+     */
+    private BigDecimal balanceAmount;
+    /**
+     * 支付密码
+     */
+    private String paymentPassword;
     /**
      * 账号数量
      */
     private Integer accountCount;
+
+    /**
+     * 当前数量
+     */
+    private Integer currentAccountCount;
 
 }

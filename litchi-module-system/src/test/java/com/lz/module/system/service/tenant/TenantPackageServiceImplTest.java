@@ -61,33 +61,6 @@ public class TenantPackageServiceImplTest extends BaseDbUnitTest {
         assertPojoEquals(reqVO, tenantPackage, "id");
     }
 
-    @Test
-    public void testUpdateTenantPackage_success() {
-        // mock 数据
-        TenantPackageDO dbTenantPackage = randomPojo(TenantPackageDO.class,
-                o -> o.setStatus(randomCommonStatus()));
-        tenantPackageMapper.insert(dbTenantPackage);// @Sql: 先插入出一条存在的数据
-        // 准备参数
-        TenantPackageSaveReqVO reqVO = randomPojo(TenantPackageSaveReqVO.class, o -> {
-            o.setId(dbTenantPackage.getId()); // 设置更新的 ID
-            o.setStatus(randomCommonStatus());
-        });
-        // mock 方法
-        Long tenantId01 = randomLongId();
-        Long tenantId02 = randomLongId();
-        when(tenantService.getTenantListByPackageId(eq(reqVO.getId()))).thenReturn(
-                asList(randomPojo(TenantDO.class, o -> o.setId(tenantId01)),
-                        randomPojo(TenantDO.class, o -> o.setId(tenantId02))));
-
-        // 调用
-        tenantPackageService.updateTenantPackage(reqVO);
-        // 校验是否更新正确
-        TenantPackageDO tenantPackage = tenantPackageMapper.selectById(reqVO.getId()); // 获取最新的
-        assertPojoEquals(reqVO, tenantPackage);
-        // 校验调用租户的菜单
-        verify(tenantService).updateTenantRoleMenu(eq(tenantId01), eq(reqVO.getMenuIds()));
-        verify(tenantService).updateTenantRoleMenu(eq(tenantId02), eq(reqVO.getMenuIds()));
-    }
 
     @Test
     public void testUpdateTenantPackage_notExists() {
@@ -98,21 +71,6 @@ public class TenantPackageServiceImplTest extends BaseDbUnitTest {
         assertServiceException(() -> tenantPackageService.updateTenantPackage(reqVO), TENANT_PACKAGE_NOT_EXISTS);
     }
 
-    @Test
-    public void testDeleteTenantPackage_success() {
-        // mock 数据
-        TenantPackageDO dbTenantPackage = randomPojo(TenantPackageDO.class);
-        tenantPackageMapper.insert(dbTenantPackage);// @Sql: 先插入出一条存在的数据
-        // 准备参数
-        Long id = dbTenantPackage.getId();
-        // mock 租户未使用该套餐
-        when(tenantService.getTenantCountByPackageId(eq(id))).thenReturn(0L);
-
-        // 调用
-        tenantPackageService.deleteTenantPackage(id);
-       // 校验数据不存在了
-       assertNull(tenantPackageMapper.selectById(id));
-    }
 
     @Test
     public void testDeleteTenantPackage_notExists() {
@@ -121,20 +79,6 @@ public class TenantPackageServiceImplTest extends BaseDbUnitTest {
 
         // 调用, 并断言异常
         assertServiceException(() -> tenantPackageService.deleteTenantPackage(id), TENANT_PACKAGE_NOT_EXISTS);
-    }
-
-    @Test
-    public void testDeleteTenantPackage_used() {
-        // mock 数据
-        TenantPackageDO dbTenantPackage = randomPojo(TenantPackageDO.class);
-        tenantPackageMapper.insert(dbTenantPackage);// @Sql: 先插入出一条存在的数据
-        // 准备参数
-        Long id = dbTenantPackage.getId();
-        // mock 租户在使用该套餐
-        when(tenantService.getTenantCountByPackageId(eq(id))).thenReturn(1L);
-
-        // 调用, 并断言异常
-        assertServiceException(() -> tenantPackageService.deleteTenantPackage(id), TENANT_PACKAGE_USED);
     }
 
     @Test

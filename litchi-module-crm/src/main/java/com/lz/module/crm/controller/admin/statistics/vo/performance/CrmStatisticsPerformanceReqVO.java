@@ -1,6 +1,7 @@
 package com.lz.module.crm.controller.admin.statistics.vo.performance;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -35,7 +36,8 @@ public class CrmStatisticsPerformanceReqVO {
 
     @Schema(description = "时间范围", requiredMode = Schema.RequiredMode.REQUIRED)
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
-    @NotEmpty(message = "时间范围不能为空")
+    @Size(min = 2, max = 2, message = "请选择时间范围")
+    @NotEmpty(message = "请选择时间范围")
     private LocalDateTime[] times;
 
 }

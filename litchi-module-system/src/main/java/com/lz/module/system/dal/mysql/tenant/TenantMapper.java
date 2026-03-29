@@ -20,8 +20,11 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
     default PageResult<TenantDO> selectPage(TenantPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<TenantDO>()
                 .likeIfPresent(TenantDO::getName, reqVO.getName())
+                .eqIfPresent(TenantDO::getCode, reqVO.getCode())
                 .likeIfPresent(TenantDO::getContactName, reqVO.getContactName())
-                .likeIfPresent(TenantDO::getContactMobile, reqVO.getContactMobile())
+                .eqIfPresent(TenantDO::getContactMobile, reqVO.getContactMobile())
+                .eqIfPresent(TenantDO::getIndustry, reqVO.getIndustry())
+                .eqIfPresent(TenantDO::getType, reqVO.getType())
                 .eqIfPresent(TenantDO::getStatus, reqVO.getStatus())
                 .betweenIfPresent(TenantDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TenantDO::getId));
@@ -35,13 +38,13 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
         return selectOne(TenantDO::getWebsite, website);
     }
 
-    default Long selectCountByPackageId(Long packageId) {
-        return selectCount(TenantDO::getPackageId, packageId);
-    }
-
-    default List<TenantDO> selectListByPackageId(Long packageId) {
-        return selectList(TenantDO::getPackageId, packageId);
-    }
+//    default Long selectCountByPackageId(Long packageId) {
+//        return selectCount(TenantDO::getPackageId, packageId);
+//    }
+//
+//    default List<TenantDO> selectListByPackageId(Long packageId) {
+//        return selectList(TenantDO::getPackageId, packageId);
+//    }
 
     default List<TenantDO> selectListByStatus(Integer status) {
         return selectList(TenantDO::getStatus, status);

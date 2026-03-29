@@ -90,9 +90,6 @@ public class TenantServiceImpl implements TenantService {
         if (tenant.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
             throw exception(TENANT_DISABLE, tenant.getName());
         }
-        if (DateUtils.isExpired(tenant.getExpireTime())) {
-            throw exception(TENANT_EXPIRE, tenant.getName());
-        }
     }
 
     @Override
@@ -104,7 +101,7 @@ public class TenantServiceImpl implements TenantService {
         // 校验租户域名是否重复
         validTenantWebsiteDuplicate(createReqVO.getWebsite(), null);
         // 校验套餐被禁用
-        TenantPackageDO tenantPackage = tenantPackageService.validTenantPackage(createReqVO.getPackageId());
+//        TenantPackageDO tenantPackage = tenantPackageService.validTenantPackage(createReqVO.getPackageId());
 
         // 创建租户
         TenantDO tenant = BeanUtils.toBean(createReqVO, TenantDO.class);
@@ -112,11 +109,11 @@ public class TenantServiceImpl implements TenantService {
         // 创建租户的管理员
         TenantUtils.execute(tenant.getId(), () -> {
             // 创建角色
-            Long roleId = createRole(tenantPackage);
+//            Long roleId = createRole(tenantPackage);
             // 创建用户，并分配角色
-            Long userId = createUser(roleId, createReqVO);
+//            Long userId = createUser(roleId, createReqVO);
             // 修改租户的管理员
-            tenantMapper.updateById(new TenantDO().setId(tenant.getId()).setContactUserId(userId));
+//            tenantMapper.updateById(new TenantDO().setId(tenant.getId()).setContactUserId(userId));
         });
         return tenant.getId();
     }
@@ -150,15 +147,15 @@ public class TenantServiceImpl implements TenantService {
         // 校验租户域名是否重复
         validTenantWebsiteDuplicate(updateReqVO.getWebsite(), updateReqVO.getId());
         // 校验套餐被禁用
-        TenantPackageDO tenantPackage = tenantPackageService.validTenantPackage(updateReqVO.getPackageId());
+//        TenantPackageDO tenantPackage = tenantPackageService.validTenantPackage(updateReqVO.getPackageId());
 
         // 更新租户
         TenantDO updateObj = BeanUtils.toBean(updateReqVO, TenantDO.class);
         tenantMapper.updateById(updateObj);
-        // 如果套餐发生变化，则修改其角色的权限
-        if (ObjectUtil.notEqual(tenant.getPackageId(), updateReqVO.getPackageId())) {
-            updateTenantRoleMenu(tenant.getId(), tenantPackage.getMenuIds());
-        }
+//        // 如果套餐发生变化，则修改其角色的权限
+//        if (ObjectUtil.notEqual(tenant.getPackageId(), updateReqVO.getPackageId())) {
+//            updateTenantRoleMenu(tenant.getId(), tenantPackage.getMenuIds());
+//        }
     }
 
     private void validTenantNameDuplicate(String name, Long id) {
@@ -266,15 +263,15 @@ public class TenantServiceImpl implements TenantService {
         return tenantMapper.selectByWebsite(website);
     }
 
-    @Override
-    public Long getTenantCountByPackageId(Long packageId) {
-        return tenantMapper.selectCountByPackageId(packageId);
-    }
-
-    @Override
-    public List<TenantDO> getTenantListByPackageId(Long packageId) {
-        return tenantMapper.selectListByPackageId(packageId);
-    }
+//    @Override
+//    public Long getTenantCountByPackageId(Long packageId) {
+//        return tenantMapper.selectCountByPackageId(packageId);
+//    }
+//
+//    @Override
+//    public List<TenantDO> getTenantListByPackageId(Long packageId) {
+//        return tenantMapper.selectListByPackageId(packageId);
+//    }
 
     @Override
     public List<TenantDO> getTenantListByStatus(Integer status) {
@@ -302,17 +299,18 @@ public class TenantServiceImpl implements TenantService {
         // 获得租户，然后获得菜单
         TenantDO tenant = getTenant(TenantContextHolder.getRequiredTenantId());
         Set<Long> menuIds;
-        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
+//        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
             menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
-        } else {
-            menuIds = tenantPackageService.getTenantPackage(tenant.getPackageId()).getMenuIds();
-        }
+//        } else {
+////            menuIds = tenantPackageService.getTenantPackage(tenant.getPackageId()).getMenuIds();
+//        }
         // 执行处理器
         handler.handle(menuIds);
     }
 
     private static boolean isSystemTenant(TenantDO tenant) {
-        return Objects.equals(tenant.getPackageId(), TenantDO.PACKAGE_ID_SYSTEM);
+//        return Objects.equals(tenant.getPackageId(), TenantDO.PACKAGE_ID_SYSTEM);
+        return true;
     }
 
     private boolean isTenantDisable() {
