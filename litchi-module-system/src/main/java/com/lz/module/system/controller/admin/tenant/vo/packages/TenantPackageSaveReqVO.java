@@ -56,8 +56,4 @@ public class TenantPackageSaveReqVO {
 
     @Schema(description = "备注", example = "你猜")
     private String remark;
-
-    @Schema(description = "关联的菜单编号", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Set<Long> menuIds;
-
 }

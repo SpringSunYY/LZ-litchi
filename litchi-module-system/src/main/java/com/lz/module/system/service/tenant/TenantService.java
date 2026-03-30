@@ -104,6 +104,8 @@ public interface TenantService {
 //     */
 //    List<TenantDO> getTenantListByPackageId(Long packageId);
 
+
+    List<TenantDO> getTenantListByPackageCode(String code);
     /**
      * 获得指定状态的租户列表
      *

@@ -263,6 +263,12 @@ public class TenantServiceImpl implements TenantService {
         return tenantMapper.selectByWebsite(website);
     }
 
+    @Override
+    public List<TenantDO> getTenantListByPackageCode(String code) {
+        //TODO 从套餐和租户关联表查询
+        return List.of();
+    }
+
 //    @Override
 //    public Long getTenantCountByPackageId(Long packageId) {
 //        return tenantMapper.selectCountByPackageId(packageId);

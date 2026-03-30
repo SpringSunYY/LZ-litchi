@@ -1,6 +1,7 @@
 package com.lz.module.system.service.tenant;
 
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageGrantReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
@@ -30,6 +31,12 @@ public interface TenantPackageService {
      */
     void updateTenantPackage(@Valid TenantPackageSaveReqVO updateReqVO);
 
+    /**
+     * 授予租户套餐
+     *
+     * @param grantReqVO 授予信息
+     */
+    void grantTenantPackage(@Valid TenantPackageGrantReqVO grantReqVO);
     /**
      * 删除租户套餐
      *

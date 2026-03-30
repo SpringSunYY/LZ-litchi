@@ -4,10 +4,7 @@ import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
-import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
-import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageRespVO;
-import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
-import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSimpleRespVO;
+import com.lz.module.system.controller.admin.tenant.vo.packages.*;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.lz.module.system.service.tenant.TenantPackageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -44,6 +41,14 @@ public class TenantPackageController {
     @PreAuthorize("@ss.hasPermission('system:tenant-package:update')")
     public CommonResult<Boolean> updateTenantPackage(@Valid @RequestBody TenantPackageSaveReqVO updateReqVO) {
         tenantPackageService.updateTenantPackage(updateReqVO);
+        return success(true);
+    }
+
+    @PutMapping("/grant")
+    @Operation(summary = "授权租户套餐")
+    @PreAuthorize("@ss.hasPermission('system:tenant-package:update')")
+    public CommonResult<Boolean> grantTenantPackage(@Valid @RequestBody TenantPackageGrantReqVO grantReqVO) {
+        tenantPackageService.grantTenantPackage(grantReqVO);
         return success(true);
     }
 

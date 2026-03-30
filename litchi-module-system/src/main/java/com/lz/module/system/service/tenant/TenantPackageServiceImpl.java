@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageGrantReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
@@ -64,6 +65,19 @@ public class TenantPackageServiceImpl implements TenantPackageService {
 //            List<TenantDO> tenants = tenantService.getTenantListByPackageId(tenantPackage.getId());
 //            tenants.forEach(tenant -> tenantService.updateTenantRoleMenu(tenant.getId(), updateReqVO.getMenuIds()));
 //        }
+    }
+
+    @Override
+    public void grantTenantPackage(TenantPackageGrantReqVO grantReqVO) {
+        // 校验存在
+        TenantPackageDO tenantPackage = validateTenantPackageExists(grantReqVO.getId());
+         // 如果菜单发生变化，则修改每个租户的菜单
+        if (!CollUtil.isEqualList(tenantPackage.getMenuIds(), grantReqVO.getMenuIds())) {
+            //TODO 从关联租户中获取租户列表
+            List<TenantDO> tenants = tenantService.getTenantListByPackageCode(tenantPackage.getCode());
+            tenants.forEach(tenant -> tenantService.updateTenantRoleMenu(tenant.getId(), grantReqVO.getMenuIds()));
+        }
+        tenantPackageMapper.updateById(BeanUtils.toBean(grantReqVO, TenantPackageDO.class));
     }
 
     @Override
