@@ -46,7 +46,7 @@ public class TenantPackageDO extends BaseDO {
      * 套餐类型
      *
      */
-    private Boolean type;
+    private String type;
     /**
      * LOGO
      */

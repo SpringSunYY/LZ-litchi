@@ -103,7 +103,7 @@ public class TenantPackageServiceImplTest extends BaseDbUnitTest {
        TenantPackagePageReqVO reqVO = new TenantPackagePageReqVO();
        reqVO.setName("荔枝");
        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
-       reqVO.setRemark("源码");
+//       reqVO.setRemark("源码");
        reqVO.setCreateTime(buildBetweenTime(2022, 10, 9, 2022, 10, 11));
 
        // 调用

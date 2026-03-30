@@ -25,7 +25,7 @@ public class TenantPackageSaveReqVO {
 
     @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @NotNull(message = "套餐类型不能为空")
-    private Boolean type;
+    private String type;
 
     @Schema(description = "LOGO", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "LOGO不能为空")
@@ -58,7 +58,6 @@ public class TenantPackageSaveReqVO {
     private String remark;
 
     @Schema(description = "关联的菜单编号", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "关联的菜单编号不能为空")
     private Set<Long> menuIds;
 
 }

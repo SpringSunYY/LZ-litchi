@@ -24,7 +24,7 @@ public class TenantPackagePageReqVO extends PageParam {
     private String code;
 
     @Schema(description = "套餐类型", example = "2")
-    private Boolean type;
+    private String type;
 
     @Schema(description = "套餐描述", example = "你说的对")
     private String description;

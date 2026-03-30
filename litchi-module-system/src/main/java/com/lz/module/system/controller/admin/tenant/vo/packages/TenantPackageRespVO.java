@@ -24,7 +24,7 @@ public class TenantPackageRespVO {
     private String code;
 
     @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    private Boolean type;
+    private String type;
 
     @Schema(description = "LOGO", requiredMode = Schema.RequiredMode.REQUIRED)
     private String logo;
