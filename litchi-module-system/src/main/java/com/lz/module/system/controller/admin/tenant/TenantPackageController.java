@@ -1,6 +1,5 @@
 package com.lz.module.system.controller.admin.tenant;
 
-import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -89,9 +88,10 @@ public class TenantPackageController {
 
     @GetMapping({"/get-simple-list", "simple-list"})
     @Operation(summary = "获取租户套餐精简信息列表", description = "只包含被开启的租户套餐，主要用于前端的下拉选项")
-    public CommonResult<List<TenantPackageSimpleRespVO>> getTenantPackageList() {
-        List<TenantPackageDO> list = tenantPackageService.getTenantPackageListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(BeanUtils.toBean(list, TenantPackageSimpleRespVO.class));
+    public CommonResult<PageResult<TenantPackageSimpleRespVO>> getTenantPackageList(@Valid TenantPackagePageReqVO pageVO) {
+        PageResult<TenantPackageDO> pageResult = tenantPackageService.getTenantPackagePage(pageVO);
+        List<TenantPackageSimpleRespVO> simpleRespVOS = BeanUtils.toBean(pageResult.getList(), TenantPackageSimpleRespVO.class);
+        return success(new PageResult<>(simpleRespVOS, pageResult.getTotal()));
     }
 
 }

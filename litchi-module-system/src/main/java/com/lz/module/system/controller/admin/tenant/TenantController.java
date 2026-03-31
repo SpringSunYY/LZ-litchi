@@ -9,6 +9,7 @@ import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
+import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantRespSimpleVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantRespVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
@@ -52,10 +53,12 @@ public class TenantController {
     @PermitAll
     @TenantIgnore
     @Operation(summary = "获取租户精简信息列表", description = "只包含被开启的租户，用于【首页】功能的选择租户选项")
-    public CommonResult<List<TenantRespVO>> getTenantSimpleList() {
-        List<TenantDO> list = tenantService.getTenantListByStatus(CommonStatusEnum.ENABLE.getStatus());
-        return success(convertList(list, tenantDO ->
-                new TenantRespVO().setId(tenantDO.getId()).setName(tenantDO.getName())));
+    public CommonResult<PageResult<TenantRespSimpleVO>> getTenantSimpleList(@Valid TenantPageReqVO pageVO) {
+        pageVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
+        PageResult<TenantDO> pageResult = tenantService.getTenantPage(pageVO);
+        List<TenantRespSimpleVO> tenantRespSimpleVOS = convertList(pageResult.getList(), tenantDO ->
+                new TenantRespSimpleVO().setId(tenantDO.getId()).setName(tenantDO.getName()).setCode(tenantDO.getCode()));
+        return success(new PageResult<>(tenantRespSimpleVOS, pageResult.getTotal()));
     }
 
     @GetMapping("/get-by-website")
