@@ -24,13 +24,16 @@ public class TenantPackagePageReqVO extends PageParam {
     private String code;
 
     @Schema(description = "套餐类型", example = "2")
-    private String type;
+    private Integer type;
 
     @Schema(description = "套餐描述", example = "你说的对")
     private String description;
 
     @Schema(description = "套餐状态", example = "2")
     private Integer status;
+
+    @Schema(description = "是否发布")
+    private Integer published;
 
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)

@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Schema(description = "管理后台 - 租户套餐精简 Response VO")
 @Data
 public class TenantPackageSimpleRespVO {
@@ -20,5 +22,8 @@ public class TenantPackageSimpleRespVO {
     @Schema(description = "套餐名", requiredMode = Schema.RequiredMode.REQUIRED, example = "VIP")
     @NotNull(message = "套餐名不能为空")
     private String name;
+
+    @Schema(description = "套餐价格", requiredMode = Schema.RequiredMode.REQUIRED, example = "12109")
+    private BigDecimal price;
 
 }

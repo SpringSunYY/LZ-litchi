@@ -5,6 +5,8 @@ import com.lz.framework.tenant.core.context.TenantContextHolder;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
+import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
+import com.lz.module.system.dal.dataobject.tenant.TenantPackageSubscribeDO;
 import com.lz.module.system.service.tenant.handler.TenantInfoHandler;
 import com.lz.module.system.service.tenant.handler.TenantMenuHandler;
 import jakarta.validation.Valid;
@@ -33,6 +35,8 @@ public interface TenantService {
      * @param updateReqVO 更新信息
      */
     void updateTenant(@Valid TenantSaveReqVO updateReqVO);
+
+    void updateTenant(TenantDO tenant);
 
     /**
      * 更新租户的角色菜单
@@ -88,6 +92,11 @@ public interface TenantService {
      */
     TenantDO getTenantByWebsite(String website);
 
+
+    /**
+     * 根据租户编号查询租户信息
+     **/
+    TenantDO selectByCode(String tenantCode);
 //    /**
 //     * 获得使用指定套餐的租户数量
 //     *
@@ -105,7 +114,8 @@ public interface TenantService {
 //    List<TenantDO> getTenantListByPackageId(Long packageId);
 
 
-    List<TenantDO> getTenantListByPackageCode(String code);
+    List<TenantDO> getTenantListByPackageCode(List<String> codes);
+
     /**
      * 获得指定状态的租户列表
      *
@@ -144,4 +154,20 @@ public interface TenantService {
      */
     void validTenant(Long id);
 
+    /**
+     * 校验租户是否合法
+     *
+     * @param tenantCode 租户编号
+     * @return 租户
+     */
+    TenantDO validTenantByCode(String tenantCode);
+
+    /**
+     * 更新租户的菜单
+     *
+     * @param tenantDO               租户
+     * @param tenantPackageDO
+     * @param tenantPackageSubscribe 租户套餐订阅
+     */
+    void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe);
 }

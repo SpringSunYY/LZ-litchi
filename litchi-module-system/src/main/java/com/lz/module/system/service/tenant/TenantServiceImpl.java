@@ -1,13 +1,15 @@
 package com.lz.module.system.service.tenant;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.lang.Assert;
-import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
+import com.baomidou.dynamic.datasource.tx.DsPropagation;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.common.util.collection.ArrayUtils;
 import com.lz.framework.common.util.collection.CollectionUtils;
-import com.lz.framework.common.util.date.DateUtils;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.datapermission.core.annotation.DataPermission;
 import com.lz.framework.tenant.config.TenantProperties;
@@ -21,28 +23,35 @@ import com.lz.module.system.dal.dataobject.permission.MenuDO;
 import com.lz.module.system.dal.dataobject.permission.RoleDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
+import com.lz.module.system.dal.dataobject.tenant.TenantPackageSubscribeDO;
 import com.lz.module.system.dal.mysql.tenant.TenantMapper;
+import com.lz.module.system.dal.mysql.tenant.TenantPackageSubscribeMapper;
 import com.lz.module.system.enums.permission.RoleCodeEnum;
 import com.lz.module.system.enums.permission.RoleTypeEnum;
+import com.lz.module.system.enums.tenant.SystemTenantPackageSubscribePayStatusEnum;
+import com.lz.module.system.enums.tenant.SystemTenantPackageSubscribeStatusEnum;
 import com.lz.module.system.service.permission.MenuService;
 import com.lz.module.system.service.permission.PermissionService;
 import com.lz.module.system.service.permission.RoleService;
 import com.lz.module.system.service.tenant.handler.TenantInfoHandler;
 import com.lz.module.system.service.tenant.handler.TenantMenuHandler;
 import com.lz.module.system.service.user.AdminUserService;
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
+import static com.lz.framework.common.util.date.LocalDateTimeUtils.afterNow;
+import static com.lz.framework.common.util.date.LocalDateTimeUtils.beforeNow;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
 import static java.util.Collections.singleton;
 
@@ -74,6 +83,10 @@ public class TenantServiceImpl implements TenantService {
     private MenuService menuService;
     @Resource
     private PermissionService permissionService;
+    @Resource
+    private PasswordEncoder passwordEncoder;
+    @Resource
+    private TenantPackageSubscribeMapper tenantPackageSubscribeMapper;
 
     @Override
     public List<Long> getTenantIdList() {
@@ -93,6 +106,38 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    public TenantDO validTenantByCode(String tenantCode) {
+        TenantDO tenant = this.selectByCode(tenantCode);
+        if (tenant == null) {
+            throw exception(TENANT_NOT_EXISTS);
+        }
+        if (tenant.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
+            throw exception(TENANT_DISABLE, tenant.getName());
+        }
+        return tenant;
+    }
+
+    @Override
+    public void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe) {
+        //首先判断开始结束时间，是否在内
+        if (!afterNow(tenantPackageSubscribe.getStartTime()) || !beforeNow(tenantPackageSubscribe.getEndTime())) {
+            return;
+        }
+        //判断套餐是否关闭
+        if (tenantPackageDO.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
+            throw exception(TENANT_PACKAGE_DISABLE);
+        }
+        //拿到套餐的菜单与租户的菜单
+        Set<Long> packageMenuIds = tenantPackageDO.getMenuIds();
+        Set<Long> tenantMenuIds = tenantDO.getMenuIds();
+        tenantMenuIds.addAll(packageMenuIds);
+        tenantDO.setMenuIds(tenantMenuIds);
+        //先更新角色再更新租户，避免事务提交失败
+        updateTenantRoleMenu(tenantDO.getId(), tenantDO.getMenuIds());
+        tenantMapper.updateById(tenantDO);
+    }
+
+    @Override
     @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
     @DataPermission(enable = false) // 参见 https://gitee.com/zhijiantianya/litchi/pulls/1154 说明
     public Long createTenant(TenantSaveReqVO createReqVO) {
@@ -100,22 +145,68 @@ public class TenantServiceImpl implements TenantService {
         validTenantNameDuplicate(createReqVO.getName(), null);
         // 校验租户域名是否重复
         validTenantWebsiteDuplicate(createReqVO.getWebsite(), null);
-        // 校验套餐被禁用
-//        TenantPackageDO tenantPackage = tenantPackageService.validTenantPackage(createReqVO.getPackageId());
-
+        // 查询所有的内置套餐
+        List<TenantPackageDO> tenantPackages = tenantPackageService.getTenantPackageListByTypeBuiltIn();
+        Set<Long> menuIds = new HashSet<>();
+        for (TenantPackageDO tenantPackage : tenantPackages) {
+            if (ArrayUtils.isEmpty(tenantPackage.getMenuIds())) {
+                continue;
+            }
+            menuIds.addAll(tenantPackage.getMenuIds());
+        }
+        if (ArrayUtils.isEmpty(menuIds)) {
+            throw exception(TENANT_NOT_EXISTS_MENU);
+        }
         // 创建租户
         TenantDO tenant = BeanUtils.toBean(createReqVO, TenantDO.class);
+        tenant.setPaymentPassword(passwordEncoder.encode(createReqVO.getPassword()));
+        tenant.setAccountCount(30);
+        tenant.setCurrentAccountCount(1);
+        tenant.setMenuIds(menuIds);
+        tenant.setPaymentAmount(BigDecimal.ZERO);
+        tenant.setBalanceAmount(BigDecimal.ZERO);
+        tenant.setRechargeAmount(BigDecimal.ZERO);
         tenantMapper.insert(tenant);
         // 创建租户的管理员
         TenantUtils.execute(tenant.getId(), () -> {
-            // 创建角色
-//            Long roleId = createRole(tenantPackage);
-            // 创建用户，并分配角色
-//            Long userId = createUser(roleId, createReqVO);
-            // 修改租户的管理员
-//            tenantMapper.updateById(new TenantDO().setId(tenant.getId()).setContactUserId(userId));
+            initTenantMenu(createReqVO, menuIds, tenant, tenantPackages);
         });
         return tenant.getId();
+    }
+
+    private void initTenantMenu(TenantSaveReqVO createReqVO, Set<Long> menuIds, TenantDO tenant, List<TenantPackageDO> tenantPackages) {
+        // 创建角色
+        Long roleId = createRole(menuIds);
+        // 创建用户，并分配角色
+        Long userId = createUser(roleId, createReqVO);
+        // 修改租户的管理员
+        tenantMapper.updateById(new TenantDO().setId(tenant.getId()).setContactUserId(userId));
+        //创建套餐订阅
+        List<TenantPackageSubscribeDO> subscribeDOS = new ArrayList<>();
+        LocalDateTime startTime = LocalDateTimeUtil.now();
+        LocalDateTime endTime = startTime.plusDays(99999);
+        tenantPackages.forEach(tenantPackage -> {
+            TenantPackageSubscribeDO tenantPackageSubscribe = new TenantPackageSubscribeDO();
+            BigDecimal totalPrice = new BigDecimal(BigInteger.ZERO);
+            tenantPackageSubscribe.setPackageName(tenantPackage.getName())
+                    .setPackageCode(tenantPackage.getCode())
+                    .setPackageType(tenantPackage.getType())
+                    .setPackageLogo(tenantPackage.getLogo())
+                    .setPackageStatus(tenantPackage.getStatus())
+                    .setTenantName(tenant.getName())
+                    .setTenantCode(tenant.getCode())
+                    .setPrice(tenantPackage.getPrice())
+                    .setDiscountPrice(totalPrice)
+                    .setDays(99999)
+                    .setTotalPrice(totalPrice)
+                    .setStartTime(startTime)
+                    .setEndTime(endTime)
+                    .setPayStatus(SystemTenantPackageSubscribePayStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_2.getStatus())
+                    .setStatus(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_2.getStatus())
+                    .setRemark("系统自动订阅内置套餐");
+            subscribeDOS.add(tenantPackageSubscribe);
+        });
+        tenantPackageSubscribeMapper.insertBatch(subscribeDOS);
     }
 
     private Long createUser(Long roleId, TenantSaveReqVO createReqVO) {
@@ -126,14 +217,14 @@ public class TenantServiceImpl implements TenantService {
         return userId;
     }
 
-    private Long createRole(TenantPackageDO tenantPackage) {
+    private Long createRole(Set<Long> menuIds) {
         // 创建角色
         RoleSaveReqVO reqVO = new RoleSaveReqVO();
         reqVO.setName(RoleCodeEnum.TENANT_ADMIN.getName()).setCode(RoleCodeEnum.TENANT_ADMIN.getCode())
                 .setSort(0).setRemark("系统自动生成");
         Long roleId = roleService.createRole(reqVO, RoleTypeEnum.SYSTEM.getType());
         // 分配权限
-        permissionService.assignRoleMenu(roleId, tenantPackage.getMenuIds());
+        permissionService.assignRoleMenu(roleId, menuIds);
         return roleId;
     }
 
@@ -146,16 +237,14 @@ public class TenantServiceImpl implements TenantService {
         validTenantNameDuplicate(updateReqVO.getName(), updateReqVO.getId());
         // 校验租户域名是否重复
         validTenantWebsiteDuplicate(updateReqVO.getWebsite(), updateReqVO.getId());
-        // 校验套餐被禁用
-//        TenantPackageDO tenantPackage = tenantPackageService.validTenantPackage(updateReqVO.getPackageId());
-
         // 更新租户
         TenantDO updateObj = BeanUtils.toBean(updateReqVO, TenantDO.class);
         tenantMapper.updateById(updateObj);
-//        // 如果套餐发生变化，则修改其角色的权限
-//        if (ObjectUtil.notEqual(tenant.getPackageId(), updateReqVO.getPackageId())) {
-//            updateTenantRoleMenu(tenant.getId(), tenantPackage.getMenuIds());
-//        }
+    }
+
+    @Override
+    public void updateTenant(TenantDO tenant) {
+        tenantMapper.updateById(tenant);
     }
 
     private void validTenantNameDuplicate(String name, Long id) {
@@ -190,7 +279,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    @DSTransactional
+    @DSTransactional(propagation = DsPropagation.REQUIRES_NEW)
     public void updateTenantRoleMenu(Long tenantId, Set<Long> menuIds) {
         TenantUtils.execute(tenantId, () -> {
             // 获得所有角色
@@ -264,9 +353,13 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public List<TenantDO> getTenantListByPackageCode(String code) {
-        //TODO 从套餐和租户关联表查询
-        return List.of();
+    public TenantDO selectByCode(String tenantCode) {
+        return tenantMapper.selectByCode(tenantCode);
+    }
+
+    @Override
+    public List<TenantDO> getTenantListByPackageCode(List<String> codes) {
+        return tenantMapper.selectTenantByCodes(codes);
     }
 
 //    @Override
@@ -306,7 +399,7 @@ public class TenantServiceImpl implements TenantService {
         TenantDO tenant = getTenant(TenantContextHolder.getRequiredTenantId());
         Set<Long> menuIds;
 //        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
-            menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
+        menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
 //        } else {
 ////            menuIds = tenantPackageService.getTenantPackage(tenant.getPackageId()).getMenuIds();
 //        }

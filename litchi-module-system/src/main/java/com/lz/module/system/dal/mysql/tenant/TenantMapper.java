@@ -50,4 +50,22 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
         return selectList(TenantDO::getStatus, status);
     }
 
+    /**
+     * 根据租户套餐编号，查询租户
+     *
+     * @return 租户列表
+     */
+    default TenantDO selectByCode(String tenantCode) {
+        return selectOne(TenantDO::getCode, tenantCode);
+    }
+
+
+    /**
+     * 根据租户套餐编号，查询租户列表
+     *
+     * @return 租户列表
+     */
+    default List<TenantDO> selectTenantByCodes(List<String> tenantCodes) {
+        return selectList(TenantDO::getCode, tenantCodes);
+    }
 }

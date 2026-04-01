@@ -46,7 +46,7 @@ public class TenantPackageDO extends BaseDO {
      * 套餐类型
      *
      */
-    private String type;
+    private Integer type;
     /**
      * LOGO
      */
@@ -64,6 +64,12 @@ public class TenantPackageDO extends BaseDO {
      *
      */
     private Integer status;
+
+    /**
+     * 是否发布
+     *
+     */
+    private Integer published;
     /**
      * 排序
      */

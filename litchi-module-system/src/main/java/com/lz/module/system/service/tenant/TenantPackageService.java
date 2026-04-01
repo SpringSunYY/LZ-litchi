@@ -32,6 +32,11 @@ public interface TenantPackageService {
     void updateTenantPackage(@Valid TenantPackageSaveReqVO updateReqVO);
 
     /**
+     * 更新租户套餐
+     *
+     */
+    void  updateTenantPackage(@Valid TenantPackageDO tenantPackageDO);
+    /**
      * 授予租户套餐
      *
      * @param grantReqVO 授予信息
@@ -75,6 +80,14 @@ public interface TenantPackageService {
      */
     TenantPackageDO validTenantPackage(Long id);
 
+
+    /**
+     * 校验租户套餐
+     *
+     * @param packageCode 套餐编码
+     * @return 租户套餐
+     */
+    TenantPackageDO validTenantPackageByCode(String packageCode);
     /**
      * 获得指定状态的租户套餐列表
      *
@@ -82,5 +95,10 @@ public interface TenantPackageService {
      * @return 租户套餐
      */
     List<TenantPackageDO> getTenantPackageListByStatus(Integer status);
+
+    /**
+     * 获得内置的租户套餐列表
+     */
+    List<TenantPackageDO> getTenantPackageListByTypeBuiltIn();
 
 }

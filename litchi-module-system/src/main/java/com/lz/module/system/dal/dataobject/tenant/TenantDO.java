@@ -1,13 +1,16 @@
 package com.lz.module.system.dal.dataobject.tenant;
 
 import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 /**
  * 租户 DO
@@ -83,7 +86,8 @@ public class TenantDO extends BaseDO {
     /**
      * 关联菜单
      */
-    private String menuIds;
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private Set<Long> menuIds;
     /**
      * 绑定域名
      */

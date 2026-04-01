@@ -111,14 +111,17 @@ public interface ErrorCodeConstants {
     ErrorCode TENANT_CAN_NOT_UPDATE_SYSTEM = new ErrorCode(1_002_015_003, "系统租户不能进行修改、删除等操作！");
     ErrorCode TENANT_NAME_DUPLICATE = new ErrorCode(1_002_015_004, "名字为【{}】的租户已存在");
     ErrorCode TENANT_WEBSITE_DUPLICATE = new ErrorCode(1_002_015_005, "域名为【{}】的租户已存在");
+    ErrorCode TENANT_NOT_EXISTS_MENU = new ErrorCode(1_002_015_006, "租户没有成功绑定菜单，菜单权限为空");
 
     // ========== 租户套餐 1-002-016-000 ==========
     ErrorCode TENANT_PACKAGE_NOT_EXISTS = new ErrorCode(1_002_016_000, "租户套餐不存在");
     ErrorCode TENANT_PACKAGE_USED = new ErrorCode(1_002_016_001, "租户正在使用该套餐，请给租户重新设置套餐后再尝试删除");
     ErrorCode TENANT_PACKAGE_DISABLE = new ErrorCode(1_002_016_002, "名字为【{}】的租户套餐已被禁用");
     ErrorCode TENANT_PACKAGE_NAME_DUPLICATE = new ErrorCode(1_002_016_003, "已经存在该名字的租户套餐");
+    ErrorCode TENANT_PACKAGE_CODE_DUPLICATE = new ErrorCode(1_002_016_004, "已经存在该编码的租户套餐");
     // ========== 订阅套餐 1-002-017-000 ==========
     ErrorCode TENANT_PACKAGE_SUBSCRIBE_NOT_EXISTS = new ErrorCode(1_002_017_000, "租户套餐订阅不存在");
+    ErrorCode TENANT_PACKAGE_SUBSCRIBE_PROHIBIT_TENANT_OR_PACKAGE_CHANGE = new ErrorCode(1_002_017_001, "租户或者租户套餐不可改变");
 
 
     // ========== 社交用户 1-002-018-000 ==========

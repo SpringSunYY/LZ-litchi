@@ -1,8 +1,5 @@
 package com.lz.module.system.controller.admin.tenant.vo.packages;
 
-import com.alibaba.excel.annotation.ExcelProperty;
-import com.lz.framework.excel.core.annotations.DictFormat;
-import com.lz.framework.excel.core.convert.DictConvert;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -24,7 +21,7 @@ public class TenantPackageRespVO {
     private String code;
 
     @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    private String type;
+    private Integer type;
 
     @Schema(description = "LOGO", requiredMode = Schema.RequiredMode.REQUIRED)
     private String logo;
@@ -37,6 +34,9 @@ public class TenantPackageRespVO {
 
     @Schema(description = "套餐状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     private Integer status;
+
+    @Schema(description = "是否发布", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Integer published;
 
     @Schema(description = "排序", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer orderNum;

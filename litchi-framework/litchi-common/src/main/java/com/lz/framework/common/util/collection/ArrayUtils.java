@@ -15,14 +15,14 @@ import static com.lz.framework.common.util.collection.CollectionUtils.convertLis
  *
  * @author 荔枝源码
  */
-public class ArrayUtils {
+public class ArrayUtils extends ArrayUtil {
 
     /**
      * 将 object 和 newElements 合并成一个数组
      *
-     * @param object 对象
+     * @param object      对象
      * @param newElements 数组
-     * @param <T> 泛型
+     * @param <T>         泛型
      * @return 结果数组
      */
     @SafeVarargs

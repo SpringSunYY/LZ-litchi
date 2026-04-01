@@ -28,12 +28,17 @@ public class TenantPackageSubscribeRespVO {
 
     @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty(value = "套餐类型", converter = DictConvert.class)
-    @DictFormat("system_tenant_package_type") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
-    private Boolean type;
+    @DictFormat("system_tenant_package_type")
+    private Integer packageType;
+
+    @Schema(description = "套餐状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @ExcelProperty(value = "套餐状态", converter = DictConvert.class)
+    @DictFormat("system_tenant_package_status")
+    private Integer packageStatus;
 
     @Schema(description = "LOGO", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("LOGO")
-    private String logo;
+    private String packageLogo;
 
     @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "赵六")
     @ExcelProperty("租户名")

@@ -1,24 +1,34 @@
 package com.lz.module.system.service.tenant;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.dynamic.datasource.annotation.DSTransactional;
+import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.common.util.collection.ArrayUtils;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageGrantReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
+import com.lz.module.system.dal.dataobject.tenant.TenantPackageSubscribeDO;
 import com.lz.module.system.dal.mysql.tenant.TenantPackageMapper;
-import com.baomidou.dynamic.datasource.annotation.DSTransactional;
-import com.google.common.annotations.VisibleForTesting;
+import com.lz.module.system.enums.tenant.SystemTenantPackageSubscribePayStatusEnum;
+import com.lz.module.system.enums.tenant.SystemTenantPackageSubscribeStatusEnum;
+import com.lz.module.system.enums.tenant.SystemTenantPackageTypeEnum;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.time.LocalDateTime;
+import java.util.*;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
@@ -39,53 +49,146 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     @Lazy // 避免循环依赖的报错
     private TenantService tenantService;
 
+    @Resource
+    @Lazy
+    private TenantPackageSubscribeService tenantPackageSubscribeService;
+
+    @DSTransactional
     @Override
     public Long createTenantPackage(TenantPackageSaveReqVO createReqVO) {
-        // 校验套餐名是否重复
-        validateTenantPackageNameUnique(null, createReqVO.getName());
+        // 校验套餐名和code是否重复
+        validateTenantPackageNameAndCodeUnique(null, createReqVO.getName(), createReqVO.getCode());
         // 插入
         TenantPackageDO tenantPackage = BeanUtils.toBean(createReqVO, TenantPackageDO.class);
+
+        //如果是内置套餐，则需要给所有的租户都订阅
+        if (!Objects.equals(tenantPackage.getType(), SystemTenantPackageTypeEnum.SYSTEM_TENANT_PACKAGE_TYPE_ENUM_0.getStatus())) {
+            tenantPackageMapper.insert(tenantPackage);
+            return tenantPackage.getId();
+        }
+        //查询到所有的租户
+        List<TenantDO> tenantDOS = tenantService.getTenantListByStatus(CommonStatusEnum.ENABLE.getStatus());
+        tenantDOS.forEach(tenant -> {
+            LocalDateTime startTime = LocalDateTimeUtil.now();
+            LocalDateTime endTime = startTime.plusDays(99999);
+            TenantUtils.execute(tenant.getId(), () -> {
+                TenantPackageSubscribeDO tenantPackageSubscribe = new TenantPackageSubscribeDO();
+                BigDecimal totalPrice = new BigDecimal(BigInteger.ZERO);
+                tenantPackageSubscribe.setPackageName(tenantPackage.getName())
+                        .setPackageCode(tenantPackage.getCode())
+                        .setPackageType(tenantPackage.getType())
+                        .setPackageStatus(tenantPackage.getStatus())
+                        .setPackageLogo(tenantPackage.getLogo())
+                        .setTenantName(tenant.getName())
+                        .setTenantCode(tenant.getCode())
+                        .setPrice(tenantPackage.getPrice())
+                        .setDiscountPrice(totalPrice)
+                        .setDays(99999)
+                        .setTotalPrice(totalPrice)
+                        .setStartTime(startTime)
+                        .setEndTime(endTime)
+                        .setPayStatus(SystemTenantPackageSubscribePayStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_2.getStatus())
+                        .setStatus(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_2.getStatus())
+                        .setRemark("系统自动订阅内置套餐");
+                tenantPackageSubscribeService.insertTenantPackageSubscribe(tenantPackageSubscribe);
+            });
+        });
+        tenantPackage.setSubscriptionNum(tenantDOS.size());
+        tenantPackage.setSubscriptionTotalAmount(
+                new BigDecimal(tenantDOS.size()).multiply(
+                        tenantPackage.getPrice()
+                ));
         tenantPackageMapper.insert(tenantPackage);
         // 返回
         return tenantPackage.getId();
     }
 
     @Override
-    @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
     public void updateTenantPackage(TenantPackageSaveReqVO updateReqVO) {
         // 校验存在
         TenantPackageDO tenantPackage = validateTenantPackageExists(updateReqVO.getId());
+        //套餐编号、类型不可更改
+        tenantPackage.setCode(null).setType(null);
         // 校验套餐名是否重复
-        validateTenantPackageNameUnique(updateReqVO.getId(), updateReqVO.getName());
+        validateTenantPackageNameAndCodeUnique(updateReqVO.getId(), updateReqVO.getName(), updateReqVO.getCode());
         // 更新
         TenantPackageDO updateObj = BeanUtils.toBean(updateReqVO, TenantPackageDO.class);
         tenantPackageMapper.updateById(updateObj);
-//        // 如果菜单发生变化，则修改每个租户的菜单
-//        if (!CollUtil.isEqualList(tenantPackage.getMenuIds(), updateReqVO.getMenuIds())) {
-//            List<TenantDO> tenants = tenantService.getTenantListByPackageId(tenantPackage.getId());
-//            tenants.forEach(tenant -> tenantService.updateTenantRoleMenu(tenant.getId(), updateReqVO.getMenuIds()));
-//        }
+        // 如果菜单发生状态变化，则修改每个租户的菜单
+        if (!tenantPackage.getStatus().equals(updateReqVO.getStatus())) {
+            List<TenantPackageSubscribeDO> tenantPackageSubscribeDOS = updateTenantMenu(tenantPackage);
+            //只更新当前订阅的套餐的状态
+            tenantPackageSubscribeDOS.forEach(tenantPackageSubscribeDO -> {
+                tenantPackageSubscribeDO.setStatus(updateReqVO.getStatus());
+            });
+            tenantPackageSubscribeService.updateBatch(tenantPackageSubscribeDOS);
+        }
+    }
+
+    @Override
+    public void updateTenantPackage(TenantPackageDO tenantPackageDO) {
+        tenantPackageMapper.updateById(tenantPackageDO);
     }
 
     @Override
     public void grantTenantPackage(TenantPackageGrantReqVO grantReqVO) {
         // 校验存在
         TenantPackageDO tenantPackage = validateTenantPackageExists(grantReqVO.getId());
-         // 如果菜单发生变化，则修改每个租户的菜单
-        if (!CollUtil.isEqualList(tenantPackage.getMenuIds(), grantReqVO.getMenuIds())) {
-            //TODO 从关联租户中获取租户列表
-            List<TenantDO> tenants = tenantService.getTenantListByPackageCode(tenantPackage.getCode());
-            tenants.forEach(tenant -> tenantService.updateTenantRoleMenu(tenant.getId(), grantReqVO.getMenuIds()));
-        }
         tenantPackageMapper.updateById(BeanUtils.toBean(grantReqVO, TenantPackageDO.class));
+        //如果原套餐是关闭，则不需要更新权限
+        if (tenantPackage.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
+            return;
+        }
+        // 如果菜单发生变化，则修改每个租户的菜单
+        if (CollUtil.isEqualList(tenantPackage.getMenuIds(), grantReqVO.getMenuIds())) {
+            return;
+        }
+        updateTenantMenu(tenantPackage);
+
+    }
+
+    private List<TenantPackageSubscribeDO> updateTenantMenu(TenantPackageDO tenantPackage) {
+        // 获取该套餐的订阅
+        List<TenantPackageSubscribeDO> packageSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndPackageCode(tenantPackage.getCode());
+        //根据订阅拿到租户
+        if (ArrayUtils.isEmpty(packageSubscribeDOS)) {
+            return new ArrayList<>();
+        }
+        List<String> tenantCodes = packageSubscribeDOS.stream().map(TenantPackageSubscribeDO::getTenantCode).toList();
+        //从关联租户套餐订阅中获取租户列表
+        List<TenantDO> tenants = tenantService.getTenantListByPackageCode(tenantCodes);
+        tenants.forEach(tenant -> {
+            //首先拿到该租户当前订阅的所有套餐
+            List<TenantPackageSubscribeDO> tenantSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndTenantCode(tenant.getCode());
+            //在拿到所有的套餐，根据套餐编号
+            if (ArrayUtils.isEmpty(tenantSubscribeDOS)) return;
+            List<String> packageCodes = tenantSubscribeDOS.stream().map(TenantPackageSubscribeDO::getPackageCode).toList();
+            List<TenantPackageDO> tenantPackageDOS = tenantPackageMapper.selectListByCodes(packageCodes);
+            if (ArrayUtils.isEmpty(tenantPackageDOS)) return;
+            Set<Long> menuIds = new HashSet<>();
+            for (TenantPackageDO packageDO : tenantPackageDOS) {
+                if (ArrayUtils.isEmpty(packageDO.getMenuIds())) {
+                    continue;
+                }
+                menuIds.addAll(packageDO.getMenuIds());
+            }
+            if (ArrayUtils.isEmpty(menuIds)) {
+                throw exception(TENANT_NOT_EXISTS_MENU);
+            }
+            tenantService.updateTenantRoleMenu(tenant.getId(), menuIds);
+            //更新租户权限
+            tenant.setMenuIds(menuIds);
+            tenantService.updateTenant(tenant);
+        });
+        return packageSubscribeDOS;
     }
 
     @Override
     public void deleteTenantPackage(Long id) {
         // 校验存在
-        validateTenantPackageExists(id);
+        TenantPackageDO tenantPackageDO = validateTenantPackageExists(id);
         // 校验正在使用
-//        validateTenantUsed(id);
+        validateTenantUsed(tenantPackageDO.getCode());
         // 删除
         tenantPackageMapper.deleteById(id);
     }
@@ -93,14 +196,9 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     @Override
     public void deleteTenantPackageList(List<Long> ids) {
         // 1. 校验是否有租户正在使用该套餐
-//        for (Long id : ids) {
-//            if (tenantService.getTenantCountByPackageId(id) > 0) {
-//                throw exception(TENANT_PACKAGE_USED);
-//            }
-//        }
-
-        // 2. 批量删除
-        tenantPackageMapper.deleteByIds(ids);
+        for (Long id : ids) {
+            this.deleteTenantPackage(id);
+        }
     }
 
     private TenantPackageDO validateTenantPackageExists(Long id) {
@@ -111,11 +209,12 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         return tenantPackage;
     }
 
-//    private void validateTenantUsed(Long id) {
-//        if (tenantService.getTenantCountByPackageId(id) > 0) {
-//            throw exception(TENANT_PACKAGE_USED);
-//        }
-//    }
+    private void validateTenantUsed(String code) {
+        List<TenantPackageSubscribeDO> tenantPackageSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndPackageCode(code);
+        if (ArrayUtils.isNotEmpty(tenantPackageSubscribeDOS)) {
+            throw exception(TENANT_PACKAGE_USED);
+        }
+    }
 
     @Override
     public TenantPackageDO getTenantPackage(Long id) {
@@ -140,26 +239,43 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     }
 
     @Override
+    public TenantPackageDO validTenantPackageByCode(String packageCode) {
+        TenantPackageDO tenantPackage = tenantPackageMapper.selectByCode(packageCode);
+        if (tenantPackage == null) {
+            throw exception(TENANT_PACKAGE_NOT_EXISTS);
+        }
+        if (tenantPackage.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
+            throw exception(TENANT_PACKAGE_DISABLE, tenantPackage.getName());
+        }
+        return tenantPackage;
+    }
+
+    @Override
     public List<TenantPackageDO> getTenantPackageListByStatus(Integer status) {
         return tenantPackageMapper.selectListByStatus(status);
     }
 
+    @Override
+    public List<TenantPackageDO> getTenantPackageListByTypeBuiltIn() {
+        return tenantPackageMapper.selectListByTypeBuiltIn();
+    }
+
 
     @VisibleForTesting
-    void validateTenantPackageNameUnique(Long id, String name) {
+    void validateTenantPackageNameAndCodeUnique(Long id, String name, String code) {
         if (StrUtil.isBlank(name)) {
             return;
         }
-        TenantPackageDO tenantPackage = tenantPackageMapper.selectByName(name);
-        if (tenantPackage == null) {
+        if (StrUtil.isBlank(code)) {
             return;
         }
-        // 如果 id 为空，说明不用比较是否为相同 id 的用户
-        if (id == null) {
+        TenantPackageDO tenantPackageByName = tenantPackageMapper.selectByName(name);
+        if (tenantPackageByName != null && !tenantPackageByName.getId().equals(id)) {
             throw exception(TENANT_PACKAGE_NAME_DUPLICATE);
         }
-        if (!tenantPackage.getId().equals(id)) {
-            throw exception(TENANT_PACKAGE_NAME_DUPLICATE);
+        TenantPackageDO tenantPackageByCode = tenantPackageMapper.selectByCode(code);
+        if (tenantPackageByCode != null && !tenantPackageByCode.getId().equals(id)) {
+            throw exception(TENANT_PACKAGE_CODE_DUPLICATE);
         }
     }
 

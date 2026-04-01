@@ -19,7 +19,10 @@ public class TenantPackageSubscribePageReqVO extends PageParam {
     private String packageCode;
 
     @Schema(description = "套餐类型", example = "1")
-    private Boolean type;
+    private Integer packageType;
+
+    @Schema(description = "套餐状态", example = "1")
+    private Integer packageStatus;
 
     @Schema(description = "租户名", example = "赵六")
     private String tenantName;

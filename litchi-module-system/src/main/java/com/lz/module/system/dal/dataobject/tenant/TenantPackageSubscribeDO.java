@@ -1,12 +1,13 @@
 package com.lz.module.system.dal.dataobject.tenant;
 
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-
-import com.baomidou.mybatisplus.annotation.*;
-import com.lz.framework.mybatis.core.dataobject.BaseDO;
 
 /**
  * 租户套餐订阅 DO
@@ -38,14 +39,16 @@ public class TenantPackageSubscribeDO extends BaseDO {
     private String packageCode;
     /**
      * 套餐类型
-     *
-     * 枚举 {@link TODO system_tenant_package_type 对应的类}
      */
-    private Boolean type;
+    private Integer packageType;
+    /**
+     * 套餐状态
+     */
+    private Integer packageStatus;
     /**
      * LOGO
      */
-    private String logo;
+    private String packageLogo;
     /**
      * 租户名
      */
@@ -72,14 +75,10 @@ public class TenantPackageSubscribeDO extends BaseDO {
     private BigDecimal totalPrice;
     /**
      * 订阅状态
-     *
-     * 枚举 {@link TODO system_tenant_package_subscribe_status 对应的类}
      */
     private Integer status;
     /**
      * 支付状态
-     *
-     * 枚举 {@link TODO system_tenant_package_subscribe_pay_status 对应的类}
      */
     private Integer payStatus;
     /**

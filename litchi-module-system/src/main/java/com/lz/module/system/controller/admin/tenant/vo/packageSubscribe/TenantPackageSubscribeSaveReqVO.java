@@ -1,8 +1,11 @@
 package com.lz.module.system.controller.admin.tenant.vo.packageSubscribe;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -15,19 +18,25 @@ public class TenantPackageSubscribeSaveReqVO {
 
     @Schema(description = "套餐名", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
     @NotEmpty(message = "套餐名不能为空")
+    @Size(max = 32,min = 2, message = "套餐名长度为2~32个字符")
     private String packageName;
 
     @Schema(description = "套餐编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "套餐编码不能为空")
+    @Size(max = 32,min = 4, message = "套餐编码长度为4~32个字符")
     private String packageCode;
 
     @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "套餐类型不能为空")
-    private Boolean type;
+    private Integer packageType;
+
+    @Schema(description = "套餐状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @NotNull(message = "套餐状态不能为空")
+    private Integer packageStatus;
 
     @Schema(description = "LOGO", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "LOGO不能为空")
-    private String logo;
+    private String packageLogo;
 
     @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "赵六")
     @NotEmpty(message = "租户名不能为空")

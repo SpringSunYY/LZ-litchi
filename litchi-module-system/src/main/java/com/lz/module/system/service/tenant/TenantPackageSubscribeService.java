@@ -23,6 +23,7 @@ public interface TenantPackageSubscribeService {
      */
     Long createTenantPackageSubscribe(@Valid TenantPackageSubscribeSaveReqVO createReqVO);
 
+    Long insertTenantPackageSubscribe(TenantPackageSubscribeDO tenantPackageSubscribe);
     /**
      * 更新租户套餐订阅
      *
@@ -60,4 +61,21 @@ public interface TenantPackageSubscribeService {
      */
     PageResult<TenantPackageSubscribeDO> getTenantPackageSubscribePage(TenantPackageSubscribePageReqVO pageReqVO);
 
+    /**
+     * 获得租户套餐编码订阅列表 正在订阅的
+     *
+     * @param packageCode 套餐编码
+     * @return 租户套餐订阅列表
+     */
+    List<TenantPackageSubscribeDO> selectSubscribeByCurrentDateAndPackageCode(String packageCode);
+
+    /**
+     * 获得租户编码订阅列表 正在订阅的
+     *
+     * @param tenantCode 租户编码
+     * @return 租户套餐订阅列表
+     */
+    List<TenantPackageSubscribeDO> selectSubscribeByCurrentDateAndTenantCode(String tenantCode);
+
+    void updateBatch(List<TenantPackageSubscribeDO> tenantPackageSubscribeDOS);
 }

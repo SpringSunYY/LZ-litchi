@@ -16,10 +16,12 @@ public class TenantSaveReqVO {
 
     @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
     @NotEmpty(message = "租户名不能为空")
+    @Size(max = 32,min = 4,message = "租户名长度为 4~32 个字符")
     private String name;
 
     @Schema(description = "编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "编码不能为空")
+    @Length(max = 32,min = 4,message = "编码长度为 4~32 个字符")
     private String code;
 
     @Schema(description = "联系人的用户编号", example = "24903")
