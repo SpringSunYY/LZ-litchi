@@ -39,6 +39,9 @@ public class TenantPageReqVO extends PageParam {
     @Schema(description = "租户状态（0正常 1停用）", example = "1")
     private Integer status;
 
+    @Schema(description = "地区",example = "100000")
+    private String addressCode;
+
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;

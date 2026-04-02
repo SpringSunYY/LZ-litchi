@@ -26,6 +26,7 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
                 .eqIfPresent(TenantDO::getIndustry, reqVO.getIndustry())
                 .eqIfPresent(TenantDO::getType, reqVO.getType())
                 .eqIfPresent(TenantDO::getStatus, reqVO.getStatus())
+                .eqIfPresent(TenantDO::getAddressCode, reqVO.getAddressCode())
                 .betweenIfPresent(TenantDO::getCreateTime, reqVO.getCreateTime())
                 .orderByDesc(TenantDO::getId));
     }
