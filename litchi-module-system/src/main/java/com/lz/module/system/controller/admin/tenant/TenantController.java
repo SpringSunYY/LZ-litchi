@@ -26,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Set;
 
 import static com.lz.framework.apilog.core.enums.OperateTypeEnum.EXPORT;
 import static com.lz.framework.common.pojo.CommonResult.success;
@@ -114,6 +115,15 @@ public class TenantController {
     public CommonResult<TenantRespVO> getTenant(@RequestParam("id") Long id) {
         TenantDO tenant = tenantService.getTenant(id);
         return success(BeanUtils.toBean(tenant, TenantRespVO.class));
+    }
+
+    @GetMapping("/menu")
+    @Operation(summary = "获得租户菜单")
+    @Parameter(name = "code", description = "编码", required = true, example = "1024")
+    @PreAuthorize("@ss.hasPermission('system:tenant:query')")
+    public CommonResult<Set<Long>> getTenantMenu(@RequestParam("code") String code) {
+        Set<Long> menuIds = tenantService.getTenantMenu(code);
+        return success(menuIds);
     }
 
     @GetMapping("/page")

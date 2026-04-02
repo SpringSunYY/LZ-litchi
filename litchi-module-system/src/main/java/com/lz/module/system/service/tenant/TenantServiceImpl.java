@@ -11,6 +11,7 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.collection.ArrayUtils;
 import com.lz.framework.common.util.collection.CollectionUtils;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.datapermission.core.annotation.DataPermission;
 import com.lz.framework.tenant.config.TenantProperties;
 import com.lz.framework.tenant.core.context.TenantContextHolder;
@@ -138,6 +139,22 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    public Set<Long> getTenantMenu(String code) {
+        //查询租户
+        TenantDO tenant = this.selectByCode(code);
+        if (ObjectUtils.isEmpty(tenant)) {
+            throw exception(TENANT_NOT_EXISTS);
+        }
+        Set<Long> menuIds;
+        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
+            menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
+        } else {
+            menuIds = tenant.getMenuIds();
+        }
+        return menuIds;
+    }
+
+    @Override
     @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
     @DataPermission(enable = false) // 参见 https://gitee.com/zhijiantianya/litchi/pulls/1154 说明
     public Long createTenant(TenantSaveReqVO createReqVO) {
@@ -233,6 +250,10 @@ public class TenantServiceImpl implements TenantService {
     public void updateTenant(TenantSaveReqVO updateReqVO) {
         // 校验存在
         TenantDO tenant = validateUpdateTenant(updateReqVO.getId());
+        //code不可修改
+        if (!Objects.equals(tenant.getCode(), updateReqVO.getCode())) {
+            throw exception(TENANT_PROHIBIT_UPDATE_CODE);
+        }
         // 校验租户名称是否重复
         validTenantNameDuplicate(updateReqVO.getName(), updateReqVO.getId());
         // 校验租户域名是否重复
@@ -398,18 +419,17 @@ public class TenantServiceImpl implements TenantService {
         // 获得租户，然后获得菜单
         TenantDO tenant = getTenant(TenantContextHolder.getRequiredTenantId());
         Set<Long> menuIds;
-//        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
-        menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
-//        } else {
-////            menuIds = tenantPackageService.getTenantPackage(tenant.getPackageId()).getMenuIds();
-//        }
+        if (isSystemTenant(tenant)) { // 系统租户，菜单是全量的
+            menuIds = CollectionUtils.convertSet(menuService.getMenuList(), MenuDO::getId);
+        } else {
+            menuIds = tenant.getMenuIds();
+        }
         // 执行处理器
         handler.handle(menuIds);
     }
 
     private static boolean isSystemTenant(TenantDO tenant) {
-//        return Objects.equals(tenant.getPackageId(), TenantDO.PACKAGE_ID_SYSTEM);
-        return true;
+        return Objects.equals(tenant.getId(), TenantDO.PACKAGE_ID_SYSTEM);
     }
 
     private boolean isTenantDisable() {

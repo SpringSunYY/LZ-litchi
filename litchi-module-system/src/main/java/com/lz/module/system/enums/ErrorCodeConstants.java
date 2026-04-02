@@ -112,6 +112,7 @@ public interface ErrorCodeConstants {
     ErrorCode TENANT_NAME_DUPLICATE = new ErrorCode(1_002_015_004, "名字为【{}】的租户已存在");
     ErrorCode TENANT_WEBSITE_DUPLICATE = new ErrorCode(1_002_015_005, "域名为【{}】的租户已存在");
     ErrorCode TENANT_NOT_EXISTS_MENU = new ErrorCode(1_002_015_006, "租户没有成功绑定菜单，菜单权限为空");
+    ErrorCode TENANT_PROHIBIT_UPDATE_CODE=new ErrorCode(1_002_015_007, "租户编码不能修改");
 
     // ========== 租户套餐 1-002-016-000 ==========
     ErrorCode TENANT_PACKAGE_NOT_EXISTS = new ErrorCode(1_002_016_000, "租户套餐不存在");

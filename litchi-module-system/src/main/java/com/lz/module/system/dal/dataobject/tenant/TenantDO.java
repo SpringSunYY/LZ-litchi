@@ -31,7 +31,7 @@ public class TenantDO extends BaseDO {
     /**
      * 套餐编号 - 系统
      */
-    public static final Long PACKAGE_ID_SYSTEM = 0L;
+    public static final Long PACKAGE_ID_SYSTEM = 1L;
 
 
     /**

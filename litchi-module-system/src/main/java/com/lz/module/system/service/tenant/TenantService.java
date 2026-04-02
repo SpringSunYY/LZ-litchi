@@ -170,4 +170,6 @@ public interface TenantService {
      * @param tenantPackageSubscribe 租户套餐订阅
      */
     void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe);
+
+    Set<Long> getTenantMenu(String code);
 }
