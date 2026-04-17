@@ -93,7 +93,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
                         .setTotalPrice(totalPrice)
                         .setStartTime(startTime)
                         .setEndTime(endTime)
-                        .setPayStatus(SystemTenantPackageSubscribePayStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_2.getStatus())
+                        .setPayStatus(SystemTenantPackageSubscribePayStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_1.getStatus())
                         .setStatus(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_2.getStatus())
                         .setRemark("系统自动订阅内置套餐");
                 tenantPackageSubscribeService.insertTenantPackageSubscribe(tenantPackageSubscribe);
