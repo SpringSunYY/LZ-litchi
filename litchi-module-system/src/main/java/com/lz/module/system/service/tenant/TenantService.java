@@ -97,22 +97,6 @@ public interface TenantService {
      * 根据租户编号查询租户信息
      **/
     TenantDO selectByCode(String tenantCode);
-//    /**
-//     * 获得使用指定套餐的租户数量
-//     *
-//     * @param packageId 租户套餐编号
-//     * @return 租户数量
-//     */
-//    Long getTenantCountByPackageId(Long packageId);
-//
-//    /**
-//     * 获得使用指定套餐的租户数组
-//     *
-//     * @param packageId 租户套餐编号
-//     * @return 租户数组
-//     */
-//    List<TenantDO> getTenantListByPackageId(Long packageId);
-
 
     List<TenantDO> getTenantListByPackageCode(List<String> codes);
 

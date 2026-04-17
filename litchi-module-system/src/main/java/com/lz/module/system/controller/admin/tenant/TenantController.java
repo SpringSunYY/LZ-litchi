@@ -72,7 +72,20 @@ public class TenantController {
         if (tenant == null || CommonStatusEnum.isDisable(tenant.getStatus())) {
             return success(null);
         }
-        return success(new TenantRespVO().setId(tenant.getId()).setName(tenant.getName()));
+        return success(new TenantRespVO().setId(tenant.getId()).setName(tenant.getName()).setCode(tenant.getCode()));
+    }
+
+    @GetMapping("/get-by-code")
+    @PermitAll
+    @TenantIgnore
+    @Operation(summary = "使用编码，获得租户信息", description = "登录界面，根据用户的编码，获得租户信息")
+    @Parameter(name = "code", description = "编码", required = true, example = "litchi")
+    public CommonResult<TenantRespVO> getTenantByCode(@RequestParam("code") String code) {
+        TenantDO tenant = tenantService.selectByCode(code);
+        if (tenant == null || CommonStatusEnum.isDisable(tenant.getStatus())) {
+            return success(null);
+        }
+        return success(new TenantRespVO().setId(tenant.getId()).setName(tenant.getName()).setCode(tenant.getCode()));
     }
 
     @PostMapping("/create")
