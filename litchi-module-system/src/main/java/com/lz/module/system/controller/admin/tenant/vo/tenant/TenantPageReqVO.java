@@ -18,6 +18,9 @@ import static com.lz.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_
 @ToString(callSuper = true)
 public class TenantPageReqVO extends PageParam {
 
+    @Schema(description = "租户编号")
+    private Long id;
+
     @Schema(description = "租户名", example = "张三")
     private String name;
 

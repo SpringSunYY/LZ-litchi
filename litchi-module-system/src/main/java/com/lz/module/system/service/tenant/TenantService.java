@@ -177,7 +177,6 @@ public interface TenantService {
 
     boolean isSystemTenantById(Long id);
 
-
     /**
      * 更新租户的菜单
      *

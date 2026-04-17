@@ -19,6 +19,7 @@ public interface TenantMapper extends BaseMapperX<TenantDO> {
 
     default PageResult<TenantDO> selectPage(TenantPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<TenantDO>()
+                .eqIfPresent(TenantDO::getId, reqVO.getId())
                 .likeIfPresent(TenantDO::getName, reqVO.getName())
                 .eqIfPresent(TenantDO::getCode, reqVO.getCode())
                 .likeIfPresent(TenantDO::getContactName, reqVO.getContactName())

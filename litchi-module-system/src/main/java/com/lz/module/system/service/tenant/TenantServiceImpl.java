@@ -406,15 +406,10 @@ public class TenantServiceImpl implements TenantService {
     @TenantIgnore // 忽略多租户,查询所有租户,如果不是系统租户时，则进行多租户的过滤
     public PageResult<TenantDO> getTenantPage(TenantPageReqVO pageReqVO) {
         Long tenantId = TenantContextHolder.getTenantId();
-        if (isSystemTenantById(tenantId)) {
-            return tenantMapper.selectPage(pageReqVO);
-        } else {
-            PageResult<TenantDO>[] result = new PageResult[1];
-            TenantUtils.execute(tenantId, () -> {
-                result[0] = tenantMapper.selectPage(pageReqVO);
-            });
-            return result[0];
+        if (!isSystemTenantById(tenantId)) {
+            pageReqVO.setId(tenantId);
         }
+        return tenantMapper.selectPage(pageReqVO);
     }
 
     @Override
