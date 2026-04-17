@@ -172,4 +172,16 @@ public interface TenantService {
     void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe);
 
     Set<Long> getTenantMenu(String code);
+
+    boolean isSystemTenant(TenantDO tenant);
+
+    boolean isSystemTenantById(Long id);
+
+
+    /**
+     * 更新租户的菜单
+     *
+     * @param code 租户编号
+     */
+    void updateTenantMenuByTenantCode(String code);
 }

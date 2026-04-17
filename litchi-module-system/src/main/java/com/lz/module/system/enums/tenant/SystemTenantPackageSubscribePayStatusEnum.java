@@ -9,8 +9,8 @@ import java.util.Arrays;
 @Getter
 @AllArgsConstructor
 public enum SystemTenantPackageSubscribePayStatusEnum implements ArrayValuable<Integer> {
-    SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_1(1, "待支付"),
-    SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_2(2, "已支付");
+    SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_0(0, "未支付"),
+    SYSTEM_TENANT_PACKAGE_SUBSCRIBE_PAY_STATUS_ENUM_1(1, "已支付");
 
     public static final Integer[] ARRAYS = Arrays.stream(values()).map(SystemTenantPackageSubscribePayStatusEnum::getStatus).toArray(Integer[]::new);
 

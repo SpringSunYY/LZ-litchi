@@ -90,6 +90,13 @@ public class TenantController {
         return success(true);
     }
 
+    @GetMapping("/update/code")
+    @PreAuthorize("@ss.hasPermission('system:tenant:update')")
+    public CommonResult<Boolean> updateTenantCode(@RequestParam("code") String code) {
+        tenantService.updateTenantMenuByTenantCode(code);
+        return success(true);
+    }
+
     @DeleteMapping("/delete")
     @Operation(summary = "删除租户")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")

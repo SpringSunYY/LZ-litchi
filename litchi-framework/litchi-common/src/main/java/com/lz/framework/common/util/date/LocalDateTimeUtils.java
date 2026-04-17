@@ -24,7 +24,7 @@ import static cn.hutool.core.date.DatePattern.createFormatter;
  *
  * @author 荔枝源码
  */
-public class LocalDateTimeUtils {
+public class LocalDateTimeUtils extends LocalDateTimeUtil{
 
     /**
      * 空的 LocalDateTime 对象，主要用于 DB 唯一索引的默认值

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @Data
 public class TenantPackageSubscribeSaveReqVO {
 
-    @Schema(description = "套餐编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15016")
+    @Schema(description = "订阅编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "15016")
     private Long id;
 
     @Schema(description = "套餐名", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
@@ -26,17 +26,6 @@ public class TenantPackageSubscribeSaveReqVO {
     @Size(max = 32,min = 4, message = "套餐编码长度为4~32个字符")
     private String packageCode;
 
-    @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "套餐类型不能为空")
-    private Integer packageType;
-
-    @Schema(description = "套餐状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "套餐状态不能为空")
-    private Integer packageStatus;
-
-    @Schema(description = "LOGO", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "LOGO不能为空")
-    private String packageLogo;
 
     @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "赵六")
     @NotEmpty(message = "租户名不能为空")

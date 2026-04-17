@@ -14,6 +14,7 @@ import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.datapermission.core.annotation.DataPermission;
 import com.lz.framework.tenant.config.TenantProperties;
+import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.framework.tenant.core.context.TenantContextHolder;
 import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.controller.admin.permission.vo.role.RoleSaveReqVO;
@@ -51,8 +52,6 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.lz.framework.common.util.date.LocalDateTimeUtils.afterNow;
-import static com.lz.framework.common.util.date.LocalDateTimeUtils.beforeNow;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
 import static java.util.Collections.singleton;
 
@@ -120,8 +119,8 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe) {
-        //首先判断开始结束时间，是否在内
-        if (!afterNow(tenantPackageSubscribe.getStartTime()) || !beforeNow(tenantPackageSubscribe.getEndTime())) {
+        //首先判断开始结束时间，是否在内,如果不在
+        if (!LocalDateTimeUtil.isIn(LocalDateTimeUtil.now(), tenantPackageSubscribe.getStartTime(), tenantPackageSubscribe.getEndTime())) {
             return;
         }
         //判断套餐是否关闭
@@ -130,7 +129,13 @@ public class TenantServiceImpl implements TenantService {
         }
         //拿到套餐的菜单与租户的菜单
         Set<Long> packageMenuIds = tenantPackageDO.getMenuIds();
+        if (CollUtil.isEmpty(packageMenuIds)) {
+            return;
+        }
         Set<Long> tenantMenuIds = tenantDO.getMenuIds();
+        if (CollUtil.isEmpty(tenantMenuIds)) {
+            tenantMenuIds = new HashSet<>();
+        }
         tenantMenuIds.addAll(packageMenuIds);
         tenantDO.setMenuIds(tenantMenuIds);
         //先更新角色再更新租户，避免事务提交失败
@@ -171,7 +176,7 @@ public class TenantServiceImpl implements TenantService {
             }
             menuIds.addAll(tenantPackage.getMenuIds());
         }
-        if (ArrayUtils.isEmpty(menuIds)) {
+        if (CollUtil.isEmpty(menuIds)) {
             throw exception(TENANT_NOT_EXISTS_MENU);
         }
         // 创建租户
@@ -325,6 +330,35 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    @DSTransactional(propagation = DsPropagation.REQUIRES_NEW)
+    @TenantIgnore // 忽略多租户,防止套餐更新权限失败
+    public void updateTenantMenuByTenantCode(String code) {
+        //查到对应的租户
+        TenantDO tenantDO = this.selectByCode(code);
+        if (ObjectUtils.isNull(tenantDO)) {
+            return;
+        }
+        //拿到租户的套餐
+        List<TenantPackageDO> tenantPackages = tenantPackageService.getTenantPackageByCode(code);
+
+        Set<Long> menuIds = new HashSet<>();
+        for (TenantPackageDO tenantPackage : tenantPackages) {
+            if (ArrayUtils.isEmpty(tenantPackage.getMenuIds())) {
+                continue;
+            }
+            menuIds.addAll(tenantPackage.getMenuIds());
+        }
+        TenantUtils.execute(
+                tenantDO.getId(), () -> {
+                    updateTenantRoleMenu(tenantDO.getId(), menuIds);
+                    //更新租户权限
+                    tenantDO.setMenuIds(menuIds);
+                    tenantMapper.updateById(tenantDO);
+                }
+        );
+    }
+
+    @Override
     public void deleteTenant(Long id) {
         // 校验存在
         validateUpdateTenant(id);
@@ -354,13 +388,33 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    @TenantIgnore // 忽略多租户,查询所有租户,如果不是系统租户时，则进行多租户的过滤
     public TenantDO getTenant(Long id) {
-        return tenantMapper.selectById(id);
+        Long tenantId = TenantContextHolder.getTenantId();
+        if (isSystemTenantById(tenantId)) {
+            return tenantMapper.selectById(id);
+        } else {
+            TenantDO[] result = new TenantDO[1];
+            TenantUtils.execute(tenantId, () -> {
+                result[0] = tenantMapper.selectById(id);
+            });
+            return result[0];
+        }
     }
 
     @Override
+    @TenantIgnore // 忽略多租户,查询所有租户,如果不是系统租户时，则进行多租户的过滤
     public PageResult<TenantDO> getTenantPage(TenantPageReqVO pageReqVO) {
-        return tenantMapper.selectPage(pageReqVO);
+        Long tenantId = TenantContextHolder.getTenantId();
+        if (isSystemTenantById(tenantId)) {
+            return tenantMapper.selectPage(pageReqVO);
+        } else {
+            PageResult<TenantDO>[] result = new PageResult[1];
+            TenantUtils.execute(tenantId, () -> {
+                result[0] = tenantMapper.selectPage(pageReqVO);
+            });
+            return result[0];
+        }
     }
 
     @Override
@@ -382,16 +436,6 @@ public class TenantServiceImpl implements TenantService {
     public List<TenantDO> getTenantListByPackageCode(List<String> codes) {
         return tenantMapper.selectTenantByCodes(codes);
     }
-
-//    @Override
-//    public Long getTenantCountByPackageId(Long packageId) {
-//        return tenantMapper.selectCountByPackageId(packageId);
-//    }
-//
-//    @Override
-//    public List<TenantDO> getTenantListByPackageId(Long packageId) {
-//        return tenantMapper.selectListByPackageId(packageId);
-//    }
 
     @Override
     public List<TenantDO> getTenantListByStatus(Integer status) {
@@ -428,8 +472,15 @@ public class TenantServiceImpl implements TenantService {
         handler.handle(menuIds);
     }
 
-    private static boolean isSystemTenant(TenantDO tenant) {
+    @Override
+    public boolean isSystemTenant(TenantDO tenant) {
         return Objects.equals(tenant.getId(), TenantDO.PACKAGE_ID_SYSTEM);
+    }
+
+    @Override
+    public boolean isSystemTenantById(Long id) {
+        return Objects.equals(id, TenantDO.PACKAGE_ID_SYSTEM);
+
     }
 
     private boolean isTenantDisable() {

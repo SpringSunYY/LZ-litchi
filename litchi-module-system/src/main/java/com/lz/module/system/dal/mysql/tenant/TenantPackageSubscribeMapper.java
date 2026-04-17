@@ -45,7 +45,7 @@ public interface TenantPackageSubscribeMapper extends BaseMapperX<TenantPackageS
         //开始时间小于等于当前时间，结束时间大于当前时间，正常
         LocalDateTime now = LocalDateTimeUtil.now();
         return selectList(new LambdaQueryWrapperX<TenantPackageSubscribeDO>()
-                .eq(TenantPackageSubscribeDO::getPackageCode, packageCode)
+                .eqIfPresent(TenantPackageSubscribeDO::getPackageCode, packageCode)
                 .eq(TenantPackageSubscribeDO::getStatus, SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_2.getStatus())
                 .le(TenantPackageSubscribeDO::getStartTime, now)
                 .ge(TenantPackageSubscribeDO::getEndTime, now)
@@ -60,7 +60,7 @@ public interface TenantPackageSubscribeMapper extends BaseMapperX<TenantPackageS
         //开始时间小于等于当前时间，结束时间大于当前时间，正常
         LocalDateTime now = LocalDateTimeUtil.now();
         return selectList(new LambdaQueryWrapperX<TenantPackageSubscribeDO>()
-                .eq(TenantPackageSubscribeDO::getTenantCode, tenantCode)
+                .eqIfPresent(TenantPackageSubscribeDO::getTenantCode, tenantCode)
                 .eq(TenantPackageSubscribeDO::getStatus, SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_2.getStatus())
                 .le(TenantPackageSubscribeDO::getStartTime, now)
                 .ge(TenantPackageSubscribeDO::getEndTime, now)

@@ -19,4 +19,7 @@ public class MenuSimpleRespVO {
     @Schema(description = "类型，参见 MenuTypeEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer type;
 
+    @Schema(description = "备注", example = "备注")
+    private String remark;
+
 }

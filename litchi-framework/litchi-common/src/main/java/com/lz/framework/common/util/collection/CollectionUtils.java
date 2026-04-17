@@ -3,15 +3,14 @@ package com.lz.framework.common.util.collection;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ArrayUtil;
-import com.lz.framework.common.pojo.PageResult;
 import com.google.common.collect.ImmutableMap;
+import com.lz.framework.common.pojo.PageResult;
 
 import java.util.*;
 import java.util.function.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static cn.hutool.core.convert.Convert.toCollection;
 import static java.util.Arrays.asList;
 
 /**
@@ -19,7 +18,7 @@ import static java.util.Arrays.asList;
  *
  * @author 荔枝源码
  */
-public class CollectionUtils {
+public class CollectionUtils extends CollectionUtil {
 
     public static boolean containsAny(Object source, Object... targets) {
         return asList(targets).contains(source);
@@ -346,7 +345,7 @@ public class CollectionUtils {
      */
     @SuppressWarnings("unchecked")
     public static <T> LinkedHashSet<T> toLinkedHashSet(Class<T> elementType, Object value) {
-        return (LinkedHashSet<T>) toCollection(LinkedHashSet.class, elementType, value);
+        return (LinkedHashSet<T>) cn.hutool.core.convert.Convert.toCollection(LinkedHashSet.class, elementType, value);
     }
 
 }

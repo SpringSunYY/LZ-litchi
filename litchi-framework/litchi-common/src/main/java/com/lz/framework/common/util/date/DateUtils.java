@@ -1,5 +1,6 @@
 package com.lz.framework.common.util.date;
 
+import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.date.LocalDateTimeUtil;
 
 import java.time.*;
@@ -11,7 +12,7 @@ import java.util.Date;
  *
  * @author 荔枝源码
  */
-public class DateUtils {
+public class DateUtils extends DateUtil {
 
     /**
      * 时区 - 默认
