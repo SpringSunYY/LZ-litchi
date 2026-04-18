@@ -17,7 +17,6 @@
         <module>litchi-module-infra</module>
         <module>litchi-module-member</module>
         <module>litchi-module-bpm</module>
-        <module>litchi-module-report</module>
         <module>litchi-module-mp</module>
         <module>litchi-module-pay</module>
         <module>litchi-module-mall</module>
