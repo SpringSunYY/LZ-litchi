@@ -8,10 +8,7 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
-import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
-import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantRespSimpleVO;
-import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantRespVO;
-import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
+import com.lz.module.system.controller.admin.tenant.vo.tenant.*;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.service.tenant.TenantService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -91,7 +88,7 @@ public class TenantController {
     @PostMapping("/create")
     @Operation(summary = "创建租户")
     @PreAuthorize("@ss.hasPermission('system:tenant:create')")
-    public CommonResult<Long> createTenant(@Valid @RequestBody TenantSaveReqVO createReqVO) {
+    public CommonResult<TenantSaveRespVO> createTenant(@Valid @RequestBody TenantSaveReqVO createReqVO) {
         return success(tenantService.createTenant(createReqVO));
     }
 

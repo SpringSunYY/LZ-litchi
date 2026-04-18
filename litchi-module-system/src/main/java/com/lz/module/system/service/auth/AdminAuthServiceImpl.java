@@ -1,17 +1,24 @@
 package com.lz.module.system.service.auth;
 
 import cn.hutool.core.util.ObjectUtil;
+import com.anji.captcha.model.common.ResponseModel;
+import com.anji.captcha.model.vo.CaptchaVO;
+import com.anji.captcha.service.CaptchaService;
+import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.enums.UserTypeEnum;
 import com.lz.framework.common.util.monitor.TracerUtils;
 import com.lz.framework.common.util.servlet.ServletUtils;
 import com.lz.framework.common.util.validation.ValidationUtils;
+import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.api.logger.dto.LoginLogCreateReqDTO;
 import com.lz.module.system.api.sms.SmsCodeApi;
 import com.lz.module.system.api.sms.dto.code.SmsCodeUseReqDTO;
 import com.lz.module.system.api.social.dto.SocialUserBindReqDTO;
 import com.lz.module.system.api.social.dto.SocialUserRespDTO;
 import com.lz.module.system.controller.admin.auth.vo.*;
+import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
+import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveRespVO;
 import com.lz.module.system.convert.auth.AuthConvert;
 import com.lz.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
 import com.lz.module.system.dal.dataobject.user.AdminUserDO;
@@ -19,15 +26,14 @@ import com.lz.module.system.enums.logger.LoginLogTypeEnum;
 import com.lz.module.system.enums.logger.LoginResultEnum;
 import com.lz.module.system.enums.oauth2.OAuth2ClientConstants;
 import com.lz.module.system.enums.sms.SmsSceneEnum;
+import com.lz.module.system.enums.tenant.SystemTenantIndustryEnumEnum;
+import com.lz.module.system.enums.tenant.SystemTenantTypeEnum;
 import com.lz.module.system.service.logger.LoginLogService;
 import com.lz.module.system.service.member.MemberService;
 import com.lz.module.system.service.oauth2.OAuth2TokenService;
 import com.lz.module.system.service.social.SocialUserService;
+import com.lz.module.system.service.tenant.TenantService;
 import com.lz.module.system.service.user.AdminUserService;
-import com.anji.captcha.model.common.ResponseModel;
-import com.anji.captcha.model.vo.CaptchaVO;
-import com.anji.captcha.service.CaptchaService;
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import jakarta.validation.Validator;
 import lombok.Setter;
@@ -67,7 +73,8 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     private CaptchaService captchaService;
     @Resource
     private SmsCodeApi smsCodeApi;
-
+    @Resource
+    private TenantService tenantService;
     /**
      * 验证码的开关，默认为 true
      */
@@ -266,12 +273,27 @@ public class AdminAuthServiceImpl implements AdminAuthService {
     public AuthLoginRespVO register(AuthRegisterReqVO registerReqVO) {
         // 1. 校验验证码
         validateCaptcha(registerReqVO);
-
-        // 2. 校验用户名是否已存在
-        Long userId = userService.registerUser(registerReqVO);
-
-        // 3. 创建 Token 令牌，记录登录日志
-        return createTokenAfterLoginSuccess(userId, registerReqVO.getUsername(), LoginLogTypeEnum.LOGIN_USERNAME);
+        // 2.如果是开启租户情况
+        if (!tenantService.isTenantDisable()) {
+            TenantSaveReqVO createReqVO = new TenantSaveReqVO();
+            createReqVO.setName(registerReqVO.getTenantName());
+            createReqVO.setCode(registerReqVO.getTenantCode());
+            createReqVO.setContactMobile(registerReqVO.getContactMobile());
+            createReqVO.setContactName(registerReqVO.getUsername());
+            createReqVO.setUsername(registerReqVO.getUsername());
+            createReqVO.setPassword(registerReqVO.getPassword());
+            createReqVO.setType(SystemTenantTypeEnum.SYSTEM_TENANT_TYPE_ENUM_0.getStatus());
+            createReqVO.setIndustry(SystemTenantIndustryEnumEnum.SYSTEM_TENANT_INDUSTRY_ENUM_0.getStatus());
+            TenantSaveRespVO tenant = tenantService.createTenant(createReqVO);
+            return TenantUtils.execute(tenant.getTenantId(), () -> {
+                // 4. 创建 Token 令牌，记录登录日志
+                return createTokenAfterLoginSuccess(tenant.getUserId(), registerReqVO.getUsername(), LoginLogTypeEnum.LOGIN_USERNAME);
+            });
+        } else {
+            // 3. 校验用户名是否已存在
+            Long userId = userService.registerUser(registerReqVO);
+            return createTokenAfterLoginSuccess(userId, registerReqVO.getUsername(), LoginLogTypeEnum.LOGIN_USERNAME);
+        }
     }
 
     @VisibleForTesting

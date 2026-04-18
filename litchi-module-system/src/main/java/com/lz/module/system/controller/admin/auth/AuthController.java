@@ -7,6 +7,7 @@ import com.lz.framework.common.enums.UserTypeEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.security.config.SecurityProperties;
 import com.lz.framework.security.core.util.SecurityFrameworkUtils;
+import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.system.controller.admin.auth.vo.*;
 import com.lz.module.system.convert.auth.AuthConvert;
 import com.lz.module.system.dal.dataobject.permission.MenuDO;
@@ -118,6 +119,7 @@ public class AuthController {
     @PostMapping("/register")
     @PermitAll
     @Operation(summary = "注册用户")
+    @TenantIgnore
     public CommonResult<AuthLoginRespVO> register(@RequestBody @Valid AuthRegisterReqVO registerReqVO) {
         return success(authService.register(registerReqVO));
     }

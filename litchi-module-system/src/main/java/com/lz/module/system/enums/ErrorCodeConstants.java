@@ -4,7 +4,7 @@ import com.lz.framework.common.exception.ErrorCode;
 
 /**
  * System 错误码枚举类
- *
+ * <p>
  * system 系统，使用 1-002-000-000 段
  */
 public interface ErrorCodeConstants {
@@ -16,6 +16,7 @@ public interface ErrorCodeConstants {
     ErrorCode AUTH_THIRD_LOGIN_NOT_BIND = new ErrorCode(1_002_000_005, "未绑定账号，需要进行绑定");
     ErrorCode AUTH_MOBILE_NOT_EXISTS = new ErrorCode(1_002_000_007, "手机号不存在");
     ErrorCode AUTH_REGISTER_CAPTCHA_CODE_ERROR = new ErrorCode(1_002_000_008, "验证码不正确，原因：{}");
+    ErrorCode AUTH_REGISTER_TENANT_CODE_EXISTS = new ErrorCode(1_002_000_009, "租户编码已经存在：{}");
 
     // ========== 菜单模块 1-002-001-000 ==========
     ErrorCode MENU_NAME_DUPLICATE = new ErrorCode(1_002_001_000, "已经存在该名字的菜单");
@@ -49,7 +50,7 @@ public interface ErrorCodeConstants {
 
     // ========== 部门模块 1-002-004-000 ==========
     ErrorCode DEPT_NAME_DUPLICATE = new ErrorCode(1_002_004_000, "已经存在该名字的部门");
-    ErrorCode DEPT_PARENT_NOT_EXITS = new ErrorCode(1_002_004_001,"父级部门不存在");
+    ErrorCode DEPT_PARENT_NOT_EXITS = new ErrorCode(1_002_004_001, "父级部门不存在");
     ErrorCode DEPT_NOT_FOUND = new ErrorCode(1_002_004_002, "当前部门不存在");
     ErrorCode DEPT_EXITS_CHILDREN = new ErrorCode(1_002_004_003, "存在子部门，无法删除");
     ErrorCode DEPT_PARENT_ERROR = new ErrorCode(1_002_004_004, "不能设置自己为父部门");
@@ -112,7 +113,7 @@ public interface ErrorCodeConstants {
     ErrorCode TENANT_NAME_DUPLICATE = new ErrorCode(1_002_015_004, "名字为【{}】的租户已存在");
     ErrorCode TENANT_WEBSITE_DUPLICATE = new ErrorCode(1_002_015_005, "域名为【{}】的租户已存在");
     ErrorCode TENANT_NOT_EXISTS_MENU = new ErrorCode(1_002_015_006, "租户没有成功绑定菜单，菜单权限为空");
-    ErrorCode TENANT_PROHIBIT_UPDATE_CODE=new ErrorCode(1_002_015_007, "租户编码不能修改");
+    ErrorCode TENANT_PROHIBIT_UPDATE_CODE = new ErrorCode(1_002_015_007, "租户编码不能修改");
 
     // ========== 租户套餐 1-002-016-000 ==========
     ErrorCode TENANT_PACKAGE_NOT_EXISTS = new ErrorCode(1_002_016_000, "租户套餐不存在");

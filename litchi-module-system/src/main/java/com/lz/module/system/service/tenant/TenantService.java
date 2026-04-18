@@ -4,6 +4,7 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.tenant.core.context.TenantContextHolder;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
+import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveRespVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageSubscribeDO;
@@ -25,9 +26,9 @@ public interface TenantService {
      * 创建租户
      *
      * @param createReqVO 创建信息
-     * @return 编号
+     * @return 编号，用户编号
      */
-    Long createTenant(@Valid TenantSaveReqVO createReqVO);
+    TenantSaveRespVO createTenant(@Valid TenantSaveReqVO createReqVO);
 
     /**
      * 更新租户
@@ -167,4 +168,6 @@ public interface TenantService {
      * @param code 租户编号
      */
     void updateTenantMenuByTenantCode(String code);
+
+    boolean isTenantDisable();
 }

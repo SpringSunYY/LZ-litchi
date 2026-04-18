@@ -20,6 +20,7 @@ import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.controller.admin.permission.vo.role.RoleSaveReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
+import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveRespVO;
 import com.lz.module.system.convert.tenant.TenantConvert;
 import com.lz.module.system.dal.dataobject.permission.MenuDO;
 import com.lz.module.system.dal.dataobject.permission.RoleDO;
@@ -50,6 +51,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
@@ -162,7 +164,7 @@ public class TenantServiceImpl implements TenantService {
     @Override
     @DSTransactional // 多数据源，使用 @DSTransactional 保证本地事务，以及数据源的切换
     @DataPermission(enable = false) // 参见 https://gitee.com/zhijiantianya/litchi/pulls/1154 说明
-    public Long createTenant(TenantSaveReqVO createReqVO) {
+    public TenantSaveRespVO createTenant(TenantSaveReqVO createReqVO) {
         // 校验租户名称是否重复
         validTenantNameDuplicate(createReqVO.getName(), null);
         // 校验租户域名是否重复
@@ -189,14 +191,16 @@ public class TenantServiceImpl implements TenantService {
         tenant.setBalanceAmount(BigDecimal.ZERO);
         tenant.setRechargeAmount(BigDecimal.ZERO);
         tenantMapper.insert(tenant);
+        //用户编号
+        AtomicReference<Long> userId = new AtomicReference<>();
         // 创建租户的管理员
         TenantUtils.execute(tenant.getId(), () -> {
-            initTenantMenu(createReqVO, menuIds, tenant, tenantPackages);
+            userId.set(initTenantMenu(createReqVO, menuIds, tenant, tenantPackages));
         });
-        return tenant.getId();
+        return new TenantSaveRespVO().setTenantId(tenant.getId()).setUserId(userId.get());
     }
 
-    private void initTenantMenu(TenantSaveReqVO createReqVO, Set<Long> menuIds, TenantDO tenant, List<TenantPackageDO> tenantPackages) {
+    private Long initTenantMenu(TenantSaveReqVO createReqVO, Set<Long> menuIds, TenantDO tenant, List<TenantPackageDO> tenantPackages) {
         // 创建角色
         Long roleId = createRole(menuIds);
         // 创建用户，并分配角色
@@ -229,6 +233,7 @@ public class TenantServiceImpl implements TenantService {
             subscribeDOS.add(tenantPackageSubscribe);
         });
         tenantPackageSubscribeMapper.insertBatch(subscribeDOS);
+        return userId;
     }
 
     private Long createUser(Long roleId, TenantSaveReqVO createReqVO) {
@@ -478,7 +483,8 @@ public class TenantServiceImpl implements TenantService {
 
     }
 
-    private boolean isTenantDisable() {
+    @Override
+    public boolean isTenantDisable() {
         return tenantProperties == null || Boolean.FALSE.equals(tenantProperties.getEnable());
     }
 

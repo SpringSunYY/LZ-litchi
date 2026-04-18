@@ -1,6 +1,8 @@
 package com.lz.module.system.controller.admin.auth.vo;
 
 
+import cn.hutool.core.util.ObjectUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
@@ -26,4 +28,19 @@ public class AuthRegisterReqVO extends CaptchaVerificationReqVO {
     @NotEmpty(message = "密码不能为空")
     @Length(min = 4, max = 16, message = "密码长度为 4-16 位")
     private String password;
+
+    // ========== 仅【开启租户】时，需要传递的字段 ==========
+    private String tenantCode;
+    @Schema(description = "租户名", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
+    @NotEmpty(message = "租户名不能为空")
+    @Size(max = 32,min = 4,message = "租户名长度为 4~32 个字符")
+    private String tenantName;
+
+    @Schema(description = "联系人", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
+    @NotEmpty(message = "联系人不能为空")
+    private String contactName;
+
+    @Schema(description = "联系手机")
+    private String contactMobile;
+
 }
