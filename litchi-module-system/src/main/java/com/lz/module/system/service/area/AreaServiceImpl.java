@@ -2,18 +2,22 @@ package com.lz.module.system.service.area;
 
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.system.controller.admin.ip.vo.AreaListReqVO;
+import com.lz.module.system.controller.admin.ip.vo.AreaNodeRespVO;
 import com.lz.module.system.controller.admin.ip.vo.AreaSaveReqVO;
 import com.lz.module.system.dal.dataobject.area.AreaDO;
 import com.lz.module.system.dal.mysql.area.AreaMapper;
 import com.lz.module.system.dal.redis.RedisKeyConstants;
 import jakarta.annotation.Resource;
+import jakarta.validation.Valid;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
@@ -30,9 +34,9 @@ public class AreaServiceImpl implements AreaService {
     @Resource
     private AreaMapper areaMapper;
 
-    @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.AREA,
+    @CacheEvict(cacheNames = {RedisKeyConstants.AREA, RedisKeyConstants.AREA_TREE},
             allEntries = true) // allEntries 清空所有缓存，因为可能修改到 name 字段，不好清理
+    @Override
     public Long createArea(AreaSaveReqVO createReqVO) {
         // 校验父级ID的有效性
         validateParentArea(null, createReqVO.getParentId());
@@ -47,8 +51,22 @@ public class AreaServiceImpl implements AreaService {
         return area.getId();
     }
 
+    @CacheEvict(cacheNames = {RedisKeyConstants.AREA, RedisKeyConstants.AREA_TREE},
+            allEntries = true) // allEntries 清空所有缓存，因为可能修改到 name 字段，不好清理
     @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.AREA,
+    public void deleteArea(Long id) {
+        // 校验存在
+        validateAreaExists(id);
+        // 校验是否有子地区信息
+        if (areaMapper.selectCountByParentId(id) > 0) {
+            throw exception(AREA_EXITS_CHILDREN);
+        }
+        // 删除
+        areaMapper.deleteById(id);
+    }
+
+    @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.AREA, RedisKeyConstants.AREA_TREE},
             allEntries = true) // allEntries 清空所有缓存，因为可能修改到 name 字段，不好清理
     public void updateArea(AreaSaveReqVO updateReqVO) {
         // 校验存在
@@ -61,20 +79,6 @@ public class AreaServiceImpl implements AreaService {
         // 更新
         AreaDO updateObj = BeanUtils.toBean(updateReqVO, AreaDO.class);
         areaMapper.updateById(updateObj);
-    }
-
-    @CacheEvict(cacheNames = RedisKeyConstants.AREA,
-            allEntries = true) // allEntries 清空所有缓存，因为可能修改到 name 字段，不好清理
-    @Override
-    public void deleteArea(Long id) {
-        // 校验存在
-        validateAreaExists(id);
-        // 校验是否有子地区信息
-        if (areaMapper.selectCountByParentId(id) > 0) {
-            throw exception(AREA_EXITS_CHILDREN);
-        }
-        // 删除
-        areaMapper.deleteById(id);
     }
 
 
@@ -137,10 +141,32 @@ public class AreaServiceImpl implements AreaService {
         return areaMapper.selectById(id);
     }
 
-    @Cacheable(cacheNames = RedisKeyConstants.AREA)
+    @Cacheable(cacheNames = {RedisKeyConstants.AREA})
     @Override
     public List<AreaDO> getAreaList(AreaListReqVO listReqVO) {
         return areaMapper.selectList(listReqVO);
     }
 
+    @Cacheable(cacheNames = RedisKeyConstants.AREA_TREE)
+    @Override
+    public List<AreaNodeRespVO> getAreaTree(@Valid AreaListReqVO req) {
+        // 1. 查询所有地区数据
+        List<AreaDO> allAreas = areaMapper.selectList(req);
+        // 2. 按 parentId 分组
+        Map<Long, List<AreaDO>> childrenMap = allAreas.stream()
+                .collect(java.util.stream.Collectors.groupingBy(AreaDO::getParentId));
+        // 3. 递归构建树，从根节点（parentId = 0）开始
+        return buildTree(AreaDO.PARENT_ID_ROOT, childrenMap);
+    }
+
+    private List<AreaNodeRespVO> buildTree(Long parentId, Map<Long, List<AreaDO>> childrenMap) {
+        List<AreaDO> children = childrenMap.getOrDefault(parentId, List.of());
+        return children.stream()
+                .map(area -> {
+                    AreaNodeRespVO node = BeanUtils.toBean(area, AreaNodeRespVO.class);
+                    node.setChildren(buildTree(area.getId(), childrenMap));
+                    return node;
+                })
+                .collect(Collectors.toList());
+    }
 }

@@ -39,10 +39,8 @@ public class AreaController {
 
     @GetMapping("/tree")
     @Operation(summary = "获得地区树")
-    public CommonResult<List<AreaNodeRespVO>> getAreaTree() {
-        Area area = AreaUtils.getArea(Area.ID_CHINA);
-        Assert.notNull(area, "获取不到中国");
-        return success(BeanUtils.toBean(area.getChildren(), AreaNodeRespVO.class));
+    public CommonResult<List<AreaNodeRespVO>> getAreaTree(@Valid AreaListReqVO req) {
+        return success(areaService.getAreaTree(req));
     }
 
     @GetMapping("/get-by-ip")

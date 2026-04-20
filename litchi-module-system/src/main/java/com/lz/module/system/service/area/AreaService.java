@@ -1,6 +1,7 @@
 package com.lz.module.system.service.area;
 
 import com.lz.module.system.controller.admin.ip.vo.AreaListReqVO;
+import com.lz.module.system.controller.admin.ip.vo.AreaNodeRespVO;
 import com.lz.module.system.controller.admin.ip.vo.AreaSaveReqVO;
 import com.lz.module.system.dal.dataobject.area.AreaDO;
 import jakarta.validation.Valid;
@@ -52,5 +53,12 @@ public interface AreaService {
      * @return 地区信息列表
      */
     List<AreaDO> getAreaList(AreaListReqVO listReqVO);
+
+    /**
+     * 获得地区树
+     *
+     * @return 地区树
+     */
+    List<AreaNodeRespVO> getAreaTree(@Valid AreaListReqVO req);
 
 }
