@@ -20,14 +20,13 @@ public class BannerApplicationRunner implements ApplicationRunner {
     public void run(ApplicationArguments args) {
         ThreadUtil.execute(() -> {
             ThreadUtil.sleep(1, TimeUnit.SECONDS); // 延迟 1 秒，保证输出到结尾
-            log.info("\n----------------------------------------------------------\n\t" +
-                            "项目启动成功！\n\t"+
-                            "----------------------------------------------------------");
-
-            // 数据报表
-            if (isNotPresent("com.lz.module.report.framework.security.config.SecurityConfiguration")) {
-                System.out.println("[报表模块 litchi-module-report - 已禁用][参考 https://doc.iocoder.cn/report/ 开启]");
-            }
+            String log = """
+                    \n
+                    ----------------------------------------------------------
+                    项目启动成功！
+                    ----------------------------------------------------------
+                    """;
+            BannerApplicationRunner.log.info(log);
             // 工作流
             if (isNotPresent("com.lz.module.bpm.framework.flowable.config.BpmFlowableConfiguration")) {
                 System.out.println("[工作流模块 litchi-module-bpm - 已禁用][参考 https://doc.iocoder.cn/bpm/ 开启]");

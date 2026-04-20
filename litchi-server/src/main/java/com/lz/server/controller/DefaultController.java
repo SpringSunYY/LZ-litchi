@@ -52,12 +52,6 @@ public class DefaultController {
                 "[CRM 模块 litchi-module-crm - 已禁用][参考 https://doc.iocoder.cn/crm/build/ 开启]");
     }
 
-    @RequestMapping(value = { "/admin-api/report/**"})
-    public CommonResult<Boolean> report404() {
-        return CommonResult.error(NOT_IMPLEMENTED.getCode(),
-                "[报表模块 litchi-module-report - 已禁用][参考 https://doc.iocoder.cn/report/ 开启]");
-    }
-
     @RequestMapping(value = { "/admin-api/pay/**"})
     public CommonResult<Boolean> pay404() {
         return CommonResult.error(NOT_IMPLEMENTED.getCode(),

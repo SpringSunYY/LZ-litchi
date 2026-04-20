@@ -268,7 +268,7 @@ litchi:
   codegen:
     base-package: ${litchi.info.base-package}
     db-schemas: ${spring.datasource.dynamic.datasource.master.name}
-    front-type: 20 # 前端模版的类型，参见 CodegenFrontTypeEnum 枚举类
+    front-type: 40 # 前端模版的类型，参见 CodegenFrontTypeEnum 枚举类
     vo-type: 10 # VO 的类型，参见 CodegenVOTypeEnum 枚举类
     delete-batch-enable: true # 是否生成批量删除接口
     unit-test-enable: false # 是否生成单元测试
@@ -277,7 +277,6 @@ litchi:
     enable-user: false
     user-prefix: /app-api
     ignore-urls:
-      - /jmreport/* # 积木报表，无法携带租户编号
     ignore-visit-urls:
       - /admin-api/system/user/profile/**
       - /admin-api/system/auth/**
@@ -292,8 +291,6 @@ litchi:
       - mail_account
       - mail_template
       - sms_template
-      - iot:device
-      - iot:thing_model_list
   sms-code: # 短信验证码相关的配置项
     expire-times: 10m
     send-frequency: 1m
@@ -317,6 +314,3 @@ litchi:
         customer: E77DF18BE109F454A5CD319E44BF5177
 
 debug: false
-# 插件配置 TODO YY：【IOT】需要处理下
-pf4j:
-  pluginsDir: /Users/anhaohao/code/gitee/litchi/plugins # 插件目录
