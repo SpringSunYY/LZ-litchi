@@ -178,4 +178,11 @@ public interface ErrorCodeConstants {
     // ========== 站内信发送 1-002-028-000 ==========
     ErrorCode NOTIFY_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1_002_028_000, "模板参数({})缺失");
 
+    // ========== 地区信息 1-002-029-00 补充编号 ==========
+    ErrorCode AREA_NOT_EXISTS = new ErrorCode(1_002_029_000, "地区信息不存在");
+    ErrorCode AREA_EXITS_CHILDREN = new ErrorCode(1_002_029_001, "存在存在子地区信息，无法删除");
+    ErrorCode AREA_PARENT_NOT_EXITS = new ErrorCode(1_002_029_002, "父级地区信息不存在");
+    ErrorCode AREA_PARENT_ERROR = new ErrorCode(1_002_029_003, "不能设置自己为父地区信息");
+    ErrorCode AREA_NAME_DUPLICATE = new ErrorCode(1_002_029_004, "已经存在该地区名称的地区信息");
+    ErrorCode AREA_PARENT_IS_CHILD = new ErrorCode(1_002_029_005, "不能设置自己的子Area为父Area");
 }

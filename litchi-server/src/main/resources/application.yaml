@@ -282,7 +282,9 @@ litchi:
       - /admin-api/system/auth/**
       - /admin-api/trade/*
       - /admin-api/system/tenant-package-subscribe/**
+      - /admin-api/system/area/**
     ignore-tables:
+      - system-area
     ignore-caches:
       - user_role_ids
       - permission_menu_ids

@@ -107,4 +107,12 @@ public interface RedisKeyConstants {
      */
     String WXA_SUBSCRIBE_TEMPLATE = "wxa_subscribe_template";
 
+    /**
+     * 地区缓存
+     * <p>
+     * KEY 格式：area:{id}
+     * VALUE 数据格式：String 地区信息
+     */
+    String AREA = "area";
+
 }
