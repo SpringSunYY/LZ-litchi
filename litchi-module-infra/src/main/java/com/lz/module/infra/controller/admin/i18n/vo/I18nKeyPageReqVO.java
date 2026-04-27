@@ -18,8 +18,6 @@ public class I18nKeyPageReqVO extends PageParam {
     @Schema(description = "键")
     private String messageKey;
 
-    @Schema(description = "使用端")
-    private Integer localeTarget;
 
     @Schema(description = "是否内置")
     private Integer isSystem;

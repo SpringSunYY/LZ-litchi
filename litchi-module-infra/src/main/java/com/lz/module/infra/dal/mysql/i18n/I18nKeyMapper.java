@@ -19,7 +19,6 @@ public interface I18nKeyMapper extends BaseMapperX<I18nKeyDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<I18nKeyDO>()
                 .likeIfPresent(I18nKeyDO::getMessageName, reqVO.getMessageName())
                 .likeIfPresent(I18nKeyDO::getMessageKey, reqVO.getMessageKey())
-                .eqIfPresent(I18nKeyDO::getLocaleTarget, reqVO.getLocaleTarget())
                 .eqIfPresent(I18nKeyDO::getIsSystem, reqVO.getIsSystem())
                 .eqIfPresent(I18nKeyDO::getModuleType, reqVO.getModuleType())
                 .eqIfPresent(I18nKeyDO::getUseType, reqVO.getUseType())

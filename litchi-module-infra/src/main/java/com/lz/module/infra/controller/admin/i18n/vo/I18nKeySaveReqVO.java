@@ -19,10 +19,6 @@ public class I18nKeySaveReqVO {
     @NotEmpty(message = "键不能为空")
     private String messageKey;
 
-    @Schema(description = "使用端", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "使用端不能为空")
-    private Integer localeTarget;
-
     @Schema(description = "是否内置", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "是否内置不能为空")
     private Integer isSystem;

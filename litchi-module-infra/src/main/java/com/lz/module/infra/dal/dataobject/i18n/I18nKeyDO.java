@@ -33,11 +33,6 @@ public class I18nKeyDO extends BaseDO {
      */
     private String messageKey;
     /**
-     * 使用端
-     *
-     */
-    private Integer localeTarget;
-    /**
      * 是否内置
      *
      */

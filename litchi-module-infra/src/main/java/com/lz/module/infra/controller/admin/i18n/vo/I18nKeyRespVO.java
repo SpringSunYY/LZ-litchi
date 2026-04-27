@@ -25,11 +25,6 @@ public class I18nKeyRespVO {
     @ExcelProperty("键")
     private String messageKey;
 
-    @Schema(description = "使用端", requiredMode = Schema.RequiredMode.REQUIRED)
-    @ExcelProperty(value = "使用端", converter = DictConvert.class)
-    @DictFormat("infra_i18n_locale_target")
-    private Integer localeTarget;
-
     @Schema(description = "是否内置", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty(value = "是否内置", converter = DictConvert.class)
     @DictFormat("infra_i18n_key_is_system")

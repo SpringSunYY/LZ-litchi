@@ -35,12 +35,12 @@ public class I18nMessageDO extends BaseDO {
     /**
      * 简称
      */
-    private String localeTarget;
+    private String locale;
     /**
      * 使用端
      *
      */
-    private Integer target;
+    private Integer localeTarget;
     /**
      * 是否内置
      *
@@ -54,7 +54,6 @@ public class I18nMessageDO extends BaseDO {
     /**
      * 使用类型
      *
-     * 枚举 {@link TODO infra_i18n_key_use_type 对应的类}
      */
     private Integer useType;
     /**
