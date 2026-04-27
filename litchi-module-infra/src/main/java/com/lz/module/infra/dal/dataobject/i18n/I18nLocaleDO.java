@@ -1,9 +1,6 @@
-package com.lz.module.infra.dal.dataobject.i18nLocale;
+package com.lz.module.infra.dal.dataobject.i18n;
 
 import lombok.*;
-import java.util.*;
-import java.time.LocalDateTime;
-import java.time.LocalDateTime;
 import com.baomidou.mybatisplus.annotation.*;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 
@@ -45,10 +42,10 @@ public class I18nLocaleDO extends BaseDO {
      */
     private Integer localeStatus;
     /**
-     * 类型
+     * 使用端
      *
      */
-    private Integer localeType;
+    private Integer localeTarget;
     /**
      * 默认
      *

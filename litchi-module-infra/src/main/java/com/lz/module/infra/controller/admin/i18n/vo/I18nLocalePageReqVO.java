@@ -1,7 +1,6 @@
-package com.lz.module.infra.controller.admin.i18nLocale.vo;
+package com.lz.module.infra.controller.admin.i18n.vo;
 
 import lombok.*;
-import java.util.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import com.lz.framework.common.pojo.PageParam;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -22,8 +21,8 @@ public class I18nLocalePageReqVO extends PageParam {
     @Schema(description = "状态", example = "1")
     private Integer localeStatus;
 
-    @Schema(description = "类型", example = "2")
-    private Integer localeType;
+    @Schema(description = "使用端", example = "2")
+    private Integer localeTarget;
 
     @Schema(description = "默认")
     private Integer isDefault;

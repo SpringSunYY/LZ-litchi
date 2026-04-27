@@ -1,11 +1,10 @@
-package com.lz.module.infra.service.i18nLocale;
+package com.lz.module.infra.service.i18n;
 
 import java.util.*;
 import jakarta.validation.*;
-import com.lz.module.infra.controller.admin.i18nLocale.vo.*;
-import com.lz.module.infra.dal.dataobject.i18nLocale.I18nLocaleDO;
+import com.lz.module.infra.controller.admin.i18n.vo.*;
+import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.framework.common.pojo.PageParam;
 
 /**
  * 国际化国家 Service 接口

@@ -1,8 +1,7 @@
-package com.lz.module.infra.controller.admin.i18nLocale.vo;
+package com.lz.module.infra.controller.admin.i18n.vo;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
-import java.util.*;
 import jakarta.validation.constraints.*;
 
 @Schema(description = "管理后台 - 国际化国家新增/修改 Request VO")
@@ -27,9 +26,9 @@ public class I18nLocaleSaveReqVO {
     @NotNull(message = "状态不能为空")
     private Integer localeStatus;
 
-    @Schema(description = "类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "类型不能为空")
-    private Integer localeType;
+    @Schema(description = "使用端", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
+    @NotNull(message = "使用端不能为空")
+    private Integer localeTarget;
 
     @Schema(description = "默认", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "默认不能为空")
