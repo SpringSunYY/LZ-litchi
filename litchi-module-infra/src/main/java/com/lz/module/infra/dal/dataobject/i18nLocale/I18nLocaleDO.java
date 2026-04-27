@@ -42,19 +42,16 @@ public class I18nLocaleDO extends BaseDO {
     /**
      * 状态
      *
-     * 枚举 {@link TODO infra_i18n_locale_status 对应的类}
      */
     private Integer localeStatus;
     /**
      * 类型
      *
-     * 枚举 {@link TODO infra_i18n_locale_type 对应的类}
      */
     private Integer localeType;
     /**
      * 默认
      *
-     * 枚举 {@link TODO infra_i18n_locale_is_default 对应的类}
      */
     private Integer isDefault;
     /**

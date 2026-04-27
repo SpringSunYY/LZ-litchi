@@ -41,14 +41,14 @@ public class TenantPackageSubscribeController {
 
     @PostMapping("/create")
     @Operation(summary = "创建租户套餐订阅")
-    @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:create')")
+    @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:create')")
     public CommonResult<Long> createTenantPackageSubscribe(@Valid @RequestBody TenantPackageSubscribeSaveReqVO createReqVO) {
         return success(tenantPackageSubscribeService.createTenantPackageSubscribe(createReqVO));
     }
 
     @PutMapping("/update")
     @Operation(summary = "更新租户套餐订阅")
-    @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:update')")
+    @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:update')")
     public CommonResult<Boolean> updateTenantPackageSubscribe(@Valid @RequestBody TenantPackageSubscribeSaveReqVO updateReqVO) {
         tenantPackageSubscribeService.updateTenantPackageSubscribe(updateReqVO);
         return success(true);
@@ -57,7 +57,7 @@ public class TenantPackageSubscribeController {
     @DeleteMapping("/delete")
     @Operation(summary = "删除租户套餐订阅")
     @Parameter(name = "id", description = "编号", required = true)
-    @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:delete')")
+    @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:delete')")
     public CommonResult<Boolean> deleteTenantPackageSubscribe(@RequestParam("id") Long id) {
         tenantPackageSubscribeService.deleteTenantPackageSubscribe(id);
         return success(true);
@@ -66,7 +66,7 @@ public class TenantPackageSubscribeController {
     @DeleteMapping("/delete-list")
     @Parameter(name = "ids", description = "编号", required = true)
     @Operation(summary = "批量删除租户套餐订阅")
-                @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:delete')")
+                @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:delete')")
     public CommonResult<Boolean> deleteTenantPackageSubscribeList(@RequestParam("ids") List<Long> ids) {
         tenantPackageSubscribeService.deleteTenantPackageSubscribeListByIds(ids);
         return success(true);
@@ -75,7 +75,7 @@ public class TenantPackageSubscribeController {
     @GetMapping("/get")
     @Operation(summary = "获得租户套餐订阅")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
-    @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:query')")
+    @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:query')")
     public CommonResult<TenantPackageSubscribeRespVO> getTenantPackageSubscribe(@RequestParam("id") Long id) {
         TenantPackageSubscribeDO tenantPackageSubscribe = tenantPackageSubscribeService.getTenantPackageSubscribe(id);
         return success(BeanUtils.toBean(tenantPackageSubscribe, TenantPackageSubscribeRespVO.class));
@@ -83,7 +83,7 @@ public class TenantPackageSubscribeController {
 
     @GetMapping("/page")
     @Operation(summary = "获得租户套餐订阅分页")
-    @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:query')")
+    @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:query')")
     public CommonResult<PageResult<TenantPackageSubscribeRespVO>> getTenantPackageSubscribePage(@Valid TenantPackageSubscribePageReqVO pageReqVO) {
         PageResult<TenantPackageSubscribeDO> pageResult = tenantPackageSubscribeService.getTenantPackageSubscribePage(pageReqVO);
         return success(BeanUtils.toBean(pageResult, TenantPackageSubscribeRespVO.class));
@@ -91,7 +91,7 @@ public class TenantPackageSubscribeController {
 
     @GetMapping("/export-excel")
     @Operation(summary = "导出租户套餐订阅 Excel")
-    @PreAuthorize("@ss.hasPermission('system:tenant-package-subscribe:export')")
+    @PreAuthorize("@ss.hasPermission('system:tenantPackageSubscribe:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportTenantPackageSubscribeExcel(@Valid TenantPackageSubscribePageReqVO pageReqVO,
               HttpServletResponse response) throws IOException {
