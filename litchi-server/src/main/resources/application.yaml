@@ -283,8 +283,10 @@ litchi:
       - /admin-api/trade/*
       - /admin-api/system/tenant-package-subscribe/**
       - /admin-api/system/area/**
+      - /admin-api/infra/i18n-locale/**
     ignore-tables:
       - system-area
+      - infra_i18n_locale
     ignore-caches:
       - user_role_ids
       - permission_menu_ids
@@ -295,6 +297,7 @@ litchi:
       - sms_template
       - area
       - area_tree
+      - infra_i18n_locale
   sms-code: # 短信验证码相关的配置项
     expire-times: 10m
     send-frequency: 1m
