@@ -1,5 +1,6 @@
 package com.lz.module.infra.service.i18n;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
@@ -7,6 +8,7 @@ import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
+import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -96,6 +98,18 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     @Override
     public PageResult<I18nMessageDO> getI18nMessagePage(I18nMessagePageReqVO pageReqVO) {
         return i18nMessageMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    public List<I18nMessageDO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage) {
+        //查询通用和类型是这个的target
+        LambdaQueryWrapper<I18nMessageDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.and(wrapper ->
+                wrapper.eq(I18nMessageDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
+                        .or()
+                        .eq(I18nMessageDO::getLocaleTarget, localeTarget));
+        queryWrapper.eq(I18nMessageDO::getLocale, acceptLanguage);
+        return i18nMessageMapper.selectList(queryWrapper);
     }
 
 }

@@ -60,4 +60,12 @@ public interface I18nMessageService {
      */
     PageResult<I18nMessageDO> getI18nMessagePage(I18nMessagePageReqVO pageReqVO);
 
+    /**
+     * 获得国际化信息列表
+     *
+     * @param localeTarget 使用端
+     * @param acceptLanguage 接受的语言
+     * @return 国际化信息列表
+     */
+    List<I18nMessageDO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage);
 }
