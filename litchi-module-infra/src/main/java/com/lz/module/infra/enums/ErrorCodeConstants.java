@@ -72,6 +72,7 @@ public interface ErrorCodeConstants {
     // ========== 国际化国家 1-001-008-000==========
     ErrorCode I18N_LOCALE_NOT_EXISTS = new ErrorCode(1_001_008_000, "国际化国家不存在");
     ErrorCode I18N_LOCALE_EXISTS = new ErrorCode(1_001_008_001, "国际化国家已存在");
+    ErrorCode I18N_LOCALE_PROHIBIT_DELETE = new ErrorCode(1_001_008_002, "国际化默认国家不允许删除");
 
     ErrorCode I18N_KEY_NOT_EXISTS = new ErrorCode(1_001_008_002, "国际化键名不存在");
     ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_001_008_002, "国际化信息不存在");

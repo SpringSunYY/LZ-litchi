@@ -16,8 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.List;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.lz.module.infra.enums.ErrorCodeConstants.I18N_LOCALE_EXISTS;
-import static com.lz.module.infra.enums.ErrorCodeConstants.I18N_LOCALE_NOT_EXISTS;
+import static com.lz.module.infra.enums.ErrorCodeConstants.*;
 
 /**
  * 国际化国家 Service 实现类
@@ -70,7 +69,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         }
         //如果传递过来是默认，且之前不是默认，则将之前默认的设置为否
         if (updateReqVO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus())
-                && i18nLocaleDO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus())) {
+            && i18nLocaleDO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus())) {
             i18nLocaleMapper.update(new I18nLocaleDO().setIsDefault(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()),
                     new LambdaUpdateWrapper<I18nLocaleDO>()
                             .eq(I18nLocaleDO::getLocaleTarget, updateReqVO.getLocaleTarget())
@@ -82,7 +81,11 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Override
     public void deleteI18nLocale(Long id) {
         // 校验存在
-        validateI18nLocaleExists(id);
+        I18nLocaleDO i18nLocaleDO = validateI18nLocaleExists(id);
+        //默认不可删除
+        if (i18nLocaleDO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus())) {
+            throw exception(I18N_LOCALE_PROHIBIT_DELETE);
+        }
         // 删除
         i18nLocaleMapper.deleteById(id);
     }
@@ -90,7 +93,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Override
     public void deleteI18nLocaleListByIds(List<Long> ids) {
         // 删除
-        i18nLocaleMapper.deleteByIds(ids);
+        ids.forEach(this::deleteI18nLocale);
     }
 
 
