@@ -23,7 +23,7 @@ public interface I18nKeyMapper extends BaseMapperX<I18nKeyDO> {
                 .eqIfPresent(I18nKeyDO::getModuleType, reqVO.getModuleType())
                 .eqIfPresent(I18nKeyDO::getUseType, reqVO.getUseType())
                 .betweenIfPresent(I18nKeyDO::getCreateTime, reqVO.getCreateTime())
-                .orderByDesc(I18nKeyDO::getId));
+                .orderByDesc(I18nKeyDO::getOrderNum));
     }
 
 }
