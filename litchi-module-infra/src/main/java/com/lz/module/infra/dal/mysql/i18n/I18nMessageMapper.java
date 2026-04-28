@@ -1,8 +1,8 @@
 package com.lz.module.infra.dal.mysql.i18n;
 
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.mybatis.core.mapper.BaseMapperX;
+import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import org.apache.ibatis.annotations.Mapper;
@@ -18,7 +18,7 @@ public interface I18nMessageMapper extends BaseMapperX<I18nMessageDO> {
     default PageResult<I18nMessageDO> selectPage(I18nMessagePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<I18nMessageDO>()
                 .likeIfPresent(I18nMessageDO::getMessageName, reqVO.getMessageName())
-                .likeIfPresent(I18nMessageDO::getMessageKey, reqVO.getMessageKey())
+                .eqIfPresent(I18nMessageDO::getMessageKey, reqVO.getMessageKey())
                 .eqIfPresent(I18nMessageDO::getLocale, reqVO.getLocale())
                 .eqIfPresent(I18nMessageDO::getLocaleTarget, reqVO.getLocaleTarget())
                 .eqIfPresent(I18nMessageDO::getIsSystem, reqVO.getIsSystem())
@@ -29,4 +29,12 @@ public interface I18nMessageMapper extends BaseMapperX<I18nMessageDO> {
                 .orderByDesc(I18nMessageDO::getId));
     }
 
+    default I18nMessageDO selectByMessageKeyAndLocaleAndTarget(String messageKey, String locale, Integer localeTarget) {
+        return selectOne(new LambdaQueryWrapperX<I18nMessageDO>()
+                .eq(I18nMessageDO::getMessageKey, messageKey)
+                .eq(I18nMessageDO::getLocale, locale)
+                .eq(I18nMessageDO::getLocaleTarget, localeTarget));
+    }
+
+    ;
 }

@@ -79,4 +79,5 @@ public interface ErrorCodeConstants {
     ErrorCode I18N_KEY_PROHIBIT_UPDATE_KEY = new ErrorCode(1_001_008_006, "国际化键名不允许修改键名");
     ErrorCode I18N_KEY_PROHIBIT_DELETE_SYSTEM= new ErrorCode(1_001_008_007, "国际化键名不允许删除内置键");
     ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_001_008_008, "国际化信息不存在");
+    ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "国际化信息已存在");
 }
