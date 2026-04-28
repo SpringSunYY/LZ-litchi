@@ -68,4 +68,14 @@ public interface I18nMessageService {
      * @return 国际化信息列表
      */
     List<I18nMessageDO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage);
+
+    /**
+     * 获得国际化信息
+     *
+     * @param messageKey 国际化键名
+     * @param localeTarget 使用端
+     * @param acceptLanguage 语言
+     * @return 国际化信息
+     */
+    I18nMessageDO getMessageByMessageKey(String messageKey, Integer localeTarget, String acceptLanguage);
 }

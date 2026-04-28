@@ -9,6 +9,7 @@ import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
+import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -42,7 +43,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
                 i18nMessage.getLocaleTarget()
         );
         if (ObjectUtils.isNotNull(dbI18nMessage)) {
-            throw exception(I18N_MESSAGE_EXISTS);
+            throw I18nExceptionUtil.exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.insert(i18nMessage);
         // 返回
@@ -110,6 +111,22 @@ public class I18nMessageServiceImpl implements I18nMessageService {
                         .eq(I18nMessageDO::getLocaleTarget, localeTarget));
         queryWrapper.eq(I18nMessageDO::getLocale, acceptLanguage);
         return i18nMessageMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public I18nMessageDO getMessageByMessageKey(String messageKey, Integer localeTarget, String acceptLanguage) {
+        //查询通用和类型是这个的target，优先使用精确匹配的target，没有则使用通用的
+        LambdaQueryWrapper<I18nMessageDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.and(wrapper ->
+                wrapper.eq(I18nMessageDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
+                        .or()
+                        .eq(I18nMessageDO::getLocaleTarget, localeTarget));
+        queryWrapper.eq(I18nMessageDO::getMessageKey, messageKey);
+        queryWrapper.eq(I18nMessageDO::getLocale, acceptLanguage);
+        // 按 localeTarget 降序排序，优先返回精确匹配的（localeTarget > 0），其次返回通用的（localeTarget = 0）
+        queryWrapper.orderByDesc(I18nMessageDO::getLocaleTarget);
+        queryWrapper.last("LIMIT 1");
+        return i18nMessageMapper.selectOne(queryWrapper);
     }
 
 }
