@@ -58,8 +58,9 @@ public class I18nKeyController {
     @Operation(summary = "删除国际化键名")
     @Parameter(name = "id", description = "编号", required = true)
     @PreAuthorize("@ss.hasPermission('infra:message:delete')")
-    public CommonResult<Boolean> deleteI18nKey(@RequestParam("id") Long id) {
-        i18nKeyService.deleteI18nKey(id);
+    public CommonResult<Boolean> deleteI18nKey(@RequestParam("id") Long id,
+                                               @RequestParam("isDeleteChildren") Boolean isDeleteChildren) {
+        i18nKeyService.deleteI18nKey(id,isDeleteChildren);
         return success(true);
     }
 

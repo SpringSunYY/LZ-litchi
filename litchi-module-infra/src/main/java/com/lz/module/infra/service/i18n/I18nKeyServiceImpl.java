@@ -6,10 +6,13 @@ import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nKeyPageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nKeySaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
+import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
+import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nKeyIsSystemEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -28,6 +31,9 @@ public class I18nKeyServiceImpl implements I18nKeyService {
 
     @Resource
     private I18nKeyMapper i18nKeyMapper;
+
+    @Resource
+    private I18nMessageMapper i18nMessageMapper;
 
     @Override
     public Long createI18nKey(I18nKeySaveReqVO createReqVO) {
@@ -57,13 +63,18 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         i18nKeyMapper.updateById(updateObj);
     }
 
+    @Transactional
     @Override
-    public void deleteI18nKey(Long id) {
+    public void deleteI18nKey(Long id, Boolean isDeleteChildren) {
         // 校验存在
         I18nKeyDO i18nKeyDO = validateI18nKeyExists(id);
         //如果是内置不可以删除
         if (InfraI18nKeyIsSystemEnum.IS_SYSTEM_0.getStatus().equals(i18nKeyDO.getIsSystem())) {
             throw exception(I18N_KEY_PROHIBIT_DELETE_SYSTEM);
+        }
+        //如果需要删除子集
+        if (isDeleteChildren) {
+            i18nMessageMapper.delete(I18nMessageDO::getMessageKey, i18nKeyDO.getMessageKey());
         }
         // 删除
         i18nKeyMapper.deleteById(id);
@@ -72,7 +83,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     @Override
     public void deleteI18nKeyListByIds(List<Long> ids) {
         // 删除
-        ids.forEach(this::deleteI18nKey);
+        i18nKeyMapper.deleteByIds(ids);
     }
 
 

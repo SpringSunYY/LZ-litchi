@@ -33,9 +33,10 @@ public interface I18nKeyService {
     /**
      * 删除国际化键名
      *
-     * @param id 编号
+     * @param id               编号
+     * @param isDeleteChildren 是否删除子级
      */
-    void deleteI18nKey(Long id);
+    void deleteI18nKey(Long id, Boolean isDeleteChildren);
 
     /**
     * 批量删除国际化键名
