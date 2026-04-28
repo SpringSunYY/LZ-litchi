@@ -23,7 +23,7 @@ public interface I18nLocaleMapper extends BaseMapperX<I18nLocaleDO> {
                 .eqIfPresent(I18nLocaleDO::getLocaleTarget, reqVO.getLocaleTarget())
                 .eqIfPresent(I18nLocaleDO::getIsDefault, reqVO.getIsDefault())
                 .betweenIfPresent(I18nLocaleDO::getCreateTime, reqVO.getCreateTime())
-                .orderByDesc(I18nLocaleDO::getId));
+                .orderByAsc(I18nLocaleDO::getOrderNum));
     }
 
 }
