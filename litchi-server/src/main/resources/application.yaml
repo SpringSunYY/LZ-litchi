@@ -277,13 +277,13 @@ litchi:
     enable-user: false
     user-prefix: /app-api
     ignore-urls:
+      - /admin-api/infra/i18n/**
+      - /admin-api/system/area/**
+      - /admin-api/system/tenant-package-subscribe/**
     ignore-visit-urls:
       - /admin-api/system/user/profile/**
       - /admin-api/system/auth/**
       - /admin-api/trade/*
-      - /admin-api/system/tenant-package-subscribe/**
-      - /admin-api/system/area/**
-      - /admin-api/infra/i18n/**
     ignore-tables:
       - system-area
       - infra_i18n_locale

@@ -1,0 +1,31 @@
+package com.lz.module.infra.service.i18n;
+
+import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSimpRespVO;
+import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
+import jakarta.annotation.Resource;
+import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
+
+import java.util.List;
+
+/**
+ * i18n 国际化 Service 实现类
+ *
+ * @Project: litchi
+ * @Author: YY
+ * @CreateTime: 2026-04-28  16:44
+ * @Version: 1.0
+ */
+@Service
+@Validated
+public class I18nServiceImpl implements I18nService {
+    @Resource
+    private I18nLocaleService i18nLocaleService;
+
+    @Override
+    public List<I18nLocaleSimpRespVO> getI18nLocale(Integer localeTarget) {
+        List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleService.getI18nLocaleByLocaleTarget(localeTarget);
+        return BeanUtils.toBean(i18nLocaleDOList, I18nLocaleSimpRespVO.class);
+    }
+}

@@ -1,5 +1,6 @@
 package com.lz.module.infra.service.i18n;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -9,6 +10,8 @@ import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nLocaleMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
+import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
+import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -34,6 +37,12 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     public Long createI18nLocale(I18nLocaleSaveReqVO createReqVO) {
         // 插入
         I18nLocaleDO i18nLocale = BeanUtils.toBean(createReqVO, I18nLocaleDO.class);
+        //查询是否有通用的了，如果有通用的话也不允许创建
+        I18nLocaleDO i18nLocaleByLocaleCommon = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, i18nLocale.getLocale(),
+                I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
+        if (ObjectUtils.isNotNull(i18nLocaleByLocaleCommon)) {
+            throw exception(I18N_LOCALE_EXISTS, "通用");
+        }
         //根据简称查询，如果已存在则不允许创建
         I18nLocaleDO i18nLocaleByLocale = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, i18nLocale.getLocale(),
                 I18nLocaleDO::getLocaleTarget, i18nLocale.getLocaleTarget());
@@ -61,6 +70,12 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         I18nLocaleDO i18nLocaleDO = validateI18nLocaleExists(updateReqVO.getId());
         // 更新
         I18nLocaleDO updateObj = BeanUtils.toBean(updateReqVO, I18nLocaleDO.class);
+        //查询是否有通用的了，如果有通用的话也不允许创建
+        I18nLocaleDO i18nLocaleByLocaleCommon = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, updateObj.getLocale(),
+                I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
+        if (ObjectUtils.isNotNull(i18nLocaleByLocaleCommon) && !i18nLocaleByLocaleCommon.getId().equals(updateReqVO.getId())) {
+            throw exception(I18N_LOCALE_EXISTS, "通用");
+        }
         // 校验简称已存在
         I18nLocaleDO i18nLocaleByLocale = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, updateObj.getLocale(),
                 I18nLocaleDO::getLocaleTarget, updateObj.getLocaleTarget());
@@ -115,4 +130,16 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         return i18nLocaleMapper.selectPage(pageReqVO);
     }
 
+    @Override
+    public List<I18nLocaleDO> getI18nLocaleByLocaleTarget(Integer localeTarget) {
+        //查询通用和类型是这个的target
+        LambdaQueryWrapper<I18nLocaleDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.and(wrapper ->
+                wrapper.eq(I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
+                        .or()
+                        .eq(I18nLocaleDO::getLocaleTarget, localeTarget));
+        queryWrapper.eq(I18nLocaleDO::getLocaleStatus, InfraI18nLocaleStatusEnum.LOCALE_STATUS_0.getStatus());
+        queryWrapper.orderByAsc(I18nLocaleDO::getOrderNum);
+        return i18nLocaleMapper.selectList(queryWrapper);
+    }
 }

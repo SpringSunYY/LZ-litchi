@@ -58,4 +58,11 @@ public interface I18nLocaleService {
      */
     PageResult<I18nLocaleDO> getI18nLocalePage(I18nLocalePageReqVO pageReqVO);
 
+    /**
+     * 获得国际化国家列表
+     *
+     * @param localeTarget 国际化目标
+     * @return 国际化国家列表
+     */
+    List<I18nLocaleDO> getI18nLocaleByLocaleTarget(Integer localeTarget);
 }
