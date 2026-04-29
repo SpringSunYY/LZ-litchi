@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModelDrawer } from '@vben/common-ui';
 import { ElMessage, ElTabs, ElTabPane, ElCheckbox, ElInput, ElSelect, ElRadioGroup, ElCheckboxGroup, ElDatePicker } from 'element-plus';
 ## 特殊：主子表专属逻辑
 #if ( $table.templateType == 10 || $table.templateType == 12 )
@@ -54,7 +54,7 @@ const [Form, formApi] = useVbenForm({
   showDefaultActions: false
 });
 
-const [Modal, modalApi] = useVbenModal({
+const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
   async onConfirm() {
     const { valid } = await formApi.validate();
     if (!valid) {
@@ -79,7 +79,7 @@ const [Modal, modalApi] = useVbenModal({
         #end
       #end
     #end
-    modalApi.lock();
+    modalDrawerApi.lock();
     // 提交表单
     const data = (await formApi.getValues()) as ${simpleClassName}Api.${simpleClassName};
     ## 特殊：主子表专属逻辑
@@ -100,11 +100,11 @@ const [Modal, modalApi] = useVbenModal({
     try {
       await (formData.value?.id ? update${simpleClassName}(data) : create${simpleClassName}(data));
       // 关闭并提示
-      await modalApi.close();
+      await modalDrawerApi.close();
       emit('success');
       ElMessage.success($t('ui.actionMessage.operationSuccess'));
     } finally {
-      modalApi.unlock();
+      modalDrawerApi.unlock();
     }
   },
   async onOpenChange(isOpen: boolean) {
@@ -113,16 +113,16 @@ const [Modal, modalApi] = useVbenModal({
       return;
     }
     // 加载数据
-    let data = modalApi.getData<${simpleClassName}Api.${simpleClassName}>();
+    let data = modalDrawerApi.getData<${simpleClassName}Api.${simpleClassName}>();
     if (!data) {
       return;
     }
     if (data.id) {
-      modalApi.lock();
+      modalDrawerApi.lock();
       try {
         data = await get${simpleClassName}(data.id);
       } finally {
-        modalApi.unlock();
+        modalDrawerApi.unlock();
       }
     }
     // 设置到 values
@@ -133,7 +133,7 @@ const [Modal, modalApi] = useVbenModal({
 </script>
 
 <template>
-  <Modal :title="getTitle">
+  <ModalDrawer :title="getTitle">
     <Form class="mx-4" />
     ## 特殊：主子表专属逻辑
     #if ( $table.templateType == 10 || $table.templateType == 12 )
@@ -150,5 +150,5 @@ const [Modal, modalApi] = useVbenModal({
         #end
       </el-tabs>
     #end
-  </Modal>
+  </ModalDrawer>
 </template>

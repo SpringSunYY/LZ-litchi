@@ -418,6 +418,7 @@ public class CodegenEngine {
         Map<String, Object> bindingMap = new HashMap<>(globalBindingMap);
         bindingMap.put("table", table);
         bindingMap.put("columns", columns);
+        bindingMap.put("extendConfig", table.getExtendConfig());
         bindingMap.put("primaryColumn", CollectionUtils.findFirst(columns, CodegenColumnDO::getPrimaryKey)); // 主键字段
         bindingMap.put("sceneEnum", CodegenSceneEnum.valueOf(table.getScene()));
         // className 相关

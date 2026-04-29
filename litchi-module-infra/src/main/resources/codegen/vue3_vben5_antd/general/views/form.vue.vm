@@ -2,7 +2,7 @@
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
 import type { Rule } from 'ant-design-vue/es/form';
 
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModelDrawer } from '@vben/common-ui';
 import { Tinymce as RichTextarea } from '#/components/tinymce';
 import { ImageUpload, FileUpload } from "#/components/upload";
 import { message, Tabs, Form, Input, Textarea, Select, RadioGroup, Radio, CheckboxGroup, Checkbox, DatePicker, TreeSelect } from 'ant-design-vue';
@@ -99,7 +99,7 @@ const get${simpleClassName}Tree = async () => {
 }
 #end
 
-const [Modal, modalApi] = useVbenModal({
+const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
   async onConfirm() {
     await formRef.value?.validate();
     ## 特殊：主子表专属逻辑
@@ -143,14 +143,14 @@ const [Modal, modalApi] = useVbenModal({
     try {
       await (formData.value?.id ? update${simpleClassName}(data) : create${simpleClassName}(data));
       // 关闭并提示
-      await modalApi.close();
+      await modalDrawerApi.close();
       emit('success');
       message.success({
         content: $t('ui.actionMessage.operationSuccess'),
         key: 'action_process_msg',
       });
     } finally {
-      modalApi.unlock();
+      modalDrawerApi.unlock();
     }
   },
   async onOpenChange(isOpen: boolean) {
@@ -159,16 +159,16 @@ const [Modal, modalApi] = useVbenModal({
       return;
     }
     // 加载数据
-    let data = modalApi.getData<${simpleClassName}Api.${simpleClassName}>();
+    let data = modalDrawerApi.getData<${simpleClassName}Api.${simpleClassName}>();
     if (!data) {
       return;
     }
     if (data.id) {
-      modalApi.lock();
+      modalDrawerApi.lock();
       try {
         data = await get${simpleClassName}(data.id);
       } finally {
-        modalApi.unlock();
+        modalDrawerApi.unlock();
       }
     }
     formData.value = data;
@@ -181,7 +181,7 @@ const [Modal, modalApi] = useVbenModal({
 </script>
 
 <template>
-  <Modal :title="getTitle">
+  <ModalDrawer :title="getTitle">
     <Form
       ref="formRef"
       :model="formData"
@@ -320,5 +320,5 @@ const [Modal, modalApi] = useVbenModal({
         #end
       </Tabs>
     #end
-  </Modal>
+  </ModalDrawer>
 </template>

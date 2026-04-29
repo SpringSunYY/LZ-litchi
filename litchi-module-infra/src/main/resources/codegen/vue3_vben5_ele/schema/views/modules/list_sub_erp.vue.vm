@@ -12,7 +12,7 @@ import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.bu
 #if ($table.templateType == 11) ## erp
 import ${subSimpleClassName}Form from './${subSimpleClassName_strikeCase}-form.vue'
 #end
-import { useVbenModal } from '@vben/common-ui';
+import { useVbenModelDrawer } from '@vben/common-ui';
 import { ElMessage, ElLoading } from 'element-plus';
 import { ref, computed, nextTick,watch } from 'vue';
 import { $t } from '#/locales';
@@ -36,10 +36,13 @@ const props = defineProps<{
 }>()
 
 #if ($table.templateType == 11) ## erp
-const [FormModal, formModalApi] = useVbenModal({
-  connectedComponent: ${subSimpleClassName}Form,
-  destroyOnClose: true,
-});
+  const [FormModalDrawer, formModalDrawerApi] = useVbenModelDrawer({
+    connectedComponent: ${subSimpleClassName}Form,
+    destroyOnClose: true,
+#if ($extendConfig && $extendConfig.get('popupType'))
+    type: '$extendConfig.get("popupType")',
+#end
+  });
 
 /** 创建${subTable.classComment} */
 function handleCreate() {
@@ -47,12 +50,12 @@ function handleCreate() {
     ElMessage.warning("请先选择一个${table.classComment}!")
     return
   }
-  formModalApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
+  formModalDrawerApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
 }
 
 /** 编辑${subTable.classComment} */
 function handleEdit(row: ${simpleClassName}Api.${subSimpleClassName}) {
-  formModalApi.setData(row).open();
+  formModalDrawerApi.setData(row).open();
 }
 
 /** 删除${subTable.classComment} */
@@ -180,7 +183,7 @@ watch(
 
 <template>
     #if ($table.templateType == 11) ## erp
-      <FormModal @success="onRefresh" />
+      <FormModalDrawer @success="onRefresh" />
       <Grid table-title="${subTable.classComment}列表">
         <template #toolbar-tools>
           <TableAction

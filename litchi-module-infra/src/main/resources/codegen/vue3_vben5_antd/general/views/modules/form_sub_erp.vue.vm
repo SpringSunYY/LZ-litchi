@@ -6,7 +6,7 @@
   import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
   import type { Rule } from 'ant-design-vue/es/form';
 
-  import { useVbenModal } from '@vben/common-ui';
+  import { useVbenModelDrawer } from '@vben/common-ui';
   import { Tinymce as RichTextarea } from '#/components/tinymce';
   import { ImageUpload, FileUpload } from "#/components/upload";
   import { message, Tabs, Form, Input, Textarea, Select, RadioGroup, Radio, CheckboxGroup, Checkbox, DatePicker, TreeSelect } from 'ant-design-vue';
@@ -45,24 +45,24 @@
     #end
   };
 
-  const [Modal, modalApi] = useVbenModal({
+  const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
     async onConfirm() {
       await formRef.value?.validate();
 
-      modalApi.lock();
+      modalDrawerApi.lock();
       // 提交表单
       const data = formData.value as ${simpleClassName}Api.${subSimpleClassName};
       try {
         await (formData.value?.id ? update${subSimpleClassName}(data) : create${subSimpleClassName}(data));
         // 关闭并提示
-        await modalApi.close();
+        await modalDrawerApi.close();
         emit('success');
         message.success({
           content: $t('ui.actionMessage.operationSuccess'),
           key: 'action_process_msg',
         });
       } finally {
-        modalApi.unlock();
+        modalDrawerApi.unlock();
       }
     },
     async onOpenChange(isOpen: boolean) {
@@ -72,16 +72,16 @@
       }
 
       // 加载数据
-      let data = modalApi.getData<${simpleClassName}Api.${subSimpleClassName}>();
+      let data = modalDrawerApi.getData<${simpleClassName}Api.${subSimpleClassName}>();
       if (!data) {
         return;
       }
       if (data.id) {
-        modalApi.lock();
+        modalDrawerApi.lock();
         try {
           data = await get${subSimpleClassName}(data.id);
         } finally {
-          modalApi.unlock();
+          modalDrawerApi.unlock();
         }
       }
       // 设置到 values
@@ -107,7 +107,7 @@
 </script>
 
 <template>
-  <Modal :title="getTitle">
+  <ModalDrawer :title="getTitle">
     <Form
       ref="formRef"
       :model="formData"
@@ -208,5 +208,5 @@
         #end
       #end
     </Form>
-  </Modal>
+  </ModalDrawer>
 </template>

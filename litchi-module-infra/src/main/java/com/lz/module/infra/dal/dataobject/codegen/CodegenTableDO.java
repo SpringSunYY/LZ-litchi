@@ -12,8 +12,10 @@ import com.lz.module.infra.dal.dataobject.db.DataSourceConfigDO;
 import com.lz.module.infra.enums.codegen.CodegenFrontTypeEnum;
 import com.lz.module.infra.enums.codegen.CodegenSceneEnum;
 import com.lz.module.infra.enums.codegen.CodegenTemplateTypeEnum;
+import lombok.AccessLevel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.experimental.Accessors;
 
 import java.util.Map;
@@ -168,6 +170,5 @@ public class CodegenTableDO extends BaseDO {
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
     private Map<String, Object> extendConfig;
-
 
 }

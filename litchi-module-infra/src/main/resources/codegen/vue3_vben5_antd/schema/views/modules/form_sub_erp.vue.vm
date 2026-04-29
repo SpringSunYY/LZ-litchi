@@ -5,7 +5,7 @@
 <script lang="ts" setup>
   import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
-  import { useVbenModal } from '@vben/common-ui';
+  import { useVbenModelDrawer } from '@vben/common-ui';
   import { message } from 'ant-design-vue';
 
   import { computed, ref } from 'vue';
@@ -36,25 +36,25 @@
     showDefaultActions: false
   });
 
-  const [Modal, modalApi] = useVbenModal({
+  const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
     async onConfirm() {
       const { valid } = await formApi.validate();
       if (!valid) {
         return;
       }
 
-      modalApi.lock();
+      modalDrawerApi.lock();
       // 提交表单
       const data = (await formApi.getValues()) as ${simpleClassName}Api.${subSimpleClassName};
       data.${subJoinColumn.javaField} = formData.value?.${subJoinColumn.javaField};
       try {
         await (formData.value?.id ? update${subSimpleClassName}(data) : create${subSimpleClassName}(data));
         // 关闭并提示
-        await modalApi.close();
+        await modalDrawerApi.close();
         emit('success');
         message.success( $t('ui.actionMessage.operationSuccess') );
       } finally {
-        modalApi.unlock();
+        modalDrawerApi.unlock();
       }
     },
     async onOpenChange(isOpen: boolean) {
@@ -64,16 +64,16 @@
       }
 
       // 加载数据
-      let data = modalApi.getData<${simpleClassName}Api.${subSimpleClassName}>();
+      let data = modalDrawerApi.getData<${simpleClassName}Api.${subSimpleClassName}>();
       if (!data) {
         return;
       }
       if (data.id) {
-        modalApi.lock();
+        modalDrawerApi.lock();
         try {
           data = await get${subSimpleClassName}(data.id);
         } finally {
-          modalApi.unlock();
+          modalDrawerApi.unlock();
         }
       }
       // 设置到 values
@@ -84,7 +84,7 @@
 </script>
 
 <template>
-  <Modal :title="getTitle">
+  <ModalDrawer :title="getTitle">
     <Form class="mx-4" />
-  </Modal>
+  </ModalDrawer>
 </template>

@@ -17,7 +17,7 @@
   import { ContentWrap } from '#/components/content-wrap';
 
 #if ($table.templateType == 11) ## erp
-    import { useVbenModal } from '@vben/common-ui';
+    import { useVbenModelDrawer } from '@vben/common-ui';
     import ${subSimpleClassName}Form from './${subSimpleClassName_strikeCase}-form.vue'
     import { Tinymce as RichTextarea } from '#/components/tinymce';
     import { ImageUpload, FileUpload } from "#/components/upload";
@@ -44,9 +44,12 @@ const props = defineProps<{
 }>()
 
 #if ($table.templateType == 11) ## erp
-  const [FormModal, formModalApi] = useVbenModal({
+  const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
     connectedComponent: ${subSimpleClassName}Form,
     destroyOnClose: true,
+#if ($extendConfig && $extendConfig.get('popupType'))
+    type: '$extendConfig.get("popupType")',
+#end
   });
 
 /** 创建${subTable.classComment} */
@@ -55,12 +58,12 @@ function handleCreate() {
     message.warning("请先选择一个${table.classComment}!")
     return
   }
-  formModalApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
+  modalDrawerApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
 }
 
 /** 编辑${subTable.classComment} */
 function handleEdit(row: ${simpleClassName}Api.${subSimpleClassName}) {
-  formModalApi.setData(row).open();
+  modalDrawerApi.setData(row).open();
 }
 
 /** 删除${subTable.classComment} */
@@ -203,7 +206,7 @@ onMounted(() => {
 
 <template>
     #if ($table.templateType == 11) ## erp
-      <FormModal @success="getList" />
+      <ModalDrawer @success="getList" />
       <div class="h-[600px]">
         <ContentWrap v-if="!hiddenSearchBar">
           <!-- 搜索工作栏 -->

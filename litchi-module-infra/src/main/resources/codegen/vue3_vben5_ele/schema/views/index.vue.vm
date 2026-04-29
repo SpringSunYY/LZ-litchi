@@ -2,7 +2,7 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModelDrawer  } from '@vben/common-ui';
 import { ElMessage, ElTabs, ElTabPane, ElLoading } from 'element-plus';
 import Form from './modules/form.vue';
 
@@ -35,9 +35,12 @@ const select${simpleClassName} = ref<${simpleClassName}Api.${simpleClassName}>()
 #end
 #end
 
-const [FormModal, formModalApi] = useVbenModal({
+const [FormModalDrawer, formModalDrawerApi] = useVbenModelDrawer({
   connectedComponent: Form,
   destroyOnClose: true,
+#if ($extendConfig && $extendConfig.get('popupType'))
+  type: '$extendConfig.get("popupType")',
+#end
 });
 
 #if (${table.templateType} == 2)## 树表特有：控制表格展开收缩
@@ -60,18 +63,18 @@ function onRefresh() {
 
 /** 创建${table.classComment} */
 function handleCreate() {
-  formModalApi.setData({}).open();
+  formModalDrawerApi.setData({}).open();
 }
 
 /** 编辑${table.classComment} */
 function handleEdit(row: ${simpleClassName}Api.${simpleClassName}) {
-  formModalApi.setData(row).open();
+  formModalDrawerApi.setData(row).open();
 }
 
 #if (${table.templateType} == 2)## 树表特有：新增下级
 /** 新增下级${table.classComment} */
 function handleAppend(row: ${simpleClassName}Api.${simpleClassName}) {
-  formModalApi.setData({ ${treeParentColumn.javaField}: row.id }).open();
+  formModalDrawerApi.setData({ ${treeParentColumn.javaField}: row.id }).open();
 }
 #end
 
@@ -196,7 +199,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 
 <template>
   <Page auto-content-height>
-    <FormModal @success="onRefresh" />
+    <FormModalDrawer @success="onRefresh" />
 
 #if ($table.templateType == 11) ## erp情况
   <div>

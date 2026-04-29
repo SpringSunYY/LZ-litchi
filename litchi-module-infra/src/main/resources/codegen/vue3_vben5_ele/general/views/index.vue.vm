@@ -2,7 +2,7 @@
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
 import type { VxeTableInstance } from '#/adapter/vxe-table';
 
-import { Page, useVbenModal } from '@vben/common-ui';
+import { Page, useVbenModelDrawer } from '@vben/common-ui';
 import { cloneDeep, formatDateTime } from '@vben/utils';
 import { ElButton, ElMessage, ElLoading, ElTabs, ElTabPane, ElPagination, ElForm, ElFormItem, ElDatePicker, ElSelect, ElOption, ElInput } from 'element-plus';
 import { DictTag } from '#/components/dict-tag';
@@ -117,25 +117,28 @@ const resetQuery = () => {
   handleQuery()
 }
 
-const [FormModal, formModalApi] = useVbenModal({
+const [FormModalDrawer, formModalDrawerApi] = useVbenModelDrawer({
   connectedComponent: ${simpleClassName}Form,
   destroyOnClose: true,
+#if ($extendConfig && $extendConfig.get('popupType'))
+  type: '$extendConfig.get("popupType")',
+#end
 });
 
 /** 创建${table.classComment} */
 function handleCreate() {
-  formModalApi.setData({}).open();
+  formModalDrawerApi.setData({}).open();
 }
 
 /** 编辑${table.classComment} */
 function handleEdit(row: ${simpleClassName}Api.${simpleClassName}) {
-  formModalApi.setData(row).open();
+  formModalDrawerApi.setData(row).open();
 }
 
 #if (${table.templateType} == 2)## 树表特有：新增下级
 /** 新增下级${table.classComment} */
 function handleAppend(row: ${simpleClassName}Api.${simpleClassName}) {
-  formModalApi.setData({ ${treeParentColumn.javaField}: row.id }).open();
+  formModalDrawerApi.setData({ ${treeParentColumn.javaField}: row.id }).open();
 }
 #end
 
@@ -209,7 +212,7 @@ onMounted(() => {
 
 <template>
   <Page auto-content-height>
-    <FormModal @success="getList" />
+    <FormModalDrawer @success="getList" />
 
     <ContentWrap v-if="!hiddenSearchBar">
       <!-- 搜索工作栏 -->
