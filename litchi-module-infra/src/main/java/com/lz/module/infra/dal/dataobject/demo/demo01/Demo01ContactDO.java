@@ -35,7 +35,6 @@ public class Demo01ContactDO extends BaseDO {
     /**
      * 性别
      *
-     * 枚举 {@link TODO system_user_sex 对应的类}
      */
     private Integer sex;
     /**

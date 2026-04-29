@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 @Schema(description = "管理后台 - 代码生成表定义 Response VO")
 @Data
@@ -59,6 +60,8 @@ public class CodegenTableRespVO {
     private Long treeParentColumnId;
     @Schema(description = "树表的名字字段编号", example = "16384")
     private Long treeNameColumnId;
+    @Schema(description = "扩展配置", example = "{}")
+    private Map<String, Object> extendConfig;
 
     @Schema(description = "主键编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Integer dataSourceConfigId;

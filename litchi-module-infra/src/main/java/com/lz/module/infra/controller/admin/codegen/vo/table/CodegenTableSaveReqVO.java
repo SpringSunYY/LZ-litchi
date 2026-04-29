@@ -9,6 +9,8 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
+import java.util.Map;
+
 @Schema(description = "管理后台 - 代码生成表定义创建/修改 Response VO")
 @Data
 public class CodegenTableSaveReqVO {
@@ -73,6 +75,8 @@ public class CodegenTableSaveReqVO {
     private Long treeParentColumnId;
     @Schema(description = "树表的名字字段编号", example = "16384")
     private Long treeNameColumnId;
+    @Schema(description = "扩展配置", example = "{}")
+    private Map<String, Object> extendConfig;
 
     @AssertTrue(message = "上级菜单不能为空，请前往 [修改生成配置 -> 生成信息] 界面，设置“上级菜单”字段")
     @JsonIgnore
