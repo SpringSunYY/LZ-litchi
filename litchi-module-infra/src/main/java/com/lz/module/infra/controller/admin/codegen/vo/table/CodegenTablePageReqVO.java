@@ -1,5 +1,6 @@
 package com.lz.module.infra.controller.admin.codegen.vo.table;
 
+import com.lz.framework.common.annotation.Sortable;
 import com.lz.framework.common.pojo.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
@@ -13,15 +14,18 @@ import static com.lz.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_
 @Data
 public class CodegenTablePageReqVO extends PageParam {
 
+    @Sortable(value = "table_name")
     @Schema(description = "表名称，模糊匹配", example = "litchi")
     private String tableName;
 
+    @Sortable(value = "table_comment")
     @Schema(description = "表描述，模糊匹配", example = "荔枝")
     private String tableComment;
 
     @Schema(description = "实体，模糊匹配", example = "Litchi")
     private String className;
 
+    @Sortable(value = "create_time")
     @Schema(description = "创建时间", example = "[2022-07-01 00:00:00,2022-07-01 23:59:59]")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;

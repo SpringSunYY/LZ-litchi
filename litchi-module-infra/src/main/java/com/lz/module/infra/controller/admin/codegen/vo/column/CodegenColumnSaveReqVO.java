@@ -61,6 +61,10 @@ public class CodegenColumnSaveReqVO {
     @NotNull(message = "是否为 Update 更新操作的字段不能为空")
     private Boolean updateOperation;
 
+    @Schema(description = "是否为排序字段", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
+    @NotNull(message = "是否为排序字段不能为空")
+    private Boolean sortOperation;
+
     @Schema(description = "是否为 List 查询操作的字段", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
     @NotNull(message = "是否为 List 查询操作的字段不能为空")
     private Boolean listOperation;
