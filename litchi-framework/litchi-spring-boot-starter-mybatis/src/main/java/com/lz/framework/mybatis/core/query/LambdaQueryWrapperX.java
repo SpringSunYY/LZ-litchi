@@ -159,13 +159,9 @@ public class LambdaQueryWrapperX<T> extends LambdaQueryWrapper<T> {
 
     /**
      * 根据 PageParam 自动应用排序（支持默认排序）
-     * <p>
      * 逻辑：
      * - 传了排序字段 → 校验并应用指定的排序
      * - 没传排序字段 → 应用默认排序
-     * <p>
-     * 注意：字段名会自动从驼峰转成下划线格式（如 tableName -> table_name）
-     *
      * @param pageParam         分页参数
      * @param defaultFields     默认排序字段，可多个
      * @param defaultSortOrders 默认排序方向，可多个
