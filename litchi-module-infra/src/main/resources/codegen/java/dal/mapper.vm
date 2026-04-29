@@ -50,19 +50,18 @@ import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePack
 public interface ${table.className}Mapper extends BaseMapperX<${table.className}DO> {
 
 ## 特殊：树表专属逻辑（树不需要分页接口）
+#set ($PkJavaField = $primaryColumn.javaField.substring(0,1).toUpperCase() + $primaryColumn.javaField.substring(1))##主键字段首字母大写
 #if ( $table.templateType != 2 )
     default PageResult<${table.className}DO> selectPage(${sceneEnum.prefixClass}${table.className}PageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<${table.className}DO>()
 			#listCondition()
-                .orderByDesc(${table.className}DO::getId));## 大多数情况下，id 倒序
-
+                .applyOrderDesc(reqVO, ${table.className}DO::get${PkJavaField}));
     }
 #else
     default List<${table.className}DO> selectList(${sceneEnum.prefixClass}${table.className}ListReqVO reqVO) {
         return selectList(new LambdaQueryWrapperX<${table.className}DO>()
 			#listCondition()
-                .orderByDesc(${table.className}DO::getId));## 大多数情况下，id 倒序
-
+                .applyOrderDesc(reqVO, ${table.className}DO::get${PkJavaField}));
     }
 #end
 

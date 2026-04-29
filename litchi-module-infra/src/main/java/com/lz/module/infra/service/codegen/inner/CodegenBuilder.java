@@ -3,6 +3,9 @@ package com.lz.module.infra.service.codegen.inner;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.generator.config.po.TableField;
+import com.baomidou.mybatisplus.generator.config.po.TableInfo;
+import com.google.common.collect.Sets;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.module.infra.convert.codegen.CodegenConvert;
 import com.lz.module.infra.dal.dataobject.codegen.CodegenColumnDO;
@@ -10,9 +13,6 @@ import com.lz.module.infra.dal.dataobject.codegen.CodegenTableDO;
 import com.lz.module.infra.enums.codegen.CodegenColumnHtmlTypeEnum;
 import com.lz.module.infra.enums.codegen.CodegenColumnListConditionEnum;
 import com.lz.module.infra.enums.codegen.CodegenTemplateTypeEnum;
-import com.baomidou.mybatisplus.generator.config.po.TableField;
-import com.baomidou.mybatisplus.generator.config.po.TableInfo;
-import com.google.common.collect.Sets;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -40,6 +40,24 @@ public class CodegenBuilder {
                     .put("time", CodegenColumnListConditionEnum.BETWEEN)
                     .put("date", CodegenColumnListConditionEnum.BETWEEN)
                     .build();
+
+    /**
+     * 数字类型字段的后缀映射
+     * 用于判断数据库字段是否为数字类型，数字类型默认支持排序和范围查询
+     */
+    private static final Set<String> NUMERIC_TYPE_SUFFIXES = Sets.newHashSet(
+            "count", "num", "number", "price", "amount", "total", "sum",
+            "quantity", "balance", "fee", "cost", "rate", "ratio", "percent",
+            "age", "size", "length", "width", "height", "weight", "score"
+    );
+
+    /**
+     * 数据库字段类型关键字映射，包含这些关键字的视为数字类型
+     */
+    private static final Set<String> NUMERIC_TYPE_KEYWORDS = Sets.newHashSet(
+            "int", "decimal", "float", "double", "numeric",
+            "smallint", "tinyint", "mediumint", "number"
+    );
 
     /**
      * 字段名与 {@link CodegenColumnHtmlTypeEnum} 的默认映射
@@ -113,8 +131,9 @@ public class CodegenBuilder {
         String tableName = table.getTableName().toLowerCase();
         // 第一步，_ 前缀的前面，作为 module 名字；第二步，moduleName 必须小写；
         table.setModuleName(subBefore(tableName, '_', false).toLowerCase());
-        // 第一步，第一个 _ 前缀的后面，作为 module 名字; 第二步，可能存在多个 _ 的情况，转换成驼峰; 第三步，businessName 必须小写；
-        table.setBusinessName(toCamelCase(subAfter(tableName, '_', false)).toLowerCase());
+        // 第一步，第一个 _ 前缀的后面，作为 businessName; 第二步，转换成驼峰; 第三步，首字母小写
+        String businessName = toCamelCase(subAfter(tableName, '_', false));
+        table.setBusinessName(lowerFirst(businessName));
         // 驼峰 + 首字母大写；第一步，第一个 _ 前缀的后面，作为 class 名字；第二步，驼峰命名
         table.setClassName(upperFirst(toCamelCase(subAfter(tableName, '_', false))));
         // 去除结尾的表，作为类描述
@@ -143,22 +162,64 @@ public class CodegenBuilder {
     private void processColumnOperation(CodegenColumnDO column) {
         // 处理 createOperation 字段
         column.setCreateOperation(!CREATE_OPERATION_EXCLUDE_COLUMN.contains(column.getJavaField())
-                && !column.getPrimaryKey()); // 对于主键，创建时无需传递
+                                  && !column.getPrimaryKey()); // 对于主键，创建时无需传递
         // 处理 updateOperation 字段
         column.setUpdateOperation(!UPDATE_OPERATION_EXCLUDE_COLUMN.contains(column.getJavaField())
-                || column.getPrimaryKey()); // 对于主键，更新时需要传递
+                                  || column.getPrimaryKey()); // 对于主键，更新时需要传递
         // 处理 listOperation 字段
         column.setListOperation(!LIST_OPERATION_EXCLUDE_COLUMN.contains(column.getJavaField())
-                && !column.getPrimaryKey()); // 对于主键，列表过滤不需要传递
-        // 处理 listOperationCondition 字段
-        COLUMN_LIST_OPERATION_CONDITION_MAPPINGS.entrySet().stream()
-                .filter(entry -> StrUtil.endWithIgnoreCase(column.getJavaField(), entry.getKey()))
-                .findFirst().ifPresent(entry -> column.setListOperationCondition(entry.getValue().getCondition()));
-        if (column.getListOperationCondition() == null) {
-            column.setListOperationCondition(CodegenColumnListConditionEnum.EQ.getCondition());
+                                && !column.getPrimaryKey()); // 对于主键，列表过滤不需要传递
+        // 处理 sortOperation 字段：主键、数据库数字类型、Java字段为数字相关的、时间类型默认支持排序
+        column.setSortOperation(column.getPrimaryKey()
+                                || isNumericType(column.getDataType())
+                                || isNumericField(column.getJavaField())
+                                || LocalDateTime.class.getSimpleName().equals(column.getJavaType()));
+        // 处理 listOperationCondition 字段：数字类型默认为范围查询
+        if (isNumericType(column.getDataType())) {
+            column.setListOperationCondition(CodegenColumnListConditionEnum.BETWEEN.getCondition());
+        } else {
+            COLUMN_LIST_OPERATION_CONDITION_MAPPINGS.entrySet().stream()
+                    .filter(entry -> StrUtil.endWithIgnoreCase(column.getJavaField(), entry.getKey()))
+                    .findFirst().ifPresent(entry -> column.setListOperationCondition(entry.getValue().getCondition()));
+            if (column.getListOperationCondition() == null) {
+                column.setListOperationCondition(CodegenColumnListConditionEnum.EQ.getCondition());
+            }
         }
         // 处理 listOperationResult 字段
         column.setListOperationResult(!LIST_OPERATION_RESULT_EXCLUDE_COLUMN.contains(column.getJavaField()));
+    }
+
+    /**
+     * 判断数据库字段类型是否为数字类型
+     *
+     * @param dataType 数据库字段类型
+     * @return 是否为数字类型
+     */
+    private boolean isNumericType(String dataType) {
+        if (dataType == null) {
+            return false;
+        }
+        String lowerDataType = dataType.toLowerCase();
+        // 精确匹配或前缀匹配，避免误判
+        return NUMERIC_TYPE_KEYWORDS.stream()
+                .anyMatch(keyword -> lowerDataType.equals(keyword)
+                                     || lowerDataType.startsWith(keyword + "(")
+                                     || lowerDataType.contains("_" + keyword));
+    }
+
+    /**
+     * 判断 Java 字段名是否为数字相关字段
+     * 数字相关字段默认支持排序
+     *
+     * @param javaField Java 字段名
+     * @return 是否为数字相关字段
+     */
+    private boolean isNumericField(String javaField) {
+        if (javaField == null) {
+            return false;
+        }
+        return NUMERIC_TYPE_SUFFIXES.stream()
+                .anyMatch(suffix -> StrUtil.endWithIgnoreCase(javaField, suffix));
     }
 
     private void processColumnUI(CodegenColumnDO column) {

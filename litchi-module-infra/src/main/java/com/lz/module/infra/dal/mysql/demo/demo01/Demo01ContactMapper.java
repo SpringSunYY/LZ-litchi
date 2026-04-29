@@ -18,9 +18,13 @@ public interface Demo01ContactMapper extends BaseMapperX<Demo01ContactDO> {
     default PageResult<Demo01ContactDO> selectPage(Demo01ContactPageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<Demo01ContactDO>()
                 .likeIfPresent(Demo01ContactDO::getName, reqVO.getName())
-                .eqIfPresent(Demo01ContactDO::getSex, reqVO.getSex())
+                .betweenIfPresent(Demo01ContactDO::getSex, reqVO.getSex())
+                .betweenIfPresent(Demo01ContactDO::getBirthday, reqVO.getBirthday())
+                .eqIfPresent(Demo01ContactDO::getDescription, reqVO.getDescription())
+                .eqIfPresent(Demo01ContactDO::getAvatar, reqVO.getAvatar())
                 .betweenIfPresent(Demo01ContactDO::getCreateTime, reqVO.getCreateTime())
-                .orderByDesc(Demo01ContactDO::getId));
+                .applyOrderDesc(reqVO, Demo01ContactDO::getId));
+
     }
 
 }

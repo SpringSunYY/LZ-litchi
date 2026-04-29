@@ -54,7 +54,6 @@ public class CodegenColumnRespVO {
     @Schema(description = "是否为 Sort 排序操作的字段", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
     private Boolean sortOperation;
 
-
     @Schema(description = "是否为 List 查询操作的字段", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
     private Boolean listOperation;
 

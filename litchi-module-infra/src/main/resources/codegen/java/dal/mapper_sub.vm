@@ -2,6 +2,8 @@
 #set ($subColumns = $subJoinColumnsList.get($subIndex))##当前字段数组
 #set ($subJoinColumn = $subJoinColumns.get($subIndex))##当前 join 字段
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
+#set ($SubPkColumn = $null)#foreach($c in $subColumns)#if($c.primaryKey)#set ($SubPkColumn = $c)#break#end#end##子表主键字段
+#set ($SubPkJavaField = $SubPkColumn.javaField.substring(0,1).toUpperCase() + $SubPkColumn.javaField.substring(1))##子表主键字段首字母大写
 package ${basePackage}.module.${subTable.moduleName}.dal.mysql.${subTable.businessName};
 
 import java.util.*;
@@ -26,8 +28,7 @@ public interface ${subTable.className}Mapper extends BaseMapperX<${subTable.clas
     default PageResult<${subTable.className}DO> selectPage(PageParam reqVO, ${subJoinColumn.javaType} ${subJoinColumn.javaField}) {
         return selectPage(reqVO, new LambdaQueryWrapperX<${subTable.className}DO>()
             .eq(${subTable.className}DO::get${SubJoinColumnName}, ${subJoinColumn.javaField})
-            .orderByDesc(${subTable.className}DO::getId));## 大多数情况下，id 倒序
-
+                .applyOrderDesc(reqVO, ${table.className}DO::get${PkJavaField}));
     }
 ## 主表与子表是一对一时 
     #if (!$subTable.subJoinMany)
