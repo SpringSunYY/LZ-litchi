@@ -172,6 +172,26 @@ export function useGridFormSchema(): VbenFormSchema[] {
         #end
         placeholder: '请选择${comment}',
       },
+  #elseif ($column.htmlType == "checkbox")
+      component: 'Checkbox',
+      componentProps: {
+        allowClear: true,
+        #if ("" != $dictType)## 设置了 dictType 数据字典的情况
+        options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
+        #else## 未设置 dictType 数据字典的情况
+        options: [],
+        #end
+      },
+  #elseif ($column.htmlType == "inputNumber")
+      component: 'InputNumber',
+      componentProps: {
+        allowClear: true,
+        min: 0,
+        controlsPosition: 'right',
+        placeholder: '请输入${comment}',
+      },
+  #elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
+  ## 图片/文件字段不参与搜索，跳过
   #elseif($column.htmlType == "datetime")
       component: 'RangePicker',
       componentProps: {
@@ -209,6 +229,18 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
       cellRender: {
         name: 'CellDict',
         props: { type: DICT_TYPE.$dictType.toUpperCase() },
+      },
+  #elseif($column.htmlType == "imageUpload")## 图片上传
+      cellRender: {
+          name: 'CellImage',
+          props: {
+              width: 40,
+              height: 40,
+          },
+      },
+  #elseif($column.htmlType == "fileUpload")
+      cellRender: {
+          name: 'CellFilePreview',
       },
   #end
   #if (${table.templateType} == 2 && $column.id == $treeNameColumn.id)## 树表特有:标记树节点列
@@ -375,6 +407,26 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                             #end
                             placeholder: '请选择${comment}',
                         },
+                    #elseif ($column.htmlType == "checkbox")
+                        component: 'Checkbox',
+                        componentProps: {
+                            allowClear: true,
+                            #if ("" != $dictType)## 设置了 dictType 数据字典的情况
+                                options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
+                            #else## 未设置 dictType 数据字典的情况
+                                options: [],
+                            #end
+                        },
+                    #elseif ($column.htmlType == "inputNumber")
+                        component: 'InputNumber',
+                        componentProps: {
+                            allowClear: true,
+                            min: 0,
+                            controlsPosition: 'right',
+                            placeholder: '请输入${comment}',
+                        },
+                    #elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
+                    ## 图片/文件字段不参与搜索，跳过
                     #elseif($column.htmlType == "datetime")
                         component: 'RangePicker',
                         componentProps: {
@@ -409,6 +461,18 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         cellRender: {
                             name: 'CellDict',
                             props: { type: DICT_TYPE.$dictType.toUpperCase() },
+                        },
+                    #elseif($column.htmlType == "imageUpload")## 图片上传
+                        cellRender: {
+                            name: 'CellImage',
+                            props: {
+                                width: 40,
+                                height: 40,
+                            },
+                        },
+                    #elseif($column.htmlType == "fileUpload")
+                        cellRender: {
+                            name: 'CellFilePreview',
                         },
                     #end
                 },
@@ -457,6 +521,19 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                     },
                                 #end
                             #end
+                    #if($column.htmlType == "imageUpload")## 图片上传
+                        cellRender: {
+                            name: 'CellImage',
+                            props: {
+                                width: 40,
+                                height: 40,
+                            },
+                        },
+                    #elseif($column.htmlType == "fileUpload")
+                        cellRender: {
+                            name: 'CellFilePreview',
+                        },
+                        #end
                         },
                     #end
                 #end
@@ -593,6 +670,18 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                             cellRender: {
                                 name: 'CellDict',
                                 props: { type: DICT_TYPE.$dictType.toUpperCase() },
+                            },
+                        #elseif($column.htmlType == "imageUpload")## 图片上传
+                            cellRender: {
+                                name: 'CellImage',
+                                props: {
+                                    width: 40,
+                                    height: 40,
+                                },
+                            },
+                        #elseif($column.htmlType == "fileUpload")
+                            cellRender: {
+                                name: 'CellFilePreview',
                             },
                         #end
                     },
