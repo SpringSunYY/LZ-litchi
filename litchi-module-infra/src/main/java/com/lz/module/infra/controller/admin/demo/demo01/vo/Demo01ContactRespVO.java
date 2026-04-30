@@ -14,26 +14,30 @@ import java.time.LocalDateTime;
 @ExcelIgnoreUnannotated
 public class Demo01ContactRespVO {
 
-    @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "21555")
+    @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "20881")
     @ExcelProperty("编号")
     private Long id;
 
-    @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
+    @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
     @ExcelProperty("名字")
     private String name;
 
-    @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty(value = "性别", converter = DictConvert.class)
     @DictFormat("system_user_sex") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
-    private Integer sex;
+    private Boolean sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("出生年")
     private LocalDateTime birthday;
 
-    @Schema(description = "简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "你说的对")
+    @Schema(description = "简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "随便")
     @ExcelProperty("简介")
     private String description;
+
+    @Schema(description = "年龄")
+    @ExcelProperty("年龄")
+    private Integer age;
 
     @Schema(description = "头像")
     @ExcelProperty("头像")

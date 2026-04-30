@@ -15,22 +15,23 @@ import static com.lz.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_
 @Data
 public class Demo01ContactPageReqVO extends PageParam {
 
-    @Schema(description = "名字", example = "李四")
+    @Schema(description = "名字", example = "王五")
     private String name;
 
-    @Sortable(value = "sex")
-    @Size(max = 2, message = "性别长度不能超过2")
     @Schema(description = "性别")
-    private Integer[] sex;
+    private Boolean sex;
 
     @Sortable(value = "birthday")
-    @Size(max = 2, message = "出生年长度不能超过2")
     @Schema(description = "出生年")
-    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
-    private LocalDateTime[] birthday;
+    private LocalDateTime birthday;
 
     @Schema(description = "简介", example = "随便")
     private String description;
+
+    @Sortable(value = "age")
+    @Size(max = 2, message = "年龄长度不能超过2")
+    @Schema(description = "年龄")
+    private Integer[] age;
 
     @Schema(description = "头像")
     private String avatar;

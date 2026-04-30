@@ -17,6 +17,7 @@ import { ElMessage, ElLoading } from 'element-plus';
 import { ref, computed, nextTick,watch } from 'vue';
 import { $t } from '#/locales';
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
+import { pickSort } from '#/utils';
 
 #if ($table.templateType == 11) ## erp
 import { delete${subSimpleClassName},#if ($deleteBatchEnable) delete${subSimpleClassName}List,#end get${subSimpleClassName}Page } from '#/api/${table.moduleName}/${table.businessName}';
@@ -109,9 +110,15 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridOptions: {
 #if ($table.templateType == 11)
   columns: use${subSimpleClassName}GridColumns(),
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
     proxyConfig: {
       ajax: {
-        query: async ({ page }, formValues) => {
+        query: async (ctx, formValues) => {
+          const { page } = ctx || {};
+          const { sortBy, sort } = pickSort(ctx);
           if (!props.${subJoinColumn.javaField}){
               return []
           }
@@ -120,6 +127,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             pageSize: page.pageSize,
             ${subJoinColumn.javaField}: props.${subJoinColumn.javaField},
             ...formValues,
+            ...(sortBy?.length ? { sortBy, sort } : {}),
           });
         },
       },
@@ -150,6 +158,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
   gridEvents:{
     checkboxAll: handleRowCheckboxChange,
     checkboxChange: handleRowCheckboxChange,
+    sortChange: () => gridApi.query(),
+  }
+  #else
+  gridEvents:{
+    sortChange: () => gridApi.query(),
   }
   #end
 });

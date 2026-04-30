@@ -11,24 +11,27 @@ import java.time.LocalDateTime;
 @Data
 public class Demo01ContactSaveReqVO {
 
-    @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "21555")
+    @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "20881")
     private Long id;
 
-    @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
+    @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
     @NotEmpty(message = "名字不能为空")
     private String name;
 
-    @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "性别不能为空")
-    private Integer sex;
+    private Boolean sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "出生年不能为空")
     private LocalDateTime birthday;
 
-    @Schema(description = "简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "你说的对")
+    @Schema(description = "简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "随便")
     @NotEmpty(message = "简介不能为空")
     private String description;
+
+    @Schema(description = "年龄")
+    private Integer age;
 
     @Schema(description = "头像")
     private String avatar;

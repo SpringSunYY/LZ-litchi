@@ -26,12 +26,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.function.BiPredicate;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.lz.framework.common.util.collection.CollectionUtils.convertMap;
 import static com.lz.framework.common.util.collection.CollectionUtils.convertSet;
 import static com.lz.module.infra.enums.ErrorCodeConstants.*;
 
@@ -165,44 +162,33 @@ public class CodegenServiceImpl implements CodegenService {
         validateTableInfo(tableInfo);
         List<TableField> tableFields = tableInfo.getFields();
 
-        // 2. 构建 CodegenColumnDO 数组，只同步新增的字段
+        // 2. 获取已有的 CodegenColumnDO 列表
         List<CodegenColumnDO> codegenColumns = codegenColumnMapper.selectListByTableId(tableId);
         Set<String> codegenColumnNames = convertSet(codegenColumns, CodegenColumnDO::getColumnName);
 
-        // 3.1 计算需要【修改】的字段，插入时重新插入，删除时将原来的删除
-        Map<String, CodegenColumnDO> codegenColumnDOMap = convertMap(codegenColumns, CodegenColumnDO::getColumnName);
-        BiPredicate<TableField, CodegenColumnDO> primaryKeyPredicate =
-                (tableField, codegenColumn) -> tableField.getMetaInfo().getJdbcType().name().equals(codegenColumn.getDataType())
-                        && tableField.getMetaInfo().isNullable() == codegenColumn.getNullable()
-                        && tableField.isKeyFlag() == codegenColumn.getPrimaryKey()
-                        && tableField.getComment().equals(codegenColumn.getColumnComment());
-        Set<String> modifyFieldNames = IntStream.range(0, tableFields.size()).mapToObj(index -> {
-            TableField tableField = tableFields.get(index);
-            String columnName = tableField.getColumnName();
-            CodegenColumnDO codegenColumn = codegenColumnDOMap.get(columnName);
-            if (codegenColumn == null) {
-                return null;
-            }
-            if (!primaryKeyPredicate.test(tableField, codegenColumn) || codegenColumn.getOrdinalPosition() != index) {
-                return columnName;
-            }
-            return null;
-        }).filter(Objects::nonNull).collect(Collectors.toSet());
-        // 3.2 计算需要【删除】的字段
+        // 3. 计算需要【删除】的字段（数据库中已不存在的字段）
         Set<String> tableFieldNames = convertSet(tableFields, TableField::getName);
         Set<Long> deleteColumnIds = codegenColumns.stream()
-                .filter(column -> (!tableFieldNames.contains(column.getColumnName())) || modifyFieldNames.contains(column.getColumnName()))
-                .map(CodegenColumnDO::getId).collect(Collectors.toSet());
-        // 移除已经存在的字段
-        tableFields.removeIf(column -> codegenColumnNames.contains(column.getColumnName()) && (!modifyFieldNames.contains(column.getColumnName())));
-        if (CollUtil.isEmpty(tableFields) && CollUtil.isEmpty(deleteColumnIds)) {
+                .filter(column -> !tableFieldNames.contains(column.getColumnName()))
+                .map(CodegenColumnDO::getId)
+                .collect(Collectors.toSet());
+
+        // 4. 过滤出需要【新增】的字段（数据库中有但 codegen 中没有的）
+        List<TableField> newTableFields = tableFields.stream()
+                .filter(field -> !codegenColumnNames.contains(field.getColumnName()))
+                .collect(Collectors.toList());
+
+        // 5. 如果没有新增也没有删除，则直接返回
+        if (CollUtil.isEmpty(newTableFields) && CollUtil.isEmpty(deleteColumnIds)) {
             throw exception(CODEGEN_SYNC_NONE_CHANGE);
         }
 
-        // 4.1 插入新增的字段
-        List<CodegenColumnDO> columns = codegenBuilder.buildColumns(tableId, tableFields);
-        codegenColumnMapper.insertBatch(columns);
-        // 4.2 删除不存在的字段
+        // 6. 插入新增的字段
+        List<CodegenColumnDO> columns = codegenBuilder.buildColumns(tableId, newTableFields);
+        if (CollUtil.isNotEmpty(columns)) {
+            codegenColumnMapper.insertBatch(columns);
+        }
+        // 7. 删除不存在的字段
         if (CollUtil.isNotEmpty(deleteColumnIds)) {
             codegenColumnMapper.deleteByIds(deleteColumnIds);
         }

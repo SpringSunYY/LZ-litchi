@@ -155,7 +155,9 @@ export function useGridFormSchema(): VbenFormSchema[] {
     {
       fieldName: '${javaField}',
       label: '${comment}',
-  #if ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
+  #if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
+      component: 'NumberRange',
+  #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
       component: 'Input',
       componentProps: {
         allowClear: true,
@@ -223,6 +225,9 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
       field: '${javaField}',
       title: '${comment}',
       minWidth: 120,
+  #if ($column.listOperation && $column.sortOperation)
+      sortable: true,
+  #end
   #if ($column.javaType == "LocalDateTime")## 时间类型
       formatter: 'formatDateTime',
   #elseif("" != $dictType)## 数据字典
@@ -390,50 +395,52 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                 {
                     fieldName: '${javaField}',
                     label: '${comment}',
-                    #if ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
-                        component: 'Input',
-                        componentProps: {
-                            allowClear: true,
-                            placeholder: '请输入${comment}',
-                        },
-                    #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
-                        component: 'Select',
-                        componentProps: {
-                            allowClear: true,
-                            #if ("" != $dictType)## 设置了 dictType 数据字典的情况
-                                options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
-                            #else## 未设置 dictType 数据字典的情况
-                                options: [],
-                            #end
-                            placeholder: '请选择${comment}',
-                        },
-                    #elseif ($column.htmlType == "checkbox")
-                        component: 'Checkbox',
-                        componentProps: {
-                            allowClear: true,
-                            #if ("" != $dictType)## 设置了 dictType 数据字典的情况
-                                options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
-                            #else## 未设置 dictType 数据字典的情况
-                                options: [],
-                            #end
-                        },
-                    #elseif ($column.htmlType == "inputNumber")
-                        component: 'InputNumber',
-                        componentProps: {
-                            allowClear: true,
-                            min: 0,
-                            controlsPosition: 'right',
-                            placeholder: '请输入${comment}',
-                        },
-                    #elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
-                    ## 图片/文件字段不参与搜索，跳过
-                    #elseif($column.htmlType == "datetime")
-                        component: 'RangePicker',
-                        componentProps: {
-                            ...getRangePickerDefaultProps(),
-                            allowClear: true,
-                        },
-                    #end
+                #if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
+                    component: 'NumberRange',
+                #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
+                    component: 'Input',
+                    componentProps: {
+                        allowClear: true,
+                        placeholder: '请输入${comment}',
+                    },
+                #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
+                    component: 'Select',
+                    componentProps: {
+                        allowClear: true,
+                        #if ("" != $dictType)## 设置了 dictType 数据字典的情况
+                            options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
+                        #else## 未设置 dictType 数据字典的情况
+                            options: [],
+                        #end
+                        placeholder: '请选择${comment}',
+                    },
+                #elseif ($column.htmlType == "checkbox")
+                    component: 'Checkbox',
+                    componentProps: {
+                        allowClear: true,
+                        #if ("" != $dictType)## 设置了 dictType 数据字典的情况
+                            options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
+                        #else## 未设置 dictType 数据字典的情况
+                            options: [],
+                        #end
+                    },
+                #elseif ($column.htmlType == "inputNumber")
+                    component: 'InputNumber',
+                    componentProps: {
+                        allowClear: true,
+                        min: 0,
+                        controlsPosition: 'right',
+                        placeholder: '请输入${comment}',
+                    },
+                #elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
+                ## 图片/文件字段不参与搜索，跳过
+                #elseif($column.htmlType == "datetime")
+                    component: 'RangePicker',
+                    componentProps: {
+                        ...getRangePickerDefaultProps(),
+                        allowClear: true,
+                    },
+                #end
                 },
             #end
         #end
@@ -455,26 +462,29 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                     field: '${javaField}',
                     title: '${comment}',
                     minWidth: 120,
-                    #if ($column.javaType == "LocalDateTime")## 时间类型
-                        formatter: 'formatDateTime',
-                    #elseif("" != $dictType)## 数据字典
-                        cellRender: {
-                            name: 'CellDict',
-                            props: { type: DICT_TYPE.$dictType.toUpperCase() },
+                #if ($column.listOperation && $column.sortOperation)
+                    sortable: true,
+                #end
+                #if ($column.javaType == "LocalDateTime")## 时间类型
+                    formatter: 'formatDateTime',
+                #elseif("" != $dictType)## 数据字典
+                    cellRender: {
+                        name: 'CellDict',
+                        props: { type: DICT_TYPE.$dictType.toUpperCase() },
+                    },
+                #elseif($column.htmlType == "imageUpload")## 图片上传
+                    cellRender: {
+                        name: 'CellImage',
+                        props: {
+                            width: 40,
+                            height: 40,
                         },
-                    #elseif($column.htmlType == "imageUpload")## 图片上传
-                        cellRender: {
-                            name: 'CellImage',
-                            props: {
-                                width: 40,
-                                height: 40,
-                            },
-                        },
-                    #elseif($column.htmlType == "fileUpload")
-                        cellRender: {
-                            name: 'CellFilePreview',
-                        },
-                    #end
+                    },
+                #elseif($column.htmlType == "fileUpload")
+                    cellRender: {
+                        name: 'CellFilePreview',
+                    },
+                #end
                 },
             #end
         #end
@@ -521,19 +531,6 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                     },
                                 #end
                             #end
-                    #if($column.htmlType == "imageUpload")## 图片上传
-                        cellRender: {
-                            name: 'CellImage',
-                            props: {
-                                width: 40,
-                                height: 40,
-                            },
-                        },
-                    #elseif($column.htmlType == "fileUpload")
-                        cellRender: {
-                            name: 'CellFilePreview',
-                        },
-                    #end
                         },
                     #end
                 #end
@@ -664,28 +661,31 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         field: '${javaField}',
                         title: '${comment}',
                         minWidth: 120,
-                        #if ($column.javaType == "LocalDateTime")## 时间类型
-                            formatter: 'formatDateTime',
-                        #elseif("" != $dictType)## 数据字典
-                            cellRender: {
-                                name: 'CellDict',
-                                props: { type: DICT_TYPE.$dictType.toUpperCase() },
+                    #if ($column.listOperation && $column.sortOperation)
+                        sortable: true,
+                    #end
+                    #if ($column.javaType == "LocalDateTime")## 时间类型
+                        formatter: 'formatDateTime',
+                    #elseif("" != $dictType)## 数据字典
+                        cellRender: {
+                            name: 'CellDict',
+                            props: { type: DICT_TYPE.$dictType.toUpperCase() },
+                        },
+                    #elseif($column.htmlType == "imageUpload")## 图片上传
+                        cellRender: {
+                            name: 'CellImage',
+                            props: {
+                                width: 40,
+                                height: 40,
                             },
-                        #elseif($column.htmlType == "imageUpload")## 图片上传
-                            cellRender: {
-                                name: 'CellImage',
-                                props: {
-                                    width: 40,
-                                    height: 40,
-                                },
-                            },
-                        #elseif($column.htmlType == "fileUpload")
-                            cellRender: {
-                                name: 'CellFilePreview',
-                            },
-                        #end
-                    },
-                #end
+                        },
+                    #elseif($column.htmlType == "fileUpload")
+                        cellRender: {
+                            name: 'CellFilePreview',
+                        },
+                    #end
+                },
+            #end
             #end
         ];
     }

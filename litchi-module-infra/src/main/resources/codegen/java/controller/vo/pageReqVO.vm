@@ -41,11 +41,7 @@ public class ${sceneEnum.prefixClass}${table.className}PageReqVO extends PagePar
     #if(${column.sortOperation})
     @Sortable(value = "${column.columnName}")
     #end
-#if (!${column.nullable})
     @Size(max = 2, message = "${column.columnComment}长度不能超过2")
-#else
-    @Nullable
-#end
     @Schema(description = "${column.columnComment}"#if ("$!column.example" != ""), example = "${column.example}"#end)
 #if (${column.javaType} == "LocalDateTime")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)

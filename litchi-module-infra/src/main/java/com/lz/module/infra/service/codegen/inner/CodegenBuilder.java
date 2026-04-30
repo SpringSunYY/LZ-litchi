@@ -169,13 +169,12 @@ public class CodegenBuilder {
         // 处理 listOperation 字段
         column.setListOperation(!LIST_OPERATION_EXCLUDE_COLUMN.contains(column.getJavaField())
                                 && !column.getPrimaryKey()); // 对于主键，列表过滤不需要传递
-        // 处理 sortOperation 字段：主键、数据库数字类型、Java字段为数字相关的、时间类型默认支持排序
-        column.setSortOperation(column.getPrimaryKey()
-                                || isNumericType(column.getDataType())
+        // 处理 sortOperation 字段：数据库数字类型、Java字段为数字相关的、时间类型默认支持排序
+        column.setSortOperation(isNumericType(column.getDataType())
                                 || isNumericField(column.getJavaField())
                                 || LocalDateTime.class.getSimpleName().equals(column.getJavaType()));
         // 处理 listOperationCondition 字段：数字类型默认为范围查询
-        if (isNumericType(column.getDataType())) {
+        if (isNumericType(column.getDataType())|| isNumericField(column.getJavaField())) {
             column.setListOperationCondition(CodegenColumnListConditionEnum.BETWEEN.getCondition());
         } else {
             COLUMN_LIST_OPERATION_CONDITION_MAPPINGS.entrySet().stream()

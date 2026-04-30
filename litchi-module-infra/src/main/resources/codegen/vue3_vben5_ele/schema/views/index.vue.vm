@@ -18,6 +18,7 @@ import ${subSimpleClassName}List from './modules/${subSimpleClassName_strikeCase
 import { ref, computed } from 'vue';
 import { $t } from '#/locales';
 import { ACTION_ICON, TableAction, useVbenVxeGrid } from '#/adapter/vxe-table';
+import { pickSort } from '#/utils';
 #if (${table.templateType} == 2)## 树表接口
 import { get${simpleClassName}List, delete${simpleClassName}, export${simpleClassName} } from '#/api/${table.moduleName}/${table.businessName}';
 #else## 标准表接口
@@ -155,15 +156,22 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       ajax: {
 #if (${table.templateType} == 2)## 树表数据加载
-        query: async (_, formValues) => {
-          return await get${simpleClassName}List(formValues);
+        query: async (ctx, formValues) => {
+          const { sortBy, sort } = pickSort(ctx);
+          return await get${simpleClassName}List({
+            ...formValues,
+            ...(sortBy?.length ? { sortBy, sort } : {}),
+          });
         },
 #else## 标准表数据加载
-        query: async ({ page }, formValues) => {
+        query: async (ctx, formValues) => {
+          const { page } = ctx || {};
+          const { sortBy, sort } = pickSort(ctx);
           return await get${simpleClassName}Page({
             pageNo: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
+            ...(sortBy?.length ? { sortBy, sort } : {}),
           });
         },
 #end
@@ -180,6 +188,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
       refresh: { code: 'query' },
       search: true,
     },
+    sortConfig: {
+      remote: true,
+      multiple: true,
+    },
   } as VxeTableGridOptions<${simpleClassName}Api.${simpleClassName}>,
 #if (${table.templateType} == 11 || $deleteBatchEnable)
   gridEvents:{
@@ -192,6 +204,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
       checkboxAll: handleRowCheckboxChange,
       checkboxChange: handleRowCheckboxChange,
     #end
+    sortChange: () => gridApi.query(),
+  }
+#else
+  gridEvents:{
+    sortChange: () => gridApi.query(),
   }
 #end
 });

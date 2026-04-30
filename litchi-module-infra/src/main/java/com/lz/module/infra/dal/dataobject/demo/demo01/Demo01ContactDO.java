@@ -36,7 +36,7 @@ public class Demo01ContactDO extends BaseDO {
      * 性别
      *
      */
-    private Integer sex;
+    private Boolean sex;
     /**
      * 出生年
      */
@@ -46,8 +46,13 @@ public class Demo01ContactDO extends BaseDO {
      */
     private String description;
     /**
+     * 年龄
+     */
+    private Integer age;
+    /**
      * 头像
      */
     private String avatar;
+
 
 }
