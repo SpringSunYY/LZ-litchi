@@ -76,6 +76,17 @@ public interface ${table.className}Service {
     List<${table.className}DO> get${simpleClassName}List(${sceneEnum.prefixClass}${table.className}ListReqVO listReqVO);
 #end
 
+## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+    /**
+     * 导入${table.classComment}
+     *
+     * @param list 导入列表
+     * @return 导入结果
+     */
+    ${importRespVOClass} import${simpleClassName}List(List<${importReqVOClass}> list);
+#end
+
 ## 特殊：主子表专属逻辑
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)

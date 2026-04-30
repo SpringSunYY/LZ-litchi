@@ -2,9 +2,13 @@
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
-import { Page, useVbenModelDrawer  } from '@vben/common-ui';
+import { Page, useVbenModelDrawer, useVbenModal } from '@vben/common-ui';
 import { ElMessage, ElTabs, ElTabPane, ElLoading } from 'element-plus';
 import Form from './modules/form.vue';
+## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+import ImportForm from './modules/import-form.vue';
+#end
 
 ## 特殊：主子表专属逻辑
 #if ( $table.templateType == 11 || $table.templateType == 12 )
@@ -43,6 +47,19 @@ const [FormModalDrawer, formModalDrawerApi] = useVbenModelDrawer({
   type: '$extendConfig.get("popupType")',
 #end
 });
+
+## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+const [ImportModal, importModalApi] = useVbenModal({
+  connectedComponent: ImportForm,
+  destroyOnClose: true,
+});
+
+/** 导入${table.classComment} */
+function handleImport() {
+  importModalApi.open();
+}
+#end
 
 #if (${table.templateType} == 2)## 树表特有：控制表格展开收缩
 /** 切换树形展开/收缩状态 */
@@ -217,6 +234,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
 <template>
   <Page auto-content-height>
     <FormModalDrawer @success="onRefresh" />
+    ## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+    #if ($extendConfig.get('isImport') != '1')
+    <ImportModal @success="onRefresh" />
+    #end
 
 #if ($table.templateType == 11) ## erp情况
   <div>
@@ -270,6 +291,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
               disabled: isEmpty(checkedIds),
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:delete'],
               onClick: handleDeleteBatch,
+            },
+            #end
+            ## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+            #if ($extendConfig.get('isImport') != '1')
+            {
+              label: $t('ui.actionTitle.import', ['${table.classComment}']),
+              type: 'primary',
+              icon: ACTION_ICON.UPLOAD,
+              auth: ['${table.moduleName}:${simpleClassName_strikeCase}:import'],
+              onClick: handleImport,
             },
             #end
           ]"

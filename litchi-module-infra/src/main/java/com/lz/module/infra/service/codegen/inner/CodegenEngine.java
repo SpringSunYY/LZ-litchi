@@ -71,6 +71,8 @@ public class CodegenEngine {
             .put(javaTemplatePath("controller/vo/listReqVO"), javaModuleImplVOFilePath("ListReqVO"))
             .put(javaTemplatePath("controller/vo/respVO"), javaModuleImplVOFilePath("RespVO"))
             .put(javaTemplatePath("controller/vo/saveReqVO"), javaModuleImplVOFilePath("SaveReqVO"))
+            .put(javaTemplatePath("controller/vo/importReqVO"), javaModuleImplVOFilePath("ImportVO"))
+            .put(javaTemplatePath("controller/vo/importRespVO"), javaModuleImplVOFilePath("ImportRespVO"))
             .put(javaTemplatePath("controller/controller"), javaModuleImplControllerFilePath())
             .put(javaTemplatePath("dal/do"),
                     javaModuleImplMainFilePath("dal/dataobject/${table.businessName}/${table.className}DO"))
@@ -165,6 +167,8 @@ public class CodegenEngine {
                     vue3FilePath("views/${table.moduleName}/${table.businessName}/modules/${subSimpleClassName_strikeCase}-list.vue"))
             .put(CodegenFrontTypeEnum.VUE3_VBEN5_ANTD_SCHEMA.getType(), vue3Vben5AntdSchemaTemplatePath("views/modules/list_sub_erp.vue"),  // 特殊：主子表专属逻辑
                     vue3FilePath("views/${table.moduleName}/${table.businessName}/modules/${subSimpleClassName_strikeCase}-list.vue"))
+            .put(CodegenFrontTypeEnum.VUE3_VBEN5_ANTD_SCHEMA.getType(), vue3Vben5AntdSchemaTemplatePath("views/modules/import-form.vue"),  // 导入功能
+                    vue3FilePath("views/${table.moduleName}/${table.businessName}/modules/import-form.vue"))
             // VUE3_VBEN5_ANTD
             .put(CodegenFrontTypeEnum.VUE3_VBEN5_ANTD_GENERAL.getType(), vue3Vben5AntdGeneralTemplatePath("views/index.vue"),
                     vue3FilePath("views/${table.moduleName}/${table.businessName}/index.vue"))
@@ -201,6 +205,8 @@ public class CodegenEngine {
                     vue3FilePath("views/${table.moduleName}/${table.businessName}/modules/${subSimpleClassName_strikeCase}-list.vue"))
             .put(CodegenFrontTypeEnum.VUE3_VBEN5_EP_SCHEMA.getType(), vue3Vben5EpSchemaTemplatePath("views/modules/list_sub_erp.vue"),  // 特殊：主子表专属逻辑
                     vue3FilePath("views/${table.moduleName}/${table.businessName}/modules/${subSimpleClassName_strikeCase}-list.vue"))
+            .put(CodegenFrontTypeEnum.VUE3_VBEN5_EP_SCHEMA.getType(), vue3Vben5EpSchemaTemplatePath("views/modules/import-form.vue"),  // 导入功能
+                    vue3FilePath("views/${table.moduleName}/${table.businessName}/modules/import-form.vue"))
             // VUE3_VBEN5_EP
             .put(CodegenFrontTypeEnum.VUE3_VBEN5_EP_GENERAL.getType(), vue3Vben5EpGeneralTemplatePath("views/index.vue"),
                     vue3FilePath("views/${table.moduleName}/${table.businessName}/index.vue"))
@@ -295,6 +301,7 @@ public class CodegenEngine {
         globalBindingMap.put("OperateTypeEnumClassName", OperateTypeEnum.class.getName());
         globalBindingMap.put("BeanUtils", BeanUtils.class.getName());
         globalBindingMap.put("CollectionUtilsClassName", CollectionUtils.class.getName());
+        globalBindingMap.put("StrUtilClassName", cn.hutool.core.util.StrUtil.class.getName());
     }
 
     /**
@@ -312,6 +319,9 @@ public class CodegenEngine {
         Map<String, Object> bindingMap = initBindingMap(table, columns, subTables, subColumnsList);
         // 1.2 获得模版
         Map<String, String> templates = getTemplates(table.getFrontType());
+        // 1.3 检查是否需要导入功能（isImport 为 1 时关闭）
+        Map<String, Object> extendConfig = table.getExtendConfig();
+        boolean importEnable = !ObjectUtil.equal(MapUtil.getStr(extendConfig, "isImport"), "1");
 
         // 2. 执行生成
         Map<String, String> result = Maps.newLinkedHashMapWithExpectedSize(templates.size()); // 有序
@@ -332,7 +342,11 @@ public class CodegenEngine {
                     return;
                 }
             }
-            // 2.3 默认生成
+            // 2.3 特殊：导入功能（当 isImport 为 1 时关闭）
+            if (!importEnable && isImportTemplate(vmPath)) {
+                return;
+            }
+            // 2.4 默认生成
             generateCode(result, vmPath, filePath, bindingMap);
         });
         return result;
@@ -492,12 +506,18 @@ public class CodegenEngine {
             bindingMap.put("respVOClass", prefixClass + className + "RespVO");
             bindingMap.put("saveReqVOVar", "createReqVO");
             bindingMap.put("updateReqVOVar", "updateReqVO");
+            // 导入 VO
+            bindingMap.put("importReqVOClass", prefixClass + className + "ImportVO");
+            bindingMap.put("importRespVOClass", prefixClass + className + "ImportRespVO");
         } else if (ObjectUtil.equal(codegenProperties.getVoType(), CodegenVOTypeEnum.DO.getType())) {
             bindingMap.put("saveReqVOClass", className + "DO");
             bindingMap.put("updateReqVOClass", className + "DO");
             bindingMap.put("respVOClass", className + "DO");
             bindingMap.put("saveReqVOVar", classNameVar);
             bindingMap.put("updateReqVOVar", classNameVar);
+            // 导入 VO
+            bindingMap.put("importReqVOClass", className + "ImportVO");
+            bindingMap.put("importRespVOClass", className + "ImportRespVO");
         }
         return bindingMap;
     }
@@ -645,6 +665,10 @@ public class CodegenEngine {
 
     private static boolean isListReqVOTemplate(String path) {
         return path.contains("listReqVO");
+    }
+
+    private static boolean isImportTemplate(String path) {
+        return path.contains("importReqVO") || path.contains("importRespVO") || path.contains("import-form");
     }
 
 }

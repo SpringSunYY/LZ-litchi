@@ -46,6 +46,9 @@ public class CodegenTableRespVO {
     @Schema(description = "前端类型，参见 CodegenFrontTypeEnum 枚举", requiredMode = Schema.RequiredMode.REQUIRED, example = "20")
     private Integer frontType;
 
+    @Schema(description = "扩展配置", example = "{}")
+    private Map<String, Object> extendConfig;
+
     @Schema(description = "父菜单编号", example = "1024")
     private Long parentMenuId;
 
@@ -58,10 +61,9 @@ public class CodegenTableRespVO {
 
     @Schema(description = "树表的父字段编号", example = "8192")
     private Long treeParentColumnId;
+
     @Schema(description = "树表的名字字段编号", example = "16384")
     private Long treeNameColumnId;
-    @Schema(description = "扩展配置", example = "{}")
-    private Map<String, Object> extendConfig;
 
     @Schema(description = "主键编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Integer dataSourceConfigId;

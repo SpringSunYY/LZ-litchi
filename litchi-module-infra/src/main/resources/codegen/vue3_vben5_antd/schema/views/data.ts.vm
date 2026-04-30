@@ -692,3 +692,26 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
     #end
 #end
 #end
+
+## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+/** ${table.classComment}导入的表单 */
+export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
+  return [
+    {
+      fieldName: 'file',
+      label: '${table.classComment}',
+      component: 'Upload',
+      rules: 'required',
+      componentProps: {
+        accept: '.xls,.xlsx',
+        maxSize: 10,
+        maxNumber: 1,
+        uploadParams: {
+          type: 'file',
+        },
+      },
+    },
+  ];
+}
+#end

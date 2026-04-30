@@ -1,6 +1,7 @@
 package ${basePackage}.module.${table.moduleName}.service.${table.businessName};
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import org.springframework.stereotype.Service;
 import ${jakartaPackage}.annotation.Resource;
 import org.springframework.validation.annotation.Validated;
@@ -8,6 +9,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.*;
+## 导入功能专属 VO 导入（位于 controller.vo 包下）
+#if ($extendConfig.get('isImport') != '1')
+import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importReqVOClass};
+import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importRespVOClass};
+#end
 import ${basePackage}.module.${table.moduleName}.dal.dataobject.${table.businessName}.${table.className}DO;
 ## 特殊：主子表专属逻辑
 #foreach ($subTable in $subTables)
@@ -149,7 +155,7 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 #set ($ParentJavaField = $treeParentColumn.javaField.substring(0,1).toUpperCase() + ${treeParentColumn.javaField.substring(1)})##首字母大写
         // 校验是否有子${table.classComment}
         if (${classNameVar}Mapper.selectCountBy${ParentJavaField}(id) > 0) {
-            throw exception(${simpleClassName_underlineCase.toUpperCase()}_EXITS_CHILDREN);
+            throw exception(${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN);
         }
 #end
         // 删除
@@ -415,5 +421,25 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 	}
 #end
 
+#end
+
+## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public ${importRespVOClass} import${simpleClassName}List(List<${importReqVOClass}> list) {
+        if (CollUtil.isEmpty(list)) {
+            throw exception(ERROR_CODE_IMPORT_DATA_EMPTY);
+        }
+        List<${table.className}DO> createList = new ArrayList<>(list.size());
+        for (int i = 0; i < list.size(); i++) {
+            ${importReqVOClass} importVO = list.get(i);
+            ${table.className}DO ${classNameVar} = BeanUtils.toBean(importVO, ${table.className}DO.class);
+            createList.add(${classNameVar});
+        }
+        ${classNameVar}Mapper.insertBatch(createList);
+        return ${importRespVOClass}.builder()
+                .message(StrUtil.format("成功导入 {} 个${table.classComment}", createList.size())).build();
+    }
 #end
 }

@@ -115,6 +115,14 @@ public class CodegenTableDO extends BaseDO {
      */
     private Integer frontType;
 
+    /**
+     * 扩展字段
+     * <p>
+     * 扩展的 JSON 字段
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private Map<String, Object> extendConfig;
+
     // ========== 菜单相关字段 ==========
 
     /**
@@ -162,13 +170,5 @@ public class CodegenTableDO extends BaseDO {
      * 关联 {@link CodegenColumnDO#getId()}
      */
     private Long treeNameColumnId;
-
-    /**
-     * 树表的扩展字段
-     * <p>
-     * 例如说，用于树表扩展的 JSON 字段
-     */
-    @TableField(typeHandler = JacksonTypeHandler.class)
-    private Map<String, Object> extendConfig;
 
 }

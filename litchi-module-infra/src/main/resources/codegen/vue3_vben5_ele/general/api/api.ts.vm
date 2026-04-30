@@ -101,6 +101,21 @@ export function export${simpleClassName}(params: any) {
   return requestClient.download('${baseURL}/export-excel', params);
 }
 
+## 导入功能（当 extendConfig.isImport 为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+/** 获取${table.classComment}导入模板 */
+export function import${simpleClassName}Template() {
+  return requestClient.download('${baseURL}/get-import-template');
+}
+
+/** 导入${table.classComment} */
+export function import${simpleClassName}(file: File) {
+  const formData = new FormData();
+  formData.append('file', file);
+  return requestClient.post('${baseURL}/import', formData);
+}
+#end
+
 ## 特殊：主子表专属逻辑
 #foreach ($subTable in $subTables)
   #set ($index = $foreach.count - 1)

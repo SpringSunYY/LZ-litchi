@@ -1,6 +1,8 @@
 package com.lz.module.infra.service.demo.demo01;
 
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactImportRespVO;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactImportVO;
 import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactPageReqVO;
 import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactSaveReqVO;
 import com.lz.module.infra.dal.dataobject.demo.demo01.Demo01ContactDO;
@@ -60,4 +62,11 @@ public interface Demo01ContactService {
      */
     PageResult<Demo01ContactDO> getDemo01ContactPage(Demo01ContactPageReqVO pageReqVO);
 
+    /**
+     * 导入示例联系人
+     *
+     * @param list 导入列表
+     * @return 导入结果
+     */
+    Demo01ContactImportRespVO importDemo01ContactList(List<Demo01ContactImportVO> list);
 }

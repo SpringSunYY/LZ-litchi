@@ -26,3 +26,14 @@ VALUES (
     '', '', '', 0
 );
 #end
+## 导入功能按钮（当 extendConfig.isImport 为 0 或不存在时开启，为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+INSERT INTO system_menu(
+    name, permission, type, sort, parent_id,
+    path, icon, component, status
+)
+VALUES (
+    '${table.classComment}导入', '${permissionPrefix}:import', 3, 6, @parentId,
+    '', '', '', 0
+);
+#end

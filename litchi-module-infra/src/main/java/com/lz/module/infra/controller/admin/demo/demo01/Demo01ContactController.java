@@ -6,9 +6,7 @@ import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.excel.core.util.ExcelUtils;
-import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactPageReqVO;
-import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactRespVO;
-import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactSaveReqVO;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.*;
 import com.lz.module.infra.dal.dataobject.demo.demo01.Demo01ContactDO;
 import com.lz.module.infra.service.demo.demo01.Demo01ContactService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,8 +18,10 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import static com.lz.framework.apilog.core.enums.OperateTypeEnum.EXPORT;
@@ -97,6 +97,33 @@ public class Demo01ContactController {
         // 导出 Excel
         ExcelUtils.write(response, "示例联系人.xls", "数据", Demo01ContactRespVO.class,
                 BeanUtils.toBean(list, Demo01ContactRespVO.class));
+    }
+
+    @GetMapping("/get-import-template")
+    @PreAuthorize("@ss.hasPermission('infra:demo01-contact:import')")
+    @Operation(summary = "获得示例联系人导入模板")
+    public void importTemplate(HttpServletResponse response) throws IOException {
+        // 手动创建导出 demo
+        List<Demo01ContactImportVO> list = Collections.singletonList(
+                Demo01ContactImportVO.builder()
+                        .name("王五")
+                        .sex(null)
+                        .birthday(null)
+                        .description("随便")
+                        .age(null)
+                        .avatar(null)
+                        .build());
+        // 输出
+        ExcelUtils.write(response, "示例联系人导入模板.xls", "示例联系人模板", Demo01ContactImportVO.class, list);
+    }
+
+    @PostMapping("/import")
+    @Operation(summary = "导入示例联系人")
+    @Parameter(name = "file", description = "Excel 文件", required = true)
+    @PreAuthorize("@ss.hasPermission('infra:demo01-contact:import')")
+    public CommonResult<Demo01ContactImportRespVO> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
+        List<Demo01ContactImportVO> list = ExcelUtils.read(file, Demo01ContactImportVO.class);
+        return success(demo01ContactService.importDemo01ContactList(list));
     }
 
 }

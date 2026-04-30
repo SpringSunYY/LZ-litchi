@@ -2,6 +2,7 @@ package ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePac
 
 import org.springframework.web.bind.annotation.*;
 import ${jakartaPackage}.annotation.Resource;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.validation.annotation.Validated;
 #if ($sceneEnum.scene == 1)import org.springframework.security.access.prepost.PreAuthorize;#end
 
@@ -14,6 +15,8 @@ import ${jakartaPackage}.validation.*;
 import ${jakartaPackage}.servlet.http.*;
 import java.util.*;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 import ${PageParamClassName};
 import ${PageResultClassName};
@@ -22,11 +25,17 @@ import ${BeanUtils};
 import static ${CommonResultClassName}.success;
 
 import ${ExcelUtilsClassName};
+import ${StrUtilClassName};
 
 import ${ApiAccessLogClassName};
 import static ${OperateTypeEnumClassName}.*;
 
 import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.*;
+## 导入功能专属 VO 导入
+#if ($extendConfig.get('isImport') != '1')
+import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importReqVOClass};
+import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importRespVOClass};
+#end
 import ${basePackage}.module.${table.moduleName}.dal.dataobject.${table.businessName}.${table.className}DO;
 ## 特殊：主子表专属逻辑
 #foreach ($subTable in $subTables)
@@ -158,6 +167,58 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         ExcelUtils.write(response, "${table.classComment}.xls", "数据", ${table.className}RespVO.class,
                         BeanUtils.toBean(list, ${table.className}RespVO.class));
     }
+#end
+
+## 导入功能（当 extendConfig.isImport 为 0 或不存在时开启，为 1 时关闭）
+#if ($extendConfig.get('isImport') != '1')
+    @GetMapping("/get-import-template")
+#if ($sceneEnum.scene == 1)
+    @PreAuthorize("@ss.hasPermission('${permissionPrefix}:import')")
+#end
+    @Operation(summary = "获得${table.classComment}导入模板")
+    public void importTemplate(HttpServletResponse response) throws IOException {
+        // 手动创建导出 demo
+        List<${importReqVOClass}> list = Collections.singletonList(
+                ${importReqVOClass}.builder()
+#foreach ($column in $columns)
+#if ($column.createOperation || $column.updateOperation)
+#if (!$column.primaryKey)
+#if ($column.example && $column.example != '')
+#if ($column.javaType == "String")
+                        .${column.javaField}("${column.example}")
+#elseif ($column.javaType == "LocalDateTime")
+                        .${column.javaField}(LocalDateTime.now())
+#elseif ($column.javaType == "LocalDate")
+                        .${column.javaField}(LocalDate.now())
+#elseif ($column.javaType == "Boolean")
+                        .${column.javaField}(true)
+#elseif ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Short" || $column.javaType == "Byte" || $column.javaType == "Double" || $column.javaType == "BigDecimal")
+                        .${column.javaField}(0)
+#else
+                        .${column.javaField}(${column.example})
+#end
+#else
+                        .${column.javaField}(null)
+#end
+#end
+#end
+#end
+                        .build());
+        // 输出
+        ExcelUtils.write(response, "${table.classComment}导入模板.xls", "${table.classComment}模板", ${importReqVOClass}.class, list);
+    }
+
+    @PostMapping("/import")
+    @Operation(summary = "导入${table.classComment}")
+    @Parameter(name = "file", description = "Excel 文件", required = true)
+#if ($sceneEnum.scene == 1)
+    @PreAuthorize("@ss.hasPermission('${permissionPrefix}:import')")
+#end
+    public CommonResult<${importRespVOClass}> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
+        List<${importReqVOClass}> list = ExcelUtils.read(file, ${importReqVOClass}.class);
+        return success(${classNameVar}Service.import${simpleClassName}List(list));
+    }
+
 #end
 
 ## 特殊：主子表专属逻辑
