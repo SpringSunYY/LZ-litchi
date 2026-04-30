@@ -1,0 +1,26 @@
+<script lang="ts" setup>
+#if ($extendConfig.get('isImport') != '1')
+import {
+  import${simpleClassName},
+  import${simpleClassName}Template,
+} from '#/api/${table.moduleName}/${table.businessName}';
+import { ImportExcel } from '#/components/import-excel';
+
+import { use${simpleClassName}ImportSchema } from '../data';
+
+const emit = defineEmits(['success']);
+#end
+</script>
+
+#if ($extendConfig.get('isImport') != '1')
+<template>
+  <ImportExcel
+    title="导入${table.classComment}"
+    :import-api="import${simpleClassName}"
+    :template-api="import${simpleClassName}Template"
+    template-file-name="${table.classComment}导入模板.xls"
+    :form-schema="use${simpleClassName}ImportSchema"
+    @success="emit('success')"
+  />
+</template>
+#end

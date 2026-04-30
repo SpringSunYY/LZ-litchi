@@ -1,0 +1,56 @@
+package ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo;
+
+import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.convert.DictConvert;
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
+import com.alibaba.excel.annotation.ExcelProperty;
+## 处理 BigDecimal 字段的引入
+#foreach ($column in $columns)
+#if (${column.javaType} == "BigDecimal")
+import java.math.BigDecimal;
+#break
+#end
+#end
+## 处理 LocalDate/LocalDateTime 字段的引入
+#foreach ($column in $columns)
+#if ((${column.createOperation} || ${column.updateOperation}) && (${column.javaType} == "LocalDateTime" || ${column.javaType} == "LocalDate"))
+import java.time.${column.javaType};
+#break
+#end
+#end
+
+@Schema(description = "${sceneEnum.name} - ${table.classComment}导入 Request VO")
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
+@Accessors(chain = false)
+public class ${sceneEnum.prefixClass}${table.className}ImportVO {
+
+#foreach ($column in $columns)
+#if ($column.createOperation || $column.updateOperation)
+#if (!$column.primaryKey)
+    @Schema(description = "${column.columnComment}"#if ("$!column.example" != ""), example = "${column.example}"#end)
+#if (${column.javaType} == "LocalDateTime")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+#elseif (${column.javaType} == "LocalDate")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+#end
+#if ("" != $column.dictType)
+    @ExcelProperty(value = "${column.columnComment}", converter = DictConvert.class)
+    @DictFormat("${column.dictType}")
+#else
+    @ExcelProperty("${column.columnComment}")
+#end
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+#end
+}
