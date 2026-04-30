@@ -110,9 +110,7 @@ export function import${simpleClassName}Template() {
 
 /** 导入${table.classComment} */
 export function import${simpleClassName}(file: File) {
-  const formData = new FormData();
-  formData.append('file', file);
-  return requestClient.post('${baseURL}/import', formData);
+  return requestClient.upload('${baseURL}/import', file);
 }
 #end
 
