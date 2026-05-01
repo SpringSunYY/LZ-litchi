@@ -1,23 +1,24 @@
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 // ========== ${table.classComment} ==========
-${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS(1_003_000_001L, "${table.classComment}不存在"),
+${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS(1_003_000_001L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassName_underlineCase}:notExists",#end "${table.classComment}不存在"),
 ## 特殊：树表专属逻辑
 #if ( $table.templateType == 2 )
-${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN(1_003_000_002L, "存在子${table.classComment}，无法删除"),
-${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXISTS(1_003_000_003L, "父级${table.classComment}不存在"),
-${simpleClassName_underlineCase.toUpperCase()}_PARENT_ERROR(1_003_000_004L, "不能设置自己为父${table.classComment}"),
-${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE(1_003_000_005L, "已经存在该${treeNameColumn.columnComment}的${table.classComment}"),
-${simpleClassName_underlineCase.toUpperCase()}_PARENT_IS_CHILD(1_003_000_006L, "不能设置自己的子${table.className}为父${table.className}"),
+${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN(1_003_000_002L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassName_underlineCase}:existChildren",#end "存在子${table.classComment}，无法删除"),
+${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXISTS(1_003_000_003L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassName_underlineCase}:parentNotExists",#end "父级${table.classComment}不存在"),
+${simpleClassName_underlineCase.toUpperCase()}_PARENT_ERROR(1_003_000_004L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassName_underlineCase}:parentError",#end "不能设置自己为父${table.classComment}"),
+${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE(1_003_000_005L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassName_underlineCase}:${treeNameColumn_javaField_underlineCase}Duplicate",#end "已经存在该${treeNameColumn.columnComment}的${table.classComment}"),
+${simpleClassName_underlineCase.toUpperCase()}_PARENT_IS_CHILD(1_003_000_006L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassName_underlineCase}:parentIsChild",#end "不能设置自己的子${table.className}为父${table.className}"),
 #end
 ## 特殊：主子表专属逻辑（ERP 情况）
 #if ( $table.templateType == 11 )
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
 #set ($simpleClassNameUnderlineCase = $simpleClassNameUnderlineCases.get($index))
-${simpleClassNameUnderlineCase.toUpperCase()}_NOT_EXISTS(1_003_000_007L, "${subTable.classComment}不存在"),
+${simpleClassNameUnderlineCase.toUpperCase()}_NOT_EXISTS(1_003_000_007L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassNameUnderlineCase}:notExists",#end "${subTable.classComment}不存在"),
 #if ( !$subTable.subJoinMany )
-${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS(1_003_000_008L, "${subTable.classComment}已存在"),
+${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS(1_003_000_008L#if ($isI18n), "${table.moduleName}:${table.businessName}:back:${simpleClassNameUnderlineCase}:exists",#end "${subTable.classComment}已存在"),
 #end
 #end
 #end
-// ========== 导入通用错误码 ==========
+// ========== 导入通用错误码（可自行配置国际化） ==========
 ERROR_CODE_IMPORT_DATA_EMPTY(1_003_000_100L, "导入数据不能为空！"),

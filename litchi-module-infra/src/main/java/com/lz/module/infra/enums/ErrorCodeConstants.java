@@ -68,7 +68,7 @@ public interface ErrorCodeConstants {
     ErrorCode DEMO03_COURSE_NOT_EXISTS = new ErrorCode(1_001_201_008, "学生课程不存在");
     ErrorCode DEMO03_GRADE_NOT_EXISTS = new ErrorCode(1_001_201_009, "学生班级不存在");
     ErrorCode DEMO03_GRADE_EXISTS = new ErrorCode(1_001_201_010, "学生班级已存在");
-
+    ErrorCode ERROR_CODE_IMPORT_DATA_EMPTY = new ErrorCode(1_001_201_011, "导入数据为空");
     // ========== 国际化国家 1-001-008-000==========
     ErrorCode I18N_LOCALE_NOT_EXISTS = new ErrorCode(1_001_008_000, "国际化国家不存在");
     ErrorCode I18N_LOCALE_EXISTS = new ErrorCode(1_001_008_001, "国际化国家已存在{}");
@@ -77,7 +77,7 @@ public interface ErrorCodeConstants {
     ErrorCode I18N_KEY_NOT_EXISTS = new ErrorCode(1_001_008_004, "国际化键名不存在");
     ErrorCode I18N_KEY_EXISTS = new ErrorCode(1_001_008_005, "国际化键名已存在");
     ErrorCode I18N_KEY_PROHIBIT_UPDATE_KEY = new ErrorCode(1_001_008_006, "国际化键名不允许修改键名");
-    ErrorCode I18N_KEY_PROHIBIT_DELETE_SYSTEM= new ErrorCode(1_001_008_007, "国际化键名不允许删除内置键");
+    ErrorCode I18N_KEY_PROHIBIT_DELETE_SYSTEM = new ErrorCode(1_001_008_007, "国际化键名不允许删除内置键");
     ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_001_008_008, "国际化信息不存在");
-    ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "test","国际化信息已存在");
+    ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "test", "国际化信息已存在");
 }

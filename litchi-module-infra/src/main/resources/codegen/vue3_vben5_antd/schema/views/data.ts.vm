@@ -11,7 +11,9 @@ import {
 #if(${table.templateType} == 2)## 树表需要导入这些
 import { get${simpleClassName}List } from '#/api/${table.moduleName}/${table.businessName}';
 import { handleTree } from '@vben/utils';
+import { $t } from '@vben/locales';
 #end
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 
 /** 新增/修改的表单 */
 export function useFormSchema(): VbenFormSchema[] {
@@ -27,7 +29,7 @@ export function useFormSchema(): VbenFormSchema[] {
 #if(${table.templateType} == 2)## 树表特有字段：上级
     {
       fieldName: '${treeParentColumn.javaField}',
-      label: '上级${table.classComment}',
+      label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
       component: 'ApiTreeSelect',
       componentProps: {
         allowClear: true,
@@ -35,14 +37,20 @@ export function useFormSchema(): VbenFormSchema[] {
           const data = await get${simpleClassName}List({});
           data.unshift({
             id: 0,
-            ${treeNameColumn.javaField}: '顶级${table.classComment}',
+            ${treeNameColumn.javaField}: #if($isI18n)$t('treeRoot')#else '${treeNameColumn.columnComment}'#end,
           });
           return handleTree(data);
         },
         labelField: '${treeNameColumn.javaField}',
         valueField: 'id',
         childrenField: 'children',
-        placeholder: '请选择上级${table.classComment}',
+        placeholder: $t('ui.placeholder.select', [
+          #if($isI18n)
+            $t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')
+          #else
+            '${treeParentColumn.columnComment}'
+          #end
+        ]),
         treeDefaultExpandAll: true,
       },
       rules: 'selectRequired',
@@ -64,22 +72,32 @@ export function useFormSchema(): VbenFormSchema[] {
   #end
     {
       fieldName: '${javaField}',
+#if($isI18n)
+      label: $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
       label: '${comment}',
-  #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
+#end
+#if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
       rules: 'required',
-  #end
-  #if ($column.htmlType == "input")
+#end
+#if ($column.htmlType == "input")
       component: 'Input',
       componentProps: {
-        placeholder: '请输入${comment}',
+        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #elseif($column.htmlType == "imageUpload")## 图片上传
+#elseif($column.htmlType == "imageUpload")## 图片上传
       component: 'ImageUpload',
-  #elseif($column.htmlType == "fileUpload")## 文件上传
+#elseif($column.htmlType == "fileUpload")## 文件上传
       component: 'FileUpload',
-  #elseif($column.htmlType == "editor")## 文本编辑器
+#elseif($column.htmlType == "editor")## 文本编辑器
       component: 'RichTextarea',
-  #elseif($column.htmlType == "select")## 下拉框
+#elseif($column.htmlType == "select")## 下拉框
       component: 'Select',
       componentProps: {
         #if ("" != $dictType)## 有数据字典
@@ -87,9 +105,15 @@ export function useFormSchema(): VbenFormSchema[] {
         #else##没数据字典
         options: [],
         #end
-        placeholder: '请选择${comment}',
+        placeholder: $t('ui.placeholder.select', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #elseif($column.htmlType == "checkbox")## 多选框
+#elseif($column.htmlType == "checkbox")## 多选框
       component: 'Checkbox',
       componentProps: {
         #if ("" != $dictType)## 有数据字典
@@ -98,7 +122,7 @@ export function useFormSchema(): VbenFormSchema[] {
         options: [],
         #end
       },
-  #elseif($column.htmlType == "radio")## 单选框
+#elseif($column.htmlType == "radio")## 单选框
       component: 'RadioGroup',
       componentProps: {
         #if ("" != $dictType)## 有数据字典
@@ -109,26 +133,38 @@ export function useFormSchema(): VbenFormSchema[] {
         buttonStyle: 'solid',
         optionType: 'button',
       },
-  #elseif($column.htmlType == "datetime")## 时间框
+#elseif($column.htmlType == "datetime")## 时间框
       component: 'DatePicker',
       componentProps: {
         showTime: true,
         format: 'YYYY-MM-DD HH:mm:ss',
         valueFormat: 'x',
       },
-  #elseif($column.htmlType == "textarea")## 文本域
+#elseif($column.htmlType == "textarea")## 文本域
       component: 'Textarea',
       componentProps: {
-        placeholder: '请输入${comment}',
+        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #elseif($column.htmlType == "inputNumber")## 数字输入框
+#elseif($column.htmlType == "inputNumber")## 数字输入框
       component: 'InputNumber',
       componentProps: {
         min: 0,
         controlsPosition: 'right',
-        placeholder: '请输入${comment}',
+        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #end
+#end
     },
 #end
 #end
@@ -154,16 +190,26 @@ export function useGridFormSchema(): VbenFormSchema[] {
   #end
     {
       fieldName: '${javaField}',
+#if($isI18n)
+      label: $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
       label: '${comment}',
-  #if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
+#end
+#if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
       component: 'NumberRange',
-  #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
+#elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
       component: 'Input',
       componentProps: {
         allowClear: true,
-        placeholder: '请输入${comment}',
+        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
+#elseif ($column.htmlType == "select" || $column.htmlType == "radio")
       component: 'Select',
       componentProps: {
         allowClear: true,
@@ -172,9 +218,15 @@ export function useGridFormSchema(): VbenFormSchema[] {
         #else## 未设置 dictType 数据字典的情况
         options: [],
         #end
-        placeholder: '请选择${comment}',
+        placeholder: $t('ui.placeholder.select', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #elseif ($column.htmlType == "checkbox")
+#elseif ($column.htmlType == "checkbox")
       component: 'Checkbox',
       componentProps: {
         allowClear: true,
@@ -184,23 +236,29 @@ export function useGridFormSchema(): VbenFormSchema[] {
         options: [],
         #end
       },
-  #elseif ($column.htmlType == "inputNumber")
+#elseif ($column.htmlType == "inputNumber")
       component: 'InputNumber',
       componentProps: {
         allowClear: true,
         min: 0,
         controlsPosition: 'right',
-        placeholder: '请输入${comment}',
+        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
+          '${comment}',
+#end
+        ]),
       },
-  #elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
-  ## 图片/文件字段不参与搜索，跳过
-  #elseif($column.htmlType == "datetime")
+#elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
+## 图片/文件字段不参与搜索，跳过
+#elseif($column.htmlType == "datetime")
       component: 'RangePicker',
       componentProps: {
         ...getRangePickerDefaultProps(),
         allowClear: true,
       },
-  #end
+#end
     },
 #end
 #end
@@ -223,7 +281,11 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
   #set ($comment = $column.columnComment)
     {
       field: '${javaField}',
+#if($isI18n)
+      title: $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+#else
       title: '${comment}',
+#end
       minWidth: 120,
   #if ($column.listOperation && $column.sortOperation)
       sortable: true,
@@ -255,7 +317,11 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
 #end
 #end
     {
-      title: '操作',
+#if($isI18n)
+      title: $t('common.operation'),
+#else
+      title: #if($isI18n)$t('common.operation')#else '操作'#end,
+#end
       width: 200,
       fixed: 'right',
       slots: { default: 'actions' },
@@ -303,14 +369,24 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                     #else
                         {
                             fieldName: '${javaField}',
+#if($isI18n)
+                            label: $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}'),
+#else
                             label: '${comment}',
+#end
                         #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
                             rules: 'required',
                         #end
                         #if ($column.htmlType == "input")
                             component: 'Input',
                             componentProps: {
-                                placeholder: '请输入${comment}',
+                                placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                    '${comment}',
+#end
+                                ]),
                             },
                         #elseif($column.htmlType == "imageUpload")## 图片上传
                             component: 'ImageUpload',
@@ -326,7 +402,13 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                                 #else##没数据字典
                                     options: [],
                                 #end
-                                placeholder: '请选择${comment}',
+                                placeholder: $t('ui.placeholder.select', [
+#if($isI18n)
+                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                    '${comment}',
+#end
+                                ]),
                             },
                         #elseif($column.htmlType == "checkbox")## 多选框
                             component: 'Checkbox',
@@ -358,14 +440,26 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                         #elseif($column.htmlType == "textarea")## 文本域
                             component: 'Textarea',
                             componentProps: {
-                                placeholder: '请输入${comment}',
+                                placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                    '${comment}',
+#end
+                                ]),
                             },
                         #elseif($column.htmlType == "inputNumber")## 数字输入框
                             component: 'InputNumber',
                             componentProps: {
                                 min: 0,
                                 controlsPosition: 'right',
-                                placeholder: '请输入${comment}',
+                                placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                    '${comment}',
+#end
+                                ]),
                             },
                         #end
                     },
@@ -394,14 +488,24 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                 #end
                 {
                     fieldName: '${javaField}',
+#if($isI18n)
+                    label: $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}'),
+#else
                     label: '${comment}',
+#end
                 #if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
                     component: 'NumberRange',
                 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
                     component: 'Input',
                     componentProps: {
                         allowClear: true,
-                        placeholder: '请输入${comment}',
+                        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                            '${comment}',
+#end
+                        ]),
                     },
                 #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
                     component: 'Select',
@@ -412,7 +516,13 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                         #else## 未设置 dictType 数据字典的情况
                             options: [],
                         #end
-                        placeholder: '请选择${comment}',
+                        placeholder: $t('ui.placeholder.select', [
+#if($isI18n)
+                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                            '${comment}',
+#end
+                        ]),
                     },
                 #elseif ($column.htmlType == "checkbox")
                     component: 'Checkbox',
@@ -430,7 +540,13 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                         allowClear: true,
                         min: 0,
                         controlsPosition: 'right',
-                        placeholder: '请输入${comment}',
+                        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                            '${comment}',
+#end
+                        ]),
                     },
                 #elseif ($column.htmlType == "imageUpload" || $column.htmlType == "fileUpload")
                 ## 图片/文件字段不参与搜索，跳过
@@ -460,7 +576,11 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                 #set ($comment = $column.columnComment)
                 {
                     field: '${javaField}',
+#if($isI18n)
+                    title: $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}'),
+#else
                     title: '${comment}',
+#end
                     minWidth: 120,
                 #if ($column.listOperation && $column.sortOperation)
                     sortable: true,
@@ -489,7 +609,11 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
             #end
         #end
         {
-            title: '操作',
+#if($isI18n)
+            title: $t('common.operation'),
+#else
+            title: #if($isI18n)$t('common.operation')#else '操作'#end,
+#end
             width: 200,
             fixed: 'right',
             slots: { default: 'actions' },
@@ -517,7 +641,11 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         #end
                         {
                             field: '${javaField}',
+#if($isI18n)
+                            title: $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}'),
+#else
                             title: '${comment}',
+#end
                             minWidth: 120,
                             slots: { default: '${javaField}' },
                             #if ($column.htmlType == "select" || $column.htmlType == "checkbox" || $column.htmlType == "radio")
@@ -536,7 +664,11 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                 #end
             #end
             {
-                title: '操作',
+#if($isI18n)
+                title: $t('common.operation'),
+#else
+                title: #if($isI18n)$t('common.operation')#else '操作'#end,
+#end
                 width: 200,
                 fixed: 'right',
                 slots: { default: 'actions' },
@@ -574,14 +706,24 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         #else
                             {
                                 fieldName: '${javaField}',
+#if($isI18n)
+                                label: $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}'),
+#else
                                 label: '${comment}',
+#end
                                 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
                                     rules: 'required',
                                 #end
                                 #if ($column.htmlType == "input")
                                     component: 'Input',
                                     componentProps: {
-                                        placeholder: '请输入${comment}',
+                                        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                            '${comment}',
+#end
+                                        ]),
                                     },
                                 #elseif($column.htmlType == "imageUpload")## 图片上传
                                     component: 'ImageUpload',
@@ -596,8 +738,14 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                             options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
                                         #else##没数据字典
                                             options: [],
-                                        #end
-                                        placeholder: '请选择${comment}',
+#end
+                                        placeholder: $t('ui.placeholder.select', [
+#if($isI18n)
+                                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                            '${comment}',
+#end
+                                        ]),
                                     },
                                 #elseif($column.htmlType == "checkbox")## 多选框
                                     component: 'Checkbox',
@@ -629,14 +777,26 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                 #elseif($column.htmlType == "textarea")## 文本域
                                     component: 'Textarea',
                                     componentProps: {
-                                        placeholder: '请输入${comment}',
+                                        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                            '${comment}',
+#end
+                                        ]),
                                     },
                                 #elseif($column.htmlType == "inputNumber")## 数字输入框
                                     component: 'InputNumber',
                                     componentProps: {
                                         min: 0,
                                         controlsPosition: 'right',
-                                        placeholder: '请输入${comment}',
+                                        placeholder: $t('ui.placeholder.input', [
+#if($isI18n)
+                                            $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+#else
+                                            '${comment}',
+#end
+                                        ]),
                                     },
                                 #end
                             },
@@ -659,7 +819,11 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                     #set ($comment = $column.columnComment)
                     {
                         field: '${javaField}',
+#if($isI18n)
+                        title: $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}'),
+#else
                         title: '${comment}',
+#end
                         minWidth: 120,
                     #if ($column.listOperation && $column.sortOperation)
                         sortable: true,
@@ -700,7 +864,11 @@ export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
   return [
     {
       fieldName: 'file',
-      label: '${table.classComment}',
+    #if($isI18n)
+        label="$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
+    #else
+        label="$t('ui.actionTitle.import', ['${table.classComment}'])"
+    #end
       component: 'Upload',
       rules: 'required',
       componentProps: {

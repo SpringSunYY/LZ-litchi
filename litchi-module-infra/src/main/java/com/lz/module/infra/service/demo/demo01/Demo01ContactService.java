@@ -17,6 +17,7 @@ import java.util.List;
  */
 public interface Demo01ContactService {
 
+
     /**
      * 创建示例联系人
      *
@@ -44,7 +45,7 @@ public interface Demo01ContactService {
      *
      * @param ids 编号
      */
-    void deleteDemo0iContactList(List<Long> ids);
+    void deleteDemo01ContactListByIds(List<Long> ids);
 
     /**
      * 获得示例联系人

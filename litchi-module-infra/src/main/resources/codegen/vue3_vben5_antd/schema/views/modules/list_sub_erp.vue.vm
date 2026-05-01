@@ -5,6 +5,7 @@
 #set ($subJoinColumn = $subJoinColumns.get($subIndex))##当前 join 字段
 #set ($subSimpleClassName_strikeCase = $subSimpleClassName_strikeCases.get($subIndex))
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 <script lang="ts" setup>
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
@@ -48,7 +49,13 @@ const [FormModalDrawer, formModelDrawerApi] = useVbenModelDrawer({
 /** 创建${subTable.classComment} */
 function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
-    message.warning("请先选择一个${table.classComment}!")
+    message.warning($t('common.selectFirst', [
+      #if($isI18n)
+        $t('${table.moduleName}:${table.businessName}')
+      #else
+        '${table.classComment}'
+      #end
+    ]))
     return
   }
   formModelDrawerApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
@@ -86,10 +93,7 @@ async function handleDeleteBatch() {
   });
   try {
     await delete${subSimpleClassName}List(checkedIds.value);
-    message.success({
-      content: $t('ui.actionMessage.deleteSuccess', [row.id]),
-      key: 'action_key_msg',
-    });
+    message.success( $t('ui.actionMessage.deleteSuccess') );
     onRefresh();
   } finally {
     hideLoading();
@@ -203,12 +207,16 @@ watch(
 <template>
     #if ($table.templateType == 11) ## erp
       <FormModalDrawer @success="onRefresh" />
-      <Grid table-title="${subTable.classComment}列表">
+      <Grid :table-title="#if($isI18n)$t('common.subTable', [$t('${subTable.moduleName}:${subTable.businessName}')])#else '${subTable.classComment}'#end">
         <template #toolbar-tools>
           <TableAction
             :actions="[
               {
+#if($isI18n)
+                label: $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]),
+#else
                 label: $t('ui.actionTitle.create', ['${table.classComment}']),
+#end
                 type: 'primary',
                 icon: ACTION_ICON.ADD,
                 auth: ['${table.moduleName}:${simpleClassName_strikeCase}:create'],
@@ -216,7 +224,7 @@ watch(
               },
               #if ($table.templateType == 11 && $deleteBatchEnable)
               {
-                label: $t('ui.actionTitle.deleteBatch'),
+                label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
                 type: 'primary',
                 danger: true,
                 icon: ACTION_ICON.DELETE,
@@ -245,7 +253,7 @@ watch(
                 icon: ACTION_ICON.DELETE,
                 auth: ['${table.moduleName}:${simpleClassName_strikeCase}:delete'],
                 popConfirm: {
-                  title: $t('ui.actionMessage.deleteConfirm', [row.id]),
+                  title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
                   confirm: handleDelete.bind(null, row),
                 },
               },
@@ -254,6 +262,6 @@ watch(
         </template>
       </Grid>
     #else
-      <Grid table-title="${subTable.classComment}列表" />
+      <Grid :table-title="#if($isI18n)$t('common.subTable', [$t('${subTable.moduleName}:${subTable.businessName}')])#else '${subTable.classComment}'#end" />
     #end
 </template>

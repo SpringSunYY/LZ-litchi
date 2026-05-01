@@ -32,6 +32,7 @@ import { get${simpleClassName}List, delete${simpleClassName}, export${simpleClas
 import { isEmpty } from '@vben/utils';
 import { get${simpleClassName}Page, delete${simpleClassName},#if ($deleteBatchEnable) delete${simpleClassName}List,#end export${simpleClassName} } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
 #end
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 import { downloadFileFromBlobPart } from '@vben/utils';
 
 #if ($table.templateType == 12 || $table.templateType == 11) ## 内嵌和erp情况
@@ -188,7 +189,7 @@ async function onExport() {
 try {
   exportLoading.value = true;
   const data = await export${simpleClassName}(queryParams);
-  downloadFileFromBlobPart({ fileName: '${table.classComment}.xls', source: data });
+  downloadFileFromBlobPart({ #if($isI18n)fileName: $t('${table.moduleName}:${simpleClassName_strikeCase}'),#else fileName: '${table.classComment}.xls',#end source: data });
 }finally {
   exportLoading.value = false;
 }
@@ -235,20 +236,32 @@ onMounted(() => {
                       #set ($dictMethod = "boolean")
                   #end
                   #if ($column.htmlType == "input")
-                    <el-form-item label="${comment}">
+                    <el-form-item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end>
                       <el-input
                           v-model="queryParams.${javaField}"
-                          placeholder="请输入${comment}"
+                          :placeholder="$t('ui.placeholder.input', [
+                            #if($isI18n)
+                              $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                            #else
+                              '${comment}'
+                            #end
+                          ])"
                           clearable
                           @keyup.enter="handleQuery"
                            class="!w-[240px]"
                       />
                     </el-form-item>
                   #elseif ($column.htmlType == "select" || $column.htmlType == "radio" || $column.htmlType == "checkbox")
-                    <el-form-item label="${comment}">
+                    <el-form-item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end>
                       <el-select
                           v-model="queryParams.${javaField}"
-                          placeholder="请选择${comment}"
+                          :placeholder="$t('ui.placeholder.select', [
+                            #if($isI18n)
+                              $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                            #else
+                              '${comment}'
+                            #end
+                          ])"
                           clearable
                            class="!w-[240px]"
                       >
@@ -260,30 +273,36 @@ onMounted(() => {
                                 :label="dict.label"
                             />
                           #else## 未设置 dictType 数据字典的情况
-                            <el-option label="请选择字典生成" value="" />
+                            <el-option :label="$t('ui.select.dictPlaceholder')" value="" />
                           #end
                       </el-select>
                     </el-form-item>
                   #elseif($column.htmlType == "datetime")
                       #if ($column.listOperationCondition != "BETWEEN")## 非范围
-                        <el-form-item label="${comment}">
+                        <el-form-item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end>
                           <el-date-picker
                               v-model="queryParams.${javaField}"
                               value-format="YYYY-MM-DD"
-                              placeholder="选择${comment}"
+                              :placeholder="$t('ui.placeholder.date', [
+                            #if($isI18n)
+                              $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                            #else
+                              '${comment}'
+                            #end
+                          ])"
                               clearable
                                class="!w-[240px]"
                           />
                         </el-form-item>
                       #else## 范围
-                        <el-form-item label="${comment}">
+                        <el-form-item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end>
                           <el-date-picker
                               v-model="queryParams.${javaField}"
                               type="daterange"
                               value-format="YYYY-MM-DD"
-                              range-separator="至"
-                              start-placeholder="开始日期"
-                              end-placeholder="结束日期"
+                              range-separator="$t('ui.dateRange.separator')"
+                              start-placeholder="$t('ui.dateRange.start')"
+                              end-placeholder="$t('ui.dateRange.end')"
                               class="!w-[240px]"
                           />
                         </el-form-item>
@@ -292,16 +311,16 @@ onMounted(() => {
               #end
           #end
         <el-form-item>
-          <el-button class="ml-2" @click="resetQuery"> 重置 </el-button>
+          <el-button class="ml-2" @click="resetQuery"> {{ $t('ui.actionName.reset') }} </el-button>
           <el-button class="ml-2" @click="handleQuery" type="primary">
-            搜索
+            {{ $t('ui.actionName.search') }}
           </el-button>
         </el-form-item>
       </el-form>
     </ContentWrap>
 
     <!-- 列表 -->
-    <ContentWrap title="${table.classComment}">
+    <ContentWrap #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}')"#else title="${table.classComment}"#end>
       <template #extra>
         <TableToolbar
             ref="tableToolbarRef"
@@ -309,7 +328,7 @@ onMounted(() => {
         >
         #if (${table.templateType} == 2)
           <el-button @click="toggleExpand" class="mr-2">
-            {{ isExpanded ? '收缩' : '展开' }}
+            {{ isExpanded ? $t('common.retract') : $t('common.expand') }}
           </el-button>
         #end
           <el-button
@@ -319,7 +338,7 @@ onMounted(() => {
               @click="handleCreate"
               v-access:code="['${permissionPrefix}:create']"
           >
-            {{ $t('ui.actionTitle.create', ['${table.classComment}']) }}
+            #if($isI18n){{ $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]) }}#else {{ $t('ui.actionTitle.create', ['${table.classComment}']) }}#end
           </el-button>
           <el-button
               :icon="h(Download)"
@@ -329,7 +348,7 @@ onMounted(() => {
               @click="onExport"
               v-access:code="['${permissionPrefix}:export']"
           >
-            {{ $t('ui.actionTitle.export') }}
+            {{ #if($isI18n)$t('ui.actionTitle.export', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end }}
           </el-button>
         #if ($table.templateType != 2 && $deleteBatchEnable)
           <el-button
@@ -340,7 +359,7 @@ onMounted(() => {
               @click="handleDeleteBatch"
               v-access:code="['${table.moduleName}:${simpleClassName_strikeCase}:delete']"
           >
-            批量删除
+            {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end }}
           </el-button>
         #end
         </TableToolbar>
@@ -387,7 +406,7 @@ onMounted(() => {
                         #set ($subClassNameVar = $subClassNameVars.get($index))
                         #set ($subSimpleClassName = $subSimpleClassNames.get($index))
                         #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-                      <el-tab-pane name="$subClassNameVar" label="${subTable.classComment}">
+                      <el-tab-pane name="$subClassNameVar" #if($isI18n)label="$t('${subTable.moduleName}:${subSimpleClassName_strikeCase}')"#else label="${subTable.classComment}"#end>
                         <${subSimpleClassName}List :${subJoinColumn_strikeCase}="row?.id" />
                       </el-tab-pane>
                     #end
@@ -402,25 +421,25 @@ onMounted(() => {
                   #set ($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
                   #set ($comment=$column.columnComment)
                   #if ($column.javaType == "LocalDateTime")## 时间类型
-                    <vxe-column field="${javaField}" title="${comment}" align="center">
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center">
                       <template #default="{row}">
                         {{formatDateTime(row.${javaField})}}
                       </template>
                     </vxe-column>
                   #elseif($column.dictType && "" != $column.dictType)## 数据字典
-                    <vxe-column field="${javaField}" title="${comment}" align="center">
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center">
                       <template #default="{row}">
                         <dict-tag :type="DICT_TYPE.$dictType.toUpperCase()" :value="row.${javaField}" />
                       </template>
                     </vxe-column>
                   #elseif ($table.templateType == 2 && $javaField == $treeNameColumn.javaField)
-                    <vxe-column field="${javaField}" title="${comment}" align="center"  tree-node/>
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center"  tree-node/>
                   #else
-                    <vxe-column field="${javaField}" title="${comment}" align="center" />
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center" />
                   #end
               #end
           #end
-        <vxe-column field="operation" title="操作" align="center">
+        <vxe-column field="operation" :title="$t('common.operation')" align="center">
           <template #default="{row}">
 #if ( $table.templateType == 2 )
   <el-button
@@ -430,7 +449,7 @@ onMounted(() => {
       @click="handleAppend(row as any)"
       v-access:code="['${permissionPrefix}:create']"
   >
-    新增下级
+            {{ #if($isI18n)$t('common.append', [$t('${table.moduleName}:${table.businessName}')])#else $t('common.append', ['${table.classComment}'])#end }}
   </el-button>
 #end
             <el-button
@@ -440,7 +459,7 @@ onMounted(() => {
                 @click="handleEdit(row as any)"
                 v-access:code="['${permissionPrefix}:update']"
             >
-              {{ $t('ui.actionTitle.edit') }}
+              {{ #if($isI18n)$t('common.edit', [$t('${table.moduleName}:${table.businessName}')])#else $t('common.edit', ['${table.classComment}'])#end }}
             </el-button>
             <el-button
                 size="small"
@@ -453,7 +472,7 @@ onMounted(() => {
                 @click="handleDelete(row as any)"
                 v-access:code="['${permissionPrefix}:delete']"
             >
-              {{ $t('ui.actionTitle.delete') }}
+              {{ #if($isI18n)$t('common.delete', [$t('${table.moduleName}:${table.businessName}')])#else $t('common.delete', ['${table.classComment}'])#end }}
             </el-button>
           </template>
         </vxe-column>
@@ -482,7 +501,7 @@ onMounted(() => {
             #set ($subClassNameVar = $subClassNameVars.get($index))
             #set ($subSimpleClassName = $subSimpleClassNames.get($index))
             #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <el-tab-pane name="$subClassNameVar" label="${subTable.classComment}">
+          <el-tab-pane name="$subClassNameVar" #if($isI18n)label="$t('${subTable.moduleName}:${subSimpleClassName_strikeCase}')"#else label="${subTable.classComment}"#end>
             <${subSimpleClassName}List :${subJoinColumn_strikeCase}="select${simpleClassName}?.id" />
           </el-tab-pane>
         #end

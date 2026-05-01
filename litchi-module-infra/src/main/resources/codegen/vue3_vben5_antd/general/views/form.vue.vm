@@ -23,6 +23,7 @@ import { handleTree } from '@vben/utils'
 import { computed, ref } from 'vue';
 import { $t } from '#/locales';
 import { get${simpleClassName}, create${simpleClassName}, update${simpleClassName} } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 
 const emit = defineEmits(['success']);
 
@@ -42,7 +43,13 @@ const rules: Record<string, Rule[]> = {
   #foreach ($column in $columns)
     #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
       #set($comment=$column.columnComment)
-        $column.javaField: [{ required: true, message: '${comment}不能为空', trigger: #if($column.htmlType == 'select')'change'#else'blur'#end }],
+        $column.javaField: [{ required: true, message: $t('formRules.required', [
+          #if($isI18n)
+            $t('${table.moduleName}:${table.businessName}:field:${column.javaField}')
+          #else
+            '${comment}'
+          #end
+        ]), trigger: #if($column.htmlType == 'select')'change'#else'blur'#end }],
     #end
   #end
 };
@@ -50,11 +57,17 @@ const rules: Record<string, Rule[]> = {
 #if ( $table.templateType == 2 )
 const ${classNameVar}Tree = ref<any[]>([]) // 树形结构
 #end
-const getTitle = computed(() => {
-  return formData.value?.id
-    ? $t('ui.actionTitle.edit', ['${table.classComment}'])
-    : $t('ui.actionTitle.create', ['${table.classComment}']);
-});
+  const getTitle = computed(() => {
+#if($isI18n)
+    return formData.value?.id
+        ? $t('ui.actionTitle.edit', [$t('${table.moduleName}:${table.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]);
+#else
+    return formData.value?.id
+        ? $t('ui.actionTitle.edit', ['${table.classComment}'])
+        : $t('ui.actionTitle.create', ['${table.classComment}']);
+#end
+  });
 
 ## 特殊：主子表专属逻辑
 #if ( $table.templateType == 10 || $table.templateType == 12 )
@@ -93,7 +106,7 @@ const get${simpleClassName}Tree = async () => {
   const data = await get${simpleClassName}List({});
   data.unshift({
     id: 0,
-    name: '顶级${table.classComment}',
+    name: #if($isI18n)$t('treeRoot')#else '${treeNameColumn.columnComment}'#end,
   });
     ${classNameVar}Tree.value = handleTree(data);
 }
@@ -122,7 +135,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
         #end
       #end
     #end
-    modalApi.lock();
+    modalDrawerApi.lock();
     // 提交表单
     const data = formData.value as ${simpleClassName}Api.${simpleClassName};
     ## 特殊：主子表专属逻辑
@@ -222,12 +235,24 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
                 #end
                       checkable
                       treeDefaultExpandAll
-                      placeholder="请选择${comment}"
+                      :placeholder="$t('ui.placeholder.select', [
+                        #if($isI18n)
+                          $t('${table.moduleName}:${table.businessName}:field:${column.javaField}')
+                        #else
+                          '${comment}'
+                        #end
+                      ])"
               />
             </Form.Item>
           #elseif ($column.htmlType == "input" && !$column.primaryKey)## 忽略主键，不用在表单里
             <Form.Item label="${comment}" name="${javaField}">
-              <Input v-model:value="formData.${javaField}" placeholder="请输入${comment}" />
+              <Input v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
+                #if($isI18n)
+                  $t('${table.moduleName}:${table.businessName}:field:${column.javaField}')
+                #else
+                  '${comment}'
+                #end
+              ])" />
             </Form.Item>
           #elseif($column.htmlType == "imageUpload")## 图片上传
             <Form.Item label="${comment}" name="${javaField}">
@@ -243,7 +268,13 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
             </Form.Item>
           #elseif($column.htmlType == "select")## 下拉框
             <Form.Item label="${comment}" name="${javaField}">
-              <Select v-model:value="formData.${javaField}" placeholder="请选择${comment}">
+              <Select v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.select', [
+                #if($isI18n)
+                  $t('${table.moduleName}:${table.businessName}:field:${column.javaField}')
+                #else
+                  '${comment}'
+                #end
+              ])">
                 #if ("" != $dictType)## 有数据字典
                   <Select.Option
                           v-for="dict in getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod')"
@@ -253,7 +284,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
                     {{ dict.label }}
                   </Select.Option>
                 #else##没数据字典
-                  <Select.Option label="请选择字典生成" value="" />
+                  <Select.Option :label="$t('ui.select.dictPlaceholder')" value="" />
                 #end
               </Select>
             </Form.Item>
@@ -269,7 +300,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
                     {{ dict.label }}
                   </Checkbox>
                 #else##没数据字典
-                  <Checkbox label="请选择字典生成" />
+                  <Checkbox :label="$t('ui.select.dictPlaceholder')" />
                 #end
               </CheckboxGroup>
             </Form.Item>
@@ -294,12 +325,24 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
               <DatePicker
                       v-model:value="formData.${javaField}"
                       valueFormat="x"
-                      placeholder="选择${comment}"
+                      :placeholder="$t('ui.placeholder.select', [
+                        #if($isI18n)
+                          $t('${table.moduleName}:${table.businessName}:field:${column.javaField}')
+                        #else
+                          '${comment}'
+                        #end
+                      ])"
               />
             </Form.Item>
           #elseif($column.htmlType == "textarea")## 文本框
             <Form.Item label="${comment}" name="${javaField}">
-              <Textarea v-model:value="formData.${javaField}" placeholder="请输入${comment}" />
+              <Textarea v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
+                #if($isI18n)
+                  $t('${table.moduleName}:${table.businessName}:field:${column.javaField}')
+                #else
+                  '${comment}'
+                #end
+              ])" />
             </Form.Item>
           #end
         #end

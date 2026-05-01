@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
@@ -140,7 +141,7 @@ function handleRowCheckboxChange({
 /** 导出表格 */
 async function handleExport() {
   const data = await export${simpleClassName}(await gridApi.formApi.getValues());
-  downloadFileFromBlobPart({ fileName: '${table.classComment}.xls', source: data });
+  downloadFileFromBlobPart({ fileName: #if($isI18n)$t('${table.moduleName}:${table.businessName}')#else '${table.classComment}'#end + '.xls', source: data });
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -242,7 +243,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 #if ($table.templateType == 11) ## erp情况
   <div>
 #end
-    <Grid table-title="${table.classComment}列表">
+    <Grid #if($isI18n):table-title="$t('${table.moduleName}:${table.businessName}')" #else table-title="${table.classComment}列表" #end>
         #if ($table.templateType == 12) ## 内嵌情况
           <template #expand_content="{ row }">
             <!-- 子表的表单 -->
@@ -252,7 +253,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
                     #set ($subClassNameVar = $subClassNameVars.get($index))
                     #set ($subSimpleClassName = $subSimpleClassNames.get($index))
                     #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-                  <el-tab-pane name="$subClassNameVar" label="${subTable.classComment}">
+                  <el-tab-pane name="$subClassNameVar" #if($isI18n)tab="$t('common.subTable', [$t('${subTable.moduleName}:${subTable.businessName}')])"#else tab="${subTable.classComment}"#end>
                     <${subSimpleClassName}List :${subJoinColumn_strikeCase}="row?.id" />
                   </el-tab-pane>
                 #end
@@ -264,20 +265,20 @@ const [Grid, gridApi] = useVbenVxeGrid({
           :actions="[
             #if (${table.templateType} == 2)## 树表特有：展开/收缩按钮
             {
-              label: isExpanded ? '收缩' : '展开',
+              label: isExpanded ? $t('common.retract') : $t('common.expand'),
               type: 'primary',
               onClick: toggleExpand,
             },
             #end
             {
-              label: $t('ui.actionTitle.create', ['${table.classComment}']),
+              label: #if($isI18n)$t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.create', ['${table.classComment}'])#end,
               type: 'primary',
               icon: ACTION_ICON.ADD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:create'],
               onClick: handleCreate,
             },
             {
-              label: $t('ui.actionTitle.export'),
+              label: #if($isI18n)$t('ui.actionTitle.export', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end,
               type: 'primary',
               icon: ACTION_ICON.DOWNLOAD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:export'],
@@ -285,7 +286,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             },
             #if ($table.templateType != 2 && $deleteBatchEnable)
             {
-              label: $t('ui.actionTitle.deleteBatch'),
+              label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
               type: 'danger',
               icon: ACTION_ICON.DELETE,
               disabled: isEmpty(checkedIds),
@@ -296,7 +297,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ## 导入功能（当 extendConfig.isImport 为 1 时关闭）
             #if ($extendConfig.get('isImport') != '1')
             {
-              label: $t('ui.actionTitle.import', ['${table.classComment}']),
+              label: #if($isI18n)$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.import', ['${table.classComment}'])#end,
               type: 'primary',
               icon: ACTION_ICON.UPLOAD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:import'],
@@ -311,7 +312,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           :actions="[
             #if (${table.templateType} == 2)## 树表特有：新增下级
             {
-              label: '新增下级',
+              label: $t('common.append'),
               type: 'text',
               icon: ACTION_ICON.ADD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:create'],
@@ -319,20 +320,20 @@ const [Grid, gridApi] = useVbenVxeGrid({
             },
             #end
             {
-              label: $t('common.edit'),
+              label:$t('common.edit'),
               type: 'text',
               icon: ACTION_ICON.EDIT,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:update'],
               onClick: handleEdit.bind(null, row),
             },
             {
-              label: $t('common.delete'),
+              label: $t('common.delete', ['${table.classComment}']),
               type: 'danger',
               text: true,
               icon: ACTION_ICON.DELETE,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:delete'],
               popConfirm: {
-                title: $t('ui.actionMessage.deleteConfirm', [row.id]),
+                title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
                 confirm: handleDelete.bind(null, row),
               },
             },
@@ -349,7 +350,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             #set ($subClassNameVar = $subClassNameVars.get($index))
             #set ($subSimpleClassName = $subSimpleClassNames.get($index))
             #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <el-tab-pane name="$subClassNameVar" label="${subTable.classComment}">
+          <el-tab-pane name="$subClassNameVar" #if($isI18n)tab="$t('common.subTable', [$t('${subTable.moduleName}:${subTable.businessName}')])"#else tab="${subTable.classComment}"#end>
             <${subSimpleClassName}List :${subJoinColumn_strikeCase}="select${simpleClassName}?.id" />
           </el-tab-pane>
         #end

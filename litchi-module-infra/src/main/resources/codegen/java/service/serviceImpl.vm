@@ -33,7 +33,10 @@ import ${basePackage}.module.${subTable.moduleName}.dal.mysql.${subTable.busines
 import static ${ServiceExceptionUtilClassName}.exception;
 import static ${CollectionUtilsClassName}.convertList;
 import static ${CollectionUtilsClassName}.diffList;
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
+#if ($isI18n)
 import static ${basePackage}.module.${table.moduleName}.enums.ErrorCodeConstants.*;
+import ${basePackage}.module.infra.utils.I18nExceptionUtil;#end
 
 /**
  * ${table.classComment} Service 实现类
@@ -155,7 +158,11 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 #set ($ParentJavaField = $treeParentColumn.javaField.substring(0,1).toUpperCase() + ${treeParentColumn.javaField.substring(1)})##首字母大写
         // 校验是否有子${table.classComment}
         if (${classNameVar}Mapper.selectCountBy${ParentJavaField}(id) > 0) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN);
+#else
             throw exception(${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN);
+#end
         }
 #end
         // 删除
@@ -201,7 +208,11 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 
     private void validate${simpleClassName}Exists(${primaryColumn.javaType} id) {
         if (${classNameVar}Mapper.selectById(id) == null) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS);
+#else
             throw exception(${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS);
+#end
         }
     }
 
@@ -215,12 +226,20 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
         }
         // 1. 不能设置自己为父${table.classComment}
         if (Objects.equals(id, ${treeParentColumn.javaField})) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_ERROR);
+#else
             throw exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_ERROR);
+#end
         }
         // 2. 父${table.classComment}不存在
         ${simpleClassName}DO parent${simpleClassName} = ${classNameVar}Mapper.selectById(${treeParentColumn.javaField});
         if (parent${simpleClassName} == null) {
-            throw exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXITS);
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXISTS);
+#else
+            throw exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXISTS);
+#end
         }
         // 3. 递归校验父${table.classComment}，如果父${table.classComment}是自己的子${table.classComment}，则报错，避免形成环路
         if (id == null) { // id 为空，说明新增，不需要考虑环路
@@ -230,7 +249,11 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
             // 3.1 校验环路
             ${treeParentColumn.javaField} = parent${simpleClassName}.get${TreeParentJavaField}();
             if (Objects.equals(id, ${treeParentColumn.javaField})) {
+#if ($isI18n)
+                throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_IS_CHILD);
+#else
                 throw exception(${simpleClassName_underlineCase.toUpperCase()}_PARENT_IS_CHILD);
+#end
             }
             // 3.2 继续递归下一级父${table.classComment}
             if (${treeParentColumn.javaField} == null || ${simpleClassName}DO.${treeParentColumn_javaField_underlineCase.toUpperCase()}_ROOT.equals(${treeParentColumn.javaField})) {
@@ -250,10 +273,18 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
         }
         // 如果 id 为空，说明不用比较是否为相同 id 的${table.classComment}
         if (id == null) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+#else
             throw exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+#end
         }
         if (!Objects.equals(${classNameVar}.getId(), id)) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+#else
             throw exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+#end
         }
     }
 
@@ -318,7 +349,11 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 #if ( !$subTable.subJoinMany)
         // 校验是否已经存在
         if (${subClassNameVars.get($index)}Mapper.selectBy${SubJoinColumnName}(${subClassNameVar}.get${SubJoinColumnName}()) != null) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS);
+#else
             throw exception(${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS);
+#end
         }
         // 插入
 #end
@@ -357,7 +392,11 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 
     private void validate${subSimpleClassName}Exists(${subPrimaryColumn.javaType} id) {
         if (${subClassNameVar}Mapper.selectById(id) == null) {
+#if ($isI18n)
+            throw I18nExceptionUtil.exception(${simpleClassNameUnderlineCase.toUpperCase()}_NOT_EXISTS);
+#else
             throw exception(${simpleClassNameUnderlineCase.toUpperCase()}_NOT_EXISTS);
+#end
         }
     }
 
@@ -428,9 +467,15 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public ${importRespVOClass} import${simpleClassName}List(List<${importReqVOClass}> list) {
+    #if ($isI18n)
+        if (CollUtil.isEmpty(list)) {
+            throw I18nExceptionUtil.exception(ERROR_CODE_IMPORT_DATA_EMPTY);
+        }
+    #else
         if (CollUtil.isEmpty(list)) {
             throw exception(ERROR_CODE_IMPORT_DATA_EMPTY);
         }
+    #end
         List<${table.className}DO> createList = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {
             ${importReqVOClass} importVO = list.get(i);

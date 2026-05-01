@@ -10,6 +10,7 @@ import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactPageReqV
 import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactSaveReqVO;
 import com.lz.module.infra.dal.dataobject.demo.demo01.Demo01ContactDO;
 import com.lz.module.infra.dal.mysql.demo.demo01.Demo01ContactMapper;
+import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.infra.enums.ErrorCodeConstants.DEMO01_CONTACT_NOT_EXISTS;
+import static com.lz.module.infra.enums.ErrorCodeConstants.ERROR_CODE_IMPORT_DATA_EMPTY;
 
 /**
  * 示例联系人 Service 实现类
@@ -33,11 +35,13 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
     @Resource
     private Demo01ContactMapper demo01ContactMapper;
 
+
     @Override
     public Long createDemo01Contact(Demo01ContactSaveReqVO createReqVO) {
         // 插入
         Demo01ContactDO demo01Contact = BeanUtils.toBean(createReqVO, Demo01ContactDO.class);
         demo01ContactMapper.insert(demo01Contact);
+
         // 返回
         return demo01Contact.getId();
     }
@@ -60,23 +64,15 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
     }
 
     @Override
-    public void deleteDemo0iContactList(List<Long> ids) {
-        // 校验存在
-        validateDemo01ContactExists(ids);
+    public void deleteDemo01ContactListByIds(List<Long> ids) {
         // 删除
         demo01ContactMapper.deleteByIds(ids);
     }
 
-    private void validateDemo01ContactExists(List<Long> ids) {
-        List<Demo01ContactDO> list = demo01ContactMapper.selectByIds(ids);
-        if (CollUtil.isEmpty(list) || list.size() != ids.size()) {
-            throw exception(DEMO01_CONTACT_NOT_EXISTS);
-        }
-    }
 
     private void validateDemo01ContactExists(Long id) {
         if (demo01ContactMapper.selectById(id) == null) {
-            throw exception(DEMO01_CONTACT_NOT_EXISTS);
+            throw I18nExceptionUtil.exception(DEMO01_CONTACT_NOT_EXISTS);
         }
     }
 
@@ -90,11 +86,12 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
         return demo01ContactMapper.selectPage(pageReqVO);
     }
 
+
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Demo01ContactImportRespVO importDemo01ContactList(List<Demo01ContactImportVO> list) {
         if (CollUtil.isEmpty(list)) {
-            throw exception(DEMO01_CONTACT_NOT_EXISTS);
+            throw I18nExceptionUtil.exception(ERROR_CODE_IMPORT_DATA_EMPTY);
         }
         List<Demo01ContactDO> createList = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {
@@ -106,5 +103,4 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
         return Demo01ContactImportRespVO.builder()
                 .message(StrUtil.format("成功导入 {} 个示例联系人", createList.size())).build();
     }
-
 }

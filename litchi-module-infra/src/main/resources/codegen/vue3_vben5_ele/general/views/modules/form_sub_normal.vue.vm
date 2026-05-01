@@ -1,4 +1,5 @@
 #set ($subTable = $subTables.get($subIndex))##当前表
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 #set ($subColumns = $subColumnsList.get($subIndex))##当前字段数组
 #set ($subJoinColumn = $subJoinColumns.get($subIndex))##当前 join 字段
 #set ($subSimpleClassName = $subSimpleClassNames.get($subIndex))
@@ -80,7 +81,13 @@ const rules = reactive<FormRules>({
     #foreach ($column in $subColumns)
         #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
             #set($comment=$column.columnComment)
-                $column.javaField: [{ required: true, message: '${comment}不能为空', trigger: #if($column.htmlType == 'select')'change'#else'blur'#end }],
+                $column.javaField: [{ required: true, message: $t('formRules.required', [
+                  #if($isI18n)
+                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  #else
+                    '${comment}'
+                  #end
+                ]), trigger: #if($column.htmlType == 'select')'change'#else'blur'#end }],
         #end
     #end
 });
@@ -142,7 +149,13 @@ watch(
               #elseif($column.htmlType == "select")## 下拉框
                 <vxe-column field="${javaField}" title="${comment}" align="center">
                   <template #default="{row}">
-                    <el-select v-model="row.${javaField}" placeholder="请选择${comment}">
+                    <el-select v-model="row.${javaField}" :placeholder="$t('ui.placeholder.select', [
+                      #if($isI18n)
+                        $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')
+                      #else
+                        '${comment}'
+                      #end
+                    ])">
                         #if ("" != $dictType)## 有数据字典
                           <el-option
                               v-for="dict in getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod')"
@@ -151,7 +164,7 @@ watch(
                               :label="dict.label"
                           />
                         #else##没数据字典
-                          <el-option label="请选择字典生成" value="" />
+                          <el-option :label="$t('ui.select.dictPlaceholder')" value="" />
                         #end
                     </el-select>
                   </template>
@@ -169,7 +182,7 @@ watch(
                             {{ dict.label }}
                           </el-checkbox>
                         #else##没数据字典
-                          <el-checkbox label="请选择字典生成" />
+                          <el-checkbox :label="$t('ui.select.dictPlaceholder')" />
                         #end
                     </el-checkbox-group>
                   </template>
@@ -187,7 +200,7 @@ watch(
                             {{ dict.label }}
                           </el-radio>
                         #else##没数据字典
-                          <el-radio :label="1">请选择字典生成</el-radio>
+                          <el-radio :label="1">{{$t('ui.select.dictPlaceholder')}}</el-radio>
                         #end
                     </el-radio-group>
                   </template>
@@ -212,7 +225,7 @@ watch(
               #end
           #end
       #end
-    <vxe-column field="operation" title="操作" align="center">
+    <vxe-column field="operation" :title="$t('common.operation')" align="center">
       <template #default="{row}">
         <el-button
             size="small"
@@ -221,14 +234,14 @@ watch(
             @click="onDelete(row as any)"
             v-access:code="['${permissionPrefix}:delete']"
         >
-          {{ $t('ui.actionTitle.delete') }}
+          {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
         </el-button>
       </template>
     </vxe-column>
   </vxe-table>
   <div class="flex justify-center mt-4">
     <el-button :icon="h(Plus)" type="primary" plain @click="onAdd" v-access:code="['${permissionPrefix}:create']">
-      {{ $t('ui.actionTitle.create', ['${subTable.classComment}']) }}
+      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]) }}
     </el-button>
   </div>
 #else
@@ -255,7 +268,13 @@ watch(
               #end
               #if ($column.htmlType == "input" && !$column.primaryKey)## 忽略主键，不用在表单里
                 <el-form-item label="${comment}" prop="${javaField}">
-                  <el-input v-model="formData.${javaField}" placeholder="请输入${comment}" />
+                  <el-input v-model="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
+                    #if($isI18n)
+                      $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                    #else
+                      '${comment}'
+                    #end
+                  ])" />
                 </el-form-item>
               #elseif($column.htmlType == "imageUpload")## 图片上传
                 <el-form-item label="${comment}" prop="${javaField}">
@@ -271,7 +290,13 @@ watch(
                 </el-form-item>
               #elseif($column.htmlType == "select")## 下拉框
                 <el-form-item label="${comment}" prop="${javaField}">
-                  <el-select v-model="formData.${javaField}" placeholder="请选择${comment}">
+                  <el-select v-model="formData.${javaField}" :placeholder="$t('ui.placeholder.select', [
+                    #if($isI18n)
+                      $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                    #else
+                      '${comment}'
+                    #end
+                  ])">
                       #if ("" != $dictType)## 有数据字典
                         <el-option
                             v-for="dict in getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod')"
@@ -280,7 +305,7 @@ watch(
                             :label="dict.label"
                         />
                       #else##没数据字典
-                        <el-option label="请选择字典生成" value="" />
+                        <el-option :label="$t('ui.select.dictPlaceholder')" value="" />
                       #end
                   </el-select>
                 </el-form-item>
@@ -296,7 +321,7 @@ watch(
                           {{ dict.label }}
                         </el-checkbox>
                       #else##没数据字典
-                        <el-checkbox label="请选择字典生成" />
+                        <el-checkbox :label="$t('ui.select.dictPlaceholder')" />
                       #end
                   </el-checkbox-group>
                 </el-form-item>
@@ -312,7 +337,7 @@ watch(
                           {{ dict.label }}
                         </el-radio>
                       #else##没数据字典
-                        <el-radio :label="1">请选择字典生成</el-radio>
+                        <el-radio :label="1">{{$t('ui.select.dictPlaceholder')}}</el-radio>
                       #end
                   </el-radio-group>
                 </el-form-item>
@@ -321,12 +346,24 @@ watch(
                   <el-date-picker
                       v-model="formData.${javaField}"
                       value-format="x"
-                      placeholder="选择${comment}"
+                      :placeholder="$t('ui.placeholder.select', [
+                        #if($isI18n)
+                          $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                        #else
+                          '${comment}'
+                        #end
+                      ])"
                   />
                 </el-form-item>
               #elseif($column.htmlType == "textarea")## 文本框
                 <el-form-item label="${comment}" prop="${javaField}">
-                  <el-input v-model="formData.${javaField}" type="textarea" placeholder="请输入${comment}" />
+                  <el-input v-model="formData.${javaField}" type="textarea" :placeholder="$t('ui.placeholder.input', [
+                    #if($isI18n)
+                      $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                    #else
+                      '${comment}'
+                    #end
+                  ])" />
                 </el-form-item>
               #end
           #end

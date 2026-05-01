@@ -2,6 +2,7 @@
 #set ($subColumns = $subColumnsList.get($subIndex))##当前字段数组
 #set ($subJoinColumn = $subJoinColumns.get($subIndex))##当前 join 字段
 #set ($subSimpleClassName = $subSimpleClassNames.get($subIndex))
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 <script lang="ts" setup>
   import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
@@ -17,11 +18,19 @@
 
   const emit = defineEmits(['success']);
   const formData = ref<${simpleClassName}Api.${subSimpleClassName}>();
+#if($isI18n)
+  const getTitle = computed(() => {
+    return formData.value?.id
+        ? $t('ui.actionTitle.edit', [$t('${subTable.moduleName}:${subTable.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]);
+  });
+#else
   const getTitle = computed(() => {
     return formData.value?.id
         ? $t('ui.actionTitle.edit', ['${subTable.classComment}'])
         : $t('ui.actionTitle.create', ['${subTable.classComment}']);
   });
+#end
 
   const [Form, formApi] = useVbenForm({
     commonConfig: {

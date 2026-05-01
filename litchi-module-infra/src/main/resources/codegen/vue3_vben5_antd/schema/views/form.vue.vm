@@ -19,13 +19,22 @@ import { get${simpleClassName}, create${simpleClassName}, update${simpleClassNam
 
 import { useFormSchema } from '../data';
 
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 const emit = defineEmits(['success']);
 const formData = ref<${simpleClassName}Api.${simpleClassName}>();
-const getTitle = computed(() => {
-  return formData.value?.id
-    ? $t('ui.actionTitle.edit', ['${table.classComment}'])
-    : $t('ui.actionTitle.create', ['${table.classComment}']);
-});
+#if($isI18n)
+  const getTitle = computed(() => {
+    return formData.value?.id
+        ? $t('ui.actionTitle.edit', [$t('${table.moduleName}:${table.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]);
+  });
+#else
+  const getTitle = computed(() => {
+    return formData.value?.id
+        ? $t('ui.actionTitle.edit', ['${table.classComment}'])
+        : $t('ui.actionTitle.create', ['${table.classComment}']);
+  });
+#end
 
 ## 特殊：主子表专属逻辑
 #if ( $table.templateType == 10 || $table.templateType == 12 )
@@ -79,7 +88,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
         #end
       #end
     #end
-    modalApi.lock();
+    modalDrawerApid.lock();
     // 提交表单
     const data = (await formApi.getValues()) as ${simpleClassName}Api.${simpleClassName};
     ## 特殊：主子表专属逻辑
@@ -144,7 +153,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
           #set ($subClassNameVar = $subClassNameVars.get($index))
           #set ($subSimpleClassName = $subSimpleClassNames.get($index))
           #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <Tabs.TabPane key="$subClassNameVar" tab="${subTable.classComment}" force-render>
+          <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('${subTable.moduleName}:${subTable.businessName}')"#else tab="${subTable.classComment}"#end force-render>
             <${subSimpleClassName}Form ref="${subClassNameVar}FormRef" :${subJoinColumn_strikeCase}="formData?.id" />
           </Tabs.TabPane>
         #end

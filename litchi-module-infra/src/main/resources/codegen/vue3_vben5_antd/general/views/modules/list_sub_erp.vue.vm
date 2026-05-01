@@ -5,6 +5,7 @@
 #set ($subJoinColumn = $subJoinColumns.get($subIndex))##当前 join 字段
 #set ($subSimpleClassName_strikeCase = $subSimpleClassName_strikeCases.get($subIndex))
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 <script lang="ts" setup>
   import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
   import type { VxeTableInstance } from '#/adapter/vxe-table';
@@ -55,7 +56,13 @@ const props = defineProps<{
 /** 创建${subTable.classComment} */
 function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
-    message.warning("请先选择一个${table.classComment}!")
+    message.warning($t('common.selectFirst', [
+      #if($isI18n)
+        $t('${table.moduleName}:${table.businessName}')
+      #else
+        '${table.classComment}'
+      #end
+    ]))
     return
   }
   modalDrawerApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
@@ -232,7 +239,13 @@ onMounted(() => {
                         <Form.Item label="${comment}" name="${javaField}">
                           <Input
                               v-model:value="queryParams.${javaField}"
-                              placeholder="请输入${comment}"
+                              :placeholder="$t('ui.placeholder.input', [
+                                #if($isI18n)
+                                  $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                #else
+                                  '${comment}'
+                                #end
+                              ])"
                               allowClear
                               @pressEnter="handleQuery"
                               class="w-full"
@@ -242,7 +255,13 @@ onMounted(() => {
                         <Form.Item label="${comment}" name="${javaField}">
                           <Select
                               v-model:value="queryParams.${javaField}"
-                              placeholder="请选择${comment}"
+                              :placeholder="$t('ui.placeholder.select', [
+                                #if($isI18n)
+                                  $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                #else
+                                  '${comment}'
+                                #end
+                              ])"
                               allowClear
                               class="w-full"
                           >
@@ -255,7 +274,7 @@ onMounted(() => {
                                   {{ dict.label }}
                                 </Select.Option>
                               #else## 未设置 dictType 数据字典的情况
-                                <Select.Option label="请选择字典生成" value="" />
+                                <Select.Option :label="$t('ui.select.dictPlaceholder')" value="" />
                               #end
                           </Select>
                         </Form.Item>
@@ -265,7 +284,13 @@ onMounted(() => {
                               <DatePicker
                                   v-model:value="queryParams.${javaField}"
                                   valueFormat="YYYY-MM-DD"
-                                  placeholder="选择${comment}"
+                                  :placeholder="$t('ui.placeholder.date', [
+                                  #if($isI18n)
+                                    $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                  #else
+                                    '${comment}'
+                                  #end
+                                ])"
                                   allowClear
                                   class="w-full"
                               />
@@ -283,16 +308,16 @@ onMounted(() => {
                   #end
               #end
             <Form.Item>
-              <Button class="ml-2" @click="resetQuery"> 重置 </Button>
+              <Button class="ml-2" @click="resetQuery"> {{ $t('ui.actionName.reset') }} </Button>
               <Button class="ml-2" @click="handleQuery" type="primary">
-                搜索
+                {{ $t('ui.actionName.search') }}
               </Button>
             </Form.Item>
           </Form>
         </ContentWrap>
 
         <!-- 列表 -->
-        <ContentWrap title="${table.classComment}">
+        <ContentWrap #if($isI18n)title="$t('${subTable.moduleName}:${subTable.businessName}:list')"#else title="${subTable.classComment}"#end>
           <template #extra>
             <TableToolbar
                 ref="tableToolbarRef"
@@ -317,7 +342,7 @@ onMounted(() => {
                       @click="handleDeleteBatch"
                       v-access:code="['${table.moduleName}:${simpleClassName_strikeCase}:delete']"
                   >
-                    批量删除
+                    {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${subTable.classComment}'])#end }}
                   </Button>
                 #end
             </TableToolbar>
@@ -359,7 +384,7 @@ onMounted(() => {
                       #end
                   #end
               #end
-            <vxe-column field="operation" title="操作" align="center">
+            <vxe-column field="operation" :title="$t('common.operation')" align="center">
               <template #default="{row}">
                 <Button
                     size="small"
@@ -367,7 +392,7 @@ onMounted(() => {
                     @click="handleEdit(row as any)"
                     v-access:code="['${permissionPrefix}:update']"
                 >
-                  {{ $t('ui.actionTitle.edit') }}
+                  {{ #if($isI18n)$t('common.edit', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.edit', ['${subTable.classComment}'])#end }}
                 </Button>
                 <Button
                     size="small"
@@ -377,7 +402,7 @@ onMounted(() => {
                     @click="handleDelete(row as any)"
                     v-access:code="['${permissionPrefix}:delete']"
                 >
-                  {{ $t('ui.actionTitle.delete') }}
+                  {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
                 </Button>
               </template>
             </vxe-column>
@@ -395,7 +420,7 @@ onMounted(() => {
         </ContentWrap>
       </div>
     #else
-    <ContentWrap title="${subTable.classComment}列表">
+    <ContentWrap :title="$t('${subTable.moduleName}:${subTable.businessName}:list')">
       <vxe-table
           :data="list"
           show-overflow

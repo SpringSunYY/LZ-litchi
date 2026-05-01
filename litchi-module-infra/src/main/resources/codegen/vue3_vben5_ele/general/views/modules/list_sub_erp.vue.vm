@@ -5,6 +5,7 @@
 #set ($subJoinColumn = $subJoinColumns.get($subIndex))##当前 join 字段
 #set ($subSimpleClassName_strikeCase = $subSimpleClassName_strikeCases.get($subIndex))
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 <script lang="ts" setup>
   import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
   import type { VxeTableInstance } from '#/adapter/vxe-table';
@@ -55,7 +56,13 @@ const props = defineProps<{
 /** 创建${subTable.classComment} */
 function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
-    ElMessage.warning("请先选择一个${table.classComment}!")
+    ElMessage.warning($t('common.selectFirst', [
+      #if($isI18n)
+        $t('${table.moduleName}:${table.businessName}')
+      #else
+        '${table.classComment}'
+      #end
+    ]))
     return
   }
   formModalDrawerApi.setData({${subJoinColumn.javaField}: props.${subJoinColumn.javaField}}).open();
@@ -69,7 +76,7 @@ function handleEdit(row: ${simpleClassName}Api.${subSimpleClassName}) {
 /** 删除${subTable.classComment} */
 async function handleDelete(row: ${simpleClassName}Api.${subSimpleClassName}) {
   const loadingInstance = ElLoading.service({
-    text: $t('ui.actionMessage.deleting', [row.id]),
+    text: $t('actionMessage.deleting', [row.id]),
     background: 'rgba(0, 0, 0, 0.7)',
   });
   try {
@@ -85,7 +92,7 @@ async function handleDelete(row: ${simpleClassName}Api.${subSimpleClassName}) {
 /** 批量删除${subTable.classComment} */
 async function handleDeleteBatch() {
   const loadingInstance = ElLoading.service({
-    text: $t('ui.actionMessage.deleting'),
+    text: $t('actionMessage.deleting'),
     background: 'rgba(0, 0, 0, 0.7)',
   });
   try {
@@ -227,7 +234,13 @@ onMounted(() => {
                         <el-form-item label="${comment}">
                           <el-input
                               v-model="queryParams.${javaField}"
-                              placeholder="请输入${comment}"
+                              :placeholder="$t('ui.placeholder.input', [
+                                #if($isI18n)
+                                  $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                #else
+                                  '${comment}'
+                                #end
+                              ])"
                               clearable
                               @keyup.enter="handleQuery"
                               class="!w-[240px]"
@@ -237,7 +250,13 @@ onMounted(() => {
                         <el-form-item label="${comment}">
                           <el-select
                               v-model="queryParams.${javaField}"
-                              placeholder="请选择${comment}"
+                              :placeholder="$t('ui.placeholder.select', [
+                                #if($isI18n)
+                                  $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                #else
+                                  '${comment}'
+                                #end
+                              ])"
                               clearable
                               class="!w-[240px]"
                           >
@@ -249,7 +268,7 @@ onMounted(() => {
                                     :label="dict.label"
                                 />
                               #else## 未设置 dictType 数据字典的情况
-                                <el-option label="请选择字典生成" value="" />
+                                <el-option :label="$t('ui.select.dictPlaceholder')" value="" />
                               #end
                           </el-select>
                         </el-form-item>
@@ -259,7 +278,13 @@ onMounted(() => {
                               <el-date-picker
                                   v-model="queryParams.${javaField}"
                                   value-format="YYYY-MM-DD"
-                                  placeholder="选择${comment}"
+                                  :placeholder="$t('ui.placeholder.date', [
+                                  #if($isI18n)
+                                    $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                  #else
+                                    '${comment}'
+                                  #end
+                                ])"
                                   clearable
                                   class="!w-[240px]"
                               />
@@ -270,9 +295,9 @@ onMounted(() => {
                                   v-model="queryParams.${javaField}"
                                   type="daterange"
                                   value-format="YYYY-MM-DD"
-                                  range-separator="至"
-                                  start-placeholder="开始日期"
-                                  end-placeholder="结束日期"
+                                  range-separator="$t('ui.dateRange.separator')"
+                                  start-placeholder="$t('dateRange.start')"
+                                  end-placeholder="$t('dateRange.end')"
                                   class="!w-[240px]"
                               />
                             </el-form-item>
@@ -281,16 +306,16 @@ onMounted(() => {
                   #end
               #end
             <el-form-item>
-              <el-button class="ml-2" @click="resetQuery"> 重置 </el-button>
+              <el-button class="ml-2" @click="resetQuery"> {{ $t('ui.actionName.reset') }} </el-button>
               <el-button class="ml-2" @click="handleQuery" type="primary">
-                搜索
+                {{ $t('ui.actionName.search') }}
               </el-button>
             </el-form-item>
           </el-form>
         </ContentWrap>
 
         <!-- 列表 -->
-        <ContentWrap title="${table.classComment}">
+        <ContentWrap #if($isI18n)title="$t('${subTable.moduleName}:${subTable.businessName}:list')"#else title="${subTable.classComment}"#end>
           <template #extra>
             <TableToolbar
                 ref="tableToolbarRef"
@@ -314,7 +339,7 @@ onMounted(() => {
                       @click="handleDeleteBatch"
                       v-access:code="['${table.moduleName}:${simpleClassName_strikeCase}:delete']"
                   >
-                    批量删除
+                    {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${subTable.classComment}'])#end }}
                   </el-button>
                 #end
             </TableToolbar>
@@ -356,7 +381,7 @@ onMounted(() => {
                       #end
                   #end
               #end
-            <vxe-column field="operation" title="操作" align="center">
+            <vxe-column field="operation" :title="$t('common.operation')" align="center">
               <template #default="{row}">
                 <el-button
                     size="small"
@@ -365,7 +390,7 @@ onMounted(() => {
                     @click="handleEdit(row as any)"
                     v-access:code="['${permissionPrefix}:update']"
                 >
-                  {{ $t('ui.actionTitle.edit') }}
+                  {{ #if($isI18n)$t('common.edit', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.edit', ['${subTable.classComment}'])#end }}
                 </el-button>
                 <el-button
                     size="small"
@@ -375,7 +400,7 @@ onMounted(() => {
                     @click="handleDelete(row as any)"
                     v-access:code="['${permissionPrefix}:delete']"
                 >
-                  {{ $t('ui.actionTitle.delete') }}
+                  {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
                 </el-button>
               </template>
             </vxe-column>
@@ -395,7 +420,7 @@ onMounted(() => {
         </ContentWrap>
       </div>
     #else
-    <ContentWrap title="${subTable.classComment}列表">
+    <ContentWrap :title="$t('${subTable.moduleName}:${subTable.businessName}:list')">
       <vxe-table
           :data="list"
           show-overflow

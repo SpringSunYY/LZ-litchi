@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
 import { useVbenModelDrawer } from '@vben/common-ui';
@@ -21,11 +22,16 @@ import { useFormSchema } from '../data';
 
 const emit = defineEmits(['success']);
 const formData = ref<${simpleClassName}Api.${simpleClassName}>();
-const getTitle = computed(() => {
-  return formData.value?.id
-    ? $t('ui.actionTitle.edit', ['${table.classComment}'])
-    : $t('ui.actionTitle.create', ['${table.classComment}']);
-});
+#if($isI18n)
+  const titleEdit = $t('ui.actionTitle.edit', [$t('${table.moduleName}:${table.businessName}')]);
+  const titleCreate = $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]);
+#else
+  const titleEdit = $t('ui.actionTitle.edit', ['${table.classComment}']);
+  const titleCreate = $t('ui.actionTitle.create', ['${table.classComment}']);
+#end
+  const getTitle = computed(() => {
+    return formData.value?.id ? titleEdit : titleCreate;
+  });
 
 ## 特殊：主子表专属逻辑
 #if ( $table.templateType == 10 || $table.templateType == 12 )
@@ -144,7 +150,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
           #set ($subClassNameVar = $subClassNameVars.get($index))
           #set ($subSimpleClassName = $subSimpleClassNames.get($index))
           #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <el-tab-pane name="$subClassNameVar" label="${subTable.classComment}">
+          <el-tab-pane name="$subClassNameVar" #if($isI18n)label="$t('${subTable.moduleName}:${subTable.businessName}')"#else label="${subTable.classComment}"#end>
             <${subSimpleClassName}Form ref="${subClassNameVar}FormRef" :${subJoinColumn_strikeCase}="formData?.id" />
           </el-tab-pane>
         #end
