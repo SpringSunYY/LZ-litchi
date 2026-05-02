@@ -5,14 +5,13 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.test.core.ut.BaseDbUnitTest;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
-import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.lz.module.system.dal.mysql.tenant.TenantPackageMapper;
+import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 
-import jakarta.annotation.Resource;
 import java.util.List;
 
 import static com.lz.framework.common.util.date.LocalDateTimeUtils.buildBetweenTime;
@@ -21,18 +20,16 @@ import static com.lz.framework.common.util.object.ObjectUtils.cloneIgnoreId;
 import static com.lz.framework.test.core.util.AssertUtils.assertPojoEquals;
 import static com.lz.framework.test.core.util.AssertUtils.assertServiceException;
 import static com.lz.framework.test.core.util.RandomUtils.*;
-import static com.lz.module.system.enums.ErrorCodeConstants.*;
-import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static com.lz.module.system.enums.ErrorCodeConstants.TENANT_PACKAGE_DISABLE;
+import static com.lz.module.system.enums.ErrorCodeConstants.TENANT_PACKAGE_NOT_EXISTS;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
-* {@link TenantPackageServiceImpl} 的单元测试类
-*
-* @author 荔枝源码
-*/
+ * {@link TenantPackageServiceImpl} 的单元测试类
+ *
+ * @author 荔枝源码
+ */
 @Import(TenantPackageServiceImpl.class)
 public class TenantPackageServiceImplTest extends BaseDbUnitTest {
 
@@ -83,35 +80,35 @@ public class TenantPackageServiceImplTest extends BaseDbUnitTest {
 
     @Test
     public void testGetTenantPackageByCodePage() {
-       // mock 数据
-       TenantPackageDO dbTenantPackage = randomPojo(TenantPackageDO.class, o -> { // 等会查询到
-           o.setName("荔枝源码");
-           o.setStatus(CommonStatusEnum.ENABLE.getStatus());
-           o.setRemark("源码解析");
-           o.setCreateTime(buildTime(2022, 10, 10));
-       });
-       tenantPackageMapper.insert(dbTenantPackage);
-       // 测试 name 不匹配
-       tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setName("源码")));
-       // 测试 status 不匹配
-       tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setStatus(CommonStatusEnum.DISABLE.getStatus())));
-       // 测试 remark 不匹配
-       tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setRemark("解析")));
-       // 测试 createTime 不匹配
-       tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setCreateTime(buildTime(2022, 11, 11))));
-       // 准备参数
-       TenantPackagePageReqVO reqVO = new TenantPackagePageReqVO();
-       reqVO.setName("荔枝");
-       reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
+        // mock 数据
+        TenantPackageDO dbTenantPackage = randomPojo(TenantPackageDO.class, o -> { // 等会查询到
+            o.setName("荔枝源码");
+            o.setStatus(CommonStatusEnum.ENABLE.getStatus());
+            o.setRemark("源码解析");
+            o.setCreateTime(buildTime(2022, 10, 10));
+        });
+        tenantPackageMapper.insert(dbTenantPackage);
+        // 测试 name 不匹配
+        tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setName("源码")));
+        // 测试 status 不匹配
+        tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setStatus(CommonStatusEnum.DISABLE.getStatus())));
+        // 测试 remark 不匹配
+        tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setRemark("解析")));
+        // 测试 createTime 不匹配
+        tenantPackageMapper.insert(cloneIgnoreId(dbTenantPackage, o -> o.setCreateTime(buildTime(2022, 11, 11))));
+        // 准备参数
+        TenantPackagePageReqVO reqVO = new TenantPackagePageReqVO();
+        reqVO.setName("荔枝");
+        reqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
 //       reqVO.setRemark("源码");
-       reqVO.setCreateTime(buildBetweenTime(2022, 10, 9, 2022, 10, 11));
+        reqVO.setCreateTime(buildBetweenTime(2022, 10, 9, 2022, 10, 11));
 
-       // 调用
-       PageResult<TenantPackageDO> pageResult = tenantPackageService.getTenantPackagePage(reqVO);
-       // 断言
-       assertEquals(1, pageResult.getTotal());
-       assertEquals(1, pageResult.getList().size());
-       assertPojoEquals(dbTenantPackage, pageResult.getList().get(0));
+        // 调用
+        PageResult<TenantPackageDO> pageResult = tenantPackageService.getTenantPackagePage(reqVO);
+        // 断言
+        assertEquals(1, pageResult.getTotal());
+        assertEquals(1, pageResult.getList().size());
+        assertPojoEquals(dbTenantPackage, pageResult.getList().get(0));
     }
 
     @Test

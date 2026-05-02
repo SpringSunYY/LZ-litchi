@@ -15,7 +15,6 @@ import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageGrantReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
-import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageRespVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
@@ -173,30 +172,31 @@ public class TenantPackageServiceImpl implements TenantPackageService {
             if (tenantService.isSystemTenant(tenant)) {
                 continue;
             }
-            //首先拿到该租户当前订阅的所有套餐
-            List<TenantPackageSubscribeDO> tenantSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndTenantCode(tenant.getCode());
-            //在拿到所有的套餐，根据套餐编号
-            if (CollectionUtils.isEmpty(tenantSubscribeDOS)) continue;
-            List<String> packageCodes = tenantSubscribeDOS.stream().map(TenantPackageSubscribeDO::getPackageCode).toList();
-            List<TenantPackageDO> tenantPackageDOS = tenantPackageMapper.selectListByCodes(packageCodes);
-            if (ArrayUtils.isEmpty(tenantPackageDOS)) continue;
-            Set<Long> menuIds = new HashSet<>();
-            //获取到所有的权限菜单
-            for (TenantPackageDO packageDO : tenantPackageDOS) {
-                if (ArrayUtils.isEmpty(packageDO.getMenuIds())) {
-                    continue;
-                }
-                menuIds.addAll(packageDO.getMenuIds());
-            }
-            if (CollUtil.isEmpty(menuIds)) {
-                continue;
-            }
-            tenantService.updateTenantRoleMenu(tenant.getId(), menuIds);
-            //更新租户权限
-            tenant.setMenuIds(menuIds);
-            tenantService.updateTenant(tenant);
+            updateTenantMenu(tenant);
         }
         return packageSubscribeDOS;
+    }
+
+    @Override
+    public TenantDO updateTenantMenu(TenantDO tenant) {
+        //首先拿到该租户当前订阅的所有套餐
+        List<TenantPackageSubscribeDO> tenantSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndTenantCode(tenant.getCode());
+        //在拿到所有的套餐，根据套餐编号
+        List<String> packageCodes = tenantSubscribeDOS.stream().map(TenantPackageSubscribeDO::getPackageCode).toList();
+        List<TenantPackageDO> tenantPackageDOS = tenantPackageMapper.selectListByCodes(packageCodes);
+        Set<Long> menuIds = new HashSet<>();
+        //获取到所有的权限菜单
+        for (TenantPackageDO packageDO : tenantPackageDOS) {
+            if (ArrayUtils.isEmpty(packageDO.getMenuIds())) {
+                continue;
+            }
+            menuIds.addAll(packageDO.getMenuIds());
+        }
+        tenantService.updateTenantRoleMenu(tenant.getId(), menuIds);
+        //更新租户权限
+        tenant.setMenuIds(menuIds);
+        tenantService.updateTenant(tenant);
+        return tenant;
     }
 
     @Override
@@ -244,10 +244,9 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         if (CollectionUtils.isEmpty(tenantPackageSubscribeDOS)) {
             return new ArrayList<>();
         }
-        Set<String> packageCodesSet = tenantPackageSubscribeDOS
+        List<String> packageCodes = tenantPackageSubscribeDOS
                 .stream().map(TenantPackageSubscribeDO::getPackageCode)
-                .collect(Collectors.toSet());
-        List<String> packageCodes = new ArrayList<>(packageCodesSet);
+                .distinct().collect(Collectors.toList());
         return tenantPackageMapper.selectListByCodes(packageCodes);
 
 

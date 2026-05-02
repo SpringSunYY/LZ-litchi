@@ -8,10 +8,18 @@ import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantPageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.TenantSaveReqVO;
 import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.mysql.tenant.TenantMapper;
+import com.lz.module.system.job.TenantPackageSubscribeAutoUpdateStatusJob;
+import com.lz.module.system.service.permission.MenuService;
+import com.lz.module.system.service.permission.PermissionService;
+import com.lz.module.system.service.permission.RoleService;
+import com.lz.module.system.service.user.AdminUserService;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Collections;
 import java.util.List;
@@ -31,19 +39,47 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  *
  * @author 荔枝源码
  */
-@Import(TenantServiceImpl.class)
+@Import({TenantServiceImpl.class, TenantPackageSubscribeAutoUpdateStatusJob.class})
 public class TenantServiceImplTest extends BaseDbUnitTest {
 
     @Resource
+    @Lazy
     private TenantServiceImpl tenantService;
 
     @Resource
     private TenantMapper tenantMapper;
 
-    @BeforeEach
-    public void setUp() {
-        // 清理租户上下文
-        TenantContextHolder.clear();
+    @MockBean
+    private TenantPackageService tenantPackageService;
+
+    @MockBean
+    @Lazy
+    private AdminUserService userService;
+
+    @MockBean
+    private RoleService roleService;
+
+    @MockBean
+    private MenuService menuService;
+
+    @MockBean
+    private PermissionService permissionService;
+
+    @MockBean
+    private PasswordEncoder passwordEncoder;
+
+    @Resource
+    private TenantPackageSubscribeAutoUpdateStatusJob tenantPackageSubscribeAutoUpdateStatusJob;
+
+   @BeforeEach
+   public void setUp() {
+       // 清理租户上下文
+       TenantContextHolder.clear();
+   }
+
+    @Test
+    public void testUpdateTenantStatus() {
+        tenantPackageSubscribeAutoUpdateStatusJob.execute(null);
     }
 
     @Test
@@ -91,7 +127,6 @@ public class TenantServiceImplTest extends BaseDbUnitTest {
         // 调用，并断言业务异常
         tenantService.validTenant(1L);
     }
-
 
 
     @Test

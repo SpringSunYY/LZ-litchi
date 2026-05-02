@@ -23,7 +23,7 @@ public class TenantPackageSubscribeSaveReqVO {
 
     @Schema(description = "套餐编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "套餐编码不能为空")
-    @Size(max = 32,min = 4, message = "套餐编码长度为4~32个字符")
+    @Size(max = 32,min = 2, message = "套餐编码长度为2~32个字符")
     private String packageCode;
 
 

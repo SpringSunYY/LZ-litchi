@@ -488,4 +488,41 @@ public class TenantServiceImpl implements TenantService {
         return tenantProperties == null || Boolean.FALSE.equals(tenantProperties.getEnable());
     }
 
+    @Override
+    public String autoUpdateTenantPackageSubscribeStatus() {
+        //1、先处理结束的套餐，套餐类型为套餐、结束时间在当前时间之前的，更新为已结束
+        int updateCountEnd = tenantPackageSubscribeMapper.updateTenantPackageSubscribeStatusToEnd();
+        log.info("[autoUpdateTenantPackageSubscribeStatus][更新套餐订阅为结束，结果为: {}]", updateCountEnd);
+        //2、处理未开始的套餐，套餐类型为套餐、开始时间在当前时间之前的，结束时间是当前时间之后更新为待开始
+        int updateCountBegin = tenantPackageSubscribeMapper.updateTenantPackageSubscribeStatusToBegin();
+        log.info("[autoUpdateTenantPackageSubscribeStatus][更新套餐订阅为待开始，结果为: {}]", updateCountBegin);
+        //3、处理租户新的权限
+        TenantDO tenant = tenantMapper.selectById(TenantContextHolder.getRequiredTenantId());
+        //4、 更新前获取租户的当前权限
+        Set<Long> oldMenuIds = tenant.getMenuIds();
+        Set<Long> newMenuIds = tenantPackageService.updateTenantMenu(tenant).getMenuIds();
+        log.info("[autoUpdateTenantPackageSubscribeStatus][更新租户权限，结果为: {}]", tenant.getName());
+
+        //5、 计算权限变化
+        Set<Long> addedMenuIds = CollUtil.isEmpty(newMenuIds) ? new HashSet<>() : new HashSet<>(newMenuIds);
+        Set<Long> removedMenuIds = CollUtil.isEmpty(oldMenuIds) ? new HashSet<>() : new HashSet<>(oldMenuIds);
+
+        if (CollUtil.isNotEmpty(oldMenuIds)) {
+            addedMenuIds.removeAll(oldMenuIds);
+        }
+        if (CollUtil.isNotEmpty(newMenuIds)) {
+            removedMenuIds.removeAll(newMenuIds);
+        }
+
+        //6、 格式化返回信息
+        StringBuilder result = new StringBuilder();
+        result.append("租户名称: ").append(tenant.getName()).append("(").append(tenant.getCode()).append(")");
+        result.append("\n新增权限: ").append(addedMenuIds.isEmpty() ? "无" : addedMenuIds);
+        result.append("\n减少权限: ").append(removedMenuIds.isEmpty() ? "无" : removedMenuIds);
+        result.append("\n当前权限: ").append(newMenuIds == null ? "无" : newMenuIds);
+
+        log.info("[autoUpdateTenantPackageSubscribeStatus][权限变化详情: {}]", result);
+        return result.toString();
+    }
+
 }

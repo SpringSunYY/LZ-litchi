@@ -170,4 +170,12 @@ public interface TenantService {
     void updateTenantMenuByTenantCode(String code);
 
     boolean isTenantDisable();
+
+    /**
+     * 自动更新租户套餐订阅状态
+     *
+     * @return 更新租户套餐订阅状态的租户
+     */
+    String autoUpdateTenantPackageSubscribeStatus();
+
 }

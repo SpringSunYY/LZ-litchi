@@ -4,6 +4,7 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageGrantReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackagePageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packages.TenantPackageSaveReqVO;
+import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import jakarta.validation.Valid;
 
@@ -42,6 +43,14 @@ public interface TenantPackageService {
      * @param grantReqVO 授予信息
      */
     void grantTenantPackage(@Valid TenantPackageGrantReqVO grantReqVO);
+
+    /**
+     * 更新租户套餐的菜单权限
+     *
+     * @param tenant 租户
+     * @return
+     */
+    TenantDO updateTenantMenu(TenantDO tenant);
 
     /**
      * 删除租户套餐

@@ -3,6 +3,7 @@ package com.lz.module.system.controller.admin.tenant.vo.packages;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -17,10 +18,12 @@ public class TenantPackageSaveReqVO {
 
     @Schema(description = "套餐名", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
     @NotEmpty(message = "套餐名不能为空")
+    @Size(max = 32,min = 2, message = "套餐名长度为2~32个字符")
     private String name;
 
     @Schema(description = "套餐编码", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotEmpty(message = "套餐编码不能为空")
+    @Size(max = 32,min = 2, message = "套餐编码长度为2~32个字符")
     private String code;
 
     @Schema(description = "套餐类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
