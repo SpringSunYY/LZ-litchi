@@ -15,6 +15,7 @@ import com.lz.module.system.dal.dataobject.tenant.TenantDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageSubscribeDO;
 import com.lz.module.system.dal.mysql.tenant.TenantPackageSubscribeMapper;
+import com.lz.module.system.enums.tenant.SystemTenantPackageSubscribeStatusEnum;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -66,7 +67,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         tenantPackageSubscribe.setStartTime(LocalDateTimeUtils.of(startDateTime));
         tenantPackageSubscribe.setEndTime(LocalDateTimeUtils.of(endDateTime));
         TenantUtils.execute(tenantDO.getId(), () -> {
-            tenantService.updateTenantMenu(tenantDO, tenantPackageDO, tenantPackageSubscribe);
+            tenantService.updateTenantMenuByTenantAndPackageAndSubscribe(tenantDO, tenantPackageDO, tenantPackageSubscribe);
             transactionTemplate.executeWithoutResult(status -> {
                 tenantPackageSubscribeMapper.insert(tenantPackageSubscribe);
                 //更新租户套餐订阅数量
@@ -127,6 +128,16 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         TenantPackageSubscribeDO updateObj = BeanUtils.toBean(updateReqVO, TenantPackageSubscribeDO.class);
         initTenantPackageSubscribeByTenant(updateObj);
         initTenantPackageSubscribeByPackage(updateObj);
+
+        //如果传过来的是关闭，但是数据库之前不是关闭
+        if (!tenantPackageSubscribeDO.getStatus().equals(updateObj.getStatus())
+            && updateObj.getStatus().equals(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_4.getStatus())) {
+            //查询到租户
+            TenantDO tenant = tenantService.selectByCode(tenantPackageSubscribeDO.getTenantCode());
+            //更新租户权限
+            tenantService.updateTenantMenuByTenant(tenant);
+        }
+
         tenantPackageSubscribeMapper.updateById(updateObj);
     }
 

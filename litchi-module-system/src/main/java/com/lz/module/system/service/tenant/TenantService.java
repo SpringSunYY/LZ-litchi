@@ -154,7 +154,22 @@ public interface TenantService {
      * @param tenantPackageDO
      * @param tenantPackageSubscribe 租户套餐订阅
      */
-    void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe);
+    void updateTenantMenuByTenantAndPackageAndSubscribe(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe);
+
+    /**
+     * 更新租户套餐的菜单权限
+     *
+     * @param tenant 租户
+     * @return
+     */
+    TenantDO updateTenantMenuByTenant(TenantDO tenant);
+    /**
+     * 更新所有租户的菜单
+     *
+     * @return 更新租户的菜单数量
+     */
+    boolean updateAllTenantMenu();
+
 
     Set<Long> getTenantMenu(String code);
 

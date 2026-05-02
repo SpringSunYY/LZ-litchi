@@ -120,7 +120,7 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
-    public void updateTenantMenu(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe) {
+    public void updateTenantMenuByTenantAndPackageAndSubscribe(TenantDO tenantDO, TenantPackageDO tenantPackageDO, TenantPackageSubscribeDO tenantPackageSubscribe) {
         //首先判断开始结束时间，是否在内,如果不在
         if (!LocalDateTimeUtil.isIn(LocalDateTimeUtil.now(), tenantPackageSubscribe.getStartTime(), tenantPackageSubscribe.getEndTime())) {
             return;
@@ -143,6 +143,41 @@ public class TenantServiceImpl implements TenantService {
         //先更新角色再更新租户，避免事务提交失败
         updateTenantRoleMenu(tenantDO.getId(), tenantDO.getMenuIds());
         tenantMapper.updateById(tenantDO);
+    }
+
+    @Override
+    public TenantDO updateTenantMenuByTenant(TenantDO tenant) {
+        //首先拿到该租户当前订阅的所有套餐
+        List<TenantPackageSubscribeDO> tenantSubscribeDOS = tenantPackageSubscribeMapper.selectSubscribeByCurrentDateAndTenantCode(tenant.getCode());
+        //在拿到所有的套餐，根据套餐编号
+        List<String> packageCodes = tenantSubscribeDOS.stream().map(TenantPackageSubscribeDO::getPackageCode).toList();
+        List<TenantPackageDO> tenantPackageDOS = tenantPackageService.selectListByCodes(packageCodes);
+        Set<Long> menuIds = new HashSet<>();
+        //获取到所有的权限菜单
+        for (TenantPackageDO packageDO : tenantPackageDOS) {
+            if (ArrayUtils.isEmpty(packageDO.getMenuIds())) {
+                continue;
+            }
+            menuIds.addAll(packageDO.getMenuIds());
+        }
+        updateTenantRoleMenu(tenant.getId(), menuIds);
+        //更新租户权限
+        tenant.setMenuIds(menuIds);
+        updateTenant(tenant);
+        return tenant;
+    }
+
+
+    @Override
+    @TenantIgnore // 忽略多租户,防止套餐更新权限失败
+    public boolean updateAllTenantMenu() {
+        //查询到所有租户
+        List<TenantDO> tenantList = tenantMapper.selectList();
+        for (TenantDO tenant : tenantList) {
+            //打开租户、更新租户
+            TenantUtils.execute(tenant.getId(), this::autoUpdateTenantPackageSubscribeStatus);
+        }
+        return true;
     }
 
     @Override
@@ -489,6 +524,8 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    //为什么这里不关闭租户，因为这里的@TenantJob已经遍历所有的租户了，
+    // 所以不需要关闭租户来一个一个查询
     public String autoUpdateTenantPackageSubscribeStatus() {
         //1、先处理结束的套餐，套餐类型为套餐、结束时间在当前时间之前的，更新为已结束
         int updateCountEnd = tenantPackageSubscribeMapper.updateTenantPackageSubscribeStatusToEnd();
@@ -500,7 +537,7 @@ public class TenantServiceImpl implements TenantService {
         TenantDO tenant = tenantMapper.selectById(TenantContextHolder.getRequiredTenantId());
         //4、 更新前获取租户的当前权限
         Set<Long> oldMenuIds = tenant.getMenuIds();
-        Set<Long> newMenuIds = tenantPackageService.updateTenantMenu(tenant).getMenuIds();
+        Set<Long> newMenuIds = updateTenantMenuByTenant(tenant).getMenuIds();
         log.info("[autoUpdateTenantPackageSubscribeStatus][更新租户权限，结果为: {}]", tenant.getName());
 
         //5、 计算权限变化

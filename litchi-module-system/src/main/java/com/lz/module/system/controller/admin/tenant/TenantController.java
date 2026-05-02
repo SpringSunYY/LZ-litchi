@@ -100,9 +100,18 @@ public class TenantController {
         return success(true);
     }
 
+    @GetMapping("/update/all-tenant-menu")
+    @Operation(summary = "更新所有租户菜单")
+    @PreAuthorize("@ss.hasPermission('system:tenant:update')")
+    public CommonResult<Boolean> updateAllTenantMenu() {
+        tenantService.updateAllTenantMenu();
+        return success(true);
+    }
+
+    @Operation(summary = "更新租户菜单")
     @GetMapping("/update/code")
     @PreAuthorize("@ss.hasPermission('system:tenant:update')")
-    public CommonResult<Boolean> updateTenantCode(@RequestParam("code") String code) {
+    public CommonResult<Boolean> updateTenantMenuByTenantCode(@RequestParam("code") String code) {
         tenantService.updateTenantMenuByTenantCode(code);
         return success(true);
     }

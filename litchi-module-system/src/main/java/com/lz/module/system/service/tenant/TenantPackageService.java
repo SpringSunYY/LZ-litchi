@@ -44,13 +44,6 @@ public interface TenantPackageService {
      */
     void grantTenantPackage(@Valid TenantPackageGrantReqVO grantReqVO);
 
-    /**
-     * 更新租户套餐的菜单权限
-     *
-     * @param tenant 租户
-     * @return
-     */
-    TenantDO updateTenantMenu(TenantDO tenant);
 
     /**
      * 删除租户套餐
@@ -119,4 +112,11 @@ public interface TenantPackageService {
      */
     List<TenantPackageDO> getTenantPackageListByTypeBuiltIn();
 
+    /**
+     * 获得指定编码的租户套餐列表
+     *
+     * @param packageCodes 套餐编码数组
+     * @return 租户套餐
+     */
+    List<TenantPackageDO> selectListByCodes(List<String> packageCodes);
 }

@@ -31,7 +31,9 @@ import org.springframework.validation.annotation.Validated;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -123,7 +125,7 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         tenantPackageMapper.updateById(updateObj);
         // 如果菜单发生状态变化，则修改每个租户的菜单
         if (!tenantPackage.getStatus().equals(updateReqVO.getStatus())) {
-            List<TenantPackageSubscribeDO> tenantPackageSubscribeDOS = updateTenantMenu(tenantPackage);
+            List<TenantPackageSubscribeDO> tenantPackageSubscribeDOS = updateTenantMenuByPackage(tenantPackage);
             if (CollectionUtil.isEmpty(tenantPackageSubscribeDOS)) {
                 return;
             }
@@ -154,11 +156,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         if (CollUtil.isEqualList(tenantPackage.getMenuIds(), grantReqVO.getMenuIds())) {
             return;
         }
-        updateTenantMenu(tenantPackage);
+        updateTenantMenuByPackage(tenantPackage);
 
     }
 
-    private List<TenantPackageSubscribeDO> updateTenantMenu(TenantPackageDO tenantPackage) {
+    private List<TenantPackageSubscribeDO> updateTenantMenuByPackage(TenantPackageDO tenantPackage) {
         // 获取该套餐的订阅
         List<TenantPackageSubscribeDO> packageSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndPackageCode(tenantPackage.getCode());
         //根据订阅拿到租户
@@ -172,32 +174,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
             if (tenantService.isSystemTenant(tenant)) {
                 continue;
             }
-            updateTenantMenu(tenant);
+            tenantService.updateTenantMenuByTenant(tenant);
         }
         return packageSubscribeDOS;
     }
 
-    @Override
-    public TenantDO updateTenantMenu(TenantDO tenant) {
-        //首先拿到该租户当前订阅的所有套餐
-        List<TenantPackageSubscribeDO> tenantSubscribeDOS = tenantPackageSubscribeService.selectSubscribeByCurrentDateAndTenantCode(tenant.getCode());
-        //在拿到所有的套餐，根据套餐编号
-        List<String> packageCodes = tenantSubscribeDOS.stream().map(TenantPackageSubscribeDO::getPackageCode).toList();
-        List<TenantPackageDO> tenantPackageDOS = tenantPackageMapper.selectListByCodes(packageCodes);
-        Set<Long> menuIds = new HashSet<>();
-        //获取到所有的权限菜单
-        for (TenantPackageDO packageDO : tenantPackageDOS) {
-            if (ArrayUtils.isEmpty(packageDO.getMenuIds())) {
-                continue;
-            }
-            menuIds.addAll(packageDO.getMenuIds());
-        }
-        tenantService.updateTenantRoleMenu(tenant.getId(), menuIds);
-        //更新租户权限
-        tenant.setMenuIds(menuIds);
-        tenantService.updateTenant(tenant);
-        return tenant;
-    }
 
     @Override
     @TenantIgnore // 忽略多租户,防止套餐更新权限失败
@@ -289,6 +270,11 @@ public class TenantPackageServiceImpl implements TenantPackageService {
     @Override
     public List<TenantPackageDO> getTenantPackageListByTypeBuiltIn() {
         return tenantPackageMapper.selectListByTypeBuiltIn();
+    }
+
+    @Override
+    public List<TenantPackageDO> selectListByCodes(List<String> packageCodes) {
+        return tenantPackageMapper.selectListByCodes(packageCodes);
     }
 
 
