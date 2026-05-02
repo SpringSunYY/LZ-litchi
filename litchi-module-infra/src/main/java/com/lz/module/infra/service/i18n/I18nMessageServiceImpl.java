@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
@@ -11,6 +12,7 @@ import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -33,6 +35,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     private I18nMessageMapper i18nMessageMapper;
 
     @Override
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     public Long createI18nMessage(I18nMessageSaveReqVO createReqVO) {
         // 插入
         I18nMessageDO i18nMessage = BeanUtils.toBean(createReqVO, I18nMessageDO.class);
@@ -51,6 +54,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     }
 
     @Override
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     public void updateI18nMessage(I18nMessageSaveReqVO updateReqVO) {
         // 校验存在
         I18nMessageDO i18nMessageDO = validateI18nMessageExists(updateReqVO.getId());
@@ -68,6 +72,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         i18nMessageMapper.updateById(updateObj);
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void deleteI18nMessage(Long id) {
         // 校验存在
@@ -76,6 +81,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         i18nMessageMapper.deleteById(id);
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void deleteI18nMessageListByIds(List<Long> ids) {
         // 删除

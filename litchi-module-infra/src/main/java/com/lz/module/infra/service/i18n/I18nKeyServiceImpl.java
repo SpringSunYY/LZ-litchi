@@ -3,6 +3,7 @@ package com.lz.module.infra.service.i18n;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nKeyPageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nKeySaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
@@ -11,6 +12,7 @@ import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
 import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nKeyIsSystemEnum;
 import jakarta.annotation.Resource;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -35,6 +37,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     @Resource
     private I18nMessageMapper i18nMessageMapper;
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public Long createI18nKey(I18nKeySaveReqVO createReqVO) {
         // 插入
@@ -50,6 +53,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         return i18nKey.getId();
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void updateI18nKey(I18nKeySaveReqVO updateReqVO) {
         // 校验存在
@@ -64,6 +68,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     }
 
     @Transactional
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void deleteI18nKey(Long id, Boolean isDeleteChildren) {
         // 校验存在
@@ -80,6 +85,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         i18nKeyMapper.deleteById(id);
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void deleteI18nKeyListByIds(List<Long> ids) {
         // 删除

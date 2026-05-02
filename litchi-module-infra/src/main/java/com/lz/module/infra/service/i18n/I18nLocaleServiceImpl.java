@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nLocalePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
@@ -13,6 +14,7 @@ import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import jakarta.annotation.Resource;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -33,6 +35,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Resource
     private I18nLocaleMapper i18nLocaleMapper;
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public Long createI18nLocale(I18nLocaleSaveReqVO createReqVO) {
         // 插入
@@ -64,6 +67,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         return i18nLocale.getId();
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void updateI18nLocale(I18nLocaleSaveReqVO updateReqVO) {
         // 校验存在
@@ -93,6 +97,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         i18nLocaleMapper.updateById(updateObj);
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void deleteI18nLocale(Long id) {
         // 校验存在
@@ -105,6 +110,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         i18nLocaleMapper.deleteById(id);
     }
 
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public void deleteI18nLocaleListByIds(List<Long> ids) {
         // 删除
