@@ -1,6 +1,14 @@
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
 #set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 #set ($functionOps = ['query', 'create', 'update', 'delete', 'export'])
+#set ($FUNCTION_ZH_NAMES = ['查询', '创建', '更新', '删除', '导出'])
+
+-- 非国际化模式下的常量定义（始终生效，确保非国际化分支能正常使用变量）
+#if (!$isI18n)
+SET @MENU_TYPE_MENU = 2;
+SET @MENU_TYPE_BUTTON = 3;
+SET @MENU_STATUS_NORMAL = 0;
+#end
 
 #if ($isI18n)
 -- 国际化常量定义（可在生成后手动修改 SQL 中的变量值）
@@ -254,7 +262,7 @@ INSERT INTO system_menu(
     path, icon, component, status, component_name
 )
 VALUES (
-    '${TABLE_REMARK}-管理', '', @MENU_TYPE_MENU, 0, ${table.parentMenuId},
+    '${table.classComment}管理', '', @MENU_TYPE_MENU, 0, ${table.parentMenuId},
     '${simpleClassName_strikeCase}', '', '${table.moduleName}/${table.businessName}/index', @MENU_STATUS_NORMAL, '${table.className}'
 );
 SET @parentId = LAST_INSERT_ID();
@@ -276,7 +284,7 @@ VALUES (
 #if ($isI18n)
     '${table.moduleName}:${table.businessName}:action:${functionOps.get($index)}', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
 #else
-    '${TABLE_REMARK}${fn}', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
+    '${table.classComment}${fn}', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
 #end
     '', '', '', @MENU_STATUS_NORMAL
 );
@@ -292,7 +300,7 @@ VALUES (
 #if ($isI18n)
     '${table.moduleName}:${table.businessName}:action:import', '${permissionPrefix}:import', @MENU_TYPE_BUTTON, 6, @parentId,
 #else
-    '${TABLE_REMARK}-导入', '${permissionPrefix}:action:import', @MENU_TYPE_BUTTON, 6, @parentId,
+    '${table.classComment}导入', '${permissionPrefix}:import', @MENU_TYPE_BUTTON, 6, @parentId,
 #end
     '', '', '', @MENU_STATUS_NORMAL
 );

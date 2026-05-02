@@ -157,4 +157,26 @@ public class CodegenController {
         writeAttachment(response, "codegen.zip", outputStream.toByteArray());
     }
 
+    @Operation(summary = "批量下载生成代码")
+    @GetMapping("/batch-download")
+    @Parameter(name = "tableIds", description = "表编号列表", required = true)
+    @PreAuthorize("@ss.hasPermission('infra:codegen:download')")
+    public void batchDownloadCodegen(@RequestParam("tableIds") List<Long> tableIds,
+                                      HttpServletResponse response) throws IOException {
+        // 生成所有表的代码
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try (java.util.zip.ZipOutputStream zipOut = new java.util.zip.ZipOutputStream(outputStream)) {
+            for (Long tableId : tableIds) {
+                Map<String, String> codes = codegenService.generationCodes(tableId);
+                for (Map.Entry<String, String> entry : codes.entrySet()) {
+                    zipOut.putNextEntry(new java.util.zip.ZipEntry(entry.getKey()));
+                    zipOut.write(entry.getValue().getBytes(java.nio.charset.StandardCharsets.UTF_8));
+                    zipOut.closeEntry();
+                }
+            }
+        }
+        // 输出
+        writeAttachment(response, "codegen_batch.zip", outputStream.toByteArray());
+    }
+
 }
