@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.CollectionUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.exception.ServiceException;
 import com.lz.framework.common.pojo.PageResult;
@@ -28,7 +29,6 @@ import com.lz.module.system.service.dept.DeptService;
 import com.lz.module.system.service.dept.PostService;
 import com.lz.module.system.service.permission.PermissionService;
 import com.lz.module.system.service.tenant.TenantService;
-import com.google.common.annotations.VisibleForTesting;
 import com.mzt.logapi.context.LogRecordContext;
 import com.mzt.logapi.service.impl.DiffParseFunction;
 import com.mzt.logapi.starter.annotation.LogRecord;
@@ -88,12 +88,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             success = SYSTEM_USER_CREATE_SUCCESS)
     public Long createUser(UserSaveReqVO createReqVO) {
         // 1.1 校验账户配合
-        tenantService.handleTenantInfo(tenant -> {
-            long count = userMapper.selectCount();
-            if (count >= tenant.getAccountCount()) {
-                throw exception(USER_COUNT_MAX, tenant.getAccountCount());
-            }
-        });
+        updateTenantAccountCount(true);
         // 1.2 校验正确性
         validateUserForCreateOrUpdate(null, createReqVO.getUsername(),
                 createReqVO.getMobile(), createReqVO.getEmail(), createReqVO.getDeptId(), createReqVO.getPostIds());
@@ -120,12 +115,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             throw exception(USER_REGISTER_DISABLED);
         }
         // 1.2 校验账户配合
-        tenantService.handleTenantInfo(tenant -> {
-            long count = userMapper.selectCount();
-            if (count >= tenant.getAccountCount()) {
-                throw exception(USER_COUNT_MAX, tenant.getAccountCount());
-            }
-        });
+        updateTenantAccountCount(true);
         // 1.3 校验正确性
         validateUserForCreateOrUpdate(null, registerReqVO.getUsername(), null, null, null, null);
 
@@ -135,6 +125,27 @@ public class AdminUserServiceImpl implements AdminUserService {
         user.setPassword(encodePassword(registerReqVO.getPassword())); // 加密密码
         userMapper.insert(user);
         return user.getId();
+    }
+
+    /**
+     * 更新租户的账号数量
+     *
+     * @param isAdd 是否添加
+     */
+    private void updateTenantAccountCount(boolean isAdd) {
+        tenantService.handleTenantInfo(tenant -> {
+            long count = userMapper.selectCount();
+            if (count >= tenant.getAccountCount()) {
+                throw exception(USER_COUNT_MAX, tenant.getAccountCount());
+            }
+            if (!isAdd) {
+                //更新当前租户人数
+                tenant.setCurrentAccountCount(Math.toIntExact(count + 1));
+            } else {
+                tenant.setCurrentAccountCount(Math.toIntExact(count));
+            }
+            tenantService.updateTenant(tenant);
+        });
     }
 
     @Override
@@ -243,6 +254,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         permissionService.processUserDeleted(id);
         // 2.2 删除用户岗位
         userPostMapper.deleteByUserId(id);
+        // 2.3 更新租户
+        updateTenantAccountCount(false);
 
         // 3. 记录操作日志上下文
         LogRecordContext.putVariable("user", user);
@@ -259,6 +272,8 @@ public class AdminUserServiceImpl implements AdminUserService {
             permissionService.processUserDeleted(id);
             userPostMapper.deleteByUserId(id);
         });
+        // 3. 更新租户
+        updateTenantAccountCount(false);
     }
 
     @Override
@@ -355,7 +370,7 @@ public class AdminUserServiceImpl implements AdminUserService {
     }
 
     private AdminUserDO validateUserForCreateOrUpdate(Long id, String username, String mobile, String email,
-                                               Long deptId, Set<Long> postIds) {
+                                                      Long deptId, Set<Long> postIds) {
         // 关闭数据权限，避免因为没有数据权限，查询不到数据，进而导致唯一校验不正确
         return DataPermissionUtils.executeIgnore(() -> {
             // 校验用户存在
@@ -442,6 +457,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 
     /**
      * 校验旧密码
+     *
      * @param id          用户 id
      * @param oldPassword 旧密码
      */
@@ -476,7 +492,7 @@ public class AdminUserServiceImpl implements AdminUserService {
             // 2.1.1 校验字段是否符合要求
             try {
                 ValidationUtils.validate(BeanUtils.toBean(importUser, UserSaveReqVO.class).setPassword(initPassword));
-            } catch (ConstraintViolationException ex){
+            } catch (ConstraintViolationException ex) {
                 respVO.getFailureUsernames().put(importUser.getUsername(), ex.getMessage());
                 return;
             }
