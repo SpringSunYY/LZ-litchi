@@ -23,7 +23,8 @@ public class Demo01ContactPageReqVO extends PageParam {
 
     @Sortable(value = "birthday")
     @Schema(description = "出生年")
-    private LocalDateTime birthday;
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    private LocalDateTime[] birthday;
 
     @Schema(description = "简介", example = "随便")
     private String description;

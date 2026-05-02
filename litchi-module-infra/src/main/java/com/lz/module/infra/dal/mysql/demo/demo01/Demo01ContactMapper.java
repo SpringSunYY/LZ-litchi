@@ -19,7 +19,7 @@ public interface Demo01ContactMapper extends BaseMapperX<Demo01ContactDO> {
         return selectPage(reqVO, new LambdaQueryWrapperX<Demo01ContactDO>()
                 .likeIfPresent(Demo01ContactDO::getName, reqVO.getName())
                 .eqIfPresent(Demo01ContactDO::getSex, reqVO.getSex())
-                .eqIfPresent(Demo01ContactDO::getBirthday, reqVO.getBirthday())
+                .betweenIfPresent(Demo01ContactDO::getBirthday, reqVO.getBirthday())
                 .eqIfPresent(Demo01ContactDO::getDescription, reqVO.getDescription())
                 .betweenIfPresent(Demo01ContactDO::getAge, reqVO.getAge())
                 .eqIfPresent(Demo01ContactDO::getAvatar, reqVO.getAvatar())

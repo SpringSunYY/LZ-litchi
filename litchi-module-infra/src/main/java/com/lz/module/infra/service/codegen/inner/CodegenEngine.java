@@ -91,10 +91,10 @@ public class CodegenEngine {
             .put(javaTemplatePath("test/serviceTest"),
                     javaModuleImplTestFilePath("service/${table.businessName}/${table.className}ServiceImplTest"))
             // Java module-api Main
-            .put(javaTemplatePath("enums/errorcode"), javaModuleApiMainFilePath("enums/ErrorCodeConstants_手动操作"))
+            .put(javaTemplatePath("enums/errorcode"), javaModuleApiMainFilePath("enums/ErrorCodeConstants_${table.className}"))
             // SQL
-            .put("codegen/sql/sql.vm", "sql/sql.sql")
-            .put("codegen/sql/h2.vm", "sql/h2.sql")
+            .put("codegen/sql/sql.vm", "sql/${table.className}.sql")
+            .put("codegen/sql/h2.vm", "sql/${table.className}_h2.sql")
             .build();
 
     /**
