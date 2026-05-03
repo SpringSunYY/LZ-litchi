@@ -88,7 +88,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
         #end
       #end
     #end
-    modalDrawerApid.lock();
+    modalDrawerApi.lock();
     // 提交表单
     const data = (await formApi.getValues()) as ${simpleClassName}Api.${simpleClassName};
     ## 特殊：主子表专属逻辑

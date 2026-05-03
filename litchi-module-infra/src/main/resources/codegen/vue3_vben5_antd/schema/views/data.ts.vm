@@ -114,7 +114,7 @@ export function useFormSchema(): VbenFormSchema[] {
         ]),
       },
 #elseif($column.htmlType == "checkbox")## 多选框
-      component: 'Checkbox',
+      component: 'SelectToString',
       componentProps: {
         #if ("" != $dictType)## 有数据字典
         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),

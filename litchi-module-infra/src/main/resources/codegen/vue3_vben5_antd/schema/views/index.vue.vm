@@ -327,7 +327,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             },
             #end
             {
-              label: $t('common.edit']),
+              label: $t('common.edit'),
               type: 'link',
               icon: ACTION_ICON.EDIT,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:update'],
