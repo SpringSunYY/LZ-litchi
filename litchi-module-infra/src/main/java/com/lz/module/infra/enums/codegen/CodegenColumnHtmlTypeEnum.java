@@ -11,6 +11,7 @@ import lombok.Getter;
 public enum CodegenColumnHtmlTypeEnum {
 
     INPUT("input"), // 文本框
+    INPUT_NUMBER("inputNumber"),
     TEXTAREA("textarea"), // 文本域
     SELECT("select"), // 下拉框
     RADIO("radio"), // 单选框

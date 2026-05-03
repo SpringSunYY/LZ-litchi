@@ -187,7 +187,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     {
       fieldName: '${javaField}',
       label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
-#if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
+#if ($column.listOperationCondition == "BETWEEN" && ($column.htmlType == "inputNumber" || $column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
       component: 'NumberRange',
 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
       component: 'Input',
@@ -469,7 +469,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
     {
       fieldName: '${javaField}',
       label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
-#if ($column.listOperationCondition == "BETWEEN" && ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
+#if ($column.listOperationCondition == "BETWEEN" && ($column.htmlType == "inputNumber" || $column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
       component: 'NumberRange',
 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
       component: 'Input',

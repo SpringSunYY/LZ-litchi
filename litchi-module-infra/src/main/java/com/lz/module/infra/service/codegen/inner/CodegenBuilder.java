@@ -56,8 +56,23 @@ public class CodegenBuilder {
      */
     private static final Set<String> NUMERIC_TYPE_KEYWORDS = Sets.newHashSet(
             "int", "decimal", "float", "double", "numeric",
-            "smallint", "tinyint", "mediumint", "number"
+            "smallint", "mediumint", "number"
     );
+
+    /**
+     * 判断数据库字段类型是否为数字类型
+     *
+     * @param dbType 数据库字段类型
+     * @return 是否为数字类型
+     */
+    private boolean isNumericDbType(String dbType) {
+        if (StrUtil.isEmpty(dbType)) {
+            return false;
+        }
+        String lowerDbType = dbType.toLowerCase();
+        return NUMERIC_TYPE_KEYWORDS.stream()
+                .anyMatch(keyword -> lowerDbType.contains(keyword));
+    }
 
     /**
      * 字段名与 {@link CodegenColumnHtmlTypeEnum} 的默认映射
@@ -233,6 +248,10 @@ public class CodegenBuilder {
         // 如果是 LocalDateTime 类型，则设置为 datetime 类型
         if (LocalDateTime.class.getSimpleName().equals(column.getJavaType())) {
             column.setHtmlType(CodegenColumnHtmlTypeEnum.DATETIME.getType());
+        }
+        // 如果是数字类型（基于数据库字段类型或字段后缀判断），则设置为 inputNumber 类型
+        if (column.getHtmlType() == null && (isNumericDbType(column.getDataType()) || isNumericField(column.getJavaField()))) {
+            column.setHtmlType(CodegenColumnHtmlTypeEnum.INPUT_NUMBER.getType());
         }
         // 兜底，设置默认为 input 类型
         if (column.getHtmlType() == null) {
