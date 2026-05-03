@@ -10,25 +10,28 @@ import java.time.LocalDateTime;
 @Data
 public class FileConfigRespVO {
 
-    @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Long id;
 
-    @Schema(description = "配置名", requiredMode = Schema.RequiredMode.REQUIRED, example = "S3 - 阿里云")
+    private String configKey;
+
     private String name;
 
-    @Schema(description = "存储器，参见 FileStorageEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     private Integer storage;
 
-    @Schema(description = "是否为主配置", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    private Boolean master;
+    private Integer pathType;
 
-    @Schema(description = "存储配置", requiredMode = Schema.RequiredMode.REQUIRED)
-    private FileClientConfig config;
+    private Integer returnType;
 
-    @Schema(description = "备注", example = "我是备注")
+    private Integer maxSize;
+
+    private String fileType;
+
     private String remark;
 
-    @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Boolean master;
+
+    private FileClientConfig config;
+
     private LocalDateTime createTime;
 
 }

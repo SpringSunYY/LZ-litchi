@@ -50,6 +50,7 @@ public interface ErrorCodeConstants {
 
     // ========== 文件配置 1-001-006-000 ==========
     ErrorCode FILE_CONFIG_NOT_EXISTS = new ErrorCode(1_001_006_000, "文件配置不存在");
+    ErrorCode FILE_CONFIG_KEY_DUPLICATE = new ErrorCode(1_001_006_001, "文件配置 key 冲突");
     ErrorCode FILE_CONFIG_DELETE_FAIL_MASTER = new ErrorCode(1_001_006_001, "该文件配置不允许删除，原因：它是主配置，删除会导致无法上传文件");
 
     // ========== 数据源配置 1-001-007-000 ==========

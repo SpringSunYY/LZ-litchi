@@ -30,7 +30,6 @@ public class UserProfileUpdateReqVO {
     private Integer sex;
 
     @Schema(description = "角色头像", example = "https://www.iocoder.cn/1.png")
-    @URL(message = "头像地址格式不正确")
     private String avatar;
 
 }

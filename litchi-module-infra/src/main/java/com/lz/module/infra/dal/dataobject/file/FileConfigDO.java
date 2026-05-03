@@ -1,6 +1,11 @@
 package com.lz.module.infra.dal.dataobject.file;
 
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.extension.handlers.AbstractJsonTypeHandler;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.lz.framework.common.util.json.JsonUtils;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
@@ -11,11 +16,6 @@ import com.lz.module.infra.framework.file.core.client.local.LocalFileClientConfi
 import com.lz.module.infra.framework.file.core.client.s3.S3FileClientConfig;
 import com.lz.module.infra.framework.file.core.client.sftp.SftpFileClientConfig;
 import com.lz.module.infra.framework.file.core.enums.FileStorageEnum;
-import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
-import com.baomidou.mybatisplus.extension.handlers.AbstractJsonTypeHandler;
-import com.fasterxml.jackson.core.type.TypeReference;
 import lombok.*;
 
 import java.lang.reflect.Field;
@@ -41,12 +41,32 @@ public class FileConfigDO extends BaseDO {
      */
     private Long id;
     /**
+     * 配置键
+     */
+    private String configKey;
+    /**
      * 配置名
      */
     private String name;
     /**
+     * 路径类型
+     */
+    private Integer pathType;
+    /**
+     * 文件大小
+     */
+    private Integer maxSize;
+    /**
+     * 文件类型
+     */
+    private String fileType;
+
+    /**
+     * 返回类型
+     */
+    private Integer returnType;
+    /**
      * 存储器
-     *
      * 枚举 {@link FileStorageEnum}
      */
     private Integer storage;
@@ -56,7 +76,7 @@ public class FileConfigDO extends BaseDO {
     private String remark;
     /**
      * 是否为主配置
-     *
+     * <p>
      * 由于我们可以配置多个文件配置，默认情况下，使用主配置进行文件的上传
      */
     private Boolean master;

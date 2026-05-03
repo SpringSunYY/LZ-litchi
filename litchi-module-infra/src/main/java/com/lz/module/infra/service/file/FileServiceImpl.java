@@ -20,6 +20,7 @@ import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static cn.hutool.core.date.DatePattern.PURE_DATE_PATTERN;
@@ -89,7 +90,7 @@ public class FileServiceImpl implements FileService {
         fileMapper.insert(new FileDO().setConfigId(client.getId())
                 .setName(name).setPath(path).setUrl(url)
                 .setType(type).setSize(content.length));
-        return url;
+        return path;
     }
 
     @VisibleForTesting
@@ -97,7 +98,10 @@ public class FileServiceImpl implements FileService {
         // 1. 生成前缀、后缀
         String prefix = null;
         if (PATH_PREFIX_DATE_ENABLE) {
-            prefix = LocalDateTimeUtil.format(LocalDateTimeUtil.now(), PURE_DATE_PATTERN);
+            LocalDateTime now = LocalDateTimeUtil.now();
+            prefix = now.getYear() + StrUtil.SLASH
+                     + String.format("%02d", now.getMonthValue()) + StrUtil.SLASH
+                     + String.format("%02d", now.getDayOfMonth());
         }
         String suffix = null;
         if (PATH_SUFFIX_TIMESTAMP_ENABLE) {

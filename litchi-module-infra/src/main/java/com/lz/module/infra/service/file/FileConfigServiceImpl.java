@@ -2,8 +2,11 @@ package com.lz.module.infra.service.file;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import cn.hutool.core.util.IdUtil;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.json.JsonUtils;
+import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.common.util.validation.ValidationUtils;
 import com.lz.module.infra.controller.admin.file.vo.config.FileConfigPageReqVO;
 import com.lz.module.infra.controller.admin.file.vo.config.FileConfigSaveReqVO;
@@ -14,8 +17,6 @@ import com.lz.module.infra.framework.file.core.client.FileClient;
 import com.lz.module.infra.framework.file.core.client.FileClientConfig;
 import com.lz.module.infra.framework.file.core.client.FileClientFactory;
 import com.lz.module.infra.framework.file.core.enums.FileStorageEnum;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import jakarta.annotation.Resource;
 import jakarta.validation.Validator;
 import lombok.Getter;
@@ -31,8 +32,7 @@ import java.util.Objects;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.framework.common.util.cache.CacheUtils.buildAsyncReloadingCache;
-import static com.lz.module.infra.enums.ErrorCodeConstants.FILE_CONFIG_DELETE_FAIL_MASTER;
-import static com.lz.module.infra.enums.ErrorCodeConstants.FILE_CONFIG_NOT_EXISTS;
+import static com.lz.module.infra.enums.ErrorCodeConstants.*;
 
 /**
  * 文件配置 Service 实现类
@@ -76,6 +76,11 @@ public class FileConfigServiceImpl implements FileConfigService {
 
     @Override
     public Long createFileConfig(FileConfigSaveReqVO createReqVO) {
+        //先查询key是否存在
+        FileConfigDO config = fileConfigMapper.selectByConfigKey(createReqVO.getConfigKey());
+        if (ObjectUtils.isNotNull(config)) {
+            throw exception(FILE_CONFIG_KEY_DUPLICATE);
+        }
         FileConfigDO fileConfig = FileConfigConvert.INSTANCE.convert(createReqVO)
                 .setConfig(parseClientConfig(createReqVO.getStorage(), createReqVO.getConfig()))
                 .setMaster(false); // 默认非 master
@@ -87,6 +92,11 @@ public class FileConfigServiceImpl implements FileConfigService {
     public void updateFileConfig(FileConfigSaveReqVO updateReqVO) {
         // 校验存在
         FileConfigDO config = validateFileConfigExists(updateReqVO.getId());
+        //查询key是否存在
+        FileConfigDO configByConfigKey = fileConfigMapper.selectByConfigKey(updateReqVO.getConfigKey());
+        if (ObjectUtils.isNotNull(configByConfigKey) && !Objects.equals(configByConfigKey.getId(), config.getId())) {
+            throw exception(FILE_CONFIG_KEY_DUPLICATE);
+        }
         // 更新
         FileConfigDO updateObj = FileConfigConvert.INSTANCE.convert(updateReqVO)
                 .setConfig(parseClientConfig(config.getStorage(), updateReqVO.getConfig()));
