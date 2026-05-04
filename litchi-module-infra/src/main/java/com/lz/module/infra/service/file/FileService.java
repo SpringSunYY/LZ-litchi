@@ -4,6 +4,7 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.module.infra.controller.admin.file.vo.file.FileCreateReqVO;
 import com.lz.module.infra.controller.admin.file.vo.file.FilePageReqVO;
 import com.lz.module.infra.controller.admin.file.vo.file.FilePresignedUrlRespVO;
+import com.lz.module.infra.controller.admin.file.vo.file.FileRespVO;
 import com.lz.module.infra.dal.dataobject.file.FileDO;
 import jakarta.validation.constraints.NotEmpty;
 
@@ -22,16 +23,16 @@ public interface FileService {
      * @param pageReqVO 分页查询
      * @return 文件分页
      */
-    PageResult<FileDO> getFilePage(FilePageReqVO pageReqVO);
+    PageResult<FileRespVO> getFilePage(FilePageReqVO pageReqVO);
 
     /**
-     * 保存文件，并返回文件的访问路径
+     * 保存文件，并返回文件的访问路径（根据配置返回相对路径或绝对路径）
      *
      * @param content   文件内容
      * @param name      文件名称，允许空
      * @param directory 目录，允许空
      * @param type      文件的 MIME 类型，允许空
-     * @return 文件路径
+     * @return 文件访问路径（相对路径或绝对路径）
      */
     String createFile(@NotEmpty(message = "文件内容不能为空") byte[] content,
                       String name, String directory, String type);
@@ -47,12 +48,13 @@ public interface FileService {
                                                String directory);
 
     /**
-     * 创建文件
+     * 创建文件（用于前端上传模式）
+     * 根据配置返回相对路径或绝对路径
      *
-     * @param createReqVO 创建信息
-     * @return 编号
+     * @param createReqVO 创建信息（包含已上传文件的相对路径和绝对路径）
+     * @return 文件访问路径（相对路径或绝对路径）
      */
-    Long createFile(FileCreateReqVO createReqVO);
+    String createFile(FileCreateReqVO createReqVO);
 
     /**
      * 删除文件
@@ -71,10 +73,10 @@ public interface FileService {
     /**
      * 获得文件内容
      *
-     * @param configId 配置编号
-     * @param path     文件路径
+     * @param configKey 配置key
+     * @param path       文件路径
      * @return 文件内容
      */
-    byte[] getFileContent(Long configId, String path) throws Exception;
+    byte[] getFileContent(String configKey, String path) throws Exception;
 
 }

@@ -33,6 +33,8 @@ public interface ErrorCodeConstants {
     ErrorCode FILE_PATH_EXISTS = new ErrorCode(1_001_003_000, "文件路径已存在");
     ErrorCode FILE_NOT_EXISTS = new ErrorCode(1_001_003_001, "文件不存在");
     ErrorCode FILE_IS_EMPTY = new ErrorCode(1_001_003_002, "文件为空");
+    ErrorCode FILE_TYPE_NOT_ALLOWED = new ErrorCode(1_001_003_003, "不允许上传该文件类型");
+    ErrorCode FILE_SIZE_EXCEED = new ErrorCode(1_001_003_004, "文件大小超过限制，允许上传的最大文件大小为 {}MB");
 
     // ========== 代码生成器 1-001-004-000 ==========
     ErrorCode CODEGEN_TABLE_EXISTS = new ErrorCode(1_001_004_002, "表定义已经存在");
@@ -52,7 +54,7 @@ public interface ErrorCodeConstants {
     ErrorCode FILE_CONFIG_NOT_EXISTS = new ErrorCode(1_001_006_000, "文件配置不存在");
     ErrorCode FILE_CONFIG_KEY_DUPLICATE = new ErrorCode(1_001_006_001, "文件配置 key 冲突");
     ErrorCode FILE_CONFIG_DELETE_FAIL_MASTER = new ErrorCode(1_001_006_001, "该文件配置不允许删除，原因：它是主配置，删除会导致无法上传文件");
-
+    ErrorCode FILE_CONFIG_MASTER_NOT_EXISTS= new ErrorCode(1_001_006_002, "主数据源配置不存在");
     // ========== 数据源配置 1-001-007-000 ==========
     ErrorCode DATA_SOURCE_CONFIG_NOT_EXISTS = new ErrorCode(1_001_007_000, "数据源配置不存在");
     ErrorCode DATA_SOURCE_CONFIG_NOT_OK = new ErrorCode(1_001_007_001, "数据源配置不正确，无法进行连接");

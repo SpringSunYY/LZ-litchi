@@ -18,8 +18,8 @@ public class DBFileClient extends AbstractFileClient<DBFileClientConfig> {
 
     private FileContentMapper fileContentMapper;
 
-    public DBFileClient(Long id, DBFileClientConfig config) {
-        super(id, config);
+    public DBFileClient(String configKey, DBFileClientConfig config) {
+        super(configKey, config);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class DBFileClient extends AbstractFileClient<DBFileClientConfig> {
 
     @Override
     public String upload(byte[] content, String path, String type) {
-        FileContentDO contentDO = new FileContentDO().setConfigId(getId())
+        FileContentDO contentDO = new FileContentDO().setConfigKey(getConfigKey())
                 .setPath(path).setContent(content);
         fileContentMapper.insert(contentDO);
         // 拼接返回路径
@@ -38,12 +38,12 @@ public class DBFileClient extends AbstractFileClient<DBFileClientConfig> {
 
     @Override
     public void delete(String path) {
-        fileContentMapper.deleteByConfigIdAndPath(getId(), path);
+        fileContentMapper.deleteByConfigKeyAndPath(getConfigKey(), path);
     }
 
     @Override
     public byte[] getContent(String path) {
-        List<FileContentDO> list = fileContentMapper.selectListByConfigIdAndPath(getId(), path);
+        List<FileContentDO> list = fileContentMapper.selectListByConfigKeyAndPath(getConfigKey(), path);
         if (CollUtil.isEmpty(list)) {
             return null;
         }

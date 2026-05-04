@@ -1,5 +1,6 @@
 package com.lz.module.infra.dal.dataobject.file;
 
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.baomidou.mybatisplus.annotation.KeySequence;
@@ -24,34 +25,41 @@ import lombok.*;
 public class FileDO extends BaseDO {
 
     /**
-     * 编号，数据库自增
+     * 文件编号
      */
+    @TableId
     private Long id;
     /**
-     * 配置编号
-     *
-     * 关联 {@link FileConfigDO#getId()}
+     * 配置
      */
-    private Long configId;
+    private String configKey;
     /**
-     * 原文件名
+     * 文件名
      */
     private String name;
     /**
-     * 路径，即文件名
+     * 文件路径
      */
     private String path;
     /**
-     * 访问地址
+     * 绝对路径
      */
-    private String url;
+    private String absolutePath;
     /**
-     * 文件的 MIME 类型，例如 "application/octet-stream"
+     * 相对路径
+     */
+    private String relativePath;
+    /**
+     * 文件类型
      */
     private String type;
     /**
      * 文件大小
      */
     private Integer size;
+    /**
+     * 模块
+     */
+    private String moduleType;
 
 }

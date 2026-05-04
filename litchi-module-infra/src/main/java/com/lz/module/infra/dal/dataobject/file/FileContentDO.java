@@ -27,20 +27,43 @@ import lombok.*;
 public class FileContentDO extends BaseDO {
 
     /**
-     * 编号，数据库自增
+     * 文件编号
      */
     @TableId
     private Long id;
     /**
-     * 配置编号
-     *
-     * 关联 {@link FileConfigDO#getId()}
+     * 配置
      */
-    private Long configId;
+    private String configKey;
     /**
-     * 路径，即文件名
+     * 文件名
+     */
+    private String name;
+    /**
+     * 文件路径
      */
     private String path;
+    /**
+     * 绝对路径
+     */
+    private String absolutePath;
+    /**
+     * 相对路径
+     */
+    private String relativePath;
+    /**
+     * 文件类型
+     */
+    private String type;
+    /**
+     * 文件大小
+     */
+    private Integer size;
+    /**
+     * 模块
+     */
+    private String moduleType;
+
     /**
      * 文件内容
      */

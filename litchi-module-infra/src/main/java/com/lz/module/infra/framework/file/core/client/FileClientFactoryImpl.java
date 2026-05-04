@@ -18,27 +18,27 @@ public class FileClientFactoryImpl implements FileClientFactory {
 
     /**
      * 文件客户端 Map
-     * key：配置编号
+     * key：配置key
      */
-    private final ConcurrentMap<Long, AbstractFileClient<?>> clients = new ConcurrentHashMap<>();
+    private final ConcurrentMap<String, AbstractFileClient<?>> clients = new ConcurrentHashMap<>();
 
     @Override
-    public FileClient getFileClient(Long configId) {
-        AbstractFileClient<?> client = clients.get(configId);
+    public FileClient getFileClient(String configKey) {
+        AbstractFileClient<?> client = clients.get(configKey);
         if (client == null) {
-            log.error("[getFileClient][配置编号({}) 找不到客户端]", configId);
+            log.error("[getFileClient][配置key({}) 找不到客户端]", configKey);
         }
         return client;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public <Config extends FileClientConfig> void createOrUpdateFileClient(Long configId, Integer storage, Config config) {
-        AbstractFileClient<Config> client = (AbstractFileClient<Config>) clients.get(configId);
+    public <Config extends FileClientConfig> void createOrUpdateFileClient(String configKey, Integer storage, Config config) {
+        AbstractFileClient<Config> client = (AbstractFileClient<Config>) clients.get(configKey);
         if (client == null) {
-            client = this.createFileClient(configId, storage, config);
+            client = this.createFileClient(configKey, storage, config);
             client.init();
-            clients.put(client.getId(), client);
+            clients.put(client.getConfigKey(), client);
         } else {
             client.refresh(config);
         }
@@ -46,11 +46,11 @@ public class FileClientFactoryImpl implements FileClientFactory {
 
     @SuppressWarnings("unchecked")
     private <Config extends FileClientConfig> AbstractFileClient<Config> createFileClient(
-            Long configId, Integer storage, Config config) {
+            String configKey, Integer storage, Config config) {
         FileStorageEnum storageEnum = FileStorageEnum.getByStorage(storage);
         Assert.notNull(storageEnum, String.format("文件配置(%s) 为空", storageEnum));
         // 创建客户端
-        return (AbstractFileClient<Config>) ReflectUtil.newInstance(storageEnum.getClientClass(), configId, config);
+        return (AbstractFileClient<Config>) ReflectUtil.newInstance(storageEnum.getClientClass(), configKey, config);
     }
 
 }

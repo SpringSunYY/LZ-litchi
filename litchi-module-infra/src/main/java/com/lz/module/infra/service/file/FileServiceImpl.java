@@ -7,14 +7,19 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.module.infra.constants.FileConstants;
 import com.lz.module.infra.controller.admin.file.vo.file.FileCreateReqVO;
 import com.lz.module.infra.controller.admin.file.vo.file.FilePageReqVO;
 import com.lz.module.infra.controller.admin.file.vo.file.FilePresignedUrlRespVO;
+import com.lz.module.infra.controller.admin.file.vo.file.FileRespVO;
+import com.lz.module.infra.dal.dataobject.file.FileConfigDO;
 import com.lz.module.infra.dal.dataobject.file.FileDO;
 import com.lz.module.infra.dal.mysql.file.FileMapper;
+import com.lz.module.infra.enums.file.InfraFilePathTypeEnum;
 import com.lz.module.infra.framework.file.core.client.FileClient;
 import com.lz.module.infra.framework.file.core.client.s3.FilePresignedUrlRespDTO;
 import com.lz.module.infra.framework.file.core.utils.FileTypeUtils;
+import com.lz.module.infra.framework.file.core.utils.FileValidationUtils;
 import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
@@ -23,9 +28,8 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static cn.hutool.core.date.DatePattern.PURE_DATE_PATTERN;
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.lz.module.infra.enums.ErrorCodeConstants.FILE_NOT_EXISTS;
+import static com.lz.module.infra.enums.ErrorCodeConstants.*;
 
 /**
  * 文件 Service 实现类
@@ -55,14 +59,50 @@ public class FileServiceImpl implements FileService {
     @Resource
     private FileMapper fileMapper;
 
+    @Resource
+    private FileValidationUtils fileValidationUtils;
+
     @Override
-    public PageResult<FileDO> getFilePage(FilePageReqVO pageReqVO) {
-        return fileMapper.selectPage(pageReqVO);
+    public PageResult<FileRespVO> getFilePage(FilePageReqVO pageReqVO) {
+        PageResult<FileDO> pageResult = fileMapper.selectPage(pageReqVO);
+        // 根据配置的返回类型，组装 url
+        return new PageResult<>(pageResult.getList().stream().map(this::convertToRespVO).toList(),
+                pageResult.getTotal());
+    }
+
+    /**
+     * 根据配置的 pathType，转换 FileDO 为 FileRespVO
+     */
+    private FileRespVO convertToRespVO(FileDO file) {
+        FileRespVO respVO = BeanUtils.toBean(file, FileRespVO.class);
+        // 获取配置
+        FileConfigDO config = fileConfigService.getFileConfig(file.getConfigKey());
+        if (config != null) {
+            // 根据 pathType 返回绝对路径或相对路径
+            if (InfraFilePathTypeEnum.FILE_PATH_TYPE_1.getStatus().equals(config.getPathType())) {
+                respVO.setUrl(file.getAbsolutePath());
+            } else {
+                respVO.setUrl(file.getRelativePath());
+            }
+        }
+        return respVO;
     }
 
     @Override
     @SneakyThrows
     public String createFile(byte[] content, String name, String directory, String type) {
+        // 0. 获取配置并进行文件校验
+        FileConfigDO config = fileConfigService.getMasterFileConfig();
+        Assert.notNull(config, "文件配置不存在");
+        // 校验文件大小
+        if (!fileValidationUtils.isValidFileSize(config, content.length)) {
+            throw exception(FILE_SIZE_EXCEED, config.getMaxSize());
+        }
+        // 校验文件类型
+        if (!fileValidationUtils.isValidFileType(config, name)) {
+            throw exception(FILE_TYPE_NOT_ALLOWED);
+        }
+
         // 1.1 处理 type 为空的情况
         if (StrUtil.isEmpty(type)) {
             type = FileTypeUtils.getMineType(content, name);
@@ -86,11 +126,30 @@ public class FileServiceImpl implements FileService {
         Assert.notNull(client, "客户端(master) 不能为空");
         String url = client.upload(content, path, type);
 
-        // 3. 保存到数据库
-        fileMapper.insert(new FileDO().setConfigId(client.getId())
-                .setName(name).setPath(path).setUrl(url)
+        // 3. 拼接绝对路径和相对路径
+        String absolutePath = url; // 绝对路径（完整URL）
+        String relativePath = FileConstants.getFileGetPath(client.getConfigKey(), path); // 相对路径
+
+        // 4. 保存到数据库
+        fileMapper.insert(new FileDO().setConfigKey(client.getConfigKey())
+                .setName(name).setPath(path).setRelativePath(relativePath).setAbsolutePath(absolutePath)
                 .setType(type).setSize(content.length));
-        return path;
+
+        // 5. 根据配置返回路径
+        return buildReturnPath(config, relativePath, absolutePath);
+    }
+
+    /**
+     * 根据配置构建返回路径
+     */
+    private String buildReturnPath(FileConfigDO config, String relativePath, String absolutePath) {
+        // 根据 pathType 返回相对路径或绝对路径
+        if (InfraFilePathTypeEnum.FILE_PATH_TYPE_1.getStatus().equals(config.getPathType())) {
+            // 返回绝对路径
+            return absolutePath;
+        }
+        // 返回相对路径
+        return relativePath;
     }
 
     @VisibleForTesting
@@ -138,14 +197,27 @@ public class FileServiceImpl implements FileService {
         FileClient fileClient = fileConfigService.getMasterFileClient();
         FilePresignedUrlRespDTO presignedObjectUrl = fileClient.getPresignedObjectUrl(path);
         return BeanUtils.toBean(presignedObjectUrl, FilePresignedUrlRespVO.class,
-                object -> object.setConfigId(fileClient.getId()).setPath(path));
+                object -> object.setUrl(fileClient.getConfigKey()).setPath(path));
     }
 
     @Override
-    public Long createFile(FileCreateReqVO createReqVO) {
+    public String createFile(FileCreateReqVO createReqVO) {
+        // 1. 保存到数据库
         FileDO file = BeanUtils.toBean(createReqVO, FileDO.class);
         fileMapper.insert(file);
-        return file.getId();
+
+        // 2. 获取配置
+        FileConfigDO config = fileConfigService.getFileConfig(file.getConfigKey());
+        if (config == null) {
+            // 如果没有配置，默认返回相对路径
+            return createReqVO.getRelativePath();
+        }
+
+        // 3. 根据 pathType 返回相对路径或绝对路径
+        if (InfraFilePathTypeEnum.FILE_PATH_TYPE_1.getStatus().equals(config.getPathType())) {
+            return createReqVO.getAbsolutePath();
+        }
+        return createReqVO.getRelativePath();
     }
 
     @Override
@@ -154,8 +226,8 @@ public class FileServiceImpl implements FileService {
         FileDO file = validateFileExists(id);
 
         // 从文件存储器中删除
-        FileClient client = fileConfigService.getFileClient(file.getConfigId());
-        Assert.notNull(client, "客户端({}) 不能为空", file.getConfigId());
+        FileClient client = fileConfigService.getFileClient(file.getConfigKey());
+        Assert.notNull(client, "客户端({}) 不能为空", file.getConfigKey());
         client.delete(file.getPath());
 
         // 删除记录
@@ -169,7 +241,7 @@ public class FileServiceImpl implements FileService {
         List<FileDO> files = fileMapper.selectByIds(ids);
         for (FileDO file : files) {
             // 获取客户端
-            FileClient client = fileConfigService.getFileClient(file.getConfigId());
+            FileClient client = fileConfigService.getFileClient(file.getConfigKey());
             Assert.notNull(client, "客户端({}) 不能为空", file.getPath());
             // 删除文件
             client.delete(file.getPath());
@@ -188,9 +260,9 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public byte[] getFileContent(Long configId, String path) throws Exception {
-        FileClient client = fileConfigService.getFileClient(configId);
-        Assert.notNull(client, "客户端({}) 不能为空", configId);
+    public byte[] getFileContent(String configKey, String path) throws Exception {
+        FileClient client = fileConfigService.getFileClient(configKey);
+        Assert.notNull(client, "客户端({}) 不能为空", configKey);
         return client.getContent(path);
     }
 

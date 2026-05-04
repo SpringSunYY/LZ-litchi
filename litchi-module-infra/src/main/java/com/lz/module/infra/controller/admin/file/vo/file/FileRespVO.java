@@ -9,26 +9,35 @@ import java.time.LocalDateTime;
 @Data
 public class FileRespVO {
 
-    @Schema(description = "文件编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
+    @Schema(description = "文件编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "21024")
     private Long id;
 
-    @Schema(description = "配置编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11")
-    private Long configId;
+    @Schema(description = "配置")
+    private String configKey;
 
-    @Schema(description = "文件路径", requiredMode = Schema.RequiredMode.REQUIRED, example = "litchi.jpg")
-    private String path;
-
-    @Schema(description = "原文件名", requiredMode = Schema.RequiredMode.REQUIRED, example = "litchi.jpg")
+    @Schema(description = "文件名", example = "张三")
     private String name;
 
-    @Schema(description = "文件 URL", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://www.iocoder.cn/litchi.jpg")
+    @Schema(description = "文件路径", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String path;
+
+    @Schema(description = "绝对路径", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String absolutePath;
+
+    @Schema(description = "相对路径", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String relativePath;
+
+    @Schema(description = "文件URL，根据配置返回相对或绝对路径")
     private String url;
 
-    @Schema(description = "文件MIME类型", example = "application/octet-stream")
+    @Schema(description = "文件类型", example = "1")
     private String type;
 
-    @Schema(description = "文件大小", example = "2048", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Schema(description = "文件大小", requiredMode = Schema.RequiredMode.REQUIRED)
     private Integer size;
+
+    @Schema(description = "模块", example = "2")
+    private String moduleType;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime createTime;

@@ -61,6 +61,14 @@ public interface FileConfigService {
     FileConfigDO getFileConfig(Long id);
 
     /**
+     * 获得文件配置
+     *
+     * @param configKey 配置key
+     * @return 文件配置
+     */
+    FileConfigDO getFileConfig(String configKey);
+
+    /**
      * 获得文件配置分页
      *
      * @param pageReqVO 分页查询
@@ -85,10 +93,25 @@ public interface FileConfigService {
     FileClient getFileClient(Long id);
 
     /**
+     * 获得指定配置key获取文件客户端
+     *
+     * @param configKey 配置的 key
+     * @return 文件客户端
+     */
+    FileClient getFileClient(String configKey);
+
+    /**
      * 获得 Master 文件客户端
      *
      * @return 文件客户端
      */
     FileClient getMasterFileClient();
+
+    /**
+     * 获得 Master 文件配置
+     *
+     * @return 文件配置
+     */
+    FileConfigDO getMasterFileConfig();
 
 }

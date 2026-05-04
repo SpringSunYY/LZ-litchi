@@ -10,15 +10,15 @@ import java.util.List;
 @Mapper
 public interface FileContentMapper extends BaseMapper<FileContentDO> {
 
-    default void deleteByConfigIdAndPath(Long configId, String path) {
+    default void deleteByConfigKeyAndPath(String configKey, String path) {
         this.delete(new LambdaQueryWrapper<FileContentDO>()
-                .eq(FileContentDO::getConfigId, configId)
+                .eq(FileContentDO::getConfigKey, configKey)
                 .eq(FileContentDO::getPath, path));
     }
 
-    default List<FileContentDO> selectListByConfigIdAndPath(Long configId, String path) {
+    default List<FileContentDO> selectListByConfigKeyAndPath(String configKey, String path) {
         return selectList(new LambdaQueryWrapper<FileContentDO>()
-                .eq(FileContentDO::getConfigId, configId)
+                .eq(FileContentDO::getConfigKey, configKey)
                 .eq(FileContentDO::getPath, path));
     }
 

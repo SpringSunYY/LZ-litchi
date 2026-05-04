@@ -12,17 +12,17 @@ import lombok.extern.slf4j.Slf4j;
 public abstract class AbstractFileClient<Config extends FileClientConfig> implements FileClient {
 
     /**
-     * 配置编号
+     * 配置key
      */
-    private final Long id;
+    private final String configKey;
     /**
      * 文件配置
      */
     protected Config config;
 
-    public AbstractFileClient(Long id, Config config) {
-        this.id = id;
+    public AbstractFileClient(String configKey, Config config) {
         this.config = config;
+        this.configKey = configKey;
     }
 
     /**
@@ -50,8 +50,8 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
     }
 
     @Override
-    public Long getId() {
-        return id;
+    public String getConfigKey() {
+        return configKey;
     }
 
     /**
@@ -59,11 +59,11 @@ public abstract class AbstractFileClient<Config extends FileClientConfig> implem
      * 使用场景：local、ftp、db，通过 FileController 的 getFile 来获取文件内容
      *
      * @param domain 自定义域名
-     * @param path 文件路径
+     * @param path   文件路径
      * @return URL 访问地址
      */
     protected String formatFileUrl(String domain, String path) {
-        return StrUtil.format("{}/admin-api/infra/file/{}/get/{}", domain, getId(), path);
+        return StrUtil.format("{}/admin-api/infra/file/{}/get/{}", domain, getConfigKey(), path);
     }
 
 }

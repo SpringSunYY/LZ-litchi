@@ -44,23 +44,36 @@ import static com.lz.module.infra.enums.ErrorCodeConstants.*;
 @Slf4j
 public class FileConfigServiceImpl implements FileConfigService {
 
-    private static final Long CACHE_MASTER_ID = 0L;
-
     /**
      * {@link FileClient} 缓存，通过它异步刷新 fileClientFactory
+     * key: configKey
      */
     @Getter
-    private final LoadingCache<Long, FileClient> clientCache = buildAsyncReloadingCache(Duration.ofSeconds(10L),
-            new CacheLoader<Long, FileClient>() {
+    private final LoadingCache<String, FileClient> clientCache = buildAsyncReloadingCache(Duration.ofSeconds(10L),
+            new CacheLoader<String, FileClient>() {
 
                 @Override
-                public FileClient load(Long id) {
-                    FileConfigDO config = Objects.equals(CACHE_MASTER_ID, id) ?
-                            fileConfigMapper.selectByMaster() : fileConfigMapper.selectById(id);
+                public FileClient load(String configKey) {
+                    FileConfigDO config = fileConfigMapper.selectByConfigKey(configKey);
                     if (config != null) {
-                        fileClientFactory.createOrUpdateFileClient(config.getId(), config.getStorage(), config.getConfig());
+                        fileClientFactory.createOrUpdateFileClient(config.getConfigKey(), config.getStorage(), config.getConfig());
                     }
-                    return fileClientFactory.getFileClient(null == config ? id : config.getId());
+                    return fileClientFactory.getFileClient(configKey);
+                }
+
+            });
+
+    /**
+     * {@link FileConfigDO} 配置缓存
+     * key: configKey
+     */
+    @Getter
+    private final LoadingCache<String, FileConfigDO> configCache = buildAsyncReloadingCache(Duration.ofSeconds(10L),
+            new CacheLoader<String, FileConfigDO>() {
+
+                @Override
+                public FileConfigDO load(String configKey) {
+                    return fileConfigMapper.selectByConfigKey(configKey);
                 }
 
             });
@@ -103,21 +116,21 @@ public class FileConfigServiceImpl implements FileConfigService {
         fileConfigMapper.updateById(updateObj);
 
         // 清空缓存
-        clearCache(config.getId(), null);
+        clearCache(config.getConfigKey(), null);
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void updateFileConfigMaster(Long id) {
         // 校验存在
-        validateFileConfigExists(id);
+        FileConfigDO config = validateFileConfigExists(id);
         // 更新其它为非 master
         fileConfigMapper.updateBatch(new FileConfigDO().setMaster(false));
         // 更新
         fileConfigMapper.updateById(new FileConfigDO().setId(id).setMaster(true));
 
         // 清空缓存
-        clearCache(null, true);
+        clearCache(config.getConfigKey(), true);
     }
 
     private FileClientConfig parseClientConfig(Integer storage, Map<String, Object> config) {
@@ -142,7 +155,7 @@ public class FileConfigServiceImpl implements FileConfigService {
         fileConfigMapper.deleteById(id);
 
         // 清空缓存
-        clearCache(id, null);
+        clearCache(config.getConfigKey(), null);
     }
 
     @Override
@@ -159,21 +172,26 @@ public class FileConfigServiceImpl implements FileConfigService {
         fileConfigMapper.deleteByIds(ids);
 
         // 清空缓存
-        ids.forEach(id -> clearCache(id, null));
+        configs.forEach(config -> clearCache(config.getConfigKey(), null));
     }
 
     /**
      * 清空指定文件配置
      *
-     * @param id     配置编号
-     * @param master 是否主配置
+     * @param configKey 配置key
+     * @param master    是否主配置
      */
-    private void clearCache(Long id, Boolean master) {
-        if (id != null) {
-            clientCache.invalidate(id);
+    private void clearCache(String configKey, Boolean master) {
+        if (configKey != null) {
+            clientCache.invalidate(configKey);
+            configCache.invalidate(configKey);
         }
         if (Boolean.TRUE.equals(master)) {
-            clientCache.invalidate(CACHE_MASTER_ID);
+            FileConfigDO masterConfig = fileConfigMapper.selectByMaster();
+            if (masterConfig != null) {
+                clientCache.invalidate(masterConfig.getConfigKey());
+                configCache.invalidate(masterConfig.getConfigKey());
+            }
         }
     }
 
@@ -191,6 +209,11 @@ public class FileConfigServiceImpl implements FileConfigService {
     }
 
     @Override
+    public FileConfigDO getFileConfig(String configKey) {
+        return configCache.getUnchecked(configKey);
+    }
+
+    @Override
     public PageResult<FileConfigDO> getFileConfigPage(FileConfigPageReqVO pageReqVO) {
         return fileConfigMapper.selectPage(pageReqVO);
     }
@@ -198,20 +221,38 @@ public class FileConfigServiceImpl implements FileConfigService {
     @Override
     public String testFileConfig(Long id) throws Exception {
         // 校验存在
-        validateFileConfigExists(id);
+        FileConfigDO config = validateFileConfigExists(id);
         // 上传文件
         byte[] content = ResourceUtil.readBytes("file/erweima.jpg");
-        return getFileClient(id).upload(content, IdUtil.fastSimpleUUID() + ".jpg", "image/jpeg");
+        return getFileClient(config.getConfigKey()).upload(content, IdUtil.fastSimpleUUID() + ".jpg", "image/jpeg");
     }
 
     @Override
     public FileClient getFileClient(Long id) {
-        return clientCache.getUnchecked(id);
+        FileConfigDO config = fileConfigMapper.selectById(id);
+        if (config == null) {
+            return null;
+        }
+        return getFileClient(config.getConfigKey());
+    }
+
+    @Override
+    public FileClient getFileClient(String configKey) {
+        return clientCache.getUnchecked(configKey);
     }
 
     @Override
     public FileClient getMasterFileClient() {
-        return clientCache.getUnchecked(CACHE_MASTER_ID);
+        FileConfigDO masterConfig = fileConfigMapper.selectByMaster();
+        if (masterConfig == null) {
+            throw exception(FILE_CONFIG_MASTER_NOT_EXISTS);
+        }
+        return getFileClient(masterConfig.getConfigKey());
+    }
+
+    @Override
+    public FileConfigDO getMasterFileConfig() {
+        return fileConfigMapper.selectByMaster();
     }
 
 }

@@ -55,7 +55,7 @@ public class AppFileController {
     @PostMapping("/create")
     @Operation(summary = "创建文件", description = "模式二：前端上传文件：配合 presigned-url 接口，记录上传了上传的文件")
     @PermitAll
-    public CommonResult<Long> createFile(@Valid @RequestBody FileCreateReqVO createReqVO) {
+    public CommonResult<String> createFile(@Valid @RequestBody FileCreateReqVO createReqVO) {
         return success(fileService.createFile(createReqVO));
     }
 

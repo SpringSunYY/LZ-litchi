@@ -6,6 +6,7 @@ import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.test.core.ut.BaseDbUnitTest;
 import com.lz.framework.test.core.util.AssertUtils;
 import com.lz.module.infra.controller.admin.file.vo.file.FilePageReqVO;
+import com.lz.module.infra.controller.admin.file.vo.file.FileRespVO;
 import com.lz.module.infra.dal.dataobject.file.FileDO;
 import com.lz.module.infra.dal.mysql.file.FileMapper;
 import com.lz.module.infra.framework.file.core.client.FileClient;
@@ -50,6 +51,7 @@ public class FileServiceImplTest extends BaseDbUnitTest {
         FileDO dbFile = randomPojo(FileDO.class, o -> { // 等会查询到
             o.setPath("yunai");
             o.setType("image/jpg");
+            o.setConfigKey("local");
             o.setCreateTime(buildTime(2021, 1, 15));
         });
         fileMapper.insert(dbFile);
@@ -70,11 +72,11 @@ public class FileServiceImplTest extends BaseDbUnitTest {
         reqVO.setCreateTime((new LocalDateTime[]{buildTime(2021, 1, 10), buildTime(2021, 1, 20)}));
 
         // 调用
-        PageResult<FileDO> pageResult = fileService.getFilePage(reqVO);
+        PageResult<FileRespVO> pageResult = fileService.getFilePage(reqVO);
         // 断言
         assertEquals(1, pageResult.getTotal());
         assertEquals(1, pageResult.getList().size());
-        AssertUtils.assertPojoEquals(dbFile, pageResult.getList().get(0));
+        assertEquals(dbFile.getPath(), pageResult.getList().get(0).getPath());
     }
 
     /**
@@ -97,16 +99,17 @@ public class FileServiceImplTest extends BaseDbUnitTest {
             pathRef.set(path);
             return true;
         }), eq(type))).thenReturn(url);
-        when(client.getId()).thenReturn(10L);
+        when(client.getConfigKey()).thenReturn("local");
         // 调用
         String result = fileService.createFile(content, name, directory, type);
         // 断言
         assertEquals(result, url);
         // 校验数据
-        FileDO file = fileMapper.selectOne(FileDO::getUrl, url);
-        assertEquals(10L, file.getConfigId());
+        FileDO file = fileMapper.selectOne(FileDO::getPath, pathRef.get());
+        assertEquals("local", file.getConfigKey());
         assertEquals(pathRef.get(), file.getPath());
-        assertEquals(url, file.getUrl());
+        assertEquals(url, file.getAbsolutePath());
+        assertTrue(file.getRelativePath().contains("/admin-api/infra/file/local/get/"));
         assertEquals(type, file.getType());
         assertEquals(content.length, file.getSize());
     }
@@ -129,16 +132,17 @@ public class FileServiceImplTest extends BaseDbUnitTest {
             pathRef.set(path);
             return true;
         }), eq(type))).thenReturn(url);
-        when(client.getId()).thenReturn(10L);
+        when(client.getConfigKey()).thenReturn("local");
         // 调用
         String result = fileService.createFile(content, null, null, null);
         // 断言
         assertEquals(result, url);
         // 校验数据
-        FileDO file = fileMapper.selectOne(FileDO::getUrl, url);
-        assertEquals(10L, file.getConfigId());
+        FileDO file = fileMapper.selectOne(FileDO::getPath, pathRef.get());
+        assertEquals("local", file.getConfigKey());
         assertEquals(pathRef.get(), file.getPath());
-        assertEquals(url, file.getUrl());
+        assertEquals(url, file.getAbsolutePath());
+        assertTrue(file.getRelativePath().contains("/admin-api/infra/file/local/get/"));
         assertEquals(type, file.getType());
         assertEquals(content.length, file.getSize());
     }
@@ -146,11 +150,11 @@ public class FileServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testDeleteFile_success() throws Exception {
         // mock 数据
-        FileDO dbFile = randomPojo(FileDO.class, o -> o.setConfigId(10L).setPath("tudou.jpg"));
+        FileDO dbFile = randomPojo(FileDO.class, o -> o.setConfigKey("local").setPath("tudou.jpg"));
         fileMapper.insert(dbFile);// @Sql: 先插入出一条存在的数据
         // mock Master 文件客户端
         FileClient client = mock(FileClient.class);
-        when(fileConfigService.getFileClient(eq(10L))).thenReturn(client);
+        when(fileConfigService.getFileClient(eq("local"))).thenReturn(client);
         // 准备参数
         Long id = dbFile.getId();
 
@@ -174,16 +178,16 @@ public class FileServiceImplTest extends BaseDbUnitTest {
     @Test
     public void testGetFileContent() throws Exception {
         // 准备参数
-        Long configId = 10L;
+        String configKey = "local";
         String path = "tudou.jpg";
         // mock 方法
         FileClient client = mock(FileClient.class);
-        when(fileConfigService.getFileClient(eq(10L))).thenReturn(client);
+        when(fileConfigService.getFileClient(eq("local"))).thenReturn(client);
         byte[] content = new byte[]{};
         when(client.getContent(eq("tudou.jpg"))).thenReturn(content);
 
         // 调用
-        byte[] result = fileService.getFileContent(configId, path);
+        byte[] result = fileService.getFileContent(configKey, path);
         // 断言
         assertSame(result, content);
     }

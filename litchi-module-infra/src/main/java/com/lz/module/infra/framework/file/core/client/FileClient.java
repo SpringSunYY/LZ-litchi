@@ -10,11 +10,9 @@ import com.lz.module.infra.framework.file.core.client.s3.FilePresignedUrlRespDTO
 public interface FileClient {
 
     /**
-     * 获得客户端编号
-     *
-     * @return 客户端编号
+     * 获取配置Key
      */
-    Long getId();
+    String getConfigKey();
 
     /**
      * 上传文件

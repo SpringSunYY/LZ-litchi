@@ -30,7 +30,7 @@ public class SftpFileClientTest {
         config.setPort(2222);
         config.setUsername("foo");
         config.setPassword("pass");
-        SftpFileClient client = new SftpFileClient(0L, config);
+        SftpFileClient client = new SftpFileClient("sftp", config);
         client.init();
         // 上传文件
         String path = IdUtil.fastSimpleUUID() + ".jpg";

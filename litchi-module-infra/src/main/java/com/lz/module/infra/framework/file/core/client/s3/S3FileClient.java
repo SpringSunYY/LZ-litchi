@@ -30,8 +30,8 @@ public class S3FileClient extends AbstractFileClient<S3FileClientConfig> {
     private S3Client client;
     private S3Presigner presigner;
 
-    public S3FileClient(Long id, S3FileClientConfig config) {
-        super(id, config);
+    public S3FileClient(String configKey, S3FileClientConfig config) {
+        super(configKey, config);
     }
 
     @Override

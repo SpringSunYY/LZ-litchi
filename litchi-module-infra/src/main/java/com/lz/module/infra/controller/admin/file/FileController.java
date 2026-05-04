@@ -1,14 +1,17 @@
 package com.lz.module.infra.controller.admin.file;
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.infra.controller.admin.file.vo.file.*;
-import com.lz.module.infra.dal.dataobject.file.FileDO;
+import com.lz.module.infra.dal.dataobject.file.FileConfigDO;
+import com.lz.module.infra.enums.file.InfraFilePathTypeEnum;
+import com.lz.module.infra.enums.file.InfraFileReturnTypeEnum;
+import com.lz.module.infra.service.file.FileConfigService;
 import com.lz.module.infra.service.file.FileService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -41,6 +44,9 @@ public class FileController {
     @Resource
     private FileService fileService;
 
+    @Resource
+    private FileConfigService fileConfigService;
+
     @PostMapping("/upload")
     @Operation(summary = "上传文件", description = "模式一：后端上传文件")
     public CommonResult<String> uploadFile(FileUploadReqVO uploadReqVO) throws Exception {
@@ -64,7 +70,7 @@ public class FileController {
 
     @PostMapping("/create")
     @Operation(summary = "创建文件", description = "模式二：前端上传文件：配合 presigned-url 接口，记录上传了上传的文件")
-    public CommonResult<Long> createFile(@Valid @RequestBody FileCreateReqVO createReqVO) {
+    public CommonResult<String> createFile(@Valid @RequestBody FileCreateReqVO createReqVO) {
         return success(fileService.createFile(createReqVO));
     }
 
@@ -86,14 +92,14 @@ public class FileController {
         return success(true);
     }
 
-    @GetMapping("/{configId}/get/**")
+    @GetMapping("/{configKey}/get/**")
     @PermitAll
     @TenantIgnore
-    @Operation(summary = "下载文件")
-    @Parameter(name = "configId", description = "配置编号", required = true)
+    @Operation(summary = "下载/预览文件")
+    @Parameter(name = "configKey", description = "配置key", required = true)
     public void getFileContent(HttpServletRequest request,
                                HttpServletResponse response,
-                               @PathVariable("configId") Long configId) throws Exception {
+                               @PathVariable("configKey") String configKey) throws Exception {
         // 获取请求的路径
         String path = StrUtil.subAfter(request.getRequestURI(), "/get/", false);
         if (StrUtil.isEmpty(path)) {
@@ -102,22 +108,55 @@ public class FileController {
         // 解码，解决中文路径的问题 https://gitee.com/zhijiantianya/litchi/pulls/807/
         path = URLUtil.decode(path);
 
-        // 读取内容
-        byte[] content = fileService.getFileContent(configId, path);
+        // 获取配置判断返回类型
+        FileConfigDO config = fileConfigService.getFileConfig(configKey);
+        if (config != null && InfraFileReturnTypeEnum.FILE_RETURN_TYPE_0.getStatus().equals(config.getReturnType())) {
+            // 返回 URL 类型，根据 pathType 返回绝对路径或相对路径
+            String url;
+            if (InfraFilePathTypeEnum.FILE_PATH_TYPE_1.getStatus().equals(config.getPathType())) {
+                // 绝对路径
+                url = getDomainByConfig(configKey) + "/admin-api/infra/file/" + configKey + "/get/" + path;
+            } else {
+                // 相对路径
+                url = "/admin-api/infra/file/" + configKey + "/get/" + path;
+            }
+            // 重定向到URL
+            response.sendRedirect(url);
+            return;
+        }
+
+        // 后端下载类型 - 读取内容
+        byte[] content = fileService.getFileContent(configKey, path);
         if (content == null) {
-            log.warn("[getFileContent][configId({}) path({}) 文件不存在]", configId, path);
+            log.warn("[getFileContent][configKey({}) path({}) 文件不存在]", configKey, path);
             response.setStatus(HttpStatus.NOT_FOUND.value());
             return;
         }
         writeAttachment(response, path, content);
     }
 
+    /**
+     * 根据配置key获取域名
+     */
+    private String getDomainByConfig(String configKey) {
+        FileConfigDO config = fileConfigService.getFileConfig(configKey);
+        if (config == null || config.getConfig() == null) {
+            return "";
+        }
+        // 通过反射获取 domain 字段
+        try {
+            Object domain = ReflectUtil.getFieldValue(config.getConfig(), "domain");
+            return domain != null ? domain.toString() : "";
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     @GetMapping("/page")
     @Operation(summary = "获得文件分页")
     @PreAuthorize("@ss.hasPermission('infra:file:query')")
     public CommonResult<PageResult<FileRespVO>> getFilePage(@Valid FilePageReqVO pageVO) {
-        PageResult<FileDO> pageResult = fileService.getFilePage(pageVO);
-        return success(BeanUtils.toBean(pageResult, FileRespVO.class));
+        return success(fileService.getFilePage(pageVO));
     }
 
 }

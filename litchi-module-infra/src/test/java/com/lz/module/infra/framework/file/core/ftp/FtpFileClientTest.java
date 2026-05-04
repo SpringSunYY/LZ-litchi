@@ -37,7 +37,7 @@ public class FtpFileClientTest {
         config.setUsername("foo");
         config.setPassword("pass");
         config.setMode(FtpMode.Passive.name());
-        FtpFileClient client = new FtpFileClient(0L, config);
+        FtpFileClient client = new FtpFileClient("ftp", config);
         client.init();
         // 上传文件
         String path = IdUtil.fastSimpleUUID() + ".jpg";

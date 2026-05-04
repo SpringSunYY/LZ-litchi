@@ -17,10 +17,16 @@ public interface FileMapper extends BaseMapperX<FileDO> {
 
     default PageResult<FileDO> selectPage(FilePageReqVO reqVO) {
         return selectPage(reqVO, new LambdaQueryWrapperX<FileDO>()
-                .likeIfPresent(FileDO::getPath, reqVO.getPath())
-                .likeIfPresent(FileDO::getType, reqVO.getType())
+                .likeIfPresent(FileDO::getConfigKey, reqVO.getConfigKey())
+                .likeIfPresent(FileDO::getName, reqVO.getName())
+                .eqIfPresent(FileDO::getPath, reqVO.getPath())
+                .eqIfPresent(FileDO::getAbsolutePath, reqVO.getAbsolutePath())
+                .eqIfPresent(FileDO::getRelativePath, reqVO.getRelativePath())
+                .eqIfPresent(FileDO::getType, reqVO.getType())
+                .betweenIfPresent(FileDO::getSize, reqVO.getSize())
+                .eqIfPresent(FileDO::getModuleType, reqVO.getModuleType())
                 .betweenIfPresent(FileDO::getCreateTime, reqVO.getCreateTime())
-                .orderByDesc(FileDO::getId));
+                .applyOrderDesc(reqVO, FileDO::getId));
     }
 
 }

@@ -97,7 +97,7 @@ public class S3FileClientTest {
         // 校验配置
         ValidationUtils.validate(Validation.buildDefaultValidatorFactory().getValidator(), config);
         // 创建 Client
-        S3FileClient client = new S3FileClient(0L, config);
+        S3FileClient client = new S3FileClient("s3", config);
         client.init();
         // 上传文件
         String path = IdUtil.fastSimpleUUID() + ".jpg";
