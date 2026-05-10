@@ -27,7 +27,7 @@ public class FtpFileClientTest {
 
     @Test
     @Disabled
-    public void test() {
+    public void test() throws Exception {
         // 创建客户端
         FtpFileClientConfig config = new FtpFileClientConfig();
         config.setDomain("http://127.0.0.1:48080");

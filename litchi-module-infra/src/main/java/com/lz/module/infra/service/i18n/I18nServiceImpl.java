@@ -31,6 +31,7 @@ public class I18nServiceImpl implements I18nService {
     private I18nMessageService i18nMessageService;
 
     @Override
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE)
     public List<I18nLocaleSimpRespVO> getI18nLocale(Integer localeTarget) {
         List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleService.getI18nLocaleByLocaleTarget(localeTarget);
         return BeanUtils.toBean(i18nLocaleDOList, I18nLocaleSimpRespVO.class);

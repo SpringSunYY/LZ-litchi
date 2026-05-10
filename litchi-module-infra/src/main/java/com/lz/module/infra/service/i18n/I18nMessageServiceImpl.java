@@ -13,6 +13,7 @@ import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -107,6 +108,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         return i18nMessageMapper.selectPage(pageReqVO);
     }
 
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
     public List<I18nMessageDO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage) {
         //查询通用和类型是这个的target

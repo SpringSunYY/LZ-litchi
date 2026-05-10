@@ -1,5 +1,6 @@
 package com.lz.module.infra.dal.dataobject.i18n;
 
+import com.lz.framework.tenant.core.aop.TenantIgnore;
 import lombok.*;
 import com.baomidou.mybatisplus.annotation.*;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
@@ -17,6 +18,7 @@ import com.lz.framework.mybatis.core.dataobject.BaseDO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@TenantIgnore
 public class I18nMessageDO extends BaseDO {
 
     /**

@@ -11,7 +11,7 @@ public class LocalFileClientTest {
 
     @Test
     @Disabled
-    public void test() {
+    public void test() throws Exception {
         // 创建客户端
         LocalFileClientConfig config = new LocalFileClientConfig();
         config.setDomain("http://127.0.0.1:48080");

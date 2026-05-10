@@ -23,7 +23,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TenantIgnore
 public class FileContentDO extends BaseDO {
 
     /**

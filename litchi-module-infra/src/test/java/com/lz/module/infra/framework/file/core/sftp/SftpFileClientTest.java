@@ -21,7 +21,7 @@ public class SftpFileClientTest {
 
     @Test
     @Disabled
-    public void test() {
+    public void test() throws Exception {
         // 创建客户端
         SftpFileClientConfig config = new SftpFileClientConfig();
         config.setDomain("http://127.0.0.1:48080");

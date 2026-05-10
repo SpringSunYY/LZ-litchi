@@ -21,7 +21,6 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@TenantIgnore
 public class FileDO extends BaseDO {
 
     /**

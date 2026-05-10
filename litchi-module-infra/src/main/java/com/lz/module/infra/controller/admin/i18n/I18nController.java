@@ -1,6 +1,7 @@
 package com.lz.module.infra.controller.admin.i18n;
 
 import com.lz.framework.common.pojo.CommonResult;
+import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSimpRespVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
 import com.lz.module.infra.service.i18n.I18nService;
@@ -37,6 +38,7 @@ public class I18nController {
     @GetMapping("/locale/target")
     @Parameter(name = "localeTarget", description = "使用端", required = true, example = "1024")
     @PermitAll
+    @TenantIgnore
     public CommonResult<List<I18nLocaleSimpRespVO>> getI18nLocale(@RequestParam("localeTarget") Integer localeTarget) {
         return success(i18nService.getI18nLocale(localeTarget));
     }
@@ -48,6 +50,7 @@ public class I18nController {
     @GetMapping("/locale/message")
     @Parameter(name = "localeTarget", description = "使用端", required = true, example = "1024")
     @PermitAll
+    @TenantIgnore
     public CommonResult<List<I18nMessageSimpVO>> getI18nLocaleMessage(
             @RequestParam("localeTarget") Integer localeTarget,
             @RequestHeader(value = "Accept-Language", required = false) String acceptLanguage) {
