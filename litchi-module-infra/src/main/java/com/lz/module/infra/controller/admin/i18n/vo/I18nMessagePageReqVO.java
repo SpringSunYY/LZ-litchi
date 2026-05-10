@@ -28,7 +28,7 @@ public class I18nMessagePageReqVO extends PageParam {
     private Integer isSystem;
 
     @Schema(description = "模块", example = "2")
-    private Integer moduleType;
+    private String moduleType;
 
     @Schema(description = "使用类型", example = "2")
     private Integer useType;

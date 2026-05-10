@@ -25,7 +25,7 @@ public class I18nKeySaveReqVO {
 
     @Schema(description = "模块", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "模块不能为空")
-    private Integer moduleType;
+    private String moduleType;
 
     @Schema(description = "使用类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @NotNull(message = "使用类型不能为空")

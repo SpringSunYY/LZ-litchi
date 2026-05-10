@@ -42,7 +42,7 @@ public class I18nMessageRespVO {
     @Schema(description = "模块", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty(value = "模块", converter = DictConvert.class)
     @DictFormat("infra_i18n_key_module_type") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
-    private Integer moduleType;
+    private String moduleType;
 
     @Schema(description = "使用类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty(value = "使用类型", converter = DictConvert.class)

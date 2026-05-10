@@ -23,7 +23,7 @@ public class I18nKeyPageReqVO extends PageParam {
     private Integer isSystem;
 
     @Schema(description = "模块", example = "1")
-    private Integer moduleType;
+    private String moduleType;
 
     @Schema(description = "使用类型", example = "1")
     private Integer useType;

@@ -43,7 +43,7 @@ public class I18nKeyDO extends BaseDO {
      * 模块
      *
      */
-    private Integer moduleType;
+    private String moduleType;
     /**
      * 使用类型
      *

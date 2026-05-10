@@ -33,7 +33,7 @@ public class I18nKeyRespVO {
     @Schema(description = "模块", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty(value = "模块", converter = DictConvert.class)
     @DictFormat("infra_i18n_key_module_type")
-    private Integer moduleType;
+    private String moduleType;
 
     @Schema(description = "使用类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty(value = "使用类型", converter = DictConvert.class)
