@@ -22,7 +22,7 @@ public interface FileMapper extends BaseMapperX<FileDO> {
                 .eqIfPresent(FileDO::getPath, reqVO.getPath())
                 .eqIfPresent(FileDO::getAbsolutePath, reqVO.getAbsolutePath())
                 .eqIfPresent(FileDO::getRelativePath, reqVO.getRelativePath())
-                .eqIfPresent(FileDO::getType, reqVO.getType())
+                .likeIfPresent(FileDO::getType, reqVO.getType())
                 .betweenIfPresent(FileDO::getSize, reqVO.getSize())
                 .eqIfPresent(FileDO::getModuleType, reqVO.getModuleType())
                 .betweenIfPresent(FileDO::getCreateTime, reqVO.getCreateTime())

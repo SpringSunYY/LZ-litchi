@@ -18,8 +18,8 @@ public class FileApiImpl implements FileApi {
     private FileService fileService;
 
     @Override
-    public String createFile(byte[] content, String name, String directory, String type) {
-        return fileService.createFile(content, name, directory, type);
+    public String createFile(byte[] content, String name, String directory, String type, String moduleType) {
+        return fileService.createFile(content, name, directory, type, moduleType);
     }
 
 }

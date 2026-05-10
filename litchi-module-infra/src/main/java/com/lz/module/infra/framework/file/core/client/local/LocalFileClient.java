@@ -21,7 +21,7 @@ public class LocalFileClient extends AbstractFileClient<LocalFileClientConfig> {
     }
 
     @Override
-    public String upload(byte[] content, String path, String type) {
+    public String upload(byte[] content, String path, String type, String moduleType) {
         // 执行写入
         String filePath = getFilePath(path);
         FileUtil.writeBytes(content, filePath);

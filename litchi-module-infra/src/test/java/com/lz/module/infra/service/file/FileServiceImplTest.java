@@ -98,10 +98,10 @@ public class FileServiceImplTest extends BaseDbUnitTest {
             assertTrue(path.matches(directory + "/\\d{8}/" + name + "_\\d+.jpg"));
             pathRef.set(path);
             return true;
-        }), eq(type))).thenReturn(url);
+        }), eq(type), eq(null))).thenReturn(url);
         when(client.getConfigKey()).thenReturn("local");
         // 调用
-        String result = fileService.createFile(content, name, directory, type);
+        String result = fileService.createFile(content, name, directory, type, null);
         // 断言
         assertEquals(result, url);
         // 校验数据
@@ -131,10 +131,10 @@ public class FileServiceImplTest extends BaseDbUnitTest {
             assertTrue(path.matches("\\d{8}/6318848e882d8a7e7e82789d87608f684ee52d41966bfc8cad3ce15aad2b970e_\\d+\\.jpg"));
             pathRef.set(path);
             return true;
-        }), eq(type))).thenReturn(url);
+        }), eq(type), eq(null))).thenReturn(url);
         when(client.getConfigKey()).thenReturn("local");
         // 调用
-        String result = fileService.createFile(content, null, null, null);
+        String result = fileService.createFile(content, null, null, null, null);
         // 断言
         assertEquals(result, url);
         // 校验数据

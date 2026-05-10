@@ -90,7 +90,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @SneakyThrows
-    public String createFile(byte[] content, String name, String directory, String type) {
+    public String createFile(byte[] content, String name, String directory, String type, String moduleType) {
         // 0. 获取配置并进行文件校验
         FileConfigDO config = fileConfigService.getMasterFileConfig();
         Assert.notNull(config, "文件配置不存在");
@@ -124,18 +124,21 @@ public class FileServiceImpl implements FileService {
         // 2.2 上传到文件存储器
         FileClient client = fileConfigService.getMasterFileClient();
         Assert.notNull(client, "客户端(master) 不能为空");
-        String url = client.upload(content, path, type);
+        String url = client.upload(content, path, type, moduleType);
 
-        // 3. 拼接绝对路径和相对路径
+        // 3. 同步元数据到存储客户端（如果是数据库存储，需要同步 name、type、size）
+        client.updateMetadata(path, name, type, content.length);
+
+        // 4. 拼接绝对路径和相对路径
         String absolutePath = url; // 绝对路径（完整URL）
         String relativePath = FileConstants.getFileGetPath(client.getConfigKey(), path); // 相对路径
 
-        // 4. 保存到数据库
+        // 5. 保存到数据库
         fileMapper.insert(new FileDO().setConfigKey(client.getConfigKey())
                 .setName(name).setPath(path).setRelativePath(relativePath).setAbsolutePath(absolutePath)
-                .setType(type).setSize(content.length));
+                .setType(type).setSize(content.length).setModuleType(moduleType));
 
-        // 5. 根据配置返回路径
+        // 6. 根据配置返回路径
         return buildReturnPath(config, relativePath, absolutePath);
     }
 
@@ -264,6 +267,33 @@ public class FileServiceImpl implements FileService {
         FileClient client = fileConfigService.getFileClient(configKey);
         Assert.notNull(client, "客户端({}) 不能为空", configKey);
         return client.getContent(path);
+    }
+
+    @Override
+    public String buildFileAccessUrl(String configKey, String path, String domain) {
+        // 优先使用传入的 domain
+        if (StrUtil.isEmpty(domain)) {
+            domain = "";
+        }
+        return domain + FileConstants.getFileGetPath(configKey, path);
+    }
+
+    @Override
+    public String buildFileAccessUrl(String configKey, String path) {
+        // 获取配置中的域名
+        FileConfigDO config = fileConfigService.getFileConfig(configKey);
+        String domain = "";
+        if (config != null && config.getConfig() != null) {
+            Object domainObj = cn.hutool.core.util.ReflectUtil.getFieldValue(config.getConfig(), "domain");
+            domain = domainObj != null ? domainObj.toString() : "";
+        }
+        return buildFileAccessUrl(configKey, path, domain);
+    }
+
+    @Override
+    public String buildFileAccessUrl(String configKey, String path, String scheme, String serverName, int serverPort) {
+        String domain = scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort);
+        return buildFileAccessUrl(configKey, path, domain);
     }
 
 }

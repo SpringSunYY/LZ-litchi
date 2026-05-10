@@ -16,4 +16,7 @@ public class AppFileUploadReqVO {
     @Schema(description = "文件目录", example = "XXX/YYY")
     private String directory;
 
+    @Schema(description = "模块", example = "app")
+    private String moduleType;
+
 }

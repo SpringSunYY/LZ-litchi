@@ -17,12 +17,21 @@ public interface FileClient {
     /**
      * 上传文件
      *
-     * @param content 文件流
-     * @param path    相对路径
+     * @param content    文件流
+     * @param path       相对路径
+     * @param type       文件类型
+     * @param moduleType 模块类型
      * @return 完整路径，即 HTTP 访问地址
      * @throws Exception 上传文件时，抛出 Exception 异常
      */
-    String upload(byte[] content, String path, String type) throws Exception;
+    String upload(byte[] content, String path, String type, String moduleType) throws Exception;
+
+    /**
+     * 上传文件（兼容旧方法）
+     */
+    default String upload(byte[] content, String path, String type) throws Exception {
+        return upload(content, path, type, null);
+    }
 
     /**
      * 删除文件
@@ -48,6 +57,18 @@ public interface FileClient {
      */
     default FilePresignedUrlRespDTO getPresignedObjectUrl(String path) throws Exception {
         throw new UnsupportedOperationException("不支持的操作");
+    }
+
+    /**
+     * 更新文件元数据（可选实现，用于同步文件信息）
+     *
+     * @param path 文件路径
+     * @param name 文件名
+     * @param type 文件类型
+     * @param size 文件大小
+     */
+    default void updateMetadata(String path, String name, String type, Integer size) {
+        // 默认不实现
     }
 
 }

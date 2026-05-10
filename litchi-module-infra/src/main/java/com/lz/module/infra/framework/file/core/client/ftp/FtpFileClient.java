@@ -32,7 +32,7 @@ public class FtpFileClient extends AbstractFileClient<FtpFileClientConfig> {
     }
 
     @Override
-    public String upload(byte[] content, String path, String type) {
+    public String upload(byte[] content, String path, String type, String moduleType) {
         // 执行写入
         String filePath = getFilePath(path);
         String fileName = FileUtil.getName(filePath);

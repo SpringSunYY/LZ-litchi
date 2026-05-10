@@ -1,7 +1,6 @@
 package com.lz.module.infra.controller.admin.file;
 
 import cn.hutool.core.io.IoUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
 import com.lz.framework.common.pojo.CommonResult;
@@ -9,7 +8,6 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.infra.controller.admin.file.vo.file.*;
 import com.lz.module.infra.dal.dataobject.file.FileConfigDO;
-import com.lz.module.infra.enums.file.InfraFilePathTypeEnum;
 import com.lz.module.infra.enums.file.InfraFileReturnTypeEnum;
 import com.lz.module.infra.service.file.FileConfigService;
 import com.lz.module.infra.service.file.FileService;
@@ -53,7 +51,7 @@ public class FileController {
         MultipartFile file = uploadReqVO.getFile();
         byte[] content = IoUtil.readBytes(file.getInputStream());
         return success(fileService.createFile(content, file.getOriginalFilename(),
-                uploadReqVO.getDirectory(), file.getContentType()));
+                uploadReqVO.getDirectory(), file.getContentType(), uploadReqVO.getModuleType()));
     }
 
     @GetMapping("/presigned-url")
@@ -103,53 +101,29 @@ public class FileController {
         // 获取请求的路径
         String path = StrUtil.subAfter(request.getRequestURI(), "/get/", false);
         if (StrUtil.isEmpty(path)) {
-            throw new IllegalArgumentException("结尾的 path 路径必须传递");
+            response.setStatus(HttpStatus.BAD_REQUEST.value());
+            return;
         }
         // 解码，解决中文路径的问题 https://gitee.com/zhijiantianya/litchi/pulls/807/
         path = URLUtil.decode(path);
 
-        // 获取配置判断返回类型
+        // 如果是后端下载模式（returnType=1），读取文件内容并返回
         FileConfigDO config = fileConfigService.getFileConfig(configKey);
-        if (config != null && InfraFileReturnTypeEnum.FILE_RETURN_TYPE_0.getStatus().equals(config.getReturnType())) {
-            // 返回 URL 类型，根据 pathType 返回绝对路径或相对路径
-            String url;
-            if (InfraFilePathTypeEnum.FILE_PATH_TYPE_1.getStatus().equals(config.getPathType())) {
-                // 绝对路径
-                url = getDomainByConfig(configKey) + "/admin-api/infra/file/" + configKey + "/get/" + path;
-            } else {
-                // 相对路径
-                url = "/admin-api/infra/file/" + configKey + "/get/" + path;
+        if (config != null && InfraFileReturnTypeEnum.FILE_RETURN_TYPE_1.getStatus().equals(config.getReturnType())) {
+            byte[] content = fileService.getFileContent(configKey, path);
+            if (content == null) {
+                log.warn("[getFileContent][configKey({}) path({}) 文件不存在]", configKey, path);
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+                return;
             }
-            // 重定向到URL
-            response.sendRedirect(url);
-            return;
-        }
-
-        // 后端下载类型 - 读取内容
-        byte[] content = fileService.getFileContent(configKey, path);
-        if (content == null) {
-            log.warn("[getFileContent][configKey({}) path({}) 文件不存在]", configKey, path);
-            response.setStatus(HttpStatus.NOT_FOUND.value());
-            return;
-        }
         writeAttachment(response, path, content);
+        return;
     }
 
-    /**
-     * 根据配置key获取域名
-     */
-    private String getDomainByConfig(String configKey) {
-        FileConfigDO config = fileConfigService.getFileConfig(configKey);
-        if (config == null || config.getConfig() == null) {
-            return "";
-        }
-        // 通过反射获取 domain 字段
-        try {
-            Object domain = ReflectUtil.getFieldValue(config.getConfig(), "domain");
-            return domain != null ? domain.toString() : "";
-        } catch (Exception e) {
-            return "";
-        }
+    // 返回URL模式 - 重定向到存储服务的完整URL
+    String redirectUrl = fileService.buildFileAccessUrl(configKey, path,
+            request.getScheme(), request.getServerName(), request.getServerPort());
+    response.sendRedirect(redirectUrl);
     }
 
     @GetMapping("/page")

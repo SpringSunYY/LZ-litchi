@@ -27,7 +27,7 @@ public class SftpFileClient extends AbstractFileClient<SftpFileClientConfig> {
     }
 
     @Override
-    public String upload(byte[] content, String path, String type) {
+    public String upload(byte[] content, String path, String type, String moduleType) {
         // 执行写入
         String filePath = getFilePath(path);
         File file = FileUtils.createTempFile(content);

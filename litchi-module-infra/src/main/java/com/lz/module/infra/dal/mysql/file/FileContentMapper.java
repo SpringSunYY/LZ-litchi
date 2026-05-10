@@ -22,4 +22,10 @@ public interface FileContentMapper extends BaseMapper<FileContentDO> {
                 .eq(FileContentDO::getPath, path));
     }
 
+    default int updateByConfigKeyAndPath(String configKey, String path, FileContentDO updateDO) {
+        return update(updateDO, new LambdaQueryWrapper<FileContentDO>()
+                .eq(FileContentDO::getConfigKey, configKey)
+                .eq(FileContentDO::getPath, path));
+    }
+
 }

@@ -16,4 +16,8 @@ public class FileUploadReqVO {
     @Schema(description = "文件目录", example = "XXX/YYY")
     private String directory;
 
+    @Schema(description = "模块", example = "infra")
+    private String moduleType;
+
+
 }

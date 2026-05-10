@@ -64,7 +64,7 @@ public class S3FileClient extends AbstractFileClient<S3FileClientConfig> {
     }
 
     @Override
-    public String upload(byte[] content, String path, String type) {
+    public String upload(byte[] content, String path, String type, String moduleType) {
         // 构造 PutObjectRequest
         PutObjectRequest putRequest = PutObjectRequest.builder()
                 .bucket(config.getBucket())

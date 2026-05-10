@@ -28,12 +28,19 @@ public class DBFileClient extends AbstractFileClient<DBFileClientConfig> {
     }
 
     @Override
-    public String upload(byte[] content, String path, String type) {
+    public String upload(byte[] content, String path, String type, String moduleType) {
+        String name = cn.hutool.core.io.FileUtil.mainName(path);
+        String absolutePath = super.formatFileUrl(config.getDomain(), path);
+        String relativePath = cn.hutool.core.util.StrUtil.appendIfMissing(config.getDomain(), "/") + path;
+
         FileContentDO contentDO = new FileContentDO().setConfigKey(getConfigKey())
-                .setPath(path).setContent(content);
+                .setName(name).setPath(path)
+                .setAbsolutePath(absolutePath).setRelativePath(relativePath)
+                .setType(type).setSize(content.length).setModuleType(moduleType)
+                .setContent(content);
         fileContentMapper.insert(contentDO);
         // 拼接返回路径
-        return super.formatFileUrl(config.getDomain(), path);
+        return absolutePath;
     }
 
     @Override
@@ -50,6 +57,14 @@ public class DBFileClient extends AbstractFileClient<DBFileClientConfig> {
         // 排序后，拿 id 最大的，即最后上传的
         list.sort(Comparator.comparing(FileContentDO::getId));
         return CollUtil.getLast(list).getContent();
+    }
+
+    /**
+     * 更新文件元数据（同步 FileDO 的信息到 FileContentDO）
+     */
+    public void updateMetadata(String path, String name, String type, Integer size) {
+        FileContentDO updateDO = new FileContentDO().setName(name).setType(type).setSize(size);
+        fileContentMapper.updateByConfigKeyAndPath(getConfigKey(), path, updateDO);
     }
 
 }
