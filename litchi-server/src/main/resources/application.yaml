@@ -272,6 +272,9 @@ litchi:
     vo-type: 10 # VO 的类型，参见 CodegenVOTypeEnum 枚举类
     delete-batch-enable: true # 是否生成批量删除接口
     unit-test-enable: false # 是否生成单元测试
+    is-i18n: "0" # 是否启用国际化（1-否，0-是）
+    is-import: "0" # 是否导入（1-否，0-是）
+    popup-type: drawer # 弹窗类型（drawer/modal）
   tenant: # 多租户相关配置项
     enable: true
     enable-user: false

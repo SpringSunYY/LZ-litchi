@@ -88,10 +88,19 @@ export function useFormSchema(): VbenFormSchema[] {
       },
 #elseif($column.htmlType == "imageUpload")## 图片上传
       component: 'ImageUpload',
-  #elseif($column.htmlType == "fileUpload")## 文件上传
+      componentProps: {
+        moduleType: '$extendConfig.get('i18nModuleType')',
+      },
+#elseif($column.htmlType == "fileUpload")## 文件上传
       component: 'FileUpload',
-  #elseif($column.htmlType == "editor")## 文本编辑器
+      componentProps: {
+        moduleType: '$extendConfig.get('i18nModuleType')',
+      },
+#elseif($column.htmlType == "editor")## 文本编辑器
       component: 'RichTextarea',
+      componentProps: {
+        moduleType: '$extendConfig.get('i18nModuleType')',
+      },
   #elseif($column.htmlType == "select")## 下拉框
       component: 'Select',
       componentProps: {

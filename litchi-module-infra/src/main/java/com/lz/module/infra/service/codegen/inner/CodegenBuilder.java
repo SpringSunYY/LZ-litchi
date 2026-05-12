@@ -13,6 +13,7 @@ import com.lz.module.infra.dal.dataobject.codegen.CodegenTableDO;
 import com.lz.module.infra.enums.codegen.CodegenColumnHtmlTypeEnum;
 import com.lz.module.infra.enums.codegen.CodegenColumnListConditionEnum;
 import com.lz.module.infra.enums.codegen.CodegenTemplateTypeEnum;
+import com.lz.module.infra.framework.codegen.config.CodegenProperties;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -29,6 +30,12 @@ import static cn.hutool.core.util.RandomUtil.randomInt;
  */
 @Component
 public class CodegenBuilder {
+
+    private final CodegenProperties codegenProperties;
+
+    public CodegenBuilder(CodegenProperties codegenProperties) {
+        this.codegenProperties = codegenProperties;
+    }
 
     /**
      * 字段名与 {@link CodegenColumnListConditionEnum} 的默认映射
@@ -154,6 +161,13 @@ public class CodegenBuilder {
         // 去除结尾的表，作为类描述
         table.setClassComment(StrUtil.removeSuffixIgnoreCase(table.getTableComment(), "表"));
         table.setTemplateType(CodegenTemplateTypeEnum.ONE.getType());
+        // 初始化扩展字段，isI18n、isImport、popupType 从配置读取，i18nModuleType 默认为当前模块名
+        Map<String, Object> extendConfig = new HashMap<>();
+        extendConfig.put("isI18n", codegenProperties.getIsI18n());
+        extendConfig.put("isImport", codegenProperties.getIsImport());
+        extendConfig.put("popupType", codegenProperties.getPopupType());
+        extendConfig.put("i18nModuleType", table.getModuleName());
+        table.setExtendConfig(extendConfig);
     }
 
     public List<CodegenColumnDO> buildColumns(Long tableId, List<TableField> tableFields) {

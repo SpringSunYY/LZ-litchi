@@ -55,4 +55,22 @@ public class CodegenProperties {
     @NotNull(message = "是否生成单元测试不能为空")
     private Boolean unitTestEnable;
 
+    /**
+     * 是否启用国际化（1-否，0-是）
+     */
+    @NotNull(message = "是否启用国际化不能为空")
+    private String isI18n = "1";
+
+    /**
+     * 是否导入（1-否，0-是）
+     */
+    @NotNull(message = "是否导入不能为空")
+    private String isImport = "1";
+
+    /**
+     * 弹窗类型（drawer/modal）
+     */
+    @NotEmpty(message = "弹窗类型不能为空")
+    private String popupType = "drawer";
+
 }
