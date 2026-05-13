@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 项目启动成功后，提供文档相关的地址
- *
+ * 准备好了吗，YY!
  * @author 荔枝源码
  */
 @Slf4j
@@ -23,17 +23,13 @@ public class BannerApplicationRunner implements ApplicationRunner {
             String log = """
                     \n
                     ----------------------------------------------------------
-                    项目启动成功！
+                    项目启动成功哦，准备好了吗 YY！
                     ----------------------------------------------------------
                     """;
             BannerApplicationRunner.log.info(log);
             // 工作流
             if (isNotPresent("com.lz.module.bpm.framework.flowable.config.BpmFlowableConfiguration")) {
                 System.out.println("[工作流模块 litchi-module-bpm - 已禁用][参考 https://doc.iocoder.cn/bpm/ 开启]");
-            }
-            // 商城系统
-            if (isNotPresent("com.lz.module.trade.framework.web.config.TradeWebConfiguration")) {
-                System.out.println("[商城系统 litchi-module-mall - 已禁用][参考 https://doc.iocoder.cn/mall/build/ 开启]");
             }
             // ERP 系统
             if (isNotPresent("com.lz.module.erp.framework.web.config.ErpWebConfiguration")) {
@@ -42,18 +38,6 @@ public class BannerApplicationRunner implements ApplicationRunner {
             // CRM 系统
             if (isNotPresent("com.lz.module.crm.framework.web.config.CrmWebConfiguration")) {
                 System.out.println("[CRM 系统 litchi-module-crm - 已禁用][参考 https://doc.iocoder.cn/crm/build/ 开启]");
-            }
-            // 微信公众号
-            if (isNotPresent("com.lz.module.mp.framework.mp.config.MpConfiguration")) {
-                System.out.println("[微信公众号 litchi-module-mp - 已禁用][参考 https://doc.iocoder.cn/mp/build/ 开启]");
-            }
-            // 支付平台
-            if (isNotPresent("com.lz.module.pay.framework.pay.config.PayConfiguration")) {
-                System.out.println("[支付系统 litchi-module-pay - 已禁用][参考 https://doc.iocoder.cn/pay/build/ 开启]");
-            }
-            // AI 大模型
-            if (isNotPresent("com.lz.module.ai.framework.web.config.AiWebConfiguration")) {
-                System.out.println("[AI 大模型 litchi-module-ai - 已禁用][参考 https://doc.iocoder.cn/ai/build/ 开启]");
             }
         });
     }
