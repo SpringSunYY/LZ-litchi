@@ -319,7 +319,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
           :actions="[
             #if (${table.templateType} == 2)## 树表特有：新增下级
             {
-              label:$t('common.append', ['${table.classComment}']),
+              label:$t('common.append'),
               type: 'link',
               icon: ACTION_ICON.ADD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:create'],

@@ -71,13 +71,13 @@ VALUES ('${TABLE_REMARK}', '${table.moduleName}:${table.businessName}', @IS_SYST
 #foreach ($fn in $functionOps)
 DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}:${table.businessName}:action:${fn}';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-${FUNCTION_ZH_NAMES.get($foreach.count - 1)}', '${table.moduleName}:${table.businessName}:action:${fn}', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, $index, '${fn}', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${FUNCTION_ZH_NAMES.get($foreach.count - 1)}-${TABLE_REMARK}', '${table.moduleName}:${table.businessName}:action:${fn}', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, $index, '${fn}', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #set ($index = $index + 1)
 #end
 #if ($extendConfig.get('isImport') != '1')
 DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}:${table.businessName}:action:import';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-导入', '${table.moduleName}:${table.businessName}:action:import', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, $index, 'import', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('导入-${TABLE_REMARK}', '${table.moduleName}:${table.businessName}:action:import', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, $index, 'import', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 
 -- -----------------------------------------
@@ -162,12 +162,12 @@ VALUES ('${TABLE_REMARK}', '${table.moduleName}:${table.businessName}', @LOCALE_
 #foreach ($fn in $functionOps)
 DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}:${table.businessName}:action:${fn}' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-${FUNCTION_ZH_NAMES.get($foreach.count - 1)}', '${table.moduleName}:${table.businessName}:action:${fn}', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, '${TABLE_REMARK}${FUNCTION_ZH_NAMES.get($foreach.count - 1)}', '${fn}', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${FUNCTION_ZH_NAMES.get($foreach.count - 1)}-${TABLE_REMARK}', '${table.moduleName}:${table.businessName}:action:${fn}', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, '${TABLE_REMARK}${FUNCTION_ZH_NAMES.get($foreach.count - 1)}', '${fn}', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #if ($extendConfig.get('isImport') != '1')
 DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}:${table.businessName}:action:import' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-导入', '${table.moduleName}:${table.businessName}:action:import', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, '${TABLE_REMARK}导入', 'import', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('导入-${TABLE_REMARK}', '${table.moduleName}:${table.businessName}:action:import', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FUNCTION, '${TABLE_REMARK}导入', 'import', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 
 -- -----------------------------------------

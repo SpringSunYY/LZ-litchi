@@ -37,7 +37,7 @@ export function useFormSchema(): VbenFormSchema[] {
           const data = await get${simpleClassName}List({});
           data.unshift({
             id: 0,
-            ${treeNameColumn.javaField}: #if($isI18n)$t('treeRoot')#else '${treeNameColumn.columnComment}'#end,
+        name: #if($isI18n)$t('ui.treeRoot',[$t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
           });
           return handleTree(data);
         },
