@@ -1,7 +1,9 @@
 package ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
-import com.lz.framework.excel.core.convert.DictConvert;
+import com.alibaba.excel.annotation.ExcelProperty;
+import ${ExcelColumnSelectClassName};
+import ${ExcelI18nClassName};
+import ${DictConvertClassName};
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +11,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.format.annotation.DateTimeFormat;
-import com.alibaba.excel.annotation.ExcelProperty;
 ## 处理 BigDecimal 字段的引入
 #foreach ($column in $columns)
 #if (${column.javaType} == "BigDecimal")
@@ -25,13 +26,13 @@ import java.time.${column.javaType};
 #end
 #end
 
-@Schema(description = "${sceneEnum.name} - ${table.classComment}导入 Request VO")
+@Schema(description = "${sceneEnum.name} - ${table.classComment}Excel Request VO")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = false)
-public class ${sceneEnum.prefixClass}${table.className}ImportVO {
+public class ${sceneEnum.prefixClass}${table.className}ExcelReqVO {
 
 #foreach ($column in $columns)
 #if ($column.createOperation || $column.updateOperation)
@@ -44,9 +45,15 @@ public class ${sceneEnum.prefixClass}${table.className}ImportVO {
 #end
 #if ("" != $column.dictType)
     @ExcelProperty(value = "${column.columnComment}", converter = DictConvert.class)
-    @DictFormat("${column.dictType}")
+    @ExcelColumnSelect(dictType = "${column.dictType}")
+#if ($isI18n)
+    @ExcelI18n(i18nKey = "${table.moduleName}:${table.businessName}:field:${column.javaField}")
+#end
 #else
     @ExcelProperty("${column.columnComment}")
+#if ($isI18n)
+    @ExcelI18n(i18nKey = "${table.moduleName}:${table.businessName}:field:${column.javaField}")
+#end
 #end
     private ${column.javaType} ${column.javaField};
 

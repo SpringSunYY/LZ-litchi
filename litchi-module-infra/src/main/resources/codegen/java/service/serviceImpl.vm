@@ -466,7 +466,7 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 #if ($extendConfig.get('isImport') != '1')
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ${importRespVOClass} import${simpleClassName}List(List<${importReqVOClass}> list) {
+    public ${excelRespVOClass} import${simpleClassName}List(List<${excelReqVOClass}> list) {
     #if ($isI18n)
         if (CollUtil.isEmpty(list)) {
             throw I18nExceptionUtil.exception(ERROR_CODE_IMPORT_DATA_EMPTY);
@@ -478,12 +478,12 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
     #end
         List<${table.className}DO> createList = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {
-            ${importReqVOClass} importVO = list.get(i);
+            ${excelReqVOClass} importVO = list.get(i);
             ${table.className}DO ${classNameVar} = BeanUtils.toBean(importVO, ${table.className}DO.class);
             createList.add(${classNameVar});
         }
         ${classNameVar}Mapper.insertBatch(createList);
-        return ${importRespVOClass}.builder()
+        return ${excelRespVOClass}.builder()
                 .message(StrUtil.format("成功导入 {} 个${table.classComment}", createList.size())).build();
     }
 #end

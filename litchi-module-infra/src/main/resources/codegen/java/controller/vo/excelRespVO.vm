@@ -4,10 +4,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Builder;
 import lombok.Data;
 
-@Schema(description = "${sceneEnum.name} - ${table.classComment}导入 Response VO")
+@Schema(description = "${sceneEnum.name} - ${table.classComment}Excel Response VO")
 @Data
 @Builder
-public class ${sceneEnum.prefixClass}${table.className}ImportRespVO {
+public class ${sceneEnum.prefixClass}${table.className}ExcelRespVO {
 
     @Schema(description = "信息", requiredMode = Schema.RequiredMode.REQUIRED)
     private String message;

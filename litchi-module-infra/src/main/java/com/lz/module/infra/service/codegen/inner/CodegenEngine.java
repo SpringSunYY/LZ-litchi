@@ -21,6 +21,8 @@ import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.common.util.string.StrUtils;
 import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
@@ -71,8 +73,8 @@ public class CodegenEngine {
             .put(javaTemplatePath("controller/vo/listReqVO"), javaModuleImplVOFilePath("ListReqVO"))
             .put(javaTemplatePath("controller/vo/respVO"), javaModuleImplVOFilePath("RespVO"))
             .put(javaTemplatePath("controller/vo/saveReqVO"), javaModuleImplVOFilePath("SaveReqVO"))
-            .put(javaTemplatePath("controller/vo/importReqVO"), javaModuleImplVOFilePath("ImportVO"))
-            .put(javaTemplatePath("controller/vo/importRespVO"), javaModuleImplVOFilePath("ImportRespVO"))
+            .put(javaTemplatePath("controller/vo/excelReqVO"), javaModuleImplVOFilePath("ExcelReqVO"))
+            .put(javaTemplatePath("controller/vo/excelRespVO"), javaModuleImplVOFilePath("ExcelRespVO"))
             .put(javaTemplatePath("controller/controller"), javaModuleImplControllerFilePath())
             .put(javaTemplatePath("dal/do"),
                     javaModuleImplMainFilePath("dal/dataobject/${table.businessName}/${table.className}DO"))
@@ -285,6 +287,8 @@ public class CodegenEngine {
         // VO 类，独有字段
         globalBindingMap.put("PageParamClassName", PageParam.class.getName());
         globalBindingMap.put("DictFormatClassName", DictFormat.class.getName());
+        globalBindingMap.put("ExcelColumnSelectClassName", ExcelColumnSelect.class.getName());
+        globalBindingMap.put("ExcelI18nClassName", ExcelI18n.class.getName());
         // DO 类，独有字段
         globalBindingMap.put("BaseDOClassName", BaseDO.class.getName());
         globalBindingMap.put("baseDOFields", CodegenBuilder.BASE_DO_FIELDS);
@@ -342,8 +346,8 @@ public class CodegenEngine {
                     return;
                 }
             }
-            // 2.3 特殊：导入功能（当 isImport 为 1 时关闭）
-            if (!importEnable && isImportTemplate(vmPath)) {
+            // 2.3 特殊：导入功能（当 isImport 为 1 时关闭）- 只对 excelRespVO 做判断
+            if (!importEnable && isExcelRespTemplate(vmPath)) {
                 return;
             }
             // 2.4 默认生成
@@ -433,6 +437,7 @@ public class CodegenEngine {
         bindingMap.put("table", table);
         bindingMap.put("columns", columns);
         bindingMap.put("extendConfig", table.getExtendConfig());
+        bindingMap.put("isI18n", ObjectUtil.equal(table.getExtendConfig().get("isI18n"), "0"));
         bindingMap.put("primaryColumn", CollectionUtils.findFirst(columns, CodegenColumnDO::getPrimaryKey)); // 主键字段
         bindingMap.put("sceneEnum", CodegenSceneEnum.valueOf(table.getScene()));
         // className 相关
@@ -506,18 +511,18 @@ public class CodegenEngine {
             bindingMap.put("respVOClass", prefixClass + className + "RespVO");
             bindingMap.put("saveReqVOVar", "createReqVO");
             bindingMap.put("updateReqVOVar", "updateReqVO");
-            // 导入 VO
-            bindingMap.put("importReqVOClass", prefixClass + className + "ImportVO");
-            bindingMap.put("importRespVOClass", prefixClass + className + "ImportRespVO");
+            // Excel VO
+            bindingMap.put("excelReqVOClass", prefixClass + className + "ExcelReqVO");
+            bindingMap.put("excelRespVOClass", prefixClass + className + "ExcelRespVO");
         } else if (ObjectUtil.equal(codegenProperties.getVoType(), CodegenVOTypeEnum.DO.getType())) {
             bindingMap.put("saveReqVOClass", className + "DO");
             bindingMap.put("updateReqVOClass", className + "DO");
             bindingMap.put("respVOClass", className + "DO");
             bindingMap.put("saveReqVOVar", classNameVar);
             bindingMap.put("updateReqVOVar", classNameVar);
-            // 导入 VO
-            bindingMap.put("importReqVOClass", className + "ImportVO");
-            bindingMap.put("importRespVOClass", className + "ImportRespVO");
+            // Excel VO
+            bindingMap.put("excelReqVOClass", className + "ExcelReqVO");
+            bindingMap.put("excelRespVOClass", className + "ExcelRespVO");
         }
         return bindingMap;
     }
@@ -667,8 +672,8 @@ public class CodegenEngine {
         return path.contains("listReqVO");
     }
 
-    private static boolean isImportTemplate(String path) {
-        return path.contains("importReqVO") || path.contains("importRespVO") || path.contains("import-form");
+    private static boolean isExcelRespTemplate(String path) {
+        return path.contains("excelRespVO") || path.contains("import-form");
     }
 
 }

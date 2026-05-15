@@ -84,7 +84,7 @@ public interface ${table.className}Service {
      * @param list 导入列表
      * @return 导入结果
      */
-    ${importRespVOClass} import${simpleClassName}List(List<${importReqVOClass}> list);
+    ${excelRespVOClass} import${simpleClassName}List(List<${excelReqVOClass}> list);
 #end
 
 ## 特殊：主子表专属逻辑

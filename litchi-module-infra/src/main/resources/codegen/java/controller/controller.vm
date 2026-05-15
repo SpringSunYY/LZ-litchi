@@ -32,10 +32,8 @@ import static ${OperateTypeEnumClassName}.*;
 
 import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.*;
 ## 导入功能专属 VO 导入
-#if ($extendConfig.get('isImport') != '1')
-import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importReqVOClass};
-import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importRespVOClass};
-#end
+import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${excelReqVOClass};
+import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${excelRespVOClass};
 import ${basePackage}.module.${table.moduleName}.dal.dataobject.${table.businessName}.${table.className}DO;
 ## 特殊：主子表专属逻辑
 #foreach ($subTable in $subTables)
@@ -155,8 +153,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<${table.className}DO> list = ${classNameVar}Service.get${simpleClassName}Page(pageReqVO).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "${table.classComment}.xls", "数据", ${respVOClass}.class,
-                        BeanUtils.toBean(list, ${respVOClass}.class));
+        ExcelUtils.write(response, "${table.classComment}.xls", "数据", ${excelReqVOClass}.class,
+                        BeanUtils.toBean(list, ${excelReqVOClass}.class));
     }
 ## 特殊：树表专属逻辑（树不需要分页接口）
 #else
@@ -164,8 +162,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
               HttpServletResponse response) throws IOException {
         List<${table.className}DO> list = ${classNameVar}Service.get${simpleClassName}List(listReqVO);
         // 导出 Excel
-        ExcelUtils.write(response, "${table.classComment}.xls", "数据", ${table.className}RespVO.class,
-                        BeanUtils.toBean(list, ${table.className}RespVO.class));
+        ExcelUtils.write(response, "${table.classComment}.xls", "data", ${excelReqVOClass}.class,
+                        BeanUtils.toBean(list, ${excelReqVOClass}.class));
     }
 #end
 
@@ -178,8 +176,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     @Operation(summary = "获得${table.classComment}导入模板")
     public void importTemplate(HttpServletResponse response) throws IOException {
         // 手动创建导出 demo
-        List<${importReqVOClass}> list = Collections.singletonList(
-                ${importReqVOClass}.builder()
+        List<${excelReqVOClass}> list = Collections.singletonList(
+                ${excelReqVOClass}.builder()
 #foreach ($column in $columns)
 #if ($column.createOperation || $column.updateOperation)
 #if (!$column.primaryKey)
@@ -205,7 +203,7 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #end
                         .build());
         // 输出
-        ExcelUtils.write(response, "${table.classComment}导入模板.xls", "${table.classComment}模板", ${importReqVOClass}.class, list);
+        ExcelUtils.write(response, "${table.classComment}导入模板.xls", "${table.classComment}模板", ${excelReqVOClass}.class, list);
     }
 
     @PostMapping("/import")
@@ -214,8 +212,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:import')")
 #end
-    public CommonResult<${importRespVOClass}> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
-        List<${importReqVOClass}> list = ExcelUtils.read(file, ${importReqVOClass}.class);
+    public CommonResult<${excelRespVOClass}> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
+        List<${excelReqVOClass}> list = ExcelUtils.read(file, ${excelReqVOClass}.class);
         return success(${classNameVar}Service.import${simpleClassName}List(list));
     }
 
