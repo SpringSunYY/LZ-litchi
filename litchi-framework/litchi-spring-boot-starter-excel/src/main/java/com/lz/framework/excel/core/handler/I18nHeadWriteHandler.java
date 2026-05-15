@@ -7,6 +7,8 @@ import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.write.handler.WorkbookWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
 import com.lz.framework.excel.core.annotations.ExcelI18n;
+import com.lz.framework.excel.core.annotations.ExcelDirection;
+import com.lz.framework.excel.core.annotations.ExcelType;
 import com.lz.framework.i18n.core.I18nUtils;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -45,6 +47,10 @@ public class I18nHeadWriteHandler implements WorkbookWriteHandler {
                 continue;
             }
 
+            if (isIgnoreByExcelType(field, ExcelDirection.IMPORT)) {
+                continue;
+            }
+
             ExcelI18n excelI18n = field.getAnnotation(ExcelI18n.class);
             if (excelI18n != null) {
                 String translated = I18nUtils.getMessage(excelI18n.i18nKey(), 0);
@@ -64,6 +70,14 @@ public class I18nHeadWriteHandler implements WorkbookWriteHandler {
     private static boolean isStaticFinalOrTransient(Field field) {
         return (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 || Modifier.isTransient(field.getModifiers());
+    }
+
+    private static boolean isIgnoreByExcelType(Field field, ExcelDirection excludeType) {
+        ExcelType excelType = field.getAnnotation(ExcelType.class);
+        if (excelType == null) {
+            return false;
+        }
+        return excelType.value() == excludeType;
     }
 
     @Override

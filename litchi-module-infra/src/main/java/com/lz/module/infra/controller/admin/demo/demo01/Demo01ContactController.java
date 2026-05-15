@@ -95,8 +95,8 @@ public class Demo01ContactController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<Demo01ContactDO> list = demo01ContactService.getDemo01ContactPage(pageReqVO).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "示例联系人.xls", "数据", Demo01ContactRespVO.class,
-                BeanUtils.toBean(list, Demo01ContactRespVO.class));
+        ExcelUtils.write(response, "示例联系人.xls", "数据", Demo01ContactImportVO.class,
+                BeanUtils.toBean(list, Demo01ContactImportVO.class));
     }
 
     @GetMapping("/get-import-template")

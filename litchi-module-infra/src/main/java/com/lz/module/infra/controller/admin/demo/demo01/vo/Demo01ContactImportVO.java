@@ -3,7 +3,9 @@ package com.lz.module.infra.controller.admin.demo.demo01.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelI18n;
+import com.lz.framework.excel.core.annotations.ExcelType;
 import com.lz.framework.excel.core.convert.DictConvert;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
@@ -26,12 +28,14 @@ public class Demo01ContactImportVO {
     @Schema(description = "名字", example = "王五")
     @ExcelProperty("名字")
     @ExcelI18n(i18nKey = "infra:demo01-contact:field:name")
+    @ExcelType(ExcelDirection.IMPORT)
     private String name;
 
     @Schema(description = "性别")
     @ExcelProperty(value = "性别", converter = DictConvert.class)
     @ExcelColumnSelect(dictType = "system_user_sex")
     @ExcelI18n(i18nKey = "infra:demo01-contact:field:sex")
+    @ExcelType(ExcelDirection.EXPORT)
     private Boolean sex;
 
     @Schema(description = "出生年")

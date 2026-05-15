@@ -3,6 +3,8 @@ package com.lz.framework.excel.core.convert;
 import cn.hutool.core.convert.Convert;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelDirection;
+import com.lz.framework.excel.core.annotations.ExcelType;
 import com.alibaba.excel.converters.Converter;
 import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.metadata.GlobalConfiguration;
@@ -34,11 +36,17 @@ public class DictConvert implements Converter<Object> {
     @Override
     public Object convertToJavaData(ReadCellData readCellData, ExcelContentProperty contentProperty,
                                     GlobalConfiguration globalConfiguration) {
-        String type = getType(contentProperty);
+        if (isIgnoreByExcelType(contentProperty, ExcelDirection.EXPORT)) {
+            return readCellData.getStringValue();
+        }
+        DictFormat dictFormat = getDictFormat(contentProperty);
+        if (dictFormat == null) {
+            return readCellData.getStringValue();
+        }
         String label = readCellData.getStringValue();
-        String value = DictFrameworkUtils.parseDictDataValue(type, label);
+        String value = DictFrameworkUtils.parseDictDataValue(dictFormat.value(), label);
         if (value == null) {
-            log.error("[convertToJavaData][type({}) 解析不掉 label({})]", type, label);
+            log.error("[convertToJavaData][type({}) 解析不掉 label({})]", dictFormat.value(), label);
             return null;
         }
         Class<?> fieldClazz = contentProperty.getField().getType();
@@ -52,18 +60,34 @@ public class DictConvert implements Converter<Object> {
             return new WriteCellData<>("");
         }
 
-        String type = getType(contentProperty);
+        if (isIgnoreByExcelType(contentProperty, ExcelDirection.IMPORT)) {
+            return new WriteCellData<>(String.valueOf(object));
+        }
+
+        DictFormat dictFormat = getDictFormat(contentProperty);
+        if (dictFormat == null) {
+            return new WriteCellData<>(String.valueOf(object));
+        }
+
         String value = String.valueOf(object);
-        String label = DictFrameworkUtils.parseDictDataLabel(type, value);
+        String label = DictFrameworkUtils.parseDictDataLabel(dictFormat.value(), value);
         if (label == null) {
-            log.error("[convertToExcelData][type({}) 转换不了 label({})]", type, value);
+            log.error("[convertToExcelData][type({}) 转换不了 label({})]", dictFormat.value(), value);
             return new WriteCellData<>("");
         }
         return new WriteCellData<>(label);
     }
 
-    private static String getType(ExcelContentProperty contentProperty) {
-        return contentProperty.getField().getAnnotation(DictFormat.class).value();
+    private static DictFormat getDictFormat(ExcelContentProperty contentProperty) {
+        return contentProperty.getField().getAnnotation(DictFormat.class);
+    }
+
+    private static boolean isIgnoreByExcelType(ExcelContentProperty contentProperty, ExcelDirection excludeType) {
+        ExcelType excelType = contentProperty.getField().getAnnotation(ExcelType.class);
+        if (excelType == null) {
+            return false;
+        }
+        return excelType.value() == excludeType;
     }
 
 }

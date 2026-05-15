@@ -3,20 +3,21 @@ package com.lz.framework.excel.core.handler;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjectUtil;
-import cn.hutool.core.util.ReflectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.poi.excel.ExcelUtil;
-import com.lz.framework.common.core.KeyValue;
-import com.lz.framework.dict.core.DictFrameworkUtils;
-import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
-import com.lz.framework.excel.core.function.ExcelColumnSelectFunction;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
+import com.lz.framework.common.core.KeyValue;
+import com.lz.framework.dict.core.DictFrameworkUtils;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelDirection;
+import com.lz.framework.excel.core.annotations.ExcelType;
+import com.lz.framework.excel.core.function.ExcelColumnSelectFunction;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.ss.usermodel.*;
@@ -41,7 +42,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
 
     /**
      * 数据起始行从 0 开始
-     *
+     * <p>
      * 约定：本项目第一行有标题所以从 1 开始如果您的 Excel 有多行标题请自行更改
      */
     public static final int FIRST_ROW = 1;
@@ -64,7 +65,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
         for (Field field : head.getDeclaredFields()) {
             // 关联 https://github.com/SpringSunYY/litchi/pull/853
             // 1.1 忽略 static final 或 transient 的字段
-            if (isStaticFinalOrTransient(field) ) {
+            if (isStaticFinalOrTransient(field)) {
                 continue;
             }
             // 1.2 忽略的字段跳过
@@ -75,6 +76,10 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
 
             // 2. 核心：处理有 ExcelColumnSelect 注解的字段
             if (field.isAnnotationPresent(ExcelColumnSelect.class)) {
+                if (isIgnoreByExcelType(field, ExcelDirection.EXPORT)) {
+                    colIndex++;
+                    continue;
+                }
                 ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
                 if (excelProperty != null && excelProperty.index() != -1) {
                     colIndex = excelProperty.index();
@@ -95,6 +100,14 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
     private boolean isStaticFinalOrTransient(Field field) {
         return (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 || Modifier.isTransient(field.getModifiers());
+    }
+
+    private static boolean isIgnoreByExcelType(Field field, ExcelDirection excludeType) {
+        ExcelType excelType = field.getAnnotation(ExcelType.class);
+        if (excelType == null) {
+            return false;
+        }
+        return excelType.value() == excludeType;
     }
 
 
