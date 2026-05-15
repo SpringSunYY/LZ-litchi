@@ -1,1 +1,2 @@
 com.lz.framework.dict.config.LitchiDictAutoConfiguration
+com.lz.framework.i18n.config.LitchiI18nAutoConfiguration

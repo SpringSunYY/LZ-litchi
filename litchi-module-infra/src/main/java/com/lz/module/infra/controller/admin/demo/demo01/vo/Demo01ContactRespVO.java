@@ -1,6 +1,7 @@
 package com.lz.module.infra.controller.admin.demo.demo01.vo;
 
 import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -16,35 +17,43 @@ public class Demo01ContactRespVO {
 
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "20881")
     @ExcelProperty("编号")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:id")
     private Long id;
 
     @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
     @ExcelProperty("名字")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:")
     private String name;
 
     @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty(value = "性别", converter = DictConvert.class)
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:sex")
     @DictFormat("system_user_sex") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
     private Boolean sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("出生年")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:birthday")
     private LocalDateTime birthday;
 
     @Schema(description = "简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "随便")
     @ExcelProperty("简介")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:description")
     private String description;
 
     @Schema(description = "年龄")
     @ExcelProperty("年龄")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:age")
     private Integer age;
 
     @Schema(description = "头像")
     @ExcelProperty("头像")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:avatar")
     private String avatar;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "infra:demo01-contact:field:createTime")
     private LocalDateTime createTime;
 
 }

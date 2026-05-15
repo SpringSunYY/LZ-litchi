@@ -110,7 +110,6 @@ public class I18nExceptionUtil {
             // 优先查询后端
             String message = i18nService.getMessageByMessageKey(
                     messageKey,
-                    InfraI18nLocaleTargetEnum.LOCALE_TARGET_1.getStatus(),
                     locale);
             if (StrUtil.isNotBlank(message)) {
                 return message;

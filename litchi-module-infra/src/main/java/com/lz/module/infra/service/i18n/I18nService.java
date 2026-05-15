@@ -32,9 +32,8 @@ public interface I18nService {
      * 根据 messageKey 获取国际化消息
      *
      * @param messageKey      消息键名
-     * @param localeTarget    使用端
      * @param acceptLanguage  Accept-Language 请求头
      * @return 国际化消息，未找到返回 null
      */
-    String getMessageByMessageKey(String messageKey, Integer localeTarget, String acceptLanguage);
+    String getMessageByMessageKey(String messageKey,  String acceptLanguage);
 }

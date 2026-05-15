@@ -122,18 +122,10 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     }
 
     @Override
-    public I18nMessageDO getMessageByMessageKey(String messageKey, Integer localeTarget, String acceptLanguage) {
-        //查询通用和类型是这个的target，优先使用精确匹配的target，没有则使用通用的
+    public I18nMessageDO getMessageByMessageKey(String messageKey, String acceptLanguage) {
         LambdaQueryWrapper<I18nMessageDO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.and(wrapper ->
-                wrapper.eq(I18nMessageDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
-                        .or()
-                        .eq(I18nMessageDO::getLocaleTarget, localeTarget));
         queryWrapper.eq(I18nMessageDO::getMessageKey, messageKey);
         queryWrapper.eq(I18nMessageDO::getLocale, acceptLanguage);
-        // 按 localeTarget 降序排序，优先返回精确匹配的（localeTarget > 0），其次返回通用的（localeTarget = 0）
-        queryWrapper.orderByDesc(I18nMessageDO::getLocaleTarget);
-        queryWrapper.last("LIMIT 1");
         return i18nMessageMapper.selectOne(queryWrapper);
     }
 

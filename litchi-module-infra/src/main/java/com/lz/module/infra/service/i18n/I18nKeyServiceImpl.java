@@ -43,7 +43,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         // 插入
         I18nKeyDO i18nKey = BeanUtils.toBean(createReqVO, I18nKeyDO.class);
         //查询键是否存在
-        I18nKeyDO i18nKeyDO = i18nKeyMapper.selectOne(I18nKeyDO::getMessageKey, i18nKey.getMessageKey());
+        I18nKeyDO i18nKeyDO = i18nKeyMapper.selectFirstOne(I18nKeyDO::getMessageKey, i18nKey.getMessageKey());
         if (ObjectUtils.isNotNull(i18nKeyDO)) {
             throw exception(I18N_KEY_EXISTS);
         }
