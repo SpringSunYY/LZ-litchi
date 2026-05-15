@@ -153,6 +153,8 @@ litchi:
   web:
     admin-ui:
       url: http://dashboard.litchi.iocoder.cn # Admin 管理后台 UI 的地址
+  i18n:
+    default-locale: zh-CN
   xss:
     enable: false
     exclude-urls: # 如下两个 url，仅仅是为了演示，去掉配置也没关系

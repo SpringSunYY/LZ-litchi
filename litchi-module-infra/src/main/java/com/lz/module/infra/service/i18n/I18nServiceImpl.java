@@ -45,7 +45,7 @@ public class I18nServiceImpl implements I18nService {
 
     @Override
     @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
-    public String getMessageByMessageKey(String messageKey,  String acceptLanguage) {
+    public String getMessageByMessageKey(String messageKey, String acceptLanguage) {
         I18nMessageDO i18nMessage = i18nMessageService.getMessageByMessageKey(messageKey, acceptLanguage);
         return i18nMessage != null ? i18nMessage.getMessage() : null;
     }
