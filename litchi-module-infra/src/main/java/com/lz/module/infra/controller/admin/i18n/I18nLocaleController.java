@@ -44,6 +44,15 @@ public class I18nLocaleController {
         return success(i18nLocaleService.createI18nLocale(createReqVO));
     }
 
+
+    @DeleteMapping("/clearn-cache")
+    @Operation(summary = "清理国际化国家缓存")
+    @PreAuthorize("@ss.hasPermission('infra:locale:delete')")
+    public CommonResult<Boolean> clearI18nLocaleCache() {
+        i18nLocaleService.clearI18nCache();
+        return success(true);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "更新国际化国家")
     @PreAuthorize("@ss.hasPermission('infra:locale:update')")

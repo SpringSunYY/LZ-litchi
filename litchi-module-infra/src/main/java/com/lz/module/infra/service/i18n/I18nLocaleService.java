@@ -65,4 +65,10 @@ public interface I18nLocaleService {
      * @return 国际化国家列表
      */
     List<I18nLocaleDO> getI18nLocaleByLocaleTarget(Integer localeTarget);
+
+    /**
+     * 清理国际化缓存
+     */
+    void clearI18nCache();
+
 }

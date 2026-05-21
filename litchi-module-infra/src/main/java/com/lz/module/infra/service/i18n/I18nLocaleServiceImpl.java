@@ -13,6 +13,7 @@ import com.lz.module.infra.dal.mysql.i18n.I18nLocaleMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
+import com.lz.framework.redis.core.RedisUtils;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -34,6 +35,9 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
 
     @Resource
     private I18nLocaleMapper i18nLocaleMapper;
+
+    @Resource
+    private RedisUtils redisUtils;
 
     @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE)
     @Override
@@ -147,5 +151,10 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         queryWrapper.eq(I18nLocaleDO::getLocaleStatus, InfraI18nLocaleStatusEnum.LOCALE_STATUS_0.getStatus());
         queryWrapper.orderByAsc(I18nLocaleDO::getOrderNum);
         return i18nLocaleMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public void clearI18nCache() {
+        redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE,RedisKeyConstants.I18N_MESSAGE);
     }
 }
