@@ -26,31 +26,37 @@ import java.time.${column.javaType};
 #end
 #end
 
-@Schema(description = "${sceneEnum.name} - ${table.classComment}Excel Request VO")
+@Schema(description = "${sceneEnum.name} - ${table.classComment}Excel VO")
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Accessors(chain = false)
-public class ${sceneEnum.prefixClass}${table.className}ExcelReqVO {
+public class ${sceneEnum.prefixClass}${table.className}ExcelVO {
 
 #foreach ($column in $columns)
 #if ($column.createOperation || $column.updateOperation)
 #if (!$column.primaryKey)
-    @Schema(description = "${column.columnComment}"#if ("$!column.example" != ""), example = "${column.example}"#end)
-#if (${column.javaType} == "LocalDateTime")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-#elseif (${column.javaType} == "LocalDate")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-#end
 #if ("" != $column.dictType)
     @ExcelProperty(value = "${column.columnComment}", converter = DictConvert.class)
+#if ($isI18n)
+    @ExcelColumnSelect(dictType = "${column.dictType}", i18n = true)
+#else
     @ExcelColumnSelect(dictType = "${column.dictType}")
+#end
 #if ($isI18n)
     @ExcelI18n(i18nKey = "${table.moduleName}:${table.businessName}:field:${column.javaField}")
 #end
 #else
+#if (${column.javaType} == "LocalDateTime")
+    @ExcelProperty(value = "${column.columnComment}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+#elseif (${column.javaType} == "LocalDate")
+    @ExcelProperty(value = "${column.columnComment}")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+#else
     @ExcelProperty("${column.columnComment}")
+#end
 #if ($isI18n)
     @ExcelI18n(i18nKey = "${table.moduleName}:${table.businessName}:field:${column.javaField}")
 #end

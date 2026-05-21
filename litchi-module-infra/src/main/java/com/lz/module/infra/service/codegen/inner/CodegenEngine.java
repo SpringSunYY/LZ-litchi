@@ -73,7 +73,7 @@ public class CodegenEngine {
             .put(javaTemplatePath("controller/vo/listReqVO"), javaModuleImplVOFilePath("ListReqVO"))
             .put(javaTemplatePath("controller/vo/respVO"), javaModuleImplVOFilePath("RespVO"))
             .put(javaTemplatePath("controller/vo/saveReqVO"), javaModuleImplVOFilePath("SaveReqVO"))
-            .put(javaTemplatePath("controller/vo/excelReqVO"), javaModuleImplVOFilePath("ExcelReqVO"))
+            .put(javaTemplatePath("controller/vo/excelVO"), javaModuleImplVOFilePath("ExcelVO"))
             .put(javaTemplatePath("controller/vo/excelRespVO"), javaModuleImplVOFilePath("ExcelRespVO"))
             .put(javaTemplatePath("controller/controller"), javaModuleImplControllerFilePath())
             .put(javaTemplatePath("dal/do"),
@@ -512,7 +512,7 @@ public class CodegenEngine {
             bindingMap.put("saveReqVOVar", "createReqVO");
             bindingMap.put("updateReqVOVar", "updateReqVO");
             // Excel VO
-            bindingMap.put("excelReqVOClass", prefixClass + className + "ExcelReqVO");
+            bindingMap.put("excelReqVOClass", prefixClass + className + "ExcelVO");
             bindingMap.put("excelRespVOClass", prefixClass + className + "ExcelRespVO");
         } else if (ObjectUtil.equal(codegenProperties.getVoType(), CodegenVOTypeEnum.DO.getType())) {
             bindingMap.put("saveReqVOClass", className + "DO");
@@ -521,7 +521,7 @@ public class CodegenEngine {
             bindingMap.put("saveReqVOVar", classNameVar);
             bindingMap.put("updateReqVOVar", classNameVar);
             // Excel VO
-            bindingMap.put("excelReqVOClass", className + "ExcelReqVO");
+            bindingMap.put("excelReqVOClass", className + "ExcelVO");
             bindingMap.put("excelRespVOClass", className + "ExcelRespVO");
         }
         return bindingMap;

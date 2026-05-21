@@ -96,8 +96,8 @@ public class Demo01ContactController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<Demo01ContactDO> list = demo01ContactService.getDemo01ContactPage(pageReqVO).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "示例联系人.xls", "数据", Demo01ContactExcelReqVO.class,
-                BeanUtils.toBean(list, Demo01ContactExcelReqVO.class));
+        ExcelUtils.write(response, "示例联系人.xls", "数据", Demo01ContactExcelVO.class,
+                BeanUtils.toBean(list, Demo01ContactExcelVO.class));
     }
 
     @GetMapping("/get-import-template")
@@ -105,8 +105,8 @@ public class Demo01ContactController {
     @Operation(summary = "获得示例联系人导入模板")
     public void importTemplate(HttpServletResponse response) throws IOException {
         // 手动创建导出 demo（sex=null 表示下拉选择，后端会翻译为当前语言的下拉选项）
-        List<Demo01ContactExcelReqVO> list = Collections.singletonList(
-                Demo01ContactExcelReqVO.builder()
+        List<Demo01ContactExcelVO> list = Collections.singletonList(
+                Demo01ContactExcelVO.builder()
                         .name("王五")
                         .sex(null)
                         .birthday(null)
@@ -115,7 +115,7 @@ public class Demo01ContactController {
                         .avatar(null)
                         .build());
         // 输出
-        ExcelUtils.write(response, "示例联系人导入模板.xls", "示例联系人模板", Demo01ContactExcelReqVO.class, list);
+        ExcelUtils.write(response, "示例联系人导入模板.xls", "示例联系人模板", Demo01ContactExcelVO.class, list);
     }
 
     @PostMapping("/import")
@@ -123,7 +123,7 @@ public class Demo01ContactController {
     @Parameter(name = "file", description = "Excel 文件", required = true)
     @PreAuthorize("@ss.hasPermission('infra:demo01-contact:import')")
     public CommonResult<Demo01ContactExcelRespVO> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
-        List<Demo01ContactExcelReqVO> list = ExcelUtils.read(file, Demo01ContactExcelReqVO.class);
+        List<Demo01ContactExcelVO> list = ExcelUtils.read(file, Demo01ContactExcelVO.class);
         return success(demo01ContactService.importDemo01ContactList(list));
     }
 }

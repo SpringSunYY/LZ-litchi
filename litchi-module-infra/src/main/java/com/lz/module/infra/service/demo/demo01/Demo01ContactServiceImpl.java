@@ -86,13 +86,13 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Demo01ContactExcelRespVO importDemo01ContactList(List<Demo01ContactExcelReqVO> list) {
+    public Demo01ContactExcelRespVO importDemo01ContactList(List<Demo01ContactExcelVO> list) {
         if (CollUtil.isEmpty(list)) {
             throw I18nExceptionUtil.exception(ERROR_CODE_IMPORT_DATA_EMPTY);
         }
         List<Demo01ContactDO> createList = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {
-            Demo01ContactExcelReqVO importVO = list.get(i);
+            Demo01ContactExcelVO importVO = list.get(i);
             Demo01ContactDO demo01Contact = BeanUtils.toBean(importVO, Demo01ContactDO.class);
             createList.add(demo01Contact);
         }

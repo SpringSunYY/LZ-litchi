@@ -1,10 +1,10 @@
-package com.lz.module.infra.service.i18n;
+package com.lz.module.infra.api.i18n;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.biz.infra.i18n.I18nCommonApi;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.framework.i18n.config.I18nProperties;
+import com.lz.module.infra.service.i18n.I18nMessageService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -39,8 +39,8 @@ public class I18nCommonApiImpl implements I18nCommonApi {
             if (message != null && StrUtil.isNotEmpty(message.getMessage())) {
                 return message.getMessage();
             }
-            // 2. 匹配不到匹配中文
-            message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, "zh-CN");
+            // 2. 匹配不到匹配默认语言
+            message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, i18nProperties.getDefaultLocale());
             if (message != null && StrUtil.isNotEmpty(message.getMessage())) {
                 return message.getMessage();
             }

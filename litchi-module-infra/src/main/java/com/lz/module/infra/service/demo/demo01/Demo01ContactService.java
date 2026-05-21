@@ -1,7 +1,7 @@
 package com.lz.module.infra.service.demo.demo01;
 
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactExcelReqVO;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactExcelVO;
 import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactExcelRespVO;
 import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactPageReqVO;
 import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactSaveReqVO;
@@ -69,5 +69,5 @@ public interface Demo01ContactService {
      * @param list 导入列表
      * @return 导入结果
      */
-    Demo01ContactExcelRespVO importDemo01ContactList(List<Demo01ContactExcelReqVO> list);
+    Demo01ContactExcelRespVO importDemo01ContactList(List<Demo01ContactExcelVO> list);
 }
