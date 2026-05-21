@@ -138,12 +138,21 @@ function handleRowCheckboxChange({
 }
 #end
 
-/** 导出表格 */
+  /** 导出${table.classComment} */
+const exportLoading = ref(false);
 async function handleExport() {
-  const data = await export${simpleClassName}(await gridApi.formApi.getValues());
-  downloadFileFromBlobPart({ fileName: #if($isI18n)$t('${table.moduleName}.${table.businessName}')#else '${table.classComment}'#end + '.xls', source: data });
+    try {
+      exportLoading.value = true;
+      message.loading({
+        content: $t('ui.actionMessage.exporting'),
+        key: 'action_key_msg',
+      });
+      const data = await export${simpleClassName}(await gridApi.formApi.getValues());
+      downloadFileFromBlobPart({ fileName: #if($isI18n)$t('${table.moduleName}.${table.businessName}')#else '${table.classComment}'#end + '.xls', source: data });
+    }finally {
+      exportLoading.value = false;
+    }
 }
-
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
     schema: useGridFormSchema(),
@@ -283,6 +292,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
               icon: ACTION_ICON.DOWNLOAD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:export'],
               onClick: handleExport,
+              loading: exportLoading,
             },
             #if ($table.templateType != 2 && $deleteBatchEnable)
             {

@@ -193,6 +193,10 @@ function handleRowCheckboxChange({
 async function onExport() {
 try {
   exportLoading.value = true;
+  message.loading({
+    content: $t('ui.actionMessage.exporting'),
+    key: 'action_key_msg',
+  });
   const data = await export${simpleClassName}(queryParams);
   downloadFileFromBlobPart({ #if($isI18n)fileName: $t('${table.moduleName}:${simpleClassName_strikeCase}'),#else fileName: '${table.classComment}.xls',#end source: data });
 }finally {

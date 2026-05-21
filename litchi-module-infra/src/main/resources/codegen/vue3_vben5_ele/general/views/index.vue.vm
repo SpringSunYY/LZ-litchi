@@ -187,6 +187,10 @@ function handleRowCheckboxChange({
 /** 导出表格 */
 async function onExport() {
 try {
+  message.loading({
+    content: $t('ui.actionMessage.exporting'),
+    key: 'action_key_msg',
+  });
   exportLoading.value = true;
   const data = await export${simpleClassName}(queryParams);
   downloadFileFromBlobPart({ #if($isI18n)fileName: $t('${table.moduleName}:${simpleClassName_strikeCase}'),#else fileName: '${table.classComment}.xls',#end source: data });
