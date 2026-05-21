@@ -10,6 +10,7 @@ import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelType;
 import com.lz.framework.i18n.core.I18nUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -26,7 +27,10 @@ import java.util.Map;
  *
  * @author YY
  */
+@Slf4j
 public class I18nHeadWriteHandler implements WorkbookWriteHandler {
+
+    private static final String DICT_SHEET_NAME = "dict sheet";
 
     private final Map<Integer, String> translatedHeadMap = new LinkedHashMap<>();
 
@@ -46,24 +50,24 @@ public class I18nHeadWriteHandler implements WorkbookWriteHandler {
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
-
             if (isIgnoreByExcelType(field, ExcelDirection.IMPORT)) {
                 continue;
             }
 
             ExcelI18n excelI18n = field.getAnnotation(ExcelI18n.class);
+            ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
+
+            int explicitIndex = excelProperty != null ? excelProperty.index() : -1;
+            int fieldColIndex = explicitIndex != -1 ? explicitIndex : colIndex;
+
             if (excelI18n != null) {
-                String translated = I18nUtils.getMessage(excelI18n.i18nKey(), 0);
+                String translated = I18nUtils.getMessage(excelI18n.i18nKey());
                 if (translated != null) {
-                    translatedHeadMap.put(colIndex, translated);
+                    translatedHeadMap.put(fieldColIndex, translated);
                 }
             }
 
-            ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
-            if (excelProperty != null && excelProperty.index() != -1) {
-                colIndex = excelProperty.index();
-            }
-            colIndex++;
+            colIndex = fieldColIndex + 1;
         }
     }
 
@@ -90,6 +94,11 @@ public class I18nHeadWriteHandler implements WorkbookWriteHandler {
         Iterator<Sheet> sheetIterator = workbook.sheetIterator();
         while (sheetIterator.hasNext()) {
             Sheet sheet = sheetIterator.next();
+            // 跳过字典 sheet，避免修改下拉数据源
+            if (DICT_SHEET_NAME.equals(sheet.getSheetName())) {
+                continue;
+            }
+
             Row headerRow = sheet.getRow(0);
             if (headerRow == null) {
                 continue;

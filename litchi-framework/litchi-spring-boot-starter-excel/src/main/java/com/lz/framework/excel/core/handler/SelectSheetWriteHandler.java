@@ -13,11 +13,13 @@ import com.alibaba.excel.write.handler.SheetWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
 import com.lz.framework.common.core.KeyValue;
+import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelType;
 import com.lz.framework.excel.core.function.ExcelColumnSelectFunction;
+import com.lz.framework.i18n.core.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFDataValidation;
 import org.apache.poi.ss.usermodel.*;
@@ -26,9 +28,11 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.lz.framework.common.util.collection.CollectionUtils.convertList;
 
@@ -51,7 +55,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
      */
     public static final int LAST_ROW = 2000;
 
-    private static final String DICT_SHEET_NAME = "字典sheet";
+    private static final String DICT_SHEET_NAME = "dict sheet";
 
     /**
      * key: 列 value: 下拉数据源
@@ -59,22 +63,17 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
     private final Map<Integer, List<String>> selectMap = new HashMap<>();
 
     public SelectSheetWriteHandler(Class<?> head) {
-        // 解析下拉数据
         int colIndex = 0;
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
         for (Field field : head.getDeclaredFields()) {
-            // 关联 https://github.com/SpringSunYY/litchi/pull/853
-            // 1.1 忽略 static final 或 transient 的字段
             if (isStaticFinalOrTransient(field)) {
                 continue;
             }
-            // 1.2 忽略的字段跳过
             if ((ignoreUnannotated && !field.isAnnotationPresent(ExcelProperty.class))
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
 
-            // 2. 核心：处理有 ExcelColumnSelect 注解的字段
             if (field.isAnnotationPresent(ExcelColumnSelect.class)) {
                 if (isIgnoreByExcelType(field, ExcelDirection.EXPORT)) {
                     colIndex++;
@@ -121,12 +120,20 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
         ExcelColumnSelect columnSelect = field.getAnnotation(ExcelColumnSelect.class);
         String dictType = columnSelect.dictType();
         String functionName = columnSelect.functionName();
+        boolean i18n = columnSelect.i18n();
+
         Assert.isTrue(ObjectUtil.isNotEmpty(dictType) || ObjectUtil.isNotEmpty(functionName),
                 "Field({}) 的 @ExcelColumnSelect 注解，dictType 和 functionName 不能同时为空", field.getName());
 
         // 情况一：使用 dictType 获得下拉数据
-        if (StrUtil.isNotEmpty(dictType)) { // 情况一： 字典数据 （默认）
-            selectMap.put(colIndex, DictFrameworkUtils.getDictDataLabelList(dictType));
+        if (StrUtil.isNotEmpty(dictType)) {
+            List<String> labels;
+            if (i18n) {
+                labels = translateDropdownLabels(columnSelect);
+            } else {
+                labels = DictFrameworkUtils.getDictDataLabelList(dictType);
+            }
+            selectMap.put(colIndex, labels);
             return;
         }
 
@@ -137,31 +144,62 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
         selectMap.put(colIndex, function.getOptions());
     }
 
+    /**
+     * 翻译下拉选项的 label（用于导出时显示当前语言的翻译）
+     * <p>
+     * 遍历字典数据，构建国际化 key（格式：前缀_字典类型_value），
+     * 查询翻译后返回。如果未查到翻译，则使用原始 label。
+     *
+     * @param columnSelect 列选择注解
+     * @return 翻译后的 label 列表
+     */
+    private List<String> translateDropdownLabels(ExcelColumnSelect columnSelect) {
+        String dictType = columnSelect.dictType();
+        String prefix = columnSelect.prefix();
+
+        List<DictDataRespDTO> dictDatas = DictFrameworkUtils.getDictDataList(dictType);
+        if (CollUtil.isEmpty(dictDatas)) {
+            return Collections.emptyList();
+        }
+
+        return dictDatas.stream()
+                .map(data -> {
+                    String i18nKey = prefix + "_" + dictType + "_" + data.getValue();
+                    String translated = I18nUtils.getMessage(i18nKey);
+                    return StrUtil.isNotEmpty(translated) ? translated : data.getLabel();
+                })
+                .collect(Collectors.toList());
+    }
+
     @Override
     public void afterSheetCreate(WriteWorkbookHolder writeWorkbookHolder, WriteSheetHolder writeSheetHolder) {
         if (CollUtil.isEmpty(selectMap)) {
+            log.warn("[afterSheetCreate] selectMap is empty");
             return;
         }
 
         // 1. 获取相应操作对象
-        DataValidationHelper helper = writeSheetHolder.getSheet().getDataValidationHelper(); // 需要设置下拉框的 sheet 页的数据验证助手
-        Workbook workbook = writeWorkbookHolder.getWorkbook(); // 获得工作簿
+        DataValidationHelper helper = writeSheetHolder.getSheet().getDataValidationHelper();
+        Workbook workbook = writeWorkbookHolder.getWorkbook();
         List<KeyValue<Integer, List<String>>> keyValues = convertList(selectMap.entrySet(), entry -> new KeyValue<>(entry.getKey(), entry.getValue()));
-        keyValues.sort(Comparator.comparing(item -> item.getValue().size())); // 升序不然创建下拉会报错
+        keyValues.sort(Comparator.comparing(item -> item.getValue().size()));
 
         // 2. 创建数据字典的 sheet 页
         Sheet dictSheet = workbook.createSheet(DICT_SHEET_NAME);
+
         for (KeyValue<Integer, List<String>> keyValue : keyValues) {
-            int rowLength = keyValue.getValue().size();
-            // 2.1 设置字典 sheet 页的值，每一列一个字典项
+            int colIndex = keyValue.getKey();
+            List<String> options = keyValue.getValue();
+
+            int rowLength = options.size();
             for (int i = 0; i < rowLength; i++) {
                 Row row = dictSheet.getRow(i);
                 if (row == null) {
                     row = dictSheet.createRow(i);
                 }
-                row.createCell(keyValue.getKey()).setCellValue(keyValue.getValue().get(i));
+                row.createCell(colIndex).setCellValue(options.get(i));
             }
-            // 2.2 设置单元格下拉选择
+
             setColumnSelect(writeSheetHolder, workbook, helper, keyValue);
         }
     }
@@ -171,30 +209,33 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
      */
     private static void setColumnSelect(WriteSheetHolder writeSheetHolder, Workbook workbook, DataValidationHelper helper,
                                         KeyValue<Integer, List<String>> keyValue) {
-        // 1.1 创建可被其他单元格引用的名称
-        Name name = workbook.createName();
-        String excelColumn = ExcelUtil.indexToColName(keyValue.getKey());
-        // 1.2 下拉框数据来源 eg:字典sheet!$B1:$B2
-        String refers = DICT_SHEET_NAME + "!$" + excelColumn + "$1:$" + excelColumn + "$" + keyValue.getValue().size();
-        name.setNameName("dict" + keyValue.getKey()); // 设置名称的名字
-        name.setRefersToFormula(refers); // 设置公式
+        int colIndex = keyValue.getKey();
+        int optionCount = keyValue.getValue().size();
 
-        // 2.1 设置约束
-        DataValidationConstraint constraint = helper.createFormulaListConstraint("dict" + keyValue.getKey()); // 设置引用约束
-        // 设置下拉单元格的首行、末行、首列、末列
-        CellRangeAddressList rangeAddressList = new CellRangeAddressList(FIRST_ROW, LAST_ROW,
-                keyValue.getKey(), keyValue.getKey());
+        // 1. 创建名称
+        Name name = workbook.createName();
+        String excelColumn = ExcelUtil.indexToColName(colIndex);
+        String nameName = "dict" + colIndex;
+        // sheet 名称包含空格时需要用单引号包裹
+        String refers = "'" + DICT_SHEET_NAME + "'!$" + excelColumn + "$1:$" + excelColumn + "$" + optionCount;
+
+        name.setNameName(nameName);
+        name.setRefersToFormula(refers);
+
+        // 2. 创建验证约束
+        DataValidationConstraint constraint = helper.createFormulaListConstraint(nameName);
+        CellRangeAddressList rangeAddressList = new CellRangeAddressList(FIRST_ROW, LAST_ROW, colIndex, colIndex);
         DataValidation validation = helper.createValidation(constraint, rangeAddressList);
+
         if (validation instanceof HSSFDataValidation) {
             validation.setSuppressDropDownArrow(false);
         } else {
             validation.setSuppressDropDownArrow(true);
             validation.setShowErrorBox(true);
         }
-        // 2.2 阻止输入非下拉框的值
         validation.setErrorStyle(DataValidation.ErrorStyle.STOP);
         validation.createErrorBox("提示", "此值不存在于下拉选择中！");
-        // 2.3 添加下拉框约束
+
         writeSheetHolder.getSheet().addValidationData(validation);
     }
 

@@ -1,22 +1,24 @@
 package com.lz.framework.excel.core.util;
 
-import com.lz.framework.common.util.http.HttpUtils;
-import com.lz.framework.excel.core.handler.I18nHeadWriteHandler;
-import com.lz.framework.excel.core.handler.SelectSheetWriteHandler;
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.converters.longconverter.LongStringConverter;
 import com.alibaba.excel.write.style.column.LongestMatchColumnWidthStyleStrategy;
+import com.lz.framework.common.util.http.HttpUtils;
+import com.lz.framework.excel.core.handler.I18nHeadWriteHandler;
+import com.lz.framework.excel.core.handler.SelectSheetWriteHandler;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 
 /**
  * Excel 工具类
  *
  * @author 荔枝源码
  */
+@Slf4j
 public class ExcelUtils {
 
     /**
@@ -46,9 +48,13 @@ public class ExcelUtils {
     }
 
     public static <T> List<T> read(MultipartFile file, Class<T> head) throws IOException {
-        return EasyExcel.read(file.getInputStream(), head, null)
-                .autoCloseStream(false)  // 不要自动关闭，交给 Servlet 自己处理
-                .doReadAllSync();
-    }
+        // 生成 i18n VO 类，将 @ExcelI18n 字段的 @ExcelProperty value 替换为 i18n 翻译后的表头
+        Class<? extends T> i18nClass = I18nClassUtils.buildI18nClass(head);
 
+        // 直接交给 EasyExcel 处理：列头匹配 + 类型转换 + 字段赋值
+        return EasyExcel.read(file.getInputStream())
+                .head(i18nClass)
+                .sheet(0)
+                .doReadSync();
+    }
 }

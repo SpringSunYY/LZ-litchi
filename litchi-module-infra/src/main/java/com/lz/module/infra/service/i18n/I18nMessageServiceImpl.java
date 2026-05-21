@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
@@ -14,6 +15,7 @@ import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -29,6 +31,7 @@ import static com.lz.module.infra.enums.ErrorCodeConstants.I18N_MESSAGE_NOT_EXIS
  * @author 荔枝软件
  */
 @Service
+@Slf4j
 @Validated
 public class I18nMessageServiceImpl implements I18nMessageService {
 
@@ -41,10 +44,9 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         // 插入
         I18nMessageDO i18nMessage = BeanUtils.toBean(createReqVO, I18nMessageDO.class);
         //根据简称、key、使用端查询是否存在
-        I18nMessageDO dbI18nMessage = i18nMessageMapper.selectByMessageKeyAndLocaleAndTarget(
+        I18nMessageDO dbI18nMessage = i18nMessageMapper.selectByMessageKey(
                 i18nMessage.getMessageKey(),
-                i18nMessage.getLocale(),
-                i18nMessage.getLocaleTarget()
+                i18nMessage.getLocale()
         );
         if (ObjectUtils.isNotNull(dbI18nMessage)) {
             throw I18nExceptionUtil.exception(I18N_MESSAGE_EXISTS);
@@ -61,10 +63,9 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         I18nMessageDO i18nMessageDO = validateI18nMessageExists(updateReqVO.getId());
         // 更新
         I18nMessageDO updateObj = BeanUtils.toBean(updateReqVO, I18nMessageDO.class);
-        I18nMessageDO dbI18nMessage = i18nMessageMapper.selectByMessageKeyAndLocaleAndTarget(
+        I18nMessageDO dbI18nMessage = i18nMessageMapper.selectByMessageKey(
                 updateObj.getMessageKey(),
-                updateObj.getLocale(),
-                updateObj.getLocaleTarget()
+                updateObj.getLocale()
         );
         if (ObjectUtils.isNotNull(dbI18nMessage)
             && !dbI18nMessage.getId().equals(updateReqVO.getId())) {
@@ -123,10 +124,21 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
     @Override
     public I18nMessageDO getMessageByMessageKey(String messageKey, String acceptLanguage) {
-        LambdaQueryWrapper<I18nMessageDO> queryWrapper = new LambdaQueryWrapper<>();
+        LambdaQueryWrapperX<I18nMessageDO> queryWrapper = new LambdaQueryWrapperX<>();
         queryWrapper.eq(I18nMessageDO::getMessageKey, messageKey);
-        queryWrapper.eq(I18nMessageDO::getLocale, acceptLanguage);
+        queryWrapper.eqIfPresent(I18nMessageDO::getLocale, acceptLanguage);
         return i18nMessageMapper.selectOne(queryWrapper);
+    }
+
+    @Override
+    public List<I18nMessageDO> getMessageListByMessageKey(String messageKey) {
+        return i18nMessageMapper.selectListByMessageKey(messageKey);
+    }
+
+    @Override
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    public I18nMessageDO getMessageByMessageKeyAndLocale(String messageKey, String locale) {
+        return i18nMessageMapper.selectByMessageKey(messageKey, locale);
     }
 
 }

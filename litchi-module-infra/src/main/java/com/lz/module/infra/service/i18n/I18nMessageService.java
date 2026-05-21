@@ -77,4 +77,21 @@ public interface I18nMessageService {
      * @return 国际化信息
      */
     I18nMessageDO getMessageByMessageKey(String messageKey, String acceptLanguage);
+
+    /**
+     * 根据国际化键名查询所有语言的翻译
+     *
+     * @param messageKey 国际化键名
+     * @return 所有语言的翻译列表
+     */
+    List<I18nMessageDO> getMessageListByMessageKey(String messageKey);
+
+    /**
+     * 根据国际化键名、语言和使用端查询翻译
+     *
+     * @param messageKey  国际化键名
+     * @param locale      语言
+     * @return 国际化信息
+     */
+    I18nMessageDO getMessageByMessageKeyAndLocale(String messageKey, String locale);
 }

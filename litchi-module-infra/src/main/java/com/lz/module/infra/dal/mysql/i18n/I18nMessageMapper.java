@@ -7,6 +7,8 @@ import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import org.apache.ibatis.annotations.Mapper;
 
+import java.util.List;
+
 /**
  * 国际化信息 Mapper
  *
@@ -29,12 +31,21 @@ public interface I18nMessageMapper extends BaseMapperX<I18nMessageDO> {
                 .orderByDesc(I18nMessageDO::getId));
     }
 
-    default I18nMessageDO selectByMessageKeyAndLocaleAndTarget(String messageKey, String locale, Integer localeTarget) {
+    default I18nMessageDO selectByMessageKey(String messageKey, String locale) {
         return selectOne(new LambdaQueryWrapperX<I18nMessageDO>()
                 .eq(I18nMessageDO::getMessageKey, messageKey)
-                .eq(I18nMessageDO::getLocale, locale)
-                .eq(I18nMessageDO::getLocaleTarget, localeTarget));
+                .eq(I18nMessageDO::getLocale, locale));
     }
 
-    ;
+    /**
+     * 根据消息键名查询所有语言的翻译
+     *
+     * @param messageKey 消息键名
+     * @return 所有语言的翻译列表
+     */
+    default List<I18nMessageDO> selectListByMessageKey(String messageKey) {
+        return selectList(new LambdaQueryWrapperX<I18nMessageDO>()
+                .eq(I18nMessageDO::getMessageKey, messageKey));
+    }
+
 }

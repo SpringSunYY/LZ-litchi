@@ -93,7 +93,7 @@ public class CodegenServiceImpl implements CodegenService {
         List<CodegenColumnDO> columns = codegenBuilder.buildColumns(table.getId(), tableInfo.getFields());
         // 如果没有主键，则使用第一个字段作为主键
         if (!tableInfo.isHavePrimaryKey()) {
-            columns.get(0).setPrimaryKey(true);
+            columns.getFirst().setPrimaryKey(true);
         }
         codegenColumnMapper.insertBatch(columns);
         return table.getId();

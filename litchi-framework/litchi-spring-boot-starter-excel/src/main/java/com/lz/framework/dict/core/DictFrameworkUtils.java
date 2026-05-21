@@ -41,7 +41,6 @@ public class DictFrameworkUtils {
 
     public static void init(DictDataCommonApi dictDataApi) {
         DictFrameworkUtils.dictDataApi = dictDataApi;
-        log.info("[init][初始化 DictFrameworkUtils 成功]");
     }
 
     public static void clearCache() {
@@ -59,6 +58,10 @@ public class DictFrameworkUtils {
     @SneakyThrows
     public static String parseDictDataLabel(String dictType, String value) {
         List<DictDataRespDTO> dictDatas = GET_DICT_DATA_CACHE.get(dictType);
+        if (CollUtil.isEmpty(dictDatas)) {
+            log.warn("[parseDictDataLabel] dictType={} has no data", dictType);
+            return null;
+        }
         DictDataRespDTO dictData = CollUtil.findOne(dictDatas, data -> Objects.equals(data.getValue(), value));
         return dictData != null ? dictData.getLabel(): null;
     }
@@ -74,6 +77,11 @@ public class DictFrameworkUtils {
         List<DictDataRespDTO> dictDatas = GET_DICT_DATA_CACHE.get(dictType);
         DictDataRespDTO dictData = CollUtil.findOne(dictDatas, data -> Objects.equals(data.getLabel(), label));
         return dictData!= null ? dictData.getValue(): null;
+    }
+
+    @SneakyThrows
+    public static List<DictDataRespDTO> getDictDataList(String dictType) {
+        return GET_DICT_DATA_CACHE.get(dictType);
     }
 
 }

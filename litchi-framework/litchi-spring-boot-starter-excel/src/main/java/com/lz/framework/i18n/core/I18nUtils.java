@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -25,14 +26,21 @@ public class I18nUtils {
     }
 
     @SneakyThrows
-    public static String getMessage(String messageKey, int localeTarget) {
+    public static String getMessage(String messageKey) {
         if (i18nCommonApi == null) {
-            log.warn("[I18nUtils] i18nCommonApi is null, key: {}", messageKey);
             return null;
         }
         String acceptLanguage = getAcceptLanguage();
-        log.info("[I18nUtils] getMessage, key: {}, localeTarget: {}, acceptLanguage: {}", messageKey, localeTarget, acceptLanguage);
-        return i18nCommonApi.getMessage(messageKey, localeTarget, acceptLanguage);
+        return i18nCommonApi.getMessage(messageKey, acceptLanguage);
+    }
+
+    @SneakyThrows
+    public static List<String> getAllLocaleMessages(String messageKey) {
+        if (i18nCommonApi == null) {
+            log.warn("[I18nUtils] i18nCommonApi is null, key: {}", messageKey);
+            return List.of();
+        }
+        return i18nCommonApi.getAllLocaleMessages(messageKey);
     }
 
     private static String getAcceptLanguage() {

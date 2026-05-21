@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -103,7 +104,7 @@ public class Demo01ContactController {
     @PreAuthorize("@ss.hasPermission('infra:demo01-contact:import')")
     @Operation(summary = "获得示例联系人导入模板")
     public void importTemplate(HttpServletResponse response) throws IOException {
-        // 手动创建导出 demo
+        // 手动创建导出 demo（sex=null 表示下拉选择，后端会翻译为当前语言的下拉选项）
         List<Demo01ContactExcelReqVO> list = Collections.singletonList(
                 Demo01ContactExcelReqVO.builder()
                         .name("王五")

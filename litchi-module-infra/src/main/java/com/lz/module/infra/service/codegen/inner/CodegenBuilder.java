@@ -78,7 +78,7 @@ public class CodegenBuilder {
         }
         String lowerDbType = dbType.toLowerCase();
         return NUMERIC_TYPE_KEYWORDS.stream()
-                .anyMatch(keyword -> lowerDbType.contains(keyword));
+                .anyMatch(lowerDbType::contains);
     }
 
     /**
