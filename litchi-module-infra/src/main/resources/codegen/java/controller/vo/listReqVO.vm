@@ -6,7 +6,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import ${PageParamClassName};
 import com.lz.framework.common.annotation.Sortable;
 import jakarta.validation.constraints.Size;
-## 处理 LocalDateTime BETWEEN 字段的引入
+/## 处理 LocalDateTime BETWEEN 字段的引入
 #foreach ($column in $columns)
 #if (${column.listOperationCondition} == "BETWEEN" && ${column.javaType} == "LocalDateTime")
 import java.time.LocalDateTime;
@@ -15,7 +15,7 @@ import static ${DateUtilsClassName}.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
 #break
 #end
 #end
-## 字段模板
+/## 字段模板
 #macro(columnTpl $prefix $prefixStr)
     #if(${column.sortOperation})
     @Sortable(value = "${column.columnName}")
@@ -24,12 +24,20 @@ import static ${DateUtilsClassName}.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
     private ${column.javaType}#if ("$!prefix" != "") ${prefix}${JavaField}#else ${column.javaField}#end;
 #end
 
+/**
+ * ${table.classComment}列表 Request VO
+ *
+ * @author ${table.author}
+ */
 @Schema(description = "${sceneEnum.name} - ${table.classComment}列表 Request VO")
 @Data
 public class ${sceneEnum.prefixClass}${table.className}ListReqVO extends PageParam {
 
 #foreach ($column in $columns)
 #if (${column.listOperation})##查询操作
+    /**
+    * ${column.columnComment}
+    */
 #if (${column.listOperationCondition} == "BETWEEN")## 情况一，Between 的时候
     #if(${column.sortOperation})
     @Sortable(value = "${column.columnName}")

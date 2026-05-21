@@ -26,6 +26,11 @@ import java.time.${column.javaType};
 #end
 #end
 
+/**
+ * ${table.classComment} Excel VO
+ *
+ * @author ${table.author}
+ */
 @Schema(description = "${sceneEnum.name} - ${table.classComment}Excel VO")
 @Data
 @Builder
@@ -37,6 +42,9 @@ public class ${sceneEnum.prefixClass}${table.className}ExcelVO {
 #foreach ($column in $columns)
 #if ($column.createOperation || $column.updateOperation)
 #if (!$column.primaryKey)
+    /**
+    * ${column.columnComment}
+    */
 #if ("" != $column.dictType)
     @ExcelProperty(value = "${column.columnComment}", converter = DictConvert.class)
 #if ($isI18n)

@@ -4,6 +4,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.util.*;
 
+/**
+ * ${table.classComment} Response VO
+ *
+ * @author ${table.author}
+ */
 @Schema(description = "${sceneEnum.name} - ${table.classComment} Response VO")
 @Data
 public class ${sceneEnum.prefixClass}${table.className}RespVO {
@@ -11,6 +16,9 @@ public class ${sceneEnum.prefixClass}${table.className}RespVO {
 ## 逐个处理字段
 #foreach ($column in $columns)
 #if (${column.listOperationResult})
+    /**
+     * ${column.columnComment}
+     */
     @Schema(description = "${column.columnComment}"#if (!${column.nullable}), requiredMode = Schema.RequiredMode.REQUIRED#end#if ("$!column.example" != ""), example = "${column.example}"#end)
     private ${column.javaType} ${column.javaField};
 

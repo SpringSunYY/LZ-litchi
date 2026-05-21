@@ -27,6 +27,7 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
 #if(${table.templateType} == 2)## 树表特有字段：上级
+    /** ${treeParentColumn.columnComment} */
     {
       fieldName: '${treeParentColumn.javaField}',
       label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
@@ -70,6 +71,7 @@ export function useFormSchema(): VbenFormSchema[] {
   #elseif ($javaType == "Boolean")
     #set ($dictMethod = "boolean")
   #end
+    /** ${comment} */
     {
       fieldName: '${javaField}',
 #if($isI18n)
@@ -197,6 +199,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
   #elseif ($javaType == "Boolean")
     #set ($dictMethod = "boolean")
   #end
+    /** ${comment} */
     {
       fieldName: '${javaField}',
 #if($isI18n)
@@ -288,6 +291,7 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
   #set ($dictType = $column.dictType)
   #set ($javaField = $column.javaField)
   #set ($comment = $column.columnComment)
+    /** ${comment} */
     {
       field: '${javaField}',
 #if($isI18n)
@@ -376,6 +380,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                     #end
                     #if ( $column.id == $subJoinColumn.id) ## 特殊：忽略主子表的 join 字段，不用填写
                     #else
+                        /** ${comment} */
                         {
                             fieldName: '${javaField}',
 #if($isI18n)
@@ -495,6 +500,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                 #elseif ($javaType == "Boolean")
                     #set ($dictMethod = "boolean")
                 #end
+                /** ${comment} */
                 {
                     fieldName: '${javaField}',
 #if($isI18n)
@@ -583,6 +589,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                 #set ($dictType = $column.dictType)
                 #set ($javaField = $column.javaField)
                 #set ($comment = $column.columnComment)
+                /** ${comment} */
                 {
                     field: '${javaField}',
 #if($isI18n)
@@ -648,6 +655,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         #elseif ($javaType == "Boolean")
                             #set ($dictMethod = "boolean")
                         #end
+                        /** ${comment} */
                         {
                             field: '${javaField}',
 #if($isI18n)
@@ -713,6 +721,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         #end
                         #if ( $column.id == $subJoinColumn.id) ## 特殊：忽略主子表的 join 字段，不用填写
                         #else
+                            /** ${comment} */
                             {
                                 fieldName: '${javaField}',
 #if($isI18n)
@@ -826,6 +835,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                     #set ($dictType = $column.dictType)
                     #set ($javaField = $column.javaField)
                     #set ($comment = $column.columnComment)
+                    /** ${comment} */
                     {
                         field: '${javaField}',
 #if($isI18n)
@@ -871,12 +881,13 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
 /** ${table.classComment}导入的表单 */
 export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
   return [
+    /** ${table.classComment}导入文件 */
     {
       fieldName: 'file',
     #if($isI18n)
-        label="$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
+      label: "$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
     #else
-        label="$t('ui.actionTitle.import', ['${table.classComment}'])"
+      label: "$t('ui.actionTitle.import', ['${table.classComment}'])"
     #end
       component: 'Upload',
       rules: 'required',

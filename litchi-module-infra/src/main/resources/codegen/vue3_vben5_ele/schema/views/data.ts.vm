@@ -26,6 +26,7 @@ export function useFormSchema(): VbenFormSchema[] {
       },
     },
 #if(${table.templateType} == 2)## 树表特有字段：上级
+    /** ${treeParentColumn.columnComment} */
     {
       fieldName: '${treeParentColumn.javaField}',
       label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
@@ -69,6 +70,7 @@ export function useFormSchema(): VbenFormSchema[] {
   #elseif ($javaType == "Boolean")
     #set ($dictMethod = "boolean")
   #end
+    /** ${comment} */
     {
       fieldName: '${javaField}',
       label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
@@ -193,6 +195,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
   #elseif ($javaType == "Boolean")
     #set ($dictMethod = "boolean")
   #end
+    /** ${comment} */
     {
       fieldName: '${javaField}',
       label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
@@ -280,6 +283,7 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
   #set ($dictType = $column.dictType)
   #set ($javaField = $column.javaField)
   #set ($comment = $column.columnComment)
+    /** ${comment} */
     {
       field: '${javaField}',
       title: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
@@ -360,9 +364,10 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                     #end
                     #if ( $column.id == $subJoinColumn.id) ## 特殊：忽略主子表的 join 字段，不用填写
                     #else
-    {
-      fieldName: '${javaField}',
-      label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                        /** ${comment} */
+                        {
+                            fieldName: '${javaField}',
+                            label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
       rules: 'required',
 #end
@@ -475,11 +480,12 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                 #elseif ($javaType == "Boolean")
                     #set ($dictMethod = "boolean")
                 #end
-    {
-      fieldName: '${javaField}',
-      label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                /** ${comment} */
+                {
+                    fieldName: '${javaField}',
+                    label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
 #if ($column.listOperationCondition == "BETWEEN" && ($column.htmlType == "inputNumber" || $column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
-      component: 'NumberRange',
+                    component: 'NumberRange',
 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
       component: 'Input',
       componentProps: {
@@ -559,12 +565,13 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                 #set ($dictType = $column.dictType)
                 #set ($javaField = $column.javaField)
                 #set ($comment = $column.columnComment)
-    {
-      field: '${javaField}',
-      title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
-      minWidth: 120,
+                /** ${comment} */
+                {
+                    field: '${javaField}',
+                    title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                    minWidth: 120,
 #if ($column.listOperation && $column.sortOperation)
-      sortable: true,
+                    sortable: true,
 #end
                 #if ($column.javaType == "LocalDateTime")## 时间类型
                     formatter: 'formatDateTime',
@@ -616,6 +623,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         #elseif ($javaType == "Boolean")
                             #set ($dictMethod = "boolean")
                         #end
+                        /** ${comment} */
                         {
                             field: '${javaField}',
                             title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
@@ -673,14 +681,15 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         #end
                         #if ( $column.id == $subJoinColumn.id) ## 特殊：忽略主子表的 join 字段，不用填写
                         #else
-    {
-      fieldName: '${javaField}',
-      label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                            /** ${comment} */
+                            {
+                                fieldName: '${javaField}',
+                                label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
-      rules: 'required',
+                                    rules: 'required',
 #end
 #if ($column.htmlType == "input")
-      component: 'Input',
+                                    component: 'Input',
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
@@ -782,6 +791,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                     #set ($dictType = $column.dictType)
                     #set ($javaField = $column.javaField)
                     #set ($comment = $column.columnComment)
+                    /** ${comment} */
     {
       field: '${javaField}',
       title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
@@ -823,12 +833,13 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
 /** ${table.classComment}导入的表单 */
 export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
   return [
+    /** ${table.classComment}导入文件 */
     {
       fieldName: 'file',
     #if($isI18n)
-      label="$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
+      label: "$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
     #else
-      label="$t('ui.actionTitle.import', ['${table.classComment}'])"
+      label: "$t('ui.actionTitle.import', ['${table.classComment}'])"
     #end
       component: 'Upload',
       rules: 'required',

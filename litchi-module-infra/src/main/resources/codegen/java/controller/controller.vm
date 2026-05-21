@@ -41,6 +41,11 @@ import ${basePackage}.module.${subTable.moduleName}.dal.dataobject.${subTable.bu
 #end
 import ${basePackage}.module.${table.moduleName}.service.${table.businessName}.${table.className}Service;
 
+/**
+ * ${table.classComment} Controller
+ *
+ * @author ${table.author}
+ */
 @Tag(name = "${sceneEnum.name} - ${table.classComment}")
 @RestController
 ##二级的 businessName 暂时不算在 HTTP 路径上，可以根据需要写
@@ -51,6 +56,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     @Resource
     private ${table.className}Service ${classNameVar}Service;
 
+    /**
+     * 创建${table.classComment}
+     */
     @PostMapping("/create")
     @Operation(summary = "创建${table.classComment}")
 #if ($sceneEnum.scene == 1)
@@ -60,6 +68,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         return success(${classNameVar}Service.create${simpleClassName}(${saveReqVOVar}));
     }
 
+    /**
+     * 更新${table.classComment}
+     */
     @PutMapping("/update")
     @Operation(summary = "更新${table.classComment}")
 #if ($sceneEnum.scene == 1)
@@ -70,6 +81,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         return success(true);
     }
 
+    /**
+     * 删除${table.classComment}
+     */
     @DeleteMapping("/delete")
     @Operation(summary = "删除${table.classComment}")
     @Parameter(name = "id", description = "编号", required = true)
@@ -81,6 +95,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         return success(true);
     }
 
+    /**
+     * 批量删除${table.classComment}
+     */
 #if ( $table.templateType != 2 && $deleteBatchEnable)
     @DeleteMapping("/delete-list")
     @Parameter(name = "ids", description = "编号", required = true)
@@ -94,6 +111,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     }
 #end
 
+    /**
+     * 获取${table.classComment}详情
+     */
     @GetMapping("/get")
     @Operation(summary = "获得${table.classComment}")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
@@ -110,6 +130,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     }
 
 #if ( $table.templateType != 2 )
+    /**
+     * 获取${table.classComment}分页
+     */
     @GetMapping("/page")
     @Operation(summary = "获得${table.classComment}分页")
 #if ($sceneEnum.scene == 1)
@@ -126,6 +149,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 
 ## 特殊：树表专属逻辑（树不需要分页接口）
 #else
+    /**
+     * 获取${table.classComment}列表
+     */
     @GetMapping("/list")
     @Operation(summary = "获得${table.classComment}列表")
 #if ($sceneEnum.scene == 1)
@@ -141,6 +167,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     }
 
 #end
+    /**
+     * 导出${table.classComment} Excel
+     */
     @GetMapping("/export-excel")
     @Operation(summary = "导出${table.classComment} Excel")
 #if ($sceneEnum.scene == 1)
@@ -169,6 +198,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 
 ## 导入功能（当 extendConfig.isImport 为 0 或不存在时开启，为 1 时关闭）
 #if ($extendConfig.get('isImport') != '1')
+    /**
+     * 获取${table.classComment}导入模板
+     */
     @GetMapping("/get-import-template")
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:import')")
@@ -206,6 +238,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         ExcelUtils.write(response, "${table.classComment}导入模板.xls", "${table.classComment}模板", ${excelReqVOClass}.class, list);
     }
 
+    /**
+     * 导入${table.classComment}
+     */
     @PostMapping("/import")
     @Operation(summary = "导入${table.classComment}")
     @Parameter(name = "file", description = "Excel 文件", required = true)
@@ -233,6 +268,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 
 ## 情况一：MASTER_ERP 时，需要分查询页子表
 #if ( $table.templateType == 11 )
+    /**
+     * 获取${subTable.classComment}分页
+     */
     @GetMapping("/${subSimpleClassName_strikeCase}/page")
     @Operation(summary = "获得${subTable.classComment}分页")
     @Parameter(name = "${subJoinColumn.javaField}", description = "${subJoinColumn.columnComment}")
@@ -247,6 +285,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 ## 情况二：非 MASTER_ERP 时，需要列表查询子表
 #else
     #if ( $subTable.subJoinMany )
+    /**
+     * 获取${subTable.classComment}列表
+     */
     @GetMapping("/${subSimpleClassName_strikeCase}/list-by-${subJoinColumn_strikeCase}")
     @Operation(summary = "获得${subTable.classComment}列表")
     @Parameter(name = "${subJoinColumn.javaField}", description = "${subJoinColumn.columnComment}")
@@ -258,6 +299,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     }
 
     #else
+    /**
+     * 获取${subTable.classComment}
+     */
     @GetMapping("/${subSimpleClassName_strikeCase}/get-by-${subJoinColumn_strikeCase}")
     @Operation(summary = "获得${subTable.classComment}")
     @Parameter(name = "${subJoinColumn.javaField}", description = "${subJoinColumn.columnComment}")
@@ -272,6 +316,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #end
 ## 特殊：MASTER_ERP 时，支持单个的新增、修改、删除操作
 #if ( $table.templateType == 11 )
+    /**
+     * 创建${subTable.classComment}
+     */
     @PostMapping("/${subSimpleClassName_strikeCase}/create")
     @Operation(summary = "创建${subTable.classComment}")
 #if ($sceneEnum.scene == 1)
@@ -281,6 +328,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         return success(${classNameVar}Service.create${subSimpleClassName}(${subClassNameVar}));
     }
 
+    /**
+     * 更新${subTable.classComment}
+     */
     @PutMapping("/${subSimpleClassName_strikeCase}/update")
     @Operation(summary = "更新${subTable.classComment}")
 #if ($sceneEnum.scene == 1)
@@ -291,6 +341,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         return success(true);
     }
 
+    /**
+     * 删除${subTable.classComment}
+     */
     @DeleteMapping("/${subSimpleClassName_strikeCase}/delete")
     @Parameter(name = "id", description = "编号", required = true)
     @Operation(summary = "删除${subTable.classComment}")
@@ -303,6 +356,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
     }
 
 #if ($deleteBatchEnable)
+    /**
+     * 批量删除${subTable.classComment}
+     */
     @DeleteMapping("/${subSimpleClassName_strikeCase}/delete-list")
     @Parameter(name = "ids", description = "编号", required = true)
     @Operation(summary = "批量删除${subTable.classComment}")
@@ -313,17 +369,20 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
         ${classNameVar}Service.delete${subSimpleClassName}ListByIds(ids);
         return success(true);
     }
-#end
 
-	@GetMapping("/${subSimpleClassName_strikeCase}/get")
-	@Operation(summary = "获得${subTable.classComment}")
-	@Parameter(name = "id", description = "编号", required = true)
+#end
+    /**
+     * 获取${subTable.classComment}详情
+     */
+    @GetMapping("/${subSimpleClassName_strikeCase}/get")
+    @Operation(summary = "获得${subTable.classComment}")
+    @Parameter(name = "id", description = "编号", required = true)
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:query')")
 #end
-	public CommonResult<${subTable.className}DO> get${subSimpleClassName}(@RequestParam("id") ${subPrimaryColumn.javaType} id) {
-	    return success(${classNameVar}Service.get${subSimpleClassName}(id));
-	}
+    public CommonResult<${subTable.className}DO> get${subSimpleClassName}(@RequestParam("id") ${subPrimaryColumn.javaType} id) {
+        return success(${classNameVar}Service.get${subSimpleClassName}(id));
+    }
 
 #end
 #end

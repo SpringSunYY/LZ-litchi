@@ -24,6 +24,11 @@ import java.time.LocalDateTime;
 import ${basePackage}.module.${subTable.moduleName}.dal.dataobject.${subTable.businessName}.${subTable.className}DO;
 #end
 
+/**
+ * ${table.classComment}新增/修改 Request VO
+ *
+ * @author ${table.author}
+ */
 @Schema(description = "${sceneEnum.name} - ${table.classComment}新增/修改 Request VO")
 @Data
 public class ${sceneEnum.prefixClass}${table.className}SaveReqVO {
@@ -31,6 +36,9 @@ public class ${sceneEnum.prefixClass}${table.className}SaveReqVO {
 ## 逐个处理字段
 #foreach ($column in $columns)
 #if (${column.createOperation} || ${column.updateOperation})
+    /**
+     * ${column.columnComment}
+     */
 ## 1. 处理 Swagger 注解
     @Schema(description = "${column.columnComment}"#if (!${column.nullable}), requiredMode = Schema.RequiredMode.REQUIRED#end#if ("$!column.example" != ""), example = "${column.example}"#end)
 ## 2. 处理 Validator 参数校验
@@ -50,6 +58,9 @@ public class ${sceneEnum.prefixClass}${table.className}SaveReqVO {
 #if ( $subTables && $subTables.size() > 0 && $table.templateType != 11 )
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
+    /**
+    * ${subTable.classComment}列表
+    */
     #if ( $subTable.subJoinMany)
     @Schema(description = "${subTable.classComment}列表")
     private List<${subTable.className}DO> ${subClassNameVars.get($index)}s;
