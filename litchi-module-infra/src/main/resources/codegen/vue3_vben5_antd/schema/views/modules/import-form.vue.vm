@@ -11,14 +11,14 @@
 <template>
   <ImportExcel
       #if($isI18n)
-          :title="$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
+          :title="$t('ui.actionTitle.import', [$t('${table.moduleName}.${table.businessName}')])"
       #else
           :title="$t('ui.actionTitle.import', ['${table.classComment}'])"
       #end
           :import-api="import${simpleClassName}"
           :template-api="import${simpleClassName}Template"
       #if($isI18n)
-          :template-file-name="$t('ui.actionTitle.importTemplate', [$t('${table.moduleName}:${table.businessName}')]) + '.xlsx'"
+          :template-file-name="$t('ui.actionTitle.importTemplate', [$t('${table.moduleName}.${table.businessName}')]) + '.xlsx'"
       #else
           :template-file-name="$t('ui.actionTitle.importTemplate', ['${table.classComment}']) + '.xlsx'"
       #end

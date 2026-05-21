@@ -23,8 +23,8 @@ import { useFormSchema } from '../data';
 const emit = defineEmits(['success']);
 const formData = ref<${simpleClassName}Api.${simpleClassName}>();
 #if($isI18n)
-  const titleEdit = $t('ui.actionTitle.edit', [$t('${table.moduleName}:${table.businessName}')]);
-  const titleCreate = $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]);
+  const titleEdit = $t('ui.actionTitle.edit', [$t('${table.moduleName}.${table.businessName}')]);
+  const titleCreate = $t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')]);
 #else
   const titleEdit = $t('ui.actionTitle.edit', ['${table.classComment}']);
   const titleCreate = $t('ui.actionTitle.create', ['${table.classComment}']);
@@ -150,7 +150,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
           #set ($subClassNameVar = $subClassNameVars.get($index))
           #set ($subSimpleClassName = $subSimpleClassNames.get($index))
           #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <el-tab-pane name="$subClassNameVar" #if($isI18n)label="$t('${subTable.moduleName}:${subTable.businessName}')"#else label="${subTable.classComment}"#end>
+          <el-tab-pane name="$subClassNameVar" #if($isI18n)label="$t('${subTable.moduleName}.${subTable.businessName}')"#else label="${subTable.classComment}"#end>
             <${subSimpleClassName}Form ref="${subClassNameVar}FormRef" :${subJoinColumn_strikeCase}="formData?.id" />
           </el-tab-pane>
         #end

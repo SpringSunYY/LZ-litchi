@@ -195,7 +195,7 @@ watch(
   <div class="flex justify-center -mt-4">
     <el-button :icon="Plus" type="primary" plain @click="onAdd" v-access:code="['${subTable.moduleName}:${simpleClassName_strikeCase}:create']">
 #if($isI18n)
-      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]) }}
+      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}.${subTable.businessName}')]) }}
 #else
       {{ $t('ui.actionTitle.create', ['${subTable.classComment}']) }}
 #end

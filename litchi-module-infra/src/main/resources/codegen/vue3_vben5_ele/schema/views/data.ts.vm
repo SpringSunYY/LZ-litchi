@@ -29,7 +29,7 @@ export function useFormSchema(): VbenFormSchema[] {
     /** ${treeParentColumn.columnComment} */
     {
       fieldName: '${treeParentColumn.javaField}',
-      label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
+      label: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
       component: 'ApiTreeSelect',
       componentProps: {
         allowClear: true,
@@ -37,7 +37,7 @@ export function useFormSchema(): VbenFormSchema[] {
           const data = await get${simpleClassName}List({});
           data.unshift({
             id: 0,
-            name: #if($isI18n)$t('ui.treeRoot',[$t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
+            name: #if($isI18n)$t('ui.treeRoot',[$t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
           });
           return handleTree(data);
         },
@@ -46,7 +46,7 @@ export function useFormSchema(): VbenFormSchema[] {
         childrenField: 'children',
         placeholder: $t('ui.placeholder.select', [
           #if($isI18n)
-            $t('${table.moduleName}:${table.businessName}:field:${treeParentColumn.javaField}')
+            $t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')
           #else
             '${treeParentColumn.columnComment}'
           #end
@@ -73,7 +73,7 @@ export function useFormSchema(): VbenFormSchema[] {
     /** ${comment} */
     {
       fieldName: '${javaField}',
-      label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
+      label: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
       rules: 'required',
 #end
@@ -82,7 +82,7 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -113,7 +113,7 @@ export function useFormSchema(): VbenFormSchema[] {
 #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -151,7 +151,7 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -164,7 +164,7 @@ export function useFormSchema(): VbenFormSchema[] {
         controlsPosition: 'right',
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -198,7 +198,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     /** ${comment} */
     {
       fieldName: '${javaField}',
-      label: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
+      label: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
 #if ($column.listOperationCondition == "BETWEEN" && ($column.htmlType == "inputNumber" || $column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
       component: 'NumberRange',
 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
@@ -207,7 +207,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -224,7 +224,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -248,7 +248,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         controlsPosition: 'right',
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}:${table.businessName}:field:${javaField}'),
+          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -286,7 +286,7 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
     /** ${comment} */
     {
       field: '${javaField}',
-      title: #if($isI18n)$t('${table.moduleName}:${table.businessName}:field:${javaField}')#else '${comment}'#end,
+      title: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
       minWidth: 120,
 #if ($column.listOperation && $column.sortOperation)
       sortable: true,
@@ -318,7 +318,7 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
 #end
 #end
     {
-      title: #if($isI18n)$t('common.operation')#else '操作'#end,
+      title: '操作',
       width: 200,
       fixed: 'right',
       slots: { default: 'actions' },
@@ -367,7 +367,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                         /** ${comment} */
                         {
                             fieldName: '${javaField}',
-                            label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                            label: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')#else '${comment}'#end,
 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
       rules: 'required',
 #end
@@ -376,7 +376,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -398,7 +398,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
 #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -436,7 +436,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -449,7 +449,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                                     controlsPosition: 'right',
                                     placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -483,7 +483,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                 /** ${comment} */
                 {
                     fieldName: '${javaField}',
-                    label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                    label: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')#else '${comment}'#end,
 #if ($column.listOperationCondition == "BETWEEN" && ($column.htmlType == "inputNumber" || $column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
                     component: 'NumberRange',
 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
@@ -492,7 +492,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -509,7 +509,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
         #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -533,7 +533,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
         controlsPosition: 'right',
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -568,7 +568,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                 /** ${comment} */
                 {
                     field: '${javaField}',
-                    title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                    title: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')#else '${comment}'#end,
                     minWidth: 120,
 #if ($column.listOperation && $column.sortOperation)
                     sortable: true,
@@ -597,7 +597,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
             #end
         #end
         {
-            title: #if($isI18n)$t('common.operation')#else '操作'#end,
+            title: '操作',
             width: 200,
             fixed: 'right',
             slots: { default: 'actions' },
@@ -626,7 +626,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         /** ${comment} */
                         {
                             field: '${javaField}',
-                            title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                            title: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')#else '${comment}'#end,
                             minWidth: 120,
                             slots: { default: '${javaField}' },
                             #if ($column.htmlType == "select" || $column.htmlType == "checkbox" || $column.htmlType == "radio")
@@ -645,7 +645,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                 #end
             #end
             {
-                title: #if($isI18n)$t('common.operation')#else '操作'#end,
+                title: '操作',
                 width: 200,
                 fixed: 'right',
                 slots: { default: 'actions' },
@@ -684,7 +684,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                             /** ${comment} */
                             {
                                 fieldName: '${javaField}',
-                                label: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+                                label: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')#else '${comment}'#end,
 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
                                     rules: 'required',
 #end
@@ -693,7 +693,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -715,7 +715,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
 #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -753,7 +753,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -766,7 +766,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                         controlsPosition: 'right',
                                         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-                                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}'),
+                                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}'),
 #else
                                     '${comment}',
 #end
@@ -794,7 +794,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                     /** ${comment} */
     {
       field: '${javaField}',
-      title: #if($isI18n)$t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')#else '${comment}'#end,
+      title: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')#else '${comment}'#end,
       minWidth: 120,
 #if ($column.listOperation && $column.sortOperation)
       sortable: true,
@@ -837,7 +837,7 @@ export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
     {
       fieldName: 'file',
     #if($isI18n)
-      label: "$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])"
+      label: "$t('ui.actionTitle.import', [$t('${table.moduleName}.${table.businessName}')])"
     #else
       label: "$t('ui.actionTitle.import', ['${table.classComment}'])"
     #end

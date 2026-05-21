@@ -58,7 +58,7 @@ function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
     ElMessage.warning($t('common.selectFirst', [
       #if($isI18n)
-        $t('${table.moduleName}:${table.businessName}')
+        $t('${table.moduleName}.${table.businessName}')
       #else
         '${table.classComment}'
       #end
@@ -315,7 +315,7 @@ onMounted(() => {
         </ContentWrap>
 
         <!-- 列表 -->
-        <ContentWrap #if($isI18n)title="$t('${subTable.moduleName}:${subTable.businessName}:list')"#else title="${subTable.classComment}"#end>
+        <ContentWrap #if($isI18n)title="$t('${subTable.moduleName}.${subTable.businessName}:list')"#else title="${subTable.classComment}"#end>
           <template #extra>
             <TableToolbar
                 ref="tableToolbarRef"
@@ -339,7 +339,7 @@ onMounted(() => {
                       @click="handleDeleteBatch"
                       v-access:code="['${table.moduleName}:${simpleClassName_strikeCase}:delete']"
                   >
-                    {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${subTable.classComment}'])#end }}
+                    {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${subTable.moduleName}.${subTable.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${subTable.classComment}'])#end }}
                   </el-button>
                 #end
             </TableToolbar>
@@ -390,7 +390,7 @@ onMounted(() => {
                     @click="handleEdit(row as any)"
                     v-access:code="['${permissionPrefix}:update']"
                 >
-                  {{ #if($isI18n)$t('common.edit', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.edit', ['${subTable.classComment}'])#end }}
+                  {{ #if($isI18n)$t('common.edit', [$t('${subTable.moduleName}.${subTable.businessName}')])#else $t('common.edit', ['${subTable.classComment}'])#end }}
                 </el-button>
                 <el-button
                     size="small"
@@ -400,7 +400,7 @@ onMounted(() => {
                     @click="handleDelete(row as any)"
                     v-access:code="['${permissionPrefix}:delete']"
                 >
-                  {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
+                  {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}.${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
                 </el-button>
               </template>
             </vxe-column>
@@ -420,7 +420,7 @@ onMounted(() => {
         </ContentWrap>
       </div>
     #else
-    <ContentWrap :title="$t('${subTable.moduleName}:${subTable.businessName}:list')">
+    <ContentWrap :title="$t('${subTable.moduleName}.${subTable.businessName}:list')">
       <vxe-table
           :data="list"
           show-overflow

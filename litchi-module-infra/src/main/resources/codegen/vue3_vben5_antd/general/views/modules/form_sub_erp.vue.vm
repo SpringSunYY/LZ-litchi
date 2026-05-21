@@ -22,8 +22,8 @@
 #if($isI18n)
 const getTitle = computed(() => {
   return formData.value?.id
-      ? $t('ui.actionTitle.edit', [$t('${subTable.moduleName}:${subTable.businessName}')])
-      : $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]);
+      ? $t('ui.actionTitle.edit', [$t('${subTable.moduleName}.${subTable.businessName}')])
+      : $t('ui.actionTitle.create', [$t('${subTable.moduleName}.${subTable.businessName}')]);
 });
 #else
 const getTitle = computed(() => {
@@ -51,7 +51,7 @@ const getTitle = computed(() => {
         #set($comment=$column.columnComment)
           $column.javaField: [{ required: true, message: $t('formRules.required', [
             #if($isI18n)
-              $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+              $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
             #else
               '${comment}'
             #end
@@ -147,7 +147,7 @@ const getTitle = computed(() => {
             <Form.Item label="${comment}" name="${javaField}">
               <Input v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
                 #if($isI18n)
-                  $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end
@@ -169,7 +169,7 @@ const getTitle = computed(() => {
             <Form.Item label="${comment}" name="${javaField}">
               <Select v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.select', [
                 #if($isI18n)
-                  $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end
@@ -226,7 +226,7 @@ const getTitle = computed(() => {
                       valueFormat="x"
                       :placeholder="$t('ui.placeholder.select', [
                         #if($isI18n)
-                          $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                          $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                         #else
                           '${comment}'
                         #end
@@ -237,7 +237,7 @@ const getTitle = computed(() => {
             <Form.Item label="${comment}" name="${javaField}">
               <Textarea v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
                 #if($isI18n)
-                  $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end

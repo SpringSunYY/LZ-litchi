@@ -189,7 +189,7 @@ watch(
   <div class="flex justify-center -mt-4">
     <Button :icon="h(Plus)" type="primary" ghost @click="onAdd" v-access:code="['${subTable.moduleName}:${simpleClassName_strikeCase}:create']">
 #if($isI18n)
-      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]) }}
+      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}.${subTable.businessName}')]) }}
 #else
       {{ $t('ui.actionTitle.create', ['${subTable.classComment}']) }}
 #end

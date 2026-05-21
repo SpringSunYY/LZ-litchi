@@ -19,8 +19,8 @@
   const emit = defineEmits(['success']);
   const formData = ref<${simpleClassName}Api.${subSimpleClassName}>();
 #if($isI18n)
-  const titleEdit = $t('ui.actionTitle.edit', [$t('${subTable.moduleName}:${subTable.businessName}')]);
-  const titleCreate = $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]);
+  const titleEdit = $t('ui.actionTitle.edit', [$t('${subTable.moduleName}.${subTable.businessName}')]);
+  const titleCreate = $t('ui.actionTitle.create', [$t('${subTable.moduleName}.${subTable.businessName}')]);
 #else
   const titleEdit = $t('ui.actionTitle.edit', ['${subTable.classComment}']);
   const titleCreate = $t('ui.actionTitle.create', ['${subTable.classComment}']);

@@ -20,12 +20,12 @@
 
   const emit = defineEmits(['success']);
   #if($isI18n)
-const getTitle = $t('${subTable.moduleName}:${subTable.businessName}:title');
+const getTitle = $t('${subTable.moduleName}.${subTable.businessName}:title');
 #else
 const getTitle = computed(() => {
     return formData.value?.id
-        ? $t('ui.actionTitle.edit', [$t('${subTable.moduleName}:${subTable.businessName}')])
-        : $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]);
+        ? $t('ui.actionTitle.edit', [$t('${subTable.moduleName}.${subTable.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${subTable.moduleName}.${subTable.businessName}')]);
 });
 #endif
 
@@ -47,7 +47,7 @@ const getTitle = computed(() => {
         #set($comment=$column.columnComment)
           $column.javaField: [{ required: true, message: $t('formRules.required', [
             #if($isI18n)
-              $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+              $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
             #else
               '${comment}'
             #end
@@ -140,7 +140,7 @@ const getTitle = computed(() => {
             <el-form-item label="${comment}" prop="${javaField}">
               <el-input v-model="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
                 #if($isI18n)
-                  $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end
@@ -162,7 +162,7 @@ const getTitle = computed(() => {
             <el-form-item label="${comment}" prop="${javaField}">
               <el-select v-model="formData.${javaField}" :placeholder="$t('ui.placeholder.select', [
                 #if($isI18n)
-                  $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end
@@ -218,7 +218,7 @@ const getTitle = computed(() => {
                       value-format="x"
                       :placeholder="$t('ui.placeholder.select', [
                         #if($isI18n)
-                          $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                          $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                         #else
                           '${comment}'
                         #end
@@ -229,7 +229,7 @@ const getTitle = computed(() => {
             <el-form-item label="${comment}" prop="${javaField}">
               <el-input v-model="formData.${javaField}" type="textarea" :placeholder="$t('ui.placeholder.input', [
                 #if($isI18n)
-                  $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                  $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end

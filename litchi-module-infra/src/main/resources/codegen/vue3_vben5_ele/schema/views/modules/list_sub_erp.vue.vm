@@ -51,7 +51,7 @@ function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
     ElMessage.warning($t('common.selectFirst', [
       #if($isI18n)
-        $t('${table.moduleName}:${table.businessName}')
+        $t('${table.moduleName}.${table.businessName}')
       #else
         '${table.classComment}'
       #end
@@ -204,13 +204,13 @@ watch(
 <template>
     #if ($table.templateType == 11) ## erp
       <FormModalDrawer @success="onRefresh" />
-      <Grid :table-title="$t('${subTable.moduleName}:${subTable.businessName}:list')">
+      <Grid :table-title="$t('${subTable.moduleName}.${subTable.businessName}:list')">
         <template #toolbar-tools>
           <TableAction
             :actions="[
               {
 #if($isI18n)
-                label: $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]),
+                label: $t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')]),
 #else
                 label: $t('ui.actionTitle.create', ['${table.classComment}']),
 #end
@@ -221,7 +221,7 @@ watch(
               },
               #if ($table.templateType == 11 && $deleteBatchEnable)
               {
-                label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
+                label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
                 type: 'danger',
                 icon: ACTION_ICON.DELETE,
                 disabled: isEmpty(checkedIds),
@@ -249,7 +249,7 @@ watch(
                 icon: ACTION_ICON.DELETE,
                 auth: ['${table.moduleName}:${simpleClassName_strikeCase}:delete'],
                 popConfirm: {
-                  title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
+                  title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
                   confirm: handleDelete.bind(null, row),
                 },
               },
@@ -258,6 +258,6 @@ watch(
         </template>
       </Grid>
     #else
-    <Grid :table-title="$t('${subTable.moduleName}:${subTable.businessName}:list')" />
+    <Grid :table-title="$t('${subTable.moduleName}.${subTable.businessName}:list')" />
     #end
 </template>

@@ -147,7 +147,7 @@ function handleRowCheckboxChange({
 /** 导出表格 */
 async function handleExport() {
   const data = await export${simpleClassName}(await gridApi.formApi.getValues());
-  downloadFileFromBlobPart({ fileName: #if($isI18n)$t('${table.moduleName}:${table.businessName}')#else '${table.classComment}'#end + '.xls', source: data });
+  downloadFileFromBlobPart({ fileName: #if($isI18n)$t('${table.moduleName}.${table.businessName}')#else '${table.classComment}'#end + '.xls', source: data });
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -249,7 +249,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 #if ($table.templateType == 11) ## erp情况
   <div>
 #end
-    <Grid #if($isI18n):table-title="$t('${table.moduleName}:${table.businessName}')" #else table-title="${table.classComment}列表" #end>
+    <Grid #if($isI18n):table-title="$t('${table.moduleName}.${table.businessName}')" #else table-title="${table.classComment}列表" #end>
         #if ($table.templateType == 12) ## 内嵌情况
           <template #expand_content="{ row }">
             <!-- 子表的表单 -->
@@ -259,7 +259,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
                     #set ($subClassNameVar = $subClassNameVars.get($index))
                     #set ($subSimpleClassName = $subSimpleClassNames.get($index))
                     #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-                  <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('${subTable.moduleName}:${subTable.businessName}')"#else tab="${subTable.classComment}"#end force-render>
+                  <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('${subTable.moduleName}.${subTable.businessName}')"#else tab="${subTable.classComment}"#end force-render>
                     <${subSimpleClassName}List :${subJoinColumn_strikeCase}="row?.id" />
                   </Tabs.TabPane>
                 #end
@@ -277,14 +277,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
             },
             #end
             {
-              label: #if($isI18n)$t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.create', ['${table.classComment}'])#end,
+              label: #if($isI18n)$t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.create', ['${table.classComment}'])#end,
               type: 'primary',
               icon: ACTION_ICON.ADD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:create'],
               onClick: handleCreate,
             },
             {
-              label: #if($isI18n)$t('ui.actionTitle.export', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end,
+              label: #if($isI18n)$t('ui.actionTitle.export', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end,
               type: 'primary',
               icon: ACTION_ICON.DOWNLOAD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:export'],
@@ -292,7 +292,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             },
             #if ($table.templateType != 2 && $deleteBatchEnable)
             {
-              label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
+              label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
               type: 'primary',
               danger: true,
               icon: ACTION_ICON.DELETE,
@@ -304,7 +304,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             ## 导入功能（当 extendConfig.isImport 为 1 时关闭）
             #if ($extendConfig.get('isImport') != '1')
             {
-              label: #if($isI18n)$t('ui.actionTitle.import', [$t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionTitle.import', ['${table.classComment}'])#end,
+              label: #if($isI18n)$t('ui.actionTitle.import', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.import', ['${table.classComment}'])#end,
               type: 'primary',
               icon: ACTION_ICON.UPLOAD,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:import'],
@@ -340,7 +340,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
               icon: ACTION_ICON.DELETE,
               auth: ['${table.moduleName}:${simpleClassName_strikeCase}:delete'],
               popConfirm: {
-                title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${table.moduleName}:${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
+                title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
                 confirm: handleDelete.bind(null, row),
               },
             },
@@ -357,7 +357,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
             #set ($subClassNameVar = $subClassNameVars.get($index))
             #set ($subSimpleClassName = $subSimpleClassNames.get($index))
             #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('common.subTable', [$t('${subTable.moduleName}:${subTable.businessName}')])"#else tab="${subTable.classComment}"#end force-render>
+          <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('common.subTable', [$t('${subTable.moduleName}.${subTable.businessName}')])"#else tab="${subTable.classComment}"#end force-render>
             <${subSimpleClassName}List :${subJoinColumn_strikeCase}="select${simpleClassName}?.id" />
           </Tabs.TabPane>
         #end

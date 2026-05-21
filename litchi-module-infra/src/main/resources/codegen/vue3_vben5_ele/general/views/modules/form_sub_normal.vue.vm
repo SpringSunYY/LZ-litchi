@@ -83,7 +83,7 @@ const rules = reactive<FormRules>({
             #set($comment=$column.columnComment)
                 $column.javaField: [{ required: true, message: $t('formRules.required', [
                   #if($isI18n)
-                    $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                    $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                   #else
                     '${comment}'
                   #end
@@ -151,7 +151,7 @@ watch(
                   <template #default="{row}">
                     <el-select v-model="row.${javaField}" :placeholder="$t('ui.placeholder.select', [
                       #if($isI18n)
-                        $t('${subTable.moduleName}:${subTable.businessName}:field:${javaField}')
+                        $t('${subTable.moduleName}.${subTable.businessName}.field.${javaField}')
                       #else
                         '${comment}'
                       #end
@@ -234,14 +234,14 @@ watch(
             @click="onDelete(row as any)"
             v-access:code="['${permissionPrefix}:delete']"
         >
-          {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}:${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
+          {{ #if($isI18n)$t('common.delete', [$t('${subTable.moduleName}.${subTable.businessName}')])#else $t('common.delete', ['${subTable.classComment}'])#end }}
         </el-button>
       </template>
     </vxe-column>
   </vxe-table>
   <div class="flex justify-center mt-4">
     <el-button :icon="h(Plus)" type="primary" plain @click="onAdd" v-access:code="['${permissionPrefix}:create']">
-      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}:${subTable.businessName}')]) }}
+      {{ $t('ui.actionTitle.create', [$t('${subTable.moduleName}.${subTable.businessName}')]) }}
     </el-button>
   </div>
 #else
@@ -270,7 +270,7 @@ watch(
                 <el-form-item label="${comment}" prop="${javaField}">
                   <el-input v-model="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
                     #if($isI18n)
-                      $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                      $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                     #else
                       '${comment}'
                     #end
@@ -292,7 +292,7 @@ watch(
                 <el-form-item label="${comment}" prop="${javaField}">
                   <el-select v-model="formData.${javaField}" :placeholder="$t('ui.placeholder.select', [
                     #if($isI18n)
-                      $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                      $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                     #else
                       '${comment}'
                     #end
@@ -348,7 +348,7 @@ watch(
                       value-format="x"
                       :placeholder="$t('ui.placeholder.select', [
                         #if($isI18n)
-                          $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                          $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                         #else
                           '${comment}'
                         #end
@@ -359,7 +359,7 @@ watch(
                 <el-form-item label="${comment}" prop="${javaField}">
                   <el-input v-model="formData.${javaField}" type="textarea" :placeholder="$t('ui.placeholder.input', [
                     #if($isI18n)
-                      $t('${subTable.moduleName}:${subTable.businessName}:field:${column.javaField}')
+                      $t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')
                     #else
                       '${comment}'
                     #end

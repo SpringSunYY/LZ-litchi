@@ -25,8 +25,8 @@ const formData = ref<${simpleClassName}Api.${simpleClassName}>();
 #if($isI18n)
   const getTitle = computed(() => {
     return formData.value?.id
-        ? $t('ui.actionTitle.edit', [$t('${table.moduleName}:${table.businessName}')])
-        : $t('ui.actionTitle.create', [$t('${table.moduleName}:${table.businessName}')]);
+        ? $t('ui.actionTitle.edit', [$t('${table.moduleName}.${table.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')]);
   });
 #else
   const getTitle = computed(() => {
@@ -153,7 +153,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
           #set ($subClassNameVar = $subClassNameVars.get($index))
           #set ($subSimpleClassName = $subSimpleClassNames.get($index))
           #set ($subJoinColumn_strikeCase = $subJoinColumn_strikeCases.get($index))
-          <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('${subTable.moduleName}:${subTable.businessName}')"#else tab="${subTable.classComment}"#end force-render>
+          <Tabs.TabPane key="$subClassNameVar" #if($isI18n)tab="$t('${subTable.moduleName}.${subTable.businessName}')"#else tab="${subTable.classComment}"#end force-render>
             <${subSimpleClassName}Form ref="${subClassNameVar}FormRef" :${subJoinColumn_strikeCase}="formData?.id" />
           </Tabs.TabPane>
         #end
