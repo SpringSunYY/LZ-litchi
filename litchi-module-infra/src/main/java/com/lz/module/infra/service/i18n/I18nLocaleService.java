@@ -1,10 +1,12 @@
 package com.lz.module.infra.service.i18n;
 
-import java.util.*;
-import jakarta.validation.*;
-import com.lz.module.infra.controller.admin.i18n.vo.*;
-import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.module.infra.controller.admin.i18n.vo.I18nLocalePageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSaveReqVO;
+import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
+import jakarta.validation.Valid;
+
+import java.util.List;
 
 /**
  * 国际化国家 Service 接口
@@ -36,10 +38,10 @@ public interface I18nLocaleService {
     void deleteI18nLocale(Long id);
 
     /**
-    * 批量删除国际化国家
-    *
-    * @param ids 编号
-    */
+     * 批量删除国际化国家
+     *
+     * @param ids 编号
+     */
     void deleteI18nLocaleListByIds(List<Long> ids);
 
     /**

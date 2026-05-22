@@ -120,4 +120,9 @@ public interface DictDataService {
      * @param type 字典类型
      */
     void deleteDictDataByDictType(String type);
+
+    /**
+     * 生成字典类型 I18n 文件
+     */
+    void generateDictI18n();
 }

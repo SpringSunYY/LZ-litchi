@@ -1,16 +1,19 @@
 package com.lz.module.system.service.dict;
 
 import cn.hutool.core.collection.CollUtil;
+import com.google.common.annotations.VisibleForTesting;
+import com.lz.framework.common.core.DictI18nDTO;
 import com.lz.framework.common.enums.CommonStatusEnum;
+import com.lz.framework.common.enums.InfraModuleConstants;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.collection.CollectionUtils;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.module.infra.api.i18n.I18nApi;
 import com.lz.module.system.controller.admin.dict.vo.data.DictDataPageReqVO;
 import com.lz.module.system.controller.admin.dict.vo.data.DictDataSaveReqVO;
 import com.lz.module.system.dal.dataobject.dict.DictDataDO;
 import com.lz.module.system.dal.dataobject.dict.DictTypeDO;
 import com.lz.module.system.dal.mysql.dict.DictDataMapper;
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,6 +22,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.system.enums.ErrorCodeConstants.*;
@@ -44,6 +48,9 @@ public class DictDataServiceImpl implements DictDataService {
 
     @Resource
     private DictDataMapper dictDataMapper;
+
+    @Resource
+    private I18nApi i18nApi;
 
     @Override
     public List<DictDataDO> getDictDataList(Integer status, String dictType) {
@@ -185,5 +192,35 @@ public class DictDataServiceImpl implements DictDataService {
     public void deleteDictDataByDictType(String type) {
         dictDataMapper.delete(DictDataDO::getDictType, type);
     }
+
+    @Override
+    public void generateDictI18n() {
+        // 1、拿到所有字典数据
+        List<DictDataDO> dictDataList = dictDataMapper.selectList();
+
+        // 2、查询到所有的字典类型，构建 type -> name 的映射
+        List<DictTypeDO> dictTypeList = dictTypeService.getDictTypeList();
+        Map<String, String> dictTypeMap = dictTypeList.stream()
+                .collect(Collectors.toMap(DictTypeDO::getType, DictTypeDO::getName));
+
+        // 3、生成key值对（包含label和dictName）
+        Map<String, DictI18nDTO> dictDataMap = dictDataList.stream()
+                .collect(Collectors.toMap(
+                        //dict.{dict_type}.{dict_value}
+                        dictDataDO ->
+                                InfraModuleConstants.I18N_DICT_PREFIX + InfraModuleConstants.I18N_SEPARATOR
+                                        + dictDataDO.getDictType() + InfraModuleConstants.I18N_SEPARATOR
+                                        + dictDataDO.getValue(),
+                        dictDataDO -> {
+                            String dictName = dictTypeMap.getOrDefault(dictDataDO.getDictType(), "");
+                            return new DictI18nDTO(dictDataDO.getLabel(), InfraModuleConstants.I18N_DICT_PREFIX + " " + dictName);
+                        },
+                        (existing, replacement) -> existing  // 冲突时保留第一个值
+                ));
+
+        // 4、写入i18n
+        i18nApi.saveDictI18n(dictDataMap);
+    }
+
 
 }

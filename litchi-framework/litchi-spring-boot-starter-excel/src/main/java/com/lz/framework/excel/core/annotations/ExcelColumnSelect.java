@@ -1,5 +1,7 @@
 package com.lz.framework.excel.core.annotations;
 
+import com.lz.framework.common.enums.InfraModuleConstants;
+
 import java.lang.annotation.*;
 
 /**
@@ -42,6 +44,6 @@ public @interface ExcelColumnSelect {
      *
      * @return 国际化 key 前缀
      */
-    String prefix() default "dict";
+    String prefix() default InfraModuleConstants.I18N_DICT_PREFIX;
 
 }

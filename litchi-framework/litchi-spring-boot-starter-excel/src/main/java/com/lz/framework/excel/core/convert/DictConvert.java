@@ -10,6 +10,7 @@ import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
+import com.lz.framework.common.enums.InfraModuleConstants;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
@@ -213,7 +214,7 @@ public class DictConvert implements Converter<Object> {
      * @return 国际化 key，格式：前缀_字典类型_value
      */
     private String buildI18nKey(String prefix, String dictType, String value) {
-        return prefix + "_" + dictType + "_" + value;
+        return prefix + InfraModuleConstants.I18N_SEPARATOR + dictType + InfraModuleConstants.I18N_SEPARATOR + value;
     }
 
     private static DictFormat getDictFormat(ExcelContentProperty contentProperty) {

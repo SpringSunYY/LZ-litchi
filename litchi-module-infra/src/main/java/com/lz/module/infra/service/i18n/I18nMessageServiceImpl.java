@@ -1,6 +1,8 @@
 package com.lz.module.infra.service.i18n;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.lz.framework.common.core.DictI18nDTO;
+import com.lz.framework.common.enums.SystemModuleTypeEnum;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
@@ -8,18 +10,27 @@ import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
+import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
+import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
 import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
+import com.lz.module.infra.enums.i18n.InfraI18nKeyUseTypeEnum;
+import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
+import com.lz.module.infra.framework.i18n.config.I18nProperties;
 import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.infra.enums.ErrorCodeConstants.I18N_MESSAGE_EXISTS;
@@ -37,6 +48,15 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
     @Resource
     private I18nMessageMapper i18nMessageMapper;
+
+    @Resource
+    private I18nKeyMapper i18nKeyMapper;
+
+    @Resource
+    private I18nProperties i18nProperties;
+
+    @Resource
+    private TransactionTemplate transactionTemplate;
 
     @Override
     @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
@@ -68,7 +88,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
                 updateObj.getLocale()
         );
         if (ObjectUtils.isNotNull(dbI18nMessage)
-            && !dbI18nMessage.getId().equals(updateReqVO.getId())) {
+                && !dbI18nMessage.getId().equals(updateReqVO.getId())) {
             throw exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.updateById(updateObj);
@@ -139,6 +159,90 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     public I18nMessageDO getMessageByMessageKeyAndLocale(String messageKey, String locale) {
         return i18nMessageMapper.selectByMessageKey(messageKey, locale);
+    }
+
+
+    @Override
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    public void saveI18nMessage(Map<String, DictI18nDTO> dictDataMap) {
+        //1、提取出所有的key，查询是否已经存在key，如果存在key不需要创建key
+        List<String> keys = dictDataMap.keySet().stream().toList();
+        if (keys.isEmpty()) {
+            return;
+        }
+        List<String> keyKeys = new ArrayList<>(keys);
+        List<String> messageKeys = new ArrayList<>(keys);
+        List<I18nKeyDO> i18nKeyDOS = i18nKeyMapper.selectList(new LambdaQueryWrapper<I18nKeyDO>()
+                .select(I18nKeyDO::getMessageKey)
+                .in(I18nKeyDO::getMessageKey, keys));
+        //2、对比key，判断是否存在
+        List<String> existMessageKeys = i18nKeyDOS.stream().map(I18nKeyDO::getMessageKey).toList();
+        keyKeys.removeAll(existMessageKeys);
+        //3、提取所有的local的key，不存在是新增
+        String defaultLocale = i18nProperties.getDefaultLocale();
+        List<I18nMessageDO> i18nMessageDOS = i18nMessageMapper.selectList(new LambdaQueryWrapper<I18nMessageDO>()
+                .select(I18nMessageDO::getMessageKey)
+                .eq(I18nMessageDO::getLocale, defaultLocale)
+                .in(I18nMessageDO::getMessageKey, messageKeys));
+        //3.1、根据key是否存在判断,如果是就为他默认语言上初始值并创建新增
+        for (I18nMessageDO i18nMessageDO : i18nMessageDOS) {
+            String messageKey = i18nMessageDO.getMessageKey();
+            //存在直接删除
+            messageKeys.remove(messageKey);
+        }
+        //4、构建需要保存结果
+        //4.1、构建key
+        List<I18nKeyDO> i18nKeyDOSavaList = new ArrayList<>();
+        for (String key : keyKeys) {
+            DictI18nDTO dictI18nDTO = dictDataMap.get(key);
+            if (ObjectUtils.isNull(dictI18nDTO)) {
+                continue;
+            }
+            I18nKeyDO i18nKeyDO = getI18nKeyDO(key, dictI18nDTO);
+            i18nKeyDOSavaList.add(i18nKeyDO);
+        }
+
+        //4.2 构建message
+        List<I18nMessageDO> i18nMessageDOSaveList = new ArrayList<>();
+        for (String key : messageKeys) {
+            DictI18nDTO dictI18nDTO = dictDataMap.get(key);
+            if (ObjectUtils.isNull(dictI18nDTO)) {
+                continue;
+            }
+            I18nMessageDO i18nMessageDO = getI18nMessageDO(key, dictI18nDTO, defaultLocale);
+            i18nMessageDOSaveList.add(i18nMessageDO);
+        }
+
+        transactionTemplate.executeWithoutResult(result -> {
+            i18nKeyMapper.insertBatch(i18nKeyDOSavaList);
+            i18nMessageMapper.insertBatch(i18nMessageDOSaveList);
+        });
+    }
+
+    private static @NonNull I18nMessageDO getI18nMessageDO(String key, DictI18nDTO dictI18nDTO, String defaultLocale) {
+        I18nMessageDO i18nMessageDO = new I18nMessageDO();
+        i18nMessageDO.setMessageName(dictI18nDTO.getDictName());
+        i18nMessageDO.setMessageKey(key);
+        i18nMessageDO.setLocale(defaultLocale);
+        i18nMessageDO.setLocaleTarget(InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
+        i18nMessageDO.setIsSystem(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus());
+        i18nMessageDO.setModuleType(SystemModuleTypeEnum.MODULE_TYPE_SYSTEM.getStatus());
+        i18nMessageDO.setUseType(InfraI18nKeyUseTypeEnum.KEY_USE_TYPE_0.getStatus());
+        i18nMessageDO.setMessage(dictI18nDTO.getLabel());
+        i18nMessageDO.setRemark("system auto generate");
+        return i18nMessageDO;
+    }
+
+    private static @NonNull I18nKeyDO getI18nKeyDO(String key, DictI18nDTO dictI18nDTO) {
+        I18nKeyDO i18nKeyDO = new I18nKeyDO();
+        i18nKeyDO.setMessageName(dictI18nDTO.getDictName());
+        i18nKeyDO.setMessageKey(key);
+        i18nKeyDO.setIsSystem(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus());
+        i18nKeyDO.setModuleType(SystemModuleTypeEnum.MODULE_TYPE_SYSTEM.getStatus());
+        i18nKeyDO.setUseType(InfraI18nKeyUseTypeEnum.KEY_USE_TYPE_0.getStatus());
+        i18nKeyDO.setOrderNum(0);
+        i18nKeyDO.setRemark("system auto generate");
+        return i18nKeyDO;
     }
 
 }

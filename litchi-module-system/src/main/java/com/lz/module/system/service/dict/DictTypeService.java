@@ -74,5 +74,4 @@ public interface DictTypeService {
      * @return 字典类型列表
      */
     List<DictTypeDO> getDictTypeList();
-
 }

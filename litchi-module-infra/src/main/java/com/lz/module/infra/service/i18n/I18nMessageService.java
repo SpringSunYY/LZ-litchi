@@ -2,6 +2,7 @@ package com.lz.module.infra.service.i18n;
 
 import java.util.*;
 
+import com.lz.framework.common.core.DictI18nDTO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
 import jakarta.validation.*;
@@ -94,4 +95,13 @@ public interface I18nMessageService {
      * @return 国际化信息
      */
     I18nMessageDO getMessageByMessageKeyAndLocale(String messageKey, String locale);
+
+
+
+    /**
+     * 保存国际化信息
+     *
+     * @param dictDataMap 字典数据
+     */
+    void saveI18nMessage(Map<String, DictI18nDTO> dictDataMap);
 }

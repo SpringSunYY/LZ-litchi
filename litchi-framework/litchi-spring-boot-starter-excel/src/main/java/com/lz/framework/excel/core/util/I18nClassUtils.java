@@ -254,6 +254,10 @@ public class I18nClassUtils {
             public Class<?> loadClass(String name, byte[] bytecode) {
                 return defineClass(name, bytecode, 0, bytecode.length);
             }
+
+            public I18nClassGenerator getGenerator() {
+                return generator;
+            }
         }
     }
 }

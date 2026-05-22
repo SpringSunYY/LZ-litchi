@@ -46,6 +46,14 @@ public class DictDataController {
         return success(dictDataId);
     }
 
+    @PostMapping("/generate-i18n")
+    @Operation(summary = "生成字典i18n")
+    @PreAuthorize("@ss.hasPermission('infra:message:create')")
+    public CommonResult<Boolean> generateDictI18n() {
+        dictDataService.generateDictI18n();
+        return success(true);
+    }
+
     @PutMapping("/update")
     @Operation(summary = "修改字典数据")
     @PreAuthorize("@ss.hasPermission('system:dict:update')")

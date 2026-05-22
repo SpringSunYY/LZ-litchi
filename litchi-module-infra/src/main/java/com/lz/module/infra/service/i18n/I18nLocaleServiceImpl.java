@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.framework.redis.core.RedisUtils;
 import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nLocalePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSaveReqVO;
@@ -13,7 +14,6 @@ import com.lz.module.infra.dal.mysql.i18n.I18nLocaleMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
-import com.lz.framework.redis.core.RedisUtils;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
@@ -56,7 +56,6 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         if (ObjectUtils.isNotNull(i18nLocaleByLocale)) {
             throw exception(I18N_LOCALE_EXISTS);
         }
-        //如果传过来的是默认，其他的全部设置为否
 
         //如果传过来的是默认，其他的全部设置为否
         if (createReqVO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus())) {
@@ -92,7 +91,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         }
         //如果传递过来是默认，且之前不是默认，则将之前默认的设置为否
         if (updateReqVO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus())
-            && i18nLocaleDO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus())) {
+                && i18nLocaleDO.getIsDefault().equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus())) {
             i18nLocaleMapper.update(new I18nLocaleDO().setIsDefault(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()),
                     new LambdaUpdateWrapper<I18nLocaleDO>()
                             .eq(I18nLocaleDO::getLocaleTarget, updateReqVO.getLocaleTarget())
@@ -155,6 +154,6 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
 
     @Override
     public void clearI18nCache() {
-        redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE,RedisKeyConstants.I18N_MESSAGE);
+        redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE, RedisKeyConstants.I18N_MESSAGE);
     }
 }
