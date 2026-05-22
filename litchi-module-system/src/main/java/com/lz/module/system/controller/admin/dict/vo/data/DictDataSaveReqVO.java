@@ -25,6 +25,13 @@ public class DictDataSaveReqVO {
     @Size(max = 100, message = "字典标签长度不能超过100个字符")
     private String label;
 
+    /**
+     * 国际化
+     */
+    @Schema(description = "国际化", example = "dict_label")
+    @Size(max = 100, message = "国际化长度不能超过100个字符")
+    private String i18n;
+
     @Schema(description = "字典值", requiredMode = Schema.RequiredMode.REQUIRED, example = "iocoder")
     @NotBlank(message = "字典键值不能为空")
     @Size(max = 100, message = "字典键值长度不能超过100个字符")

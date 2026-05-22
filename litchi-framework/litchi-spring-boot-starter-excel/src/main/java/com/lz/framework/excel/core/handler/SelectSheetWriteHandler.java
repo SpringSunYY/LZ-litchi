@@ -28,7 +28,6 @@ import org.apache.poi.ss.util.CellRangeAddressList;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Comparator;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -129,7 +128,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
         if (StrUtil.isNotEmpty(dictType)) {
             List<String> labels;
             if (i18n) {
-                labels = translateDropdownLabels(columnSelect);
+                labels = translateDropdownLabels(dictType);
             } else {
                 labels = DictFrameworkUtils.getDictDataLabelList(dictType);
             }
@@ -147,26 +146,27 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
     /**
      * 翻译下拉选项的 label（用于导出时显示当前语言的翻译）
      * <p>
-     * 遍历字典数据，构建国际化 key（格式：前缀_字典类型_value），
-     * 查询翻译后返回。如果未查到翻译，则使用原始 label。
+     * 遍历字典数据，直接取每个字典项的国际化 key 查询翻译。
+     * 如果国际化 key 为空，则使用原始 label。
      *
-     * @param columnSelect 列选择注解
+     * @param dictType 字典类型
      * @return 翻译后的 label 列表
      */
-    private List<String> translateDropdownLabels(ExcelColumnSelect columnSelect) {
-        String dictType = columnSelect.dictType();
-        String prefix = columnSelect.prefix();
-
+    private List<String> translateDropdownLabels(String dictType) {
         List<DictDataRespDTO> dictDatas = DictFrameworkUtils.getDictDataList(dictType);
         if (CollUtil.isEmpty(dictDatas)) {
-            return Collections.emptyList();
+            return List.of();
         }
 
         return dictDatas.stream()
                 .map(data -> {
-                    String i18nKey = prefix + "_" + dictType + "_" + data.getValue();
-                    String translated = I18nUtils.getMessage(i18nKey);
-                    return StrUtil.isNotEmpty(translated) ? translated : data.getLabel();
+                    if (StrUtil.isNotEmpty(data.getI18n())) {
+                        String translated = I18nUtils.getMessage(data.getI18n());
+                        if (StrUtil.isNotEmpty(translated)) {
+                            return translated;
+                        }
+                    }
+                    return data.getLabel();
                 })
                 .collect(Collectors.toList());
     }

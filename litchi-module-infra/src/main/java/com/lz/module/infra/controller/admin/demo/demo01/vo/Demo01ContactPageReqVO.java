@@ -19,7 +19,7 @@ public class Demo01ContactPageReqVO extends PageParam {
     private String name;
 
     @Schema(description = "性别")
-    private Boolean sex;
+    private Integer sex;
 
     @Sortable(value = "birthday")
     @Schema(description = "出生年")

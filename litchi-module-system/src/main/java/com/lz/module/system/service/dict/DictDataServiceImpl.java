@@ -207,10 +207,13 @@ public class DictDataServiceImpl implements DictDataService {
         Map<String, DictI18nDTO> dictDataMap = dictDataList.stream()
                 .collect(Collectors.toMap(
                         //dict.{dict_type}.{dict_value}
-                        dictDataDO ->
-                                InfraModuleConstants.I18N_DICT_PREFIX + InfraModuleConstants.I18N_SEPARATOR
-                                        + dictDataDO.getDictType() + InfraModuleConstants.I18N_SEPARATOR
-                                        + dictDataDO.getValue(),
+                        dictDataDO -> {
+                            String i18nKey = InfraModuleConstants.I18N_DICT_PREFIX + InfraModuleConstants.I18N_SEPARATOR
+                                    + dictDataDO.getDictType() + InfraModuleConstants.I18N_SEPARATOR
+                                    + dictDataDO.getValue();
+                            dictDataDO.setI18n(i18nKey);
+                            return dictDataDO.getI18n();
+                        },
                         dictDataDO -> {
                             String dictName = dictTypeMap.getOrDefault(dictDataDO.getDictType(), "");
                             return new DictI18nDTO(dictDataDO.getLabel(), InfraModuleConstants.I18N_DICT_PREFIX + " " + dictName);
@@ -219,7 +222,12 @@ public class DictDataServiceImpl implements DictDataService {
                 ));
 
         // 4、写入i18n
-        i18nApi.saveDictI18n(dictDataMap);
+        boolean b = i18nApi.saveDictI18n(dictDataMap);
+
+        //5、更新key
+        if (b) {
+            dictDataMapper.updateBatch(dictDataList);
+        }
     }
 
 

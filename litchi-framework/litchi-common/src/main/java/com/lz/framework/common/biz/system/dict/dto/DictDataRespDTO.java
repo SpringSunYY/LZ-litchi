@@ -29,5 +29,9 @@ public class DictDataRespDTO {
      * 枚举 {@link CommonStatusEnum}
      */
     private Integer status;
+    /**
+     * 国际化 key
+     */
+    private String i18n;
 
 }

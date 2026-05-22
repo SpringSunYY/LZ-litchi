@@ -1,7 +1,5 @@
 package com.lz.framework.excel.core.annotations;
 
-import com.lz.framework.common.enums.InfraModuleConstants;
-
 import java.lang.annotation.*;
 
 /**
@@ -29,21 +27,11 @@ public @interface ExcelColumnSelect {
     /**
      * 是否开启国际化，默认 false
      * <p>
-     * 开启后，下拉选项的 label 将作为国际化 key 进行翻译，
-     * 组合规则：前缀_字典类型_value（示例：dict_system_user_sex_1）
-     * 如果未查到对应翻译，则使用原始 label。
+     * 开启后，下拉选项的 label 将使用字典数据中的国际化 key 查询翻译，
+     * 如果国际化 key 为空则使用原始 label。
      *
      * @return 是否开启国际化
      */
     boolean i18n() default false;
-
-    /**
-     * 国际化 key 的前缀，默认 "dict"
-     * <p>
-     * 与 {@link #i18n()} 配合使用，最终 key = 前缀_字典类型_value
-     *
-     * @return 国际化 key 前缀
-     */
-    String prefix() default InfraModuleConstants.I18N_DICT_PREFIX;
 
 }

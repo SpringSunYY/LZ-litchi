@@ -11,10 +11,11 @@ import {
 #if(${table.templateType} == 2)## 树表需要导入这些
 import { get${simpleClassName}List } from '#/api/${table.moduleName}/${table.businessName}';
 import { handleTree } from '@vben/utils';
-import { $t } from '@vben/locales';
 #end
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
-
+#if($isI18n)
+import { $t } from '@vben/locales';
+#end
 /** 新增/修改的表单 */
 export function useFormSchema(): VbenFormSchema[] {
   return [
@@ -885,9 +886,9 @@ export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
     {
       fieldName: 'file',
     #if($isI18n)
-      label: "$t('ui.actionTitle.import', [$t('${table.moduleName}.${table.businessName}')])"
+      label: $t('ui.actionTitle.import', [$t('${table.moduleName}.${table.businessName}')]),
     #else
-      label: "$t('ui.actionTitle.import', ['${table.classComment}'])"
+      label: $t('ui.actionTitle.import', ['${table.classComment}']),
     #end
       component: 'Upload',
       rules: 'required',

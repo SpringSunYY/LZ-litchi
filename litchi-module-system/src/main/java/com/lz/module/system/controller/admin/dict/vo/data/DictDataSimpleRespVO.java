@@ -16,6 +16,9 @@ public class DictDataSimpleRespVO {
     @Schema(description = "字典标签", requiredMode = Schema.RequiredMode.REQUIRED, example = "男")
     private String label;
 
+    @Schema(description = "国际化",requiredMode = Schema.RequiredMode.REQUIRED,example = "dict.dict")
+    private String i18n;
+
     @Schema(description = "颜色类型，default、primary、success、info、warning、danger", example = "default")
     private String colorType;
 

@@ -36,7 +36,7 @@ public class Demo01ContactImportVO {
     @ExcelColumnSelect(dictType = "system_user_sex")
     @ExcelI18n(i18nKey = "infra:demo01-contact:field:sex")
     @ExcelType(ExcelDirection.EXPORT)
-    private Boolean sex;
+    private Integer sex;
 
     @Schema(description = "出生年")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

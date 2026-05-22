@@ -29,7 +29,7 @@ public class Demo01ContactRespVO {
     @ExcelProperty(value = "性别", converter = DictConvert.class)
     @ExcelI18n(i18nKey = "infra:demo01-contact:field:sex")
     @DictFormat("system_user_sex") // TODO 代码优化：建议设置到对应的 DictTypeConstants 枚举类中
-    private Boolean sex;
+    private Integer sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("出生年")

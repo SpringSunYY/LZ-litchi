@@ -164,11 +164,11 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
     @Override
     @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
-    public void saveI18nMessage(Map<String, DictI18nDTO> dictDataMap) {
+    public boolean saveI18nMessage(Map<String, DictI18nDTO> dictDataMap) {
         //1、提取出所有的key，查询是否已经存在key，如果存在key不需要创建key
         List<String> keys = dictDataMap.keySet().stream().toList();
         if (keys.isEmpty()) {
-            return;
+            return false;
         }
         List<String> keyKeys = new ArrayList<>(keys);
         List<String> messageKeys = new ArrayList<>(keys);
@@ -213,10 +213,11 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             i18nMessageDOSaveList.add(i18nMessageDO);
         }
 
-        transactionTemplate.executeWithoutResult(result -> {
+        return Boolean.TRUE.equals(transactionTemplate.execute(result -> {
             i18nKeyMapper.insertBatch(i18nKeyDOSavaList);
             i18nMessageMapper.insertBatch(i18nMessageDOSaveList);
-        });
+            return true;
+        }));
     }
 
     private static @NonNull I18nMessageDO getI18nMessageDO(String key, DictI18nDTO dictI18nDTO, String defaultLocale) {

@@ -103,5 +103,5 @@ public interface I18nMessageService {
      *
      * @param dictDataMap 字典数据
      */
-    void saveI18nMessage(Map<String, DictI18nDTO> dictDataMap);
+    boolean saveI18nMessage(Map<String, DictI18nDTO> dictDataMap);
 }

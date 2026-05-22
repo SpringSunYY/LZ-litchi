@@ -15,5 +15,5 @@ public interface I18nApi {
      *
      * @param dictDataMap 字典数据
      */
-    void saveDictI18n(Map<String, DictI18nDTO> dictDataMap);
+    boolean saveDictI18n(Map<String, DictI18nDTO> dictDataMap);
 }

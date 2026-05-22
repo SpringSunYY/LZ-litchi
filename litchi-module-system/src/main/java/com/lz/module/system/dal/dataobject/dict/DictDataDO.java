@@ -33,6 +33,10 @@ public class DictDataDO extends BaseDO {
      */
     private String label;
     /**
+     * 国际化
+     */
+    private String i18n;
+    /**
      * 字典值
      */
     private String value;

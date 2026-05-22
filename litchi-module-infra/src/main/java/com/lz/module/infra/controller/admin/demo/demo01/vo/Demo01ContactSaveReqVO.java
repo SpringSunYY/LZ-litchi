@@ -20,7 +20,7 @@ public class Demo01ContactSaveReqVO {
 
     @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "性别不能为空")
-    private Boolean sex;
+    private Integer sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotNull(message = "出生年不能为空")

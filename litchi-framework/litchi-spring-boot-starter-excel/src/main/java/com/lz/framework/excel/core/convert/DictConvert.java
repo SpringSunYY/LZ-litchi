@@ -10,7 +10,6 @@ import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
 import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
-import com.lz.framework.common.enums.InfraModuleConstants;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
@@ -20,19 +19,14 @@ import com.lz.framework.i18n.core.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Excel 字典数据转换器
  * <p>
  * 导出时将字典值转换为字典标签，导入时将字典标签反向解析为字典值。
  * <p>
- * 支持两种国际化场景：
- * <ul>
- *   <li>当字段标注了 {@link DictFormat#i18n()} = true 时，使用前缀_字典类型_value 组合国际化 key 翻译</li>
- *   <li>当字段标注了 {@link ExcelColumnSelect#i18n()} = true 时，使用前缀_字典类型_value 组合国际化 key 翻译</li>
- * </ul>
- * 国际化 key 示例：dict_system_user_sex_1
+ * 国际化：当字段标注了 @DictFormat(i18n=true) 或 @ExcelColumnSelect 时，
+ * 直接取字典数据中的国际化 key 查询翻译，如果为空则使用原始 label。
  *
  * @author lz
  */
@@ -68,28 +62,29 @@ public class DictConvert implements Converter<Object> {
         }
 
         String dictType = null;
-        String prefix = null;
         boolean i18nEnabled = false;
+
+        // ExcelColumnSelect 下拉场景：不需要兜底解析
+        boolean isColumnSelectI18n = false;
 
         // 优先尝试 @ExcelColumnSelect(i18n=true)
         ExcelColumnSelect columnSelect = getColumnSelect(contentProperty);
         if (columnSelect != null && columnSelect.i18n() && StrUtil.isNotEmpty(columnSelect.dictType())) {
             dictType = columnSelect.dictType();
-            prefix = columnSelect.prefix();
             i18nEnabled = true;
+            isColumnSelectI18n = true;
         }
 
         // 其次尝试 @DictFormat(i18n=true)
         DictFormat dictFormat = getDictFormat(contentProperty);
         if (dictType == null && dictFormat != null && dictFormat.i18n()) {
             dictType = dictFormat.value();
-            prefix = dictFormat.prefix();
             i18nEnabled = true;
         }
 
         // 国际化场景：尝试用国际化翻译匹配原始 label
         if (i18nEnabled) {
-            String matchedLabel = tryMatchLabelByI18n(prefix, dictType, label);
+            String matchedLabel = tryMatchLabelByI18n(dictType, label);
             if (matchedLabel != null) {
                 label = matchedLabel;
             } else {
@@ -97,11 +92,15 @@ public class DictConvert implements Converter<Object> {
             }
         }
 
-        // 解析为字典值（优先用国际化解析后的 label，兜底用原始 label）
+        // 解析为字典值
         if (dictType != null) {
             String value = DictFrameworkUtils.parseDictDataValue(dictType, label);
             if (value != null) {
                 return Convert.convert(contentProperty.getField().getType(), value);
+            }
+            // @ExcelColumnSelect(i18n=true) 下拉选项里只有翻译后的 label，匹配不到就不要再兜底了
+            if (isColumnSelectI18n) {
+                return label;
             }
         }
 
@@ -130,13 +129,13 @@ public class DictConvert implements Converter<Object> {
         // 优先尝试 @ExcelColumnSelect(i18n=true)：导出值必须匹配下拉选项
         ExcelColumnSelect columnSelect = getColumnSelect(contentProperty);
         if (columnSelect != null && columnSelect.i18n() && StrUtil.isNotEmpty(columnSelect.dictType())) {
-            return new WriteCellData<>(translateLabelByI18n(columnSelect.prefix(), columnSelect.dictType(), value));
+            return new WriteCellData<>(translateLabelByI18n(columnSelect.dictType(), value));
         }
 
         // 其次尝试 @DictFormat(i18n=true)
         DictFormat dictFormat = getDictFormat(contentProperty);
         if (dictFormat != null && dictFormat.i18n()) {
-            return new WriteCellData<>(translateLabelByI18n(dictFormat.prefix(), dictFormat.value(), value));
+            return new WriteCellData<>(translateLabelByI18n(dictFormat.value(), value));
         }
 
         // 兜底：普通 @DictFormat 导出（无国际化）
@@ -155,18 +154,21 @@ public class DictConvert implements Converter<Object> {
     /**
      * 导出时，根据字典值查询国际化后的标签
      * <p>
-     * 构建 i18n key = 前缀_字典类型_value，查询翻译。
-     * 如果未查到，则返回原始 label；如果都查不到，返回空字符串。
+     * 直接取字典数据中的国际化 key 查询翻译，如果为空则使用原始 label。
      */
-    private String translateLabelByI18n(String prefix, String dictType, String value) {
-        String i18nKey = buildI18nKey(prefix, dictType, value);
-        String translated = I18nUtils.getMessage(i18nKey);
-        if (StrUtil.isNotEmpty(translated)) {
-            return translated;
-        }
+    private String translateLabelByI18n(String dictType, String value) {
         String label = DictFrameworkUtils.parseDictDataLabel(dictType, value);
-        // 国际化未查到，优先返回字典原始 label，兜底返回原始值（避免 Excel 空白）
-        return StrUtil.isNotEmpty(label) ? label : value;
+        if (label == null) {
+            return value;
+        }
+        DictDataRespDTO dictData = findDictData(dictType, value);
+        if (dictData != null && StrUtil.isNotEmpty(dictData.getI18n())) {
+            String translated = I18nUtils.getMessage(dictData.getI18n());
+            if (StrUtil.isNotEmpty(translated)) {
+                return translated;
+            }
+        }
+        return label;
     }
 
     /**
@@ -176,7 +178,7 @@ public class DictConvert implements Converter<Object> {
      * 2. 如果未匹配到，查询所有语言的翻译，遍历匹配
      * 3. 如果仍未匹配到，返回 null，由后续逻辑处理
      */
-    private String tryMatchLabelByI18n(String prefix, String dictType, String importLabel) {
+    private String tryMatchLabelByI18n(String dictType, String importLabel) {
         List<DictDataRespDTO> dictDatas = DictFrameworkUtils.getDictDataList(dictType);
         if (CollUtil.isEmpty(dictDatas)) {
             log.warn("[tryMatchLabelByI18n] dictType={} has no data", dictType);
@@ -185,19 +187,21 @@ public class DictConvert implements Converter<Object> {
 
         // 1. 用当前语言的国际化 key 查询翻译，直接匹配 import label
         for (DictDataRespDTO data : dictDatas) {
-            String i18nKey = buildI18nKey(prefix, dictType, data.getValue());
-            String translated = I18nUtils.getMessage(i18nKey);
-            if (importLabel.equals(translated)) {
-                return data.getLabel();
+            if (StrUtil.isNotEmpty(data.getI18n())) {
+                String translated = I18nUtils.getMessage(data.getI18n());
+                if (importLabel.equals(translated)) {
+                    return data.getLabel();
+                }
             }
         }
 
         // 2. 查询所有语言的翻译，遍历匹配
         for (DictDataRespDTO data : dictDatas) {
-            String i18nKey = buildI18nKey(prefix, dictType, data.getValue());
-            List<String> allMessages = I18nUtils.getAllLocaleMessages(i18nKey);
-            if (CollUtil.contains(allMessages, importLabel)) {
-                return data.getLabel();
+            if (StrUtil.isNotEmpty(data.getI18n())) {
+                List<String> allMessages = I18nUtils.getAllLocaleMessages(data.getI18n());
+                if (CollUtil.contains(allMessages, importLabel)) {
+                    return data.getLabel();
+                }
             }
         }
 
@@ -206,15 +210,19 @@ public class DictConvert implements Converter<Object> {
     }
 
     /**
-     * 构建国际化 key
-     *
-     * @param prefix   前缀，默认 dict
-     * @param dictType 字典类型
-     * @param value    字典值
-     * @return 国际化 key，格式：前缀_字典类型_value
+     * 根据字典值查找字典数据
      */
-    private String buildI18nKey(String prefix, String dictType, String value) {
-        return prefix + InfraModuleConstants.I18N_SEPARATOR + dictType + InfraModuleConstants.I18N_SEPARATOR + value;
+    private static DictDataRespDTO findDictData(String dictType, String value) {
+        List<DictDataRespDTO> dictDatas = DictFrameworkUtils.getDictDataList(dictType);
+        if (CollUtil.isEmpty(dictDatas)) {
+            return null;
+        }
+        for (DictDataRespDTO data : dictDatas) {
+            if (value.equals(data.getValue())) {
+                return data;
+            }
+        }
+        return null;
     }
 
     private static DictFormat getDictFormat(ExcelContentProperty contentProperty) {

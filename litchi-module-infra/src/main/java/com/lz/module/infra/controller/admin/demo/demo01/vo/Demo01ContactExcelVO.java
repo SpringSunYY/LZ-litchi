@@ -20,30 +20,48 @@ import java.time.LocalDateTime;
 @Accessors(chain = false)
 public class Demo01ContactExcelVO {
 
-    @ExcelProperty(value = "名字")
-    @ExcelI18n(i18nKey = "infra:demo01-contact:field:name")
+    /**
+     * 名字
+     */
+    @ExcelProperty("名字")
+    @ExcelI18n(i18nKey = "infra.demo01Contact.field.name")
     private String name;
 
+    /**
+     * 性别
+     */
     @ExcelProperty(value = "性别", converter = DictConvert.class)
-    @ExcelColumnSelect(dictType = "infra_i18n_test", i18n = true)
-    @ExcelI18n(i18nKey = "infra:demo01-contact:field:sex")
-    private Boolean sex;
+    @ExcelColumnSelect(dictType = "system_user_sex", i18n = true)
+    @ExcelI18n(i18nKey = "infra.demo01Contact.field.sex")
+    private Integer sex;
 
+    /**
+     * 出生年
+     */
     @ExcelProperty(value = "出生年")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @ExcelI18n(i18nKey = "infra:demo01-contact:field:birthday")
+    @ExcelI18n(i18nKey = "infra.demo01Contact.field.birthday")
     private LocalDateTime birthday;
 
-    @ExcelProperty("简介")
-    @ExcelI18n(i18nKey = "infra:demo01-contact:field:description")
-    private String description;
-
+    /**
+     * 年龄
+     */
     @ExcelProperty("年龄")
-    @ExcelI18n(i18nKey = "infra:demo01-contact:field:age")
+    @ExcelI18n(i18nKey = "infra.demo01Contact.field.age")
     private Integer age;
 
+    /**
+     * 简介
+     */
+    @ExcelProperty("简介")
+    @ExcelI18n(i18nKey = "infra.demo01Contact.field.description")
+    private String description;
+
+    /**
+     * 头像
+     */
     @ExcelProperty("头像")
-    @ExcelI18n(i18nKey = "infra:demo01-contact:field:avatar")
+    @ExcelI18n(i18nKey = "infra.demo01Contact.field.avatar")
     private String avatar;
 
 }
