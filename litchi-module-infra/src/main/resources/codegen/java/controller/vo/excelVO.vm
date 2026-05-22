@@ -1,5 +1,5 @@
 package ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo;
-
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 import com.alibaba.excel.annotation.ExcelProperty;
 import ${ExcelColumnSelectClassName};
 import ${ExcelI18nClassName};
@@ -53,7 +53,7 @@ public class ${sceneEnum.prefixClass}${table.className}ExcelVO {
     @ExcelColumnSelect(dictType = "${column.dictType}")
 #end
 #if ($isI18n)
-    @ExcelI18n(i18nKey = "${table.moduleName}.${table.businessName}.field.${column.javaField}")
+    @ExcelI18n(i18nKey = "${i18nModuleType}.${table.businessName}.field.${column.javaField}")
 #end
 #else
 #if (${column.javaType} == "LocalDateTime")
@@ -66,7 +66,7 @@ public class ${sceneEnum.prefixClass}${table.className}ExcelVO {
     @ExcelProperty("${column.columnComment}")
 #end
 #if ($isI18n)
-    @ExcelI18n(i18nKey = "${table.moduleName}.${table.businessName}.field.${column.javaField}")
+    @ExcelI18n(i18nKey = "${i18nModuleType}.${table.businessName}.field.${column.javaField}")
 #end
 #end
     private ${column.javaType} ${column.javaField};

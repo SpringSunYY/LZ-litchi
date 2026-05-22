@@ -151,7 +151,7 @@ watch(
                   <template #default="{row}">
                     <Select v-model:value="row.${javaField}" :placeholder="$t('ui.placeholder.select', [
                       #if($isI18n)
-                        $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                        $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                       #else
                         '${comment}'
                       #end

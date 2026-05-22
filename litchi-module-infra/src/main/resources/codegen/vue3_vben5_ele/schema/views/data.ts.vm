@@ -1,5 +1,6 @@
 import type { VbenFormSchema } from '#/adapter/form';
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 import { $t } from '@vben/locales';
@@ -32,7 +33,7 @@ export function useFormSchema(): VbenFormSchema[] {
     /** ${treeParentColumn.columnComment} */
     {
       fieldName: '${treeParentColumn.javaField}',
-      label: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
+      label: #if($isI18n)$t('${i18nModuleType}.${table.businessName}.field.${treeParentColumn.javaField}')#else '${treeParentColumn.columnComment}'#end,
       component: 'ApiTreeSelect',
       componentProps: {
         allowClear: true,
@@ -40,7 +41,7 @@ export function useFormSchema(): VbenFormSchema[] {
           const data = await get${simpleClassName}List({});
           data.unshift({
             id: 0,
-            name: #if($isI18n)$t('ui.treeRoot',[$t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
+            name: #if($isI18n)$t('ui.treeRoot',[$t('${i18nModuleType}.${table.businessName}.field.${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
           });
           return handleTree(data);
         },
@@ -49,7 +50,7 @@ export function useFormSchema(): VbenFormSchema[] {
         childrenField: 'children',
         placeholder: $t('ui.placeholder.select', [
           #if($isI18n)
-            $t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')
+            $t('${i18nModuleType}.${table.businessName}.field.${treeParentColumn.javaField}')
           #else
             '${treeParentColumn.columnComment}'
           #end
@@ -76,7 +77,7 @@ export function useFormSchema(): VbenFormSchema[] {
     /** ${comment} */
     {
       fieldName: '${javaField}',
-      label: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
+      label: #if($isI18n)$t('${i18nModuleType}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
 #if (($column.createOperation || $column.updateOperation) && !$column.nullable && !${column.primaryKey})## 创建或者更新操作 && 要求非空 && 非主键
       rules: 'required',
 #end
@@ -85,7 +86,7 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -107,7 +108,7 @@ export function useFormSchema(): VbenFormSchema[] {
         moduleType: '$extendConfig.get('i18nModuleType')',
       },
   #elseif($column.htmlType == "select")## 下拉框
-      component: 'Select',
+      component: #if($isI18n)'I18nSelect#else Select'#end,
       componentProps: {
         #if ("" != $dictType)## 有数据字典
         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -116,14 +117,14 @@ export function useFormSchema(): VbenFormSchema[] {
 #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
         ]),
       },
 #elseif($column.htmlType == "checkbox")## 多选框
-      component: 'SelectToString',
+      component: #if($isI18n)'I18nSelectToString'#else'SelectToString'#end,
       componentProps: {
         #if ("" != $dictType)## 有数据字典
         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -132,7 +133,7 @@ export function useFormSchema(): VbenFormSchema[] {
         #end
       },
   #elseif($column.htmlType == "radio")## 单选框
-      component: 'RadioGroup',
+      component: #if($isI18n)'I18nRadioGroup'#else 'RadioGroup'#end,
       componentProps: {
         #if ("" != $dictType)## 有数据字典
         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -154,7 +155,7 @@ export function useFormSchema(): VbenFormSchema[] {
       componentProps: {
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -167,7 +168,7 @@ export function useFormSchema(): VbenFormSchema[] {
         controlsPosition: 'right',
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -201,7 +202,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     /** ${comment} */
     {
       fieldName: '${javaField}',
-      label: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
+      label: #if($isI18n)$t('${i18nModuleType}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
 #if ($column.listOperationCondition == "BETWEEN" && ($column.htmlType == "inputNumber" || $column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Byte" || $column.javaType == "Short" || $column.javaType == "Double" || $column.javaType == "BigDecimal"))
       component: 'NumberRange',
 #elseif ($column.htmlType == "input" || $column.htmlType == "textarea" || $column.htmlType == "editor")
@@ -210,14 +211,14 @@ export function useGridFormSchema(): VbenFormSchema[] {
         allowClear: true,
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
         ]),
       },
 #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
-      component: 'Select',
+      component: #if($isI18n)'I18nSelect#else Select'#end,
       componentProps: {
         allowClear: true,
         #if ("" != $dictType)## 设置了 dictType 数据字典的情况
@@ -227,14 +228,14 @@ export function useGridFormSchema(): VbenFormSchema[] {
         #end
         placeholder: $t('ui.placeholder.select', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
         ]),
       },
 #elseif ($column.htmlType == "checkbox")
-      component: 'Checkbox',
+      component: #if($isI18n)'I18nCheckbox'#else 'Checkbox'#end,
       componentProps: {
         allowClear: true,
         #if ("" != $dictType)## 设置了 dictType 数据字典的情况
@@ -251,7 +252,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         controlsPosition: 'right',
         placeholder: $t('ui.placeholder.input', [
 #if($isI18n)
-          $t('${table.moduleName}.${table.businessName}.field.${javaField}'),
+          $t('${i18nModuleType}.${table.businessName}.field.${javaField}'),
 #else
           '${comment}',
 #end
@@ -289,7 +290,7 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
     /** ${comment} */
     {
       field: '${javaField}',
-      title: #if($isI18n)$t('${table.moduleName}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
+      title: #if($isI18n)$t('${i18nModuleType}.${table.businessName}.field.${javaField}')#else '${comment}'#end,
       minWidth: 120,
 #if ($column.listOperation && $column.sortOperation)
       sortable: true,
@@ -298,7 +299,7 @@ export function useGridColumns(): VxeTableGridOptions<${simpleClassName}Api.${si
       formatter: 'formatDateTime',
   #elseif("" != $dictType)## 数据字典
       cellRender: {
-        name: 'CellDict',
+        name: #if($isI18n)'CellI18nDict'#else 'CellDict'#end,
         props: { type: DICT_TYPE.$dictType.toUpperCase() },
       },
   #elseif($column.htmlType == "imageUpload")## 图片上传
@@ -392,7 +393,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                             #elseif($column.htmlType == "editor")## 文本编辑器
                                 component: 'RichTextarea',
                             #elseif($column.htmlType == "select")## 下拉框
-                                component: 'Select',
+                                component: #if($isI18n)'I18nSelect#else Select'#end,
                                 componentProps: {
                                     #if ("" != $dictType)## 有数据字典
                                         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -408,7 +409,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                                 ]),
       },
 #elseif($column.htmlType == "checkbox")## 多选框
-                                component: 'Checkbox',
+                                component: #if($isI18n)'I18nCheckbox'#else 'Checkbox'#end,
                                 componentProps: {
                                     #if ("" != $dictType)## 有数据字典
                                         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -417,7 +418,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                                     #end
                                 },
                             #elseif($column.htmlType == "radio")## 单选框
-                                component: 'RadioGroup',
+                                component: #if($isI18n)'I18nRadioGroup'#else 'RadioGroup'#end,
                                 componentProps: {
                                     #if ("" != $dictType)## 有数据字典
                                         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -502,7 +503,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                                 ]),
       },
 #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
-      component: 'Select',
+      component: #if($isI18n)'I18nSelect#else Select'#end,
       componentProps: {
         allowClear: true,
         #if ("" != $dictType)## 设置了 dictType 数据字典的情况
@@ -519,7 +520,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                                 ]),
       },
 #elseif ($column.htmlType == "checkbox")
-      component: 'Checkbox',
+      component: #if($isI18n)'I18nCheckbox'#else 'Checkbox'#end,
       componentProps: {
         allowClear: true,
         #if ("" != $dictType)## 设置了 dictType 数据字典的情况
@@ -580,7 +581,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                     formatter: 'formatDateTime',
                 #elseif("" != $dictType)## 数据字典
                     cellRender: {
-                        name: 'CellDict',
+                        name: #if($isI18n)'CellI18nDict'#else 'CellDict'#end,
                         props: { type: DICT_TYPE.$dictType.toUpperCase() },
                     },
                 #elseif($column.htmlType == "imageUpload")## 图片上传
@@ -709,7 +710,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                 #elseif($column.htmlType == "editor")## 文本编辑器
                                     component: 'RichTextarea',
                                 #elseif($column.htmlType == "select")## 下拉框
-                                    component: 'Select',
+                                    component: #if($isI18n)'I18nSelect#else Select'#end,
                                     componentProps: {
                                         #if ("" != $dictType)## 有数据字典
                                             options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -725,7 +726,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                 ]),
       },
 #elseif($column.htmlType == "checkbox")## 多选框
-                                    component: 'Checkbox',
+                                    component: #if($isI18n)'I18nCheckbox'#else 'Checkbox'#end,
                                     componentProps: {
                                         #if ("" != $dictType)## 有数据字典
                                             options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -734,7 +735,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                         #end
                                     },
                                 #elseif($column.htmlType == "radio")## 单选框
-                                    component: 'RadioGroup',
+                                    component: #if($isI18n)'I18nRadioGroup'#else 'RadioGroup'#end,
                                     componentProps: {
                                         #if ("" != $dictType)## 有数据字典
                                             options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -806,7 +807,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                         formatter: 'formatDateTime',
                     #elseif("" != $dictType)## 数据字典
                         cellRender: {
-                            name: 'CellDict',
+                            name: #if($isI18n)'CellI18nDict'#else 'CellDict'#end,
                             props: { type: DICT_TYPE.$dictType.toUpperCase() },
                         },
                     #elseif($column.htmlType == "imageUpload")## 图片上传
@@ -840,7 +841,7 @@ export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
     {
       fieldName: 'file',
     #if($isI18n)
-      label: $t('ui.actionTitle.import', [$t('${table.moduleName}.${table.businessName}')]),
+      label: $t('ui.actionTitle.import', [$t('${i18nModuleType}.${table.businessName}')]),
     #else
       label: $t('ui.actionTitle.import', ['${table.classComment}']),
     #end

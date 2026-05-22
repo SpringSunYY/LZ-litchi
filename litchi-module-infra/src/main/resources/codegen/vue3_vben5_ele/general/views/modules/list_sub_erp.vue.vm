@@ -58,7 +58,7 @@ function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
     ElMessage.warning($t('common.selectFirst', [
       #if($isI18n)
-        $t('${table.moduleName}.${table.businessName}')
+        $t('${i18nModuleType}.${table.businessName}')
       #else
         '${table.classComment}'
       #end
@@ -236,7 +236,7 @@ onMounted(() => {
                               v-model="queryParams.${javaField}"
                               :placeholder="$t('ui.placeholder.input', [
                                 #if($isI18n)
-                                  $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                  $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                                 #else
                                   '${comment}'
                                 #end
@@ -252,7 +252,7 @@ onMounted(() => {
                               v-model="queryParams.${javaField}"
                               :placeholder="$t('ui.placeholder.select', [
                                 #if($isI18n)
-                                  $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                  $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                                 #else
                                   '${comment}'
                                 #end
@@ -280,7 +280,7 @@ onMounted(() => {
                                   value-format="YYYY-MM-DD"
                                   :placeholder="$t('ui.placeholder.date', [
                                   #if($isI18n)
-                                    $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                                    $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                                   #else
                                     '${comment}'
                                   #end

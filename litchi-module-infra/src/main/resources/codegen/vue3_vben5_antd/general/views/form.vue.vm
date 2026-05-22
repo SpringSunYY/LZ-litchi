@@ -45,7 +45,7 @@ const rules: Record<string, Rule[]> = {
       #set($comment=$column.columnComment)
         $column.javaField: [{ required: true, message: $t('formRules.required', [
           #if($isI18n)
-            $t('${table.moduleName}.${table.businessName}.field.${column.javaField}')
+            $t('${i18nModuleType}.${table.businessName}.field.${column.javaField}')
           #else
             '${comment}'
           #end
@@ -60,8 +60,8 @@ const ${classNameVar}Tree = ref<any[]>([]) // 树形结构
   const getTitle = computed(() => {
 #if($isI18n)
     return formData.value?.id
-        ? $t('ui.actionTitle.edit', [$t('${table.moduleName}.${table.businessName}')])
-        : $t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')]);
+        ? $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]);
 #else
     return formData.value?.id
         ? $t('ui.actionTitle.edit', ['${table.classComment}'])
@@ -106,7 +106,7 @@ const get${simpleClassName}Tree = async () => {
   const data = await get${simpleClassName}List({});
   data.unshift({
     id: 0,
-    name: #if($isI18n)$t('ui.treeRoot',[$t('${table.moduleName}.${table.businessName}.field.${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
+    name: #if($isI18n)$t('ui.treeRoot',[$t('${i18nModuleType}.${table.businessName}.field.${treeParentColumn.javaField}')])#else $t('ui.treeRoot',['${treeParentColumn.columnComment}')])#end,
   });
     ${classNameVar}Tree.value = handleTree(data);
 }
@@ -237,7 +237,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
                       treeDefaultExpandAll
                       :placeholder="$t('ui.placeholder.select', [
                         #if($isI18n)
-                          $t('${table.moduleName}.${table.businessName}.field.${column.javaField}')
+                          $t('${i18nModuleType}.${table.businessName}.field.${column.javaField}')
                         #else
                           '${comment}'
                         #end
@@ -248,7 +248,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
             <Form.Item label="${comment}" name="${javaField}">
               <Input v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
                 #if($isI18n)
-                  $t('${table.moduleName}.${table.businessName}.field.${column.javaField}')
+                  $t('${i18nModuleType}.${table.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end
@@ -270,7 +270,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
             <Form.Item label="${comment}" name="${javaField}">
               <Select v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.select', [
                 #if($isI18n)
-                  $t('${table.moduleName}.${table.businessName}.field.${column.javaField}')
+                  $t('${i18nModuleType}.${table.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end
@@ -327,7 +327,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
                       valueFormat="x"
                       :placeholder="$t('ui.placeholder.select', [
                         #if($isI18n)
-                          $t('${table.moduleName}.${table.businessName}.field.${column.javaField}')
+                          $t('${i18nModuleType}.${table.businessName}.field.${column.javaField}')
                         #else
                           '${comment}'
                         #end
@@ -338,7 +338,7 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
             <Form.Item label="${comment}" name="${javaField}">
               <Textarea v-model:value="formData.${javaField}" :placeholder="$t('ui.placeholder.input', [
                 #if($isI18n)
-                  $t('${table.moduleName}.${table.businessName}.field.${column.javaField}')
+                  $t('${i18nModuleType}.${table.businessName}.field.${column.javaField}')
                 #else
                   '${comment}'
                 #end

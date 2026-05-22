@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
 import { useVbenModelDrawer } from '@vben/common-ui';
@@ -23,8 +24,8 @@ import { useFormSchema } from '../data';
 const emit = defineEmits(['success']);
 const formData = ref<${simpleClassName}Api.${simpleClassName}>();
 #if($isI18n)
-  const titleEdit = $t('ui.actionTitle.edit', [$t('${table.moduleName}.${table.businessName}')]);
-  const titleCreate = $t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')]);
+  const titleEdit = $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}')]);
+  const titleCreate = $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]);
 #else
   const titleEdit = $t('ui.actionTitle.edit', ['${table.classComment}']);
   const titleCreate = $t('ui.actionTitle.create', ['${table.classComment}']);

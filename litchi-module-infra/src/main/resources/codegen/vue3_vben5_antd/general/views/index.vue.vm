@@ -198,7 +198,7 @@ try {
     key: 'action_key_msg',
   });
   const data = await export${simpleClassName}(queryParams);
-  downloadFileFromBlobPart({ #if($isI18n)fileName: $t('${table.moduleName}:${simpleClassName_strikeCase}'),#else fileName: '${table.classComment}.xls',#end source: data });
+  downloadFileFromBlobPart({ #if($isI18n)fileName: $t('${i18nModuleType}:${simpleClassName_strikeCase}'),#else fileName: '${table.classComment}.xls',#end source: data });
 }finally {
   exportLoading.value = false;
 }
@@ -245,12 +245,12 @@ onMounted(() => {
                       #set ($dictMethod = "boolean")
                   #end
                   #if ($column.htmlType == "input")
-                    <Form.Item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
+                    <Form.Item #if($isI18n)label="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
                       <Input
                           v-model:value="queryParams.${javaField}"
                           :placeholder="$t('ui.placeholder.input', [
                             #if($isI18n)
-                              $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                              $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                             #else
                               '${comment}'
                             #end
@@ -261,12 +261,12 @@ onMounted(() => {
                       />
                     </Form.Item>
                   #elseif ($column.htmlType == "select" || $column.htmlType == "radio" || $column.htmlType == "checkbox")
-                    <Form.Item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
+                    <Form.Item #if($isI18n)label="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
                       <Select
                           v-model:value="queryParams.${javaField}"
                           :placeholder="$t('ui.placeholder.select', [
                             #if($isI18n)
-                              $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                              $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                             #else
                               '${comment}'
                             #end
@@ -289,13 +289,13 @@ onMounted(() => {
                     </Form.Item>
                   #elseif($column.htmlType == "datetime")
                       #if ($column.listOperationCondition != "BETWEEN")## 非范围
-                        <Form.Item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
+                        <Form.Item #if($isI18n)label="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
                           <DatePicker
                               v-model:value="queryParams.${javaField}"
                               valueFormat="YYYY-MM-DD"
                               :placeholder="$t('ui.placeholder.date', [
                             #if($isI18n)
-                              $t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')
+                              $t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')
                             #else
                               '${comment}'
                             #end
@@ -305,7 +305,7 @@ onMounted(() => {
                           />
                         </Form.Item>
                       #else## 范围
-                        <Form.Item #if($isI18n)label="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
+                        <Form.Item #if($isI18n)label="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else label="${comment}"#end name="${javaField}">
                           <RangePicker
                               v-model:value="queryParams.${javaField}"
                               v-bind="getRangePickerDefaultProps()"
@@ -327,7 +327,7 @@ onMounted(() => {
     </ContentWrap>
 
     <!-- 列表 -->
-    <ContentWrap #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}')"#else title="${table.classComment}"#end>
+    <ContentWrap #if($isI18n)title="$t('${i18nModuleType}:${simpleClassName_strikeCase}')"#else title="${table.classComment}"#end>
       <template #extra>
         <TableToolbar
             ref="tableToolbarRef"
@@ -345,7 +345,7 @@ onMounted(() => {
               @click="handleCreate"
               v-access:code="['${permissionPrefix}:create']"
           >
-            #if($isI18n){{ $t('ui.actionTitle.create', [$t('${table.moduleName}.${table.businessName}')]) }}#else {{ $t('ui.actionTitle.create', ['${table.classComment}']) }}#end
+            #if($isI18n){{ $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]) }}#else {{ $t('ui.actionTitle.create', ['${table.classComment}']) }}#end
           </Button>
           <Button
               :icon="h(Download)"
@@ -355,7 +355,7 @@ onMounted(() => {
               @click="onExport"
               v-access:code="['${permissionPrefix}:export']"
           >
-            {{ #if($isI18n)$t('ui.actionTitle.export', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end }}
+            {{ #if($isI18n)$t('ui.actionTitle.export', [$t('${i18nModuleType}.${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end }}
           </Button>
         #if ($table.templateType != 2 && $deleteBatchEnable)
           <Button
@@ -367,7 +367,7 @@ onMounted(() => {
               @click="handleDeleteBatch"
               v-access:code="['${table.moduleName}:${simpleClassName_strikeCase}:delete']"
           >
-            {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${table.moduleName}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end }}
+            {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${i18nModuleType}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end }}
           </Button>
         #end
         </TableToolbar>
@@ -429,21 +429,21 @@ onMounted(() => {
                   #set ($AttrName=$column.javaField.substring(0,1).toUpperCase() + ${column.javaField.substring(1)})
                   #set ($comment=$column.columnComment)
                   #if ($column.javaType == "LocalDateTime")## 时间类型
-                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center">
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center">
                       <template #default="{row}">
                         {{formatDateTime(row.${javaField})}}
                       </template>
                     </vxe-column>
                   #elseif($column.dictType && "" != $column.dictType)## 数据字典
-                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center">
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center">
                       <template #default="{row}">
                         <dict-tag :type="DICT_TYPE.$dictType.toUpperCase()" :value="row.${javaField}" />
                       </template>
                     </vxe-column>
                   #elseif ($table.templateType == 2 && $javaField == $treeNameColumn.javaField)
-                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center"  tree-node/>
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center"  tree-node/>
                   #else
-                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${table.moduleName}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center" />
+                    <vxe-column field="${javaField}" #if($isI18n)title="$t('${i18nModuleType}:${simpleClassName_strikeCase}:field:${javaField}')"#else title="${comment}"#end align="center" />
                   #end
               #end
           #end
@@ -456,7 +456,7 @@ onMounted(() => {
       @click="handleAppend(row as any)"
       v-access:code="['${permissionPrefix}:create']"
   >
-            {{ #if($isI18n)$t('common.append', [$t('${table.moduleName}.${table.businessName}')])#else $t('common.append', ['${table.classComment}'])#end }}
+            {{ #if($isI18n)$t('common.append', [$t('${i18nModuleType}.${table.businessName}')])#else $t('common.append', ['${table.classComment}'])#end }}
   </Button>
 #end
             <Button
@@ -465,7 +465,7 @@ onMounted(() => {
                 @click="handleEdit(row as any)"
                 v-access:code="['${permissionPrefix}:update']"
             >
-              {{ #if($isI18n)$t('common.edit', [$t('${table.moduleName}.${table.businessName}')])#else $t('common.edit', ['${table.classComment}'])#end }}
+              {{ #if($isI18n)$t('common.edit', [$t('${i18nModuleType}.${table.businessName}')])#else $t('common.edit', ['${table.classComment}'])#end }}
             </Button>
             <Button
                 size="small"
@@ -478,7 +478,7 @@ onMounted(() => {
                 @click="handleDelete(row as any)"
                 v-access:code="['${permissionPrefix}:delete']"
             >
-              {{ #if($isI18n)$t('common.delete', [$t('${table.moduleName}.${table.businessName}')])#else $t('common.delete', ['${table.classComment}'])#end }}
+              {{ #if($isI18n)$t('common.delete', [$t('${i18nModuleType}.${table.businessName}')])#else $t('common.delete', ['${table.classComment}'])#end }}
             </Button>
           </template>
         </vxe-column>

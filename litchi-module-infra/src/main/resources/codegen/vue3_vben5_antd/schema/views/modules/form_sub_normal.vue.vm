@@ -5,6 +5,7 @@
 #set ($subClassNameVar = $subClassNameVars.get($subIndex))
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 <script lang="ts" setup>
   import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
