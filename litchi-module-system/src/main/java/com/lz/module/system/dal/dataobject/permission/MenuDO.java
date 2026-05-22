@@ -36,6 +36,11 @@ public class MenuDO extends BaseDO {
      * 菜单名称
      */
     private String name;
+
+    /**
+     * 国际化
+     */
+    private String i18n;
     /**
      * 权限标识
      *
@@ -105,6 +110,16 @@ public class MenuDO extends BaseDO {
      * 如果为 false 时，不显示菜单和他的所有子菜单
      */
     private Boolean alwaysShow;
+
+    /**
+     * 侧边栏，是否显示侧边栏与顶部栏
+     */
+    private Boolean sidebar;
+
+    /**
+     * 新窗口，是否用新窗口打开
+     */
+    private Boolean newWindows;
 
     /**
      * 备注

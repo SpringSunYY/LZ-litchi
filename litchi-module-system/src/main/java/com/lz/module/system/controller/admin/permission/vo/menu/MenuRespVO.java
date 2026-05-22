@@ -1,11 +1,11 @@
 package com.lz.module.system.controller.admin.permission.vo.menu;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.Data;
-
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.Data;
+
 import java.time.LocalDateTime;
 
 @Schema(description = "管理后台 - 菜单信息 Response VO")
@@ -19,6 +19,10 @@ public class MenuRespVO {
     @NotBlank(message = "菜单名称不能为空")
     @Size(max = 50, message = "菜单名称长度不能超过50个字符")
     private String name;
+
+    @Schema(description = "国际化", example = "system.menu.menu")
+    @Size(max = 100, message = "国际化长度不能超过100个字符")
+    private String i18n;
 
     @Schema(description = "权限标识,仅菜单类型为按钮时，才需要传递", example = "sys:menu:add")
     @Size(max = 100)
@@ -62,6 +66,12 @@ public class MenuRespVO {
 
     @Schema(description = "是否总是显示", example = "false")
     private Boolean alwaysShow;
+
+    @Schema(description = "侧边栏", example = "false")
+    private Boolean sidebar;
+
+    @Schema(description = "新窗口", example = "false")
+    private Boolean newWindows;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "时间戳格式")
     private LocalDateTime createTime;
