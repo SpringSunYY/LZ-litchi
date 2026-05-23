@@ -71,6 +71,9 @@ public class AuthPermissionInfoRespVO {
         @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝")
         private String name;
 
+        @Schema(description = "i18n 国际化", example = "post")
+        private String i18n;
+
         @Schema(description = "路由地址,仅菜单类型为菜单或者目录时，才需要传", example = "post")
         private String path;
 
@@ -91,6 +94,12 @@ public class AuthPermissionInfoRespVO {
 
         @Schema(description = "是否总是显示", example = "false")
         private Boolean alwaysShow;
+
+        @Schema(description = "新窗口", example = "false")
+        private Boolean newWindows;
+
+        @Schema(description = "侧边栏", example = "false")
+        private Boolean sidebar;
 
         /**
          * 子路由
