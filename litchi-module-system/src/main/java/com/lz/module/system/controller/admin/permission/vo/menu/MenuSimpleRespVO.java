@@ -1,6 +1,7 @@
 package com.lz.module.system.controller.admin.permission.vo.menu;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
 @Schema(description = "管理后台 - 菜单精简信息 Response VO")
@@ -12,6 +13,10 @@ public class MenuSimpleRespVO {
 
     @Schema(description = "菜单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝")
     private String name;
+
+    @Schema(description = "国际化", example = "system.menu.menu")
+    @Size(max = 100, message = "国际化长度不能超过100个字符")
+    private String i18n;
 
     @Schema(description = "父菜单 ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     private Long parentId;
