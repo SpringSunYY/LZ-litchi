@@ -112,9 +112,9 @@ public class MenuDO extends BaseDO {
     private Boolean alwaysShow;
 
     /**
-     * 侧边栏，是否显示侧边栏与顶部栏
+     * 菜单布局组件
      */
-    private Boolean sidebar;
+    private String layout;
 
     /**
      * 新窗口，是否用新窗口打开

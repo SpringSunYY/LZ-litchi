@@ -65,8 +65,8 @@ public class MenuSaveVO {
     @Schema(description = "是否总是显示", example = "false")
     private Boolean alwaysShow;
 
-    @Schema(description = "侧边栏", example = "false")
-    private Boolean sidebar;
+    @Schema(description = "布局", example = "BasicLayout")
+    private String layout;
 
     @Schema(description = "新窗口", example = "false")
     private Boolean newWindows;

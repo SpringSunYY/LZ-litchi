@@ -98,8 +98,8 @@ public class AuthPermissionInfoRespVO {
         @Schema(description = "新窗口", example = "false")
         private Boolean newWindows;
 
-        @Schema(description = "侧边栏", example = "false")
-        private Boolean sidebar;
+        @Schema(description = "布局", example = "BasicLayout")
+        private String layout;
 
         /**
          * 子路由
