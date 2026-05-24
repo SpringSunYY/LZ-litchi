@@ -42,6 +42,9 @@ public class TenantSaveReqVO {
     @NotNull(message = "类型不能为空")
     private Integer type;
 
+    @Schema(description = "租户状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    private Integer status;
+
     @Schema(description = "地区")
     private String addressCode;
 
