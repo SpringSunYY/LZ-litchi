@@ -185,39 +185,38 @@ VALUES ('${TABLE_REMARK}-${column.columnComment}', '${table.moduleName}.${table.
 -- 后端错误码国际化键名表（infra_i18n_key）- 异常
 -- key: ${module}.${business}.back.xxx
 -- =========================================
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.notExists';
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 1, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${TABLE_REMARK}-不存在', '${table.moduleName}.${table.businessName}.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 1, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #if ( $table.templateType == 2 )
 -- 树表特有错误码
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.existChildren';
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.existChildren';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-存在子级无法删除', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.existChildren', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 2, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentNotExists';
+VALUES ('${TABLE_REMARK}-存在子级无法删除', '${table.moduleName}.${table.businessName}.back.existChildren', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 2, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentNotExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-父级不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentNotExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 3, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentError';
+VALUES ('${TABLE_REMARK}-父级不存在', '${table.moduleName}.${table.businessName}.back.parentNotExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 3, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentError';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不能设置自己为父级', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 4, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.${treeNameColumn_javaField_underlineCase}Duplicate';
+VALUES ('${TABLE_REMARK}-不能设置自己为父级', '${table.moduleName}.${table.businessName}.back.parentError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 4, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.Duplicate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.${treeNameColumn_javaField_underlineCase}Duplicate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 5, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentIsChild';
+VALUES ('${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', '${table.moduleName}.${table.businessName}.back.Duplicate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 5, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentIsChild';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不能设置子级为父级', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentIsChild', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 6, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${TABLE_REMARK}-不能设置子级为父级', '${table.moduleName}.${table.businessName}.back.parentIsChild', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 6, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #if ( $table.templateType == 11 )
 -- 主子表特有错误码
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
-#set ($simpleClassNameUnderlineCase = $simpleClassNameUnderlineCases.get($index))
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.notExists';
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${subTable.classComment}-不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 7, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${subTable.classComment}-不存在', '${table.moduleName}.${table.businessName}.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 7, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #if ( !$subTable.subJoinMany )
-DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.exists';
+DELETE FROM infra_i18n_key WHERE message_key = '${table.moduleName}.${table.businessName}.back.exists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.exists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 8, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.businessName}.back.exists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 8, 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #end
 #end
@@ -225,38 +224,37 @@ VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.busin
 -- =========================================
 -- 后端错误码国际化信息表（infra_i18n_message）- 异常 - 英文
 -- =========================================
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.notExists' AND locale = @LOCALE_EN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.notExists' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.notExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${simpleClassNameNoCase} does not exist', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${TABLE_REMARK}-不存在', '${table.moduleName}.${table.businessName}.back.notExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${simpleClassNameNoCase} does not exist', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #if ( $table.templateType == 2 )
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.existChildren' AND locale = @LOCALE_EN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.existChildren' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-存在子级无法删除', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.existChildren', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'child ${simpleClassNameNoCase} exists, cannot delete', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentNotExists' AND locale = @LOCALE_EN;
+VALUES ('${TABLE_REMARK}-存在子级无法删除', '${table.moduleName}.${table.businessName}.back.existChildren', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'child ${simpleClassNameNoCase} exists, cannot delete', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentNotExists' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-父级不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentNotExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'parent ${simpleClassNameNoCase} does not exist', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentError' AND locale = @LOCALE_EN;
+VALUES ('${TABLE_REMARK}-父级不存在', '${table.moduleName}.${table.businessName}.back.parentNotExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'parent ${simpleClassNameNoCase} does not exist', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentError' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不能设置自己为父级', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentError', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'cannot set itself as parent ${simpleClassNameNoCase}', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.${treeNameColumn_javaField_underlineCase}Duplicate' AND locale = @LOCALE_EN;
+VALUES ('${TABLE_REMARK}-不能设置自己为父级', '${table.moduleName}.${table.businessName}.back.parentError', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'cannot set itself as parent ${simpleClassNameNoCase}', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${treeNameColumn_javaField_underlineCase}Duplicate' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.${treeNameColumn_javaField_underlineCase}Duplicate', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${simpleClassNameNoCase} with this ${treeNameColumn.columnComment} already exists', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentIsChild' AND locale = @LOCALE_EN;
+VALUES ('${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', '${table.moduleName}.${table.businessName}.back.${treeNameColumn_javaField_underlineCase}Duplicate', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${simpleClassNameNoCase} with this ${treeNameColumn_javaField_underlineCase} already exists', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentIsChild' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不能设置子级为父级', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentIsChild', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'cannot set its own child as parent', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${TABLE_REMARK}-不能设置子级为父级', '${table.moduleName}.${table.businessName}.back.parentIsChild', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'cannot set its own child as parent', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #if ( $table.templateType == 11 )
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
-#set ($simpleClassNameUnderlineCase = $simpleClassNameUnderlineCases.get($index))
 #set ($subTableNameNoCase = $subTable.className.replaceAll('([A-Z])', ' $1').replace('_', ' ').trim().toLowerCase())
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.notExists' AND locale = @LOCALE_EN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.notExists' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${subTable.classComment}-不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.notExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTableNameNoCase} does not exist', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${subTable.classComment}-不存在', '${table.moduleName}.${table.businessName}.back.notExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTableNameNoCase} does not exist', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #if ( !$subTable.subJoinMany )
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.exists' AND locale = @LOCALE_EN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.exists' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.exists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTableNameNoCase} already exists', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.businessName}.back.exists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTableNameNoCase} already exists', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #end
 #end
@@ -264,37 +262,36 @@ VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.busin
 -- =========================================
 -- 后端错误码国际化信息表（infra_i18n_message）- 异常 - 中文
 -- =========================================
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.notExists' AND locale = @LOCALE_ZH_CN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.notExists' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-不存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${TABLE_REMARK}-不存在', '${table.moduleName}.${table.businessName}.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-不存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #if ( $table.templateType == 2 )
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.existChildren' AND locale = @LOCALE_ZH_CN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.existChildren' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-存在子级无法删除', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.existChildren', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-存在子级无法删除', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentNotExists' AND locale = @LOCALE_ZH_CN;
+VALUES ('${TABLE_REMARK}-存在子级无法删除', '${table.moduleName}.${table.businessName}.back.existChildren', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-存在子级无法删除', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentNotExists' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-父级不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentNotExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-父级不存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentError' AND locale = @LOCALE_ZH_CN;
+VALUES ('${TABLE_REMARK}-父级不存在', '${table.moduleName}.${table.businessName}.back.parentNotExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-父级不存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentError' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不能设置自己为父级', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-不能设置自己为父级', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.${treeNameColumn_javaField_underlineCase}Duplicate' AND locale = @LOCALE_ZH_CN;
+VALUES ('${TABLE_REMARK}-不能设置自己为父级', '${table.moduleName}.${table.businessName}.back.parentError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-不能设置自己为父级', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${treeNameColumn_javaField_underlineCase}Duplicate' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.${treeNameColumn_javaField_underlineCase}Duplicate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentIsChild' AND locale = @LOCALE_ZH_CN;
+VALUES ('${TABLE_REMARK}-${treeNameColumn.columnComment}已存在', '${table.moduleName}.${table.businessName}.back.${treeNameColumn_javaField_underlineCase}Duplicate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-${treeNameColumn.columnComment}-已存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.parentIsChild' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${TABLE_REMARK}-不能设置子级为父级', '${table.moduleName}.${table.businessName}.back.${simpleClassName_underlineCase}.parentIsChild', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-不能设置子级为父级', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${TABLE_REMARK}-不能设置子级为父级', '${table.moduleName}.${table.businessName}.back.parentIsChild', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${TABLE_REMARK}-不能设置子级为父级', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #if ( $table.templateType == 11 )
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
-#set ($simpleClassNameUnderlineCase = $simpleClassNameUnderlineCases.get($index))
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.notExists' AND locale = @LOCALE_ZH_CN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.notExists' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${subTable.classComment}-不存在', '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTable.classComment}-不存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${subTable.classComment}-不存在', '${table.moduleName}.${table.businessName}.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTable.classComment}-不存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #if ( !$subTable.subJoinMany )
-DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.exists' AND locale = @LOCALE_ZH_CN;
+DELETE FROM infra_i18n_message WHERE message_key = '${table.moduleName}.${table.businessName}.back.exists' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.businessName}.back.${simpleClassNameUnderlineCase}.exists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTable.classComment}-已存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${subTable.classComment}-已存在', '${table.moduleName}.${table.businessName}.back.exists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${subTable.classComment}-已存在', 'back', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 #end
 #end
 #end
@@ -316,11 +313,11 @@ SET @MENU_STATUS_NORMAL = 0;
 -- -----------------------------------------
 #if ($isI18n)
 INSERT INTO system_menu(
-    name, permission, type, sort, parent_id,
+    name, i18n, permission, type, sort, parent_id,
     path, icon, component, status, component_name
 )
 VALUES (
-    '${table.moduleName}.${table.businessName}.menu', '', @MENU_TYPE_MENU, 0, ${table.parentMenuId},
+    '${table.classComment}管理', '${table.moduleName}.${table.businessName}.menu', '', @MENU_TYPE_MENU, 0, ${table.parentMenuId},
     '${simpleClassName_strikeCase}', '', '${table.moduleName}/${table.businessName}/index', @MENU_STATUS_NORMAL, '${table.className}'
 );
 SET @parentId = LAST_INSERT_ID();
@@ -341,22 +338,18 @@ SET @parentId = LAST_INSERT_ID();
 -- name: ${module}:${business}.action.query|create|update|delete|export|import
 -- -----------------------------------------
 -- @parentId 已在菜单 INSERT 后立即捕获
-#if ($isI18n)
-#set ($functionNames = $functionOps)
-#else
 #set ($functionNames = $FUNCTION_ZH_NAMES)
-#end
 #set ($index = 0)
 #foreach ($fn in $functionNames)
 INSERT INTO system_menu(
-    name, permission, type, sort, parent_id,
+    name, i18n, permission, type, sort, parent_id,
     path, icon, component, status
 )
 VALUES (
 #if ($isI18n)
-    '${table.moduleName}.${table.businessName}.action.${functionOps.get($index)}', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
+    '${table.classComment}${fn}','${table.moduleName}.${table.businessName}.action.${functionOps.get($index)}', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
 #else
-    '${table.classComment}${fn}', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
+    '${table.classComment}${fn}','', '${permissionPrefix}:${functionOps.get($index)}', @MENU_TYPE_BUTTON, $foreach.count, @parentId,
 #end
     '', '', '', @MENU_STATUS_NORMAL
 );
@@ -365,14 +358,14 @@ VALUES (
 ## 导入功能按钮（当 extendConfig.isImport 为 0 或不存在时开启，为 1 时关闭）
 #if ($extendConfig.get('isImport') != '1')
 INSERT INTO system_menu(
-    name, permission, type, sort, parent_id,
+    name, i18n, permission, type, sort, parent_id,
     path, icon, component, status
 )
 VALUES (
 #if ($isI18n)
-    '${table.moduleName}.${table.businessName}.action.import', '${permissionPrefix}:import', @MENU_TYPE_BUTTON, 6, @parentId,
+    '${table.classComment}导入','${table.moduleName}.${table.businessName}.action.import', '${permissionPrefix}:import', @MENU_TYPE_BUTTON, 6, @parentId,
 #else
-    '${table.classComment}导入', '${permissionPrefix}:import', @MENU_TYPE_BUTTON, 6, @parentId,
+    '${table.classComment}导入', '','${permissionPrefix}:import', @MENU_TYPE_BUTTON, 6, @parentId,
 #end
     '', '', '', @MENU_STATUS_NORMAL
 );

@@ -274,16 +274,16 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
         // 如果 id 为空，说明不用比较是否为相同 id 的${table.classComment}
         if (id == null) {
 #if ($isI18n)
-            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_DUPLICATE);
 #else
-            throw exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+            throw exception(${simpleClassName_underlineCase.toUpperCase()}_DUPLICATE);
 #end
         }
         if (!Objects.equals(${classNameVar}.getId(), id)) {
 #if ($isI18n)
-            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+            throw I18nExceptionUtil.exception(${simpleClassName_underlineCase.toUpperCase()}_DUPLICATE);
 #else
-            throw exception(${simpleClassName_underlineCase.toUpperCase()}_${treeNameColumn_javaField_underlineCase.toUpperCase()}_DUPLICATE);
+            throw exception(${simpleClassName_underlineCase.toUpperCase()}_DUPLICATE);
 #end
         }
     }
@@ -311,7 +311,7 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
 #set ($subSimpleClassName = $subSimpleClassNames.get($index))
-#set ($simpleClassNameUnderlineCase = $simpleClassNameUnderlineCases.get($index))
+
 #set ($subPrimaryColumn = $subPrimaryColumns.get($index))##当前 primary 字段
 #set ($subJoinColumn = $subJoinColumns.get($index))##当前 join 字段
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
