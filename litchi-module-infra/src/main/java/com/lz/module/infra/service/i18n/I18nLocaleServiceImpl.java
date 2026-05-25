@@ -44,12 +44,12 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     public Long createI18nLocale(I18nLocaleSaveReqVO createReqVO) {
         // 插入
         I18nLocaleDO i18nLocale = BeanUtils.toBean(createReqVO, I18nLocaleDO.class);
-        //查询是否有通用的了，如果有通用的话也不允许创建
-        I18nLocaleDO i18nLocaleByLocaleCommon = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, i18nLocale.getLocale(),
-                I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
-        if (ObjectUtils.isNotNull(i18nLocaleByLocaleCommon)) {
-            throw exception(I18N_LOCALE_EXISTS, "通用");
-        }
+//        //查询是否有通用的了，如果有通用的话也不允许创建
+//        I18nLocaleDO i18nLocaleByLocaleCommon = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, i18nLocale.getLocale(),
+//                I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
+//        if (ObjectUtils.isNotNull(i18nLocaleByLocaleCommon)) {
+//            throw exception(I18N_LOCALE_EXISTS, "common");
+//        }
         //根据简称查询，如果已存在则不允许创建
         I18nLocaleDO i18nLocaleByLocale = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, i18nLocale.getLocale(),
                 I18nLocaleDO::getLocaleTarget, i18nLocale.getLocaleTarget());
@@ -77,12 +77,12 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         I18nLocaleDO i18nLocaleDO = validateI18nLocaleExists(updateReqVO.getId());
         // 更新
         I18nLocaleDO updateObj = BeanUtils.toBean(updateReqVO, I18nLocaleDO.class);
-        //查询是否有通用的了，如果有通用的话也不允许创建
-        I18nLocaleDO i18nLocaleByLocaleCommon = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, updateObj.getLocale(),
-                I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
-        if (ObjectUtils.isNotNull(i18nLocaleByLocaleCommon) && !i18nLocaleByLocaleCommon.getId().equals(updateReqVO.getId())) {
-            throw exception(I18N_LOCALE_EXISTS, "通用");
-        }
+//        //查询是否有通用的了，如果有通用的话也不允许创建
+//        I18nLocaleDO i18nLocaleByLocaleCommon = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, updateObj.getLocale(),
+//                I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
+//        if (ObjectUtils.isNotNull(i18nLocaleByLocaleCommon) && !i18nLocaleByLocaleCommon.getId().equals(updateReqVO.getId())) {
+//            throw exception(I18N_LOCALE_EXISTS, "通用");
+//        }
         // 校验简称已存在
         I18nLocaleDO i18nLocaleByLocale = i18nLocaleMapper.selectOne(I18nLocaleDO::getLocale, updateObj.getLocale(),
                 I18nLocaleDO::getLocaleTarget, updateObj.getLocaleTarget());

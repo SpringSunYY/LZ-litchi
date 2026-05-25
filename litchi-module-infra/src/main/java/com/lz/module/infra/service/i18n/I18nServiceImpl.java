@@ -6,7 +6,9 @@ import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSimpRespVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
+import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import jakarta.annotation.Resource;
+import org.jspecify.annotations.Nullable;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -34,7 +36,33 @@ public class I18nServiceImpl implements I18nService {
     @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE)
     public List<I18nLocaleSimpRespVO> getI18nLocale(Integer localeTarget) {
         List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleService.getI18nLocaleByLocaleTarget(localeTarget);
+        //如果存在多个端，且查的那个端有默认语言，优先使用查的那个端的默认语言，而不是common的默认语言
+        I18nLocaleDO priorityDefault = getI18nLocaleDO(localeTarget, i18nLocaleDOList);
+
+        if (priorityDefault != null) {
+            i18nLocaleDOList.remove(priorityDefault);
+            i18nLocaleDOList.addFirst(priorityDefault);
+        }
         return BeanUtils.toBean(i18nLocaleDOList, I18nLocaleSimpRespVO.class);
+    }
+
+    private static @Nullable I18nLocaleDO getI18nLocaleDO(Integer localeTarget, List<I18nLocaleDO> i18nLocaleDOList) {
+        I18nLocaleDO specifiedTargetDefault = null;
+        I18nLocaleDO commonDefault = null;
+
+        for (I18nLocaleDO localeDO : i18nLocaleDOList) {
+            if (localeDO.getIsDefault() != null && localeDO.getIsDefault()
+                    .equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus())) {
+                if (localeDO.getLocaleTarget().equals(localeTarget)) {
+                    specifiedTargetDefault = localeDO;
+                } else if (localeDO.getLocaleTarget()
+                        .equals(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus())) {
+                    commonDefault = localeDO;
+                }
+            }
+        }
+
+        return specifiedTargetDefault != null ? specifiedTargetDefault : commonDefault;
     }
 
     @Override
