@@ -1,16 +1,12 @@
 package com.lz.framework.common.exception.util;
 
-import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.biz.infra.i18n.I18nCommonApi;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import com.lz.framework.common.exception.ErrorCode;
 import com.lz.framework.common.exception.ServiceException;
 import com.lz.framework.common.exception.enums.GlobalErrorCodeConstants;
-import com.lz.framework.common.util.servlet.ServletUtils;
 import com.google.common.annotations.VisibleForTesting;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-
-import java.util.Locale;
 
 /**
  * {@link ServiceException} 工具类
@@ -18,17 +14,11 @@ import java.util.Locale;
  * 目的在于，格式化异常信息提示。
  * 考虑到 String.format 在参数不正确时会报错，因此使用 {} 作为占位符，并使用 {@link #doFormat(int, String, Object...)} 方法来格式化
  *
- * 支持国际化：当 {@link ErrorCode#getI18n()} 不为空时，优先从 I18nCommonApi 获取翻译后的消息模板，再进行格式化。
+ * 支持国际化：当 {@link ErrorCode#getI18n()} 不为空时，优先从 I18nUtils 获取翻译后的消息模板，再进行格式化。
  *
  */
 @Slf4j
 public class ServiceExceptionUtil {
-
-    private static I18nCommonApi i18nCommonApi;
-
-    public static void init(I18nCommonApi i18nCommonApi) {
-        ServiceExceptionUtil.i18nCommonApi = i18nCommonApi;
-    }
 
     // ========== 和 ServiceException 的集成 ==========
 
@@ -76,52 +66,12 @@ public class ServiceExceptionUtil {
     }
 
     private static String resolveI18nPattern(String i18n, String fallback) {
-        if (StrUtil.isBlank(i18n)) {
+        if (i18n == null || i18n.isEmpty()) {
             return fallback;
         }
-        String acceptLanguage = getAcceptLanguage();
-        String locale = parsePrimaryLocale(acceptLanguage);
-        String messagePattern = getI18nMessage(i18n, locale);
-        return StrUtil.isNotBlank(messagePattern) ? messagePattern : fallback;
-    }
-
-    private static String getI18nMessage(String messageKey, String locale) {
-        if (i18nCommonApi == null) {
-            return null;
-        }
-        try {
-            return i18nCommonApi.getMessage(messageKey, locale);
-        } catch (Exception e) {
-            log.warn("[ServiceExceptionUtil] 获取国际化消息失败, key: {}, locale: {}", messageKey, locale, e);
-            return null;
-        }
-    }
-
-    private static String getAcceptLanguage() {
-        HttpServletRequest request = ServletUtils.getRequest();
-        if (request == null) {
-            return Locale.getDefault().toLanguageTag();
-        }
-        String acceptLanguage = request.getHeader("Accept-Language");
-        return StrUtil.isBlank(acceptLanguage) ? Locale.getDefault().toLanguageTag() : acceptLanguage;
-    }
-
-    private static String parsePrimaryLocale(String acceptLanguage) {
-        if (StrUtil.isBlank(acceptLanguage)) {
-            return Locale.getDefault().toLanguageTag();
-        }
-
-        String[] parts = acceptLanguage.split(",");
-        if (parts.length > 0) {
-            String primary = parts[0].trim();
-            int semicolonIndex = primary.indexOf(';');
-            if (semicolonIndex > 0) {
-                primary = primary.substring(0, semicolonIndex).trim();
-            }
-            return primary;
-        }
-
-        return Locale.getDefault().toLanguageTag();
+        String locale = I18nUtils.parsePrimaryLocale(I18nUtils.getAcceptLanguage());
+        String messagePattern = I18nUtils.getMessage(i18n, locale);
+        return (messagePattern != null && !messagePattern.isEmpty()) ? messagePattern : fallback;
     }
 
     // ========== 格式化方法 ==========

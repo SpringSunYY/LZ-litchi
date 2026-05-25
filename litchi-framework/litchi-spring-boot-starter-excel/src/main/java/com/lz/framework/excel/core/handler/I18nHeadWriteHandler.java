@@ -9,7 +9,7 @@ import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
 import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelType;
-import com.lz.framework.i18n.core.I18nUtils;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

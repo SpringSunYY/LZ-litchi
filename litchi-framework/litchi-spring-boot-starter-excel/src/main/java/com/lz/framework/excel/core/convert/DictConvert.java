@@ -15,7 +15,7 @@ import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelType;
-import com.lz.framework.i18n.core.I18nUtils;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;

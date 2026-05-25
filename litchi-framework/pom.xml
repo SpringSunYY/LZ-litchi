@@ -23,6 +23,7 @@
         <module>litchi-spring-boot-starter-mq</module>
 
         <module>litchi-spring-boot-starter-excel</module>
+        <module>litchi-spring-boot-starter-i18n</module>
         <module>litchi-spring-boot-starter-test</module>
 
         <module>litchi-spring-boot-starter-biz-tenant</module>
