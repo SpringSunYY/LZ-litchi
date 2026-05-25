@@ -39,7 +39,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Resource
     private RedisUtils redisUtils;
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public Long createI18nLocale(I18nLocaleSaveReqVO createReqVO) {
         // 插入
@@ -70,7 +70,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         return i18nLocale.getId();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public void updateI18nLocale(I18nLocaleSaveReqVO updateReqVO) {
         // 校验存在
@@ -100,7 +100,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         i18nLocaleMapper.updateById(updateObj);
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public void deleteI18nLocale(Long id) {
         // 校验存在
@@ -113,7 +113,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         i18nLocaleMapper.deleteById(id);
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public void deleteI18nLocaleListByIds(List<Long> ids) {
         // 删除

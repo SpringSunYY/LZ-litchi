@@ -51,6 +51,11 @@
             <artifactId>litchi-spring-boot-starter-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
         <!-- Config 配置中心相关 -->
 
         <!-- Job 定时任务相关 -->

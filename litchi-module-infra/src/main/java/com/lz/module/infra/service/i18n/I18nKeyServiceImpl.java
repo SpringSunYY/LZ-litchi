@@ -37,7 +37,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     @Resource
     private I18nMessageMapper i18nMessageMapper;
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public Long createI18nKey(I18nKeySaveReqVO createReqVO) {
         // 插入
@@ -53,7 +53,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         return i18nKey.getId();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void updateI18nKey(I18nKeySaveReqVO updateReqVO) {
         // 校验存在
@@ -68,7 +68,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     }
 
     @Transactional
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nKey(Long id, Boolean isDeleteChildren) {
         // 校验存在
@@ -85,7 +85,7 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         i18nKeyMapper.deleteById(id);
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nKeyListByIds(List<Long> ids) {
         // 删除

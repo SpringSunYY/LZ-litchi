@@ -76,7 +76,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     }
 
     @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     public void updateI18nMessage(I18nMessageSaveReqVO updateReqVO) {
         // 校验存在
         I18nMessageDO i18nMessageDO = validateI18nMessageExists(updateReqVO.getId());
@@ -93,7 +93,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         i18nMessageMapper.updateById(updateObj);
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nMessage(Long id) {
         // 校验存在
@@ -102,7 +102,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         i18nMessageMapper.deleteById(id);
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nMessageListByIds(List<Long> ids) {
         // 删除
@@ -162,7 +162,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
 
     @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     public boolean saveI18nMessage(Map<String, DictI18nDTO> dictDataMap) {
         //1、提取出所有的key，查询是否已经存在key，如果存在key不需要创建key
         List<String> keys = dictDataMap.keySet().stream().toList();

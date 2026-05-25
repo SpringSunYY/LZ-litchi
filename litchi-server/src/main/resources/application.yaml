@@ -217,6 +217,8 @@ litchi:
       - sms_template
       - area
       - area_tree
+      - i18n:message
+      - i18n:locale
   sms-code: # 短信验证码相关的配置项
     expire-times: 10m
     send-frequency: 1m
