@@ -54,7 +54,7 @@ public interface ErrorCodeConstants {
     ErrorCode FILE_CONFIG_NOT_EXISTS = new ErrorCode(1_001_006_000, "文件配置不存在");
     ErrorCode FILE_CONFIG_KEY_DUPLICATE = new ErrorCode(1_001_006_001, "文件配置 key 冲突");
     ErrorCode FILE_CONFIG_DELETE_FAIL_MASTER = new ErrorCode(1_001_006_001, "该文件配置不允许删除，原因：它是主配置，删除会导致无法上传文件");
-    ErrorCode FILE_CONFIG_MASTER_NOT_EXISTS= new ErrorCode(1_001_006_002, "主数据源配置不存在");
+    ErrorCode FILE_CONFIG_MASTER_NOT_EXISTS = new ErrorCode(1_001_006_002, "主数据源配置不存在");
     // ========== 数据源配置 1-001-007-000 ==========
     ErrorCode DATA_SOURCE_CONFIG_NOT_EXISTS = new ErrorCode(1_001_007_000, "数据源配置不存在");
     ErrorCode DATA_SOURCE_CONFIG_NOT_OK = new ErrorCode(1_001_007_001, "数据源配置不正确，无法进行连接");
@@ -78,9 +78,10 @@ public interface ErrorCodeConstants {
     ErrorCode I18N_LOCALE_PROHIBIT_DELETE = new ErrorCode(1_001_008_003, "国际化默认国家不允许删除");
 
     ErrorCode I18N_KEY_NOT_EXISTS = new ErrorCode(1_001_008_004, "国际化键名不存在");
-    ErrorCode I18N_KEY_EXISTS = new ErrorCode(1_001_008_005, "国际化键名已存在");
+    ErrorCode I18N_KEY_EXISTS = new ErrorCode(1_001_008_005, "infra.i18nKey.back.exists","国际化键名已存在");
     ErrorCode I18N_KEY_PROHIBIT_UPDATE_KEY = new ErrorCode(1_001_008_006, "国际化键名不允许修改键名");
     ErrorCode I18N_KEY_PROHIBIT_DELETE_SYSTEM = new ErrorCode(1_001_008_007, "国际化键名不允许删除内置键");
-    ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_001_008_008, "国际化信息不存在");
-    ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "test", "国际化信息已存在");
+    ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "infra.i18nMessage.back.exists", "国际化信息已存在");
+    ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_003_000_001, "infra.i18nMessage.back.notExists", "国际化信息不存在");
+
 }

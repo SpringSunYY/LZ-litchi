@@ -1,10 +1,16 @@
 package com.lz.framework.common.exception.util;
 
+import cn.hutool.core.util.StrUtil;
+import com.lz.framework.common.biz.infra.i18n.I18nCommonApi;
 import com.lz.framework.common.exception.ErrorCode;
 import com.lz.framework.common.exception.ServiceException;
 import com.lz.framework.common.exception.enums.GlobalErrorCodeConstants;
+import com.lz.framework.common.util.servlet.ServletUtils;
 import com.google.common.annotations.VisibleForTesting;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+
+import java.util.Locale;
 
 /**
  * {@link ServiceException} 工具类
@@ -12,27 +18,110 @@ import lombok.extern.slf4j.Slf4j;
  * 目的在于，格式化异常信息提示。
  * 考虑到 String.format 在参数不正确时会报错，因此使用 {} 作为占位符，并使用 {@link #doFormat(int, String, Object...)} 方法来格式化
  *
+ * 支持国际化：当 {@link ErrorCode#getI18n()} 不为空时，优先从 I18nCommonApi 获取翻译后的消息模板，再进行格式化。
+ *
  */
 @Slf4j
 public class ServiceExceptionUtil {
 
+    private static I18nCommonApi i18nCommonApi;
+
+    public static void init(I18nCommonApi i18nCommonApi) {
+        ServiceExceptionUtil.i18nCommonApi = i18nCommonApi;
+    }
+
     // ========== 和 ServiceException 的集成 ==========
 
     public static ServiceException exception(ErrorCode errorCode) {
-        return exception0(errorCode.getCode(), errorCode.getMsg());
+        String message = resolveMessage(errorCode, null);
+        return new ServiceException(errorCode.getCode(), message);
     }
 
     public static ServiceException exception(ErrorCode errorCode, Object... params) {
-        return exception0(errorCode.getCode(), errorCode.getMsg(), params);
+        String message = resolveMessage(errorCode, params);
+        return new ServiceException(errorCode.getCode(), message);
     }
 
+    /**
+     * 不经过国际化翻译，直接使用传入的 messagePattern 进行格式化。
+     */
     public static ServiceException exception0(Integer code, String messagePattern, Object... params) {
         String message = doFormat(code, messagePattern, params);
         return new ServiceException(code, message);
     }
 
+    /**
+     * 支持国际化的异常抛出，使用 i18n key 获取翻译后的消息模板进行格式化。
+     *
+     * @param code           错误码
+     * @param i18n           国际化 key，为空则直接使用 messagePattern
+     * @param messagePattern 消息模板（作为翻译失败时的兜底）
+     * @param params         格式化参数
+     */
+    public static ServiceException exception0(Integer code, String i18n, String messagePattern, Object... params) {
+        String resolvedPattern = resolveI18nPattern(i18n, messagePattern);
+        return exception0(code, resolvedPattern, params);
+    }
+
     public static ServiceException invalidParamException(String messagePattern, Object... params) {
         return exception0(GlobalErrorCodeConstants.BAD_REQUEST.getCode(), messagePattern, params);
+    }
+
+    // ========== 国际化消息解析 ==========
+
+    private static String resolveMessage(ErrorCode errorCode, Object... params) {
+        String i18n = errorCode.getI18n();
+        String messagePattern = resolveI18nPattern(i18n, errorCode.getMsg());
+        return doFormat(errorCode.getCode(), messagePattern, params);
+    }
+
+    private static String resolveI18nPattern(String i18n, String fallback) {
+        if (StrUtil.isBlank(i18n)) {
+            return fallback;
+        }
+        String acceptLanguage = getAcceptLanguage();
+        String locale = parsePrimaryLocale(acceptLanguage);
+        String messagePattern = getI18nMessage(i18n, locale);
+        return StrUtil.isNotBlank(messagePattern) ? messagePattern : fallback;
+    }
+
+    private static String getI18nMessage(String messageKey, String locale) {
+        if (i18nCommonApi == null) {
+            return null;
+        }
+        try {
+            return i18nCommonApi.getMessage(messageKey, locale);
+        } catch (Exception e) {
+            log.warn("[ServiceExceptionUtil] 获取国际化消息失败, key: {}, locale: {}", messageKey, locale, e);
+            return null;
+        }
+    }
+
+    private static String getAcceptLanguage() {
+        HttpServletRequest request = ServletUtils.getRequest();
+        if (request == null) {
+            return Locale.getDefault().toLanguageTag();
+        }
+        String acceptLanguage = request.getHeader("Accept-Language");
+        return StrUtil.isBlank(acceptLanguage) ? Locale.getDefault().toLanguageTag() : acceptLanguage;
+    }
+
+    private static String parsePrimaryLocale(String acceptLanguage) {
+        if (StrUtil.isBlank(acceptLanguage)) {
+            return Locale.getDefault().toLanguageTag();
+        }
+
+        String[] parts = acceptLanguage.split(",");
+        if (parts.length > 0) {
+            String primary = parts[0].trim();
+            int semicolonIndex = primary.indexOf(';');
+            if (semicolonIndex > 0) {
+                primary = primary.substring(0, semicolonIndex).trim();
+            }
+            return primary;
+        }
+
+        return Locale.getDefault().toLanguageTag();
     }
 
     // ========== 格式化方法 ==========
@@ -47,6 +136,9 @@ public class ServiceExceptionUtil {
      */
     @VisibleForTesting
     public static String doFormat(int code, String messagePattern, Object... params) {
+        if (params == null || params.length == 0) {
+            return messagePattern;
+        }
         StringBuilder sbuf = new StringBuilder(messagePattern.length() + 50);
         int i = 0;
         int j;

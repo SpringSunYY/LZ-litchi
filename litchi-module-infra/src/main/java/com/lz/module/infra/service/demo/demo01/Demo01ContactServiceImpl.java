@@ -7,7 +7,6 @@ import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.infra.controller.admin.demo.demo01.vo.*;
 import com.lz.module.infra.dal.dataobject.demo.demo01.Demo01ContactDO;
 import com.lz.module.infra.dal.mysql.demo.demo01.Demo01ContactMapper;
-import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,7 +68,7 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
 
     private void validateDemo01ContactExists(Long id) {
         if (demo01ContactMapper.selectById(id) == null) {
-            throw I18nExceptionUtil.exception(DEMO01_CONTACT_NOT_EXISTS);
+            throw exception(DEMO01_CONTACT_NOT_EXISTS);
         }
     }
 
@@ -88,7 +87,7 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
     @Transactional(rollbackFor = Exception.class)
     public Demo01ContactExcelRespVO importDemo01ContactList(List<Demo01ContactExcelVO> list) {
         if (CollUtil.isEmpty(list)) {
-            throw I18nExceptionUtil.exception(ERROR_CODE_IMPORT_DATA_EMPTY);
+            throw exception(ERROR_CODE_IMPORT_DATA_EMPTY);
         }
         List<Demo01ContactDO> createList = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {

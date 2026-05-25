@@ -18,7 +18,6 @@ import com.lz.module.infra.enums.i18n.InfraI18nKeyUseTypeEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import com.lz.module.infra.framework.i18n.config.I18nProperties;
-import com.lz.module.infra.utils.I18nExceptionUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
@@ -69,7 +68,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
                 i18nMessage.getLocale()
         );
         if (ObjectUtils.isNotNull(dbI18nMessage)) {
-            throw I18nExceptionUtil.exception(I18N_MESSAGE_EXISTS);
+            throw exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.insert(i18nMessage);
         // 返回

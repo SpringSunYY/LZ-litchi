@@ -33,6 +33,12 @@ public class I18nCommonApiImpl implements I18nCommonApi {
             return null;
         }
         String locale = parsePrimaryLocale(acceptLanguage);
+        boolean isDefaultLocale = false;
+        //如果语言匹配不到，则返回默认语言
+        if (locale == null || locale.isEmpty()) {
+            locale = i18nProperties.getDefaultLocale();
+            isDefaultLocale = true;
+        }
         try {
             // 1. 先精确匹配：locale
             I18nMessageDO message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, locale);
@@ -40,6 +46,10 @@ public class I18nCommonApiImpl implements I18nCommonApi {
                 return message.getMessage();
             }
             // 2. 匹配不到匹配默认语言
+            //如果就是默认语言不用查了
+            if (isDefaultLocale) {
+                return null;
+            }
             message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, i18nProperties.getDefaultLocale());
             if (message != null && StrUtil.isNotEmpty(message.getMessage())) {
                 return message.getMessage();
