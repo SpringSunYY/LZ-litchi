@@ -21,4 +21,4 @@ ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS = new ErrorCode(1
 #end
 #end
 // ========== 导入通用错误码（可自行配置国际化） ==========
-ErrorCode ERROR_CODE_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100, "导入数据不能为空！");
+ErrorCode ERROR_CODE_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100#if ($isI18n), "${table.moduleName}.back.import.dataEmpty",#end, "导入数据不能为空！");

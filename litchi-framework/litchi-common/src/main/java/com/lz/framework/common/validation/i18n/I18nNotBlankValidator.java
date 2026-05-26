@@ -35,7 +35,6 @@ public class I18nNotBlankValidator implements ConstraintValidator<I18nNotBlank, 
     }
 
     private String getI18nMessage() {
-        String message = I18nUtils.getMessage(i18nKey, this.message);
-        return message.replace("{}", "");
+        return I18nUtils.getMessage(i18nKey, this.message);
     }
 }
