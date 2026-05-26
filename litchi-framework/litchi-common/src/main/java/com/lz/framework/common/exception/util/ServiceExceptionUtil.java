@@ -1,6 +1,5 @@
 package com.lz.framework.common.exception.util;
 
-import com.lz.framework.common.biz.infra.i18n.I18nCommonApi;
 import com.lz.framework.common.util.i18n.I18nUtils;
 import com.lz.framework.common.exception.ErrorCode;
 import com.lz.framework.common.exception.ServiceException;
@@ -70,7 +69,7 @@ public class ServiceExceptionUtil {
             return fallback;
         }
         String locale = I18nUtils.parsePrimaryLocale(I18nUtils.getAcceptLanguage());
-        String messagePattern = I18nUtils.getMessage(i18n, locale);
+        String messagePattern = I18nUtils.getMessageByLanguage(i18n, locale);
         return (messagePattern != null && !messagePattern.isEmpty()) ? messagePattern : fallback;
     }
 

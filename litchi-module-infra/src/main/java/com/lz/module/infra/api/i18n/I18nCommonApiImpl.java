@@ -3,7 +3,8 @@ package com.lz.module.infra.api.i18n;
 import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.biz.infra.i18n.I18nCommonApi;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
-import com.lz.module.infra.framework.i18n.config.I18nProperties;
+import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
+import com.lz.module.infra.service.i18n.I18nLocaleService;
 import com.lz.module.infra.service.i18n.I18nMessageService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ public class I18nCommonApiImpl implements I18nCommonApi {
     private I18nMessageService i18nMessageService;
 
     @Resource
-    private I18nProperties i18nProperties;
+    private I18nLocaleService i18nLocaleService;
 
     @Override
     public String getMessage(String messageKey, String acceptLanguage) {
@@ -36,7 +37,7 @@ public class I18nCommonApiImpl implements I18nCommonApi {
         boolean isDefaultLocale = false;
         //如果语言匹配不到，则返回默认语言
         if (locale == null || locale.isEmpty()) {
-            locale = i18nProperties.getDefaultLocale();
+            locale = getBackDefaultLanguageLocale();
             isDefaultLocale = true;
         }
         try {
@@ -50,7 +51,7 @@ public class I18nCommonApiImpl implements I18nCommonApi {
             if (isDefaultLocale) {
                 return null;
             }
-            message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, i18nProperties.getDefaultLocale());
+            message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, getBackDefaultLanguageLocale());
             if (message != null && StrUtil.isNotEmpty(message.getMessage())) {
                 return message.getMessage();
             }
@@ -77,7 +78,7 @@ public class I18nCommonApiImpl implements I18nCommonApi {
 
     private String parsePrimaryLocale(String acceptLanguage) {
         if (acceptLanguage == null || acceptLanguage.isEmpty()) {
-            return i18nProperties.getDefaultLocale();
+            return getBackDefaultLanguageLocale();
         }
         String[] parts = acceptLanguage.split(",");
         if (parts.length > 0) {
@@ -89,7 +90,18 @@ public class I18nCommonApiImpl implements I18nCommonApi {
             // 将 Accept-Language 中的下划线格式（如 zh_CN）转换为数据库存储格式（如 zh-CN）
             return primary.replace('_', '-');
         }
-        return i18nProperties.getDefaultLocale();
+        return getBackDefaultLanguageLocale();
+    }
+
+
+    @Override
+    public String getDefaultLanguageLocale(Integer localeTarget) {
+        return i18nLocaleService.getI18nLocaleDefaultLangByLocalTarget(localeTarget);
+    }
+
+    @Override
+    public String getBackDefaultLanguageLocale(){
+        return i18nLocaleService.getI18nLocaleDefaultLangByLocalTarget(InfraI18nLocaleTargetEnum.LOCALE_TARGET_1.getStatus());
     }
 
 }

@@ -1,5 +1,8 @@
 package com.lz.module.infra.controller.admin.demo.demo01.vo;
 
+import com.lz.framework.common.validation.i18n.I18nNotBlank;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -15,19 +18,19 @@ public class Demo01ContactSaveReqVO {
     private Long id;
 
     @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
-    @NotEmpty(message = "名字不能为空")
+    @I18nNotBlank(i18nKey = "demo01.contact.name.notBlank",message = "名字不能为空")
     private String name;
 
     @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "性别不能为空")
+    @I18nNotNull(i18nKey = "demo01.contact.sex.notNull",message = "性别不能为空")
     private Integer sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "出生年不能为空")
+    @I18nNotNull(i18nKey ="de", message = "出生年不能为空")
     private LocalDateTime birthday;
 
     @Schema(description = "简介", requiredMode = Schema.RequiredMode.REQUIRED, example = "随便")
-    @NotEmpty(message = "简介不能为空")
+    @I18nNotEmpty(i18nKey = "demo01.contact.description.notEmpty",message = "简介不能为空")
     private String description;
 
     @Schema(description = "年龄")

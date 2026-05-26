@@ -2,6 +2,7 @@ package com.lz.framework.common.util.i18n;
 
 import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.biz.infra.i18n.I18nCommonApi;
+import com.lz.framework.common.enums.InfraModuleConstants;
 import com.lz.framework.common.util.servlet.ServletUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -33,17 +34,36 @@ public class I18nUtils {
      * @return 翻译后的文本，未找到返回 null
      */
     public static String getMessage(String messageKey) {
-        return getMessage(messageKey, getAcceptLanguage());
+        return getMessageByLanguage(messageKey, getAcceptLanguage());
+    }
+
+    /**
+     * 根据消息键名获取翻译，如果未找到则返回默认消息
+     *
+     * @param messageKey     消息键名
+     * @param defaultMessage 默认消息
+     * @return 翻译后的文本，未找到返回默认消息
+     */
+    public static String getMessage(String messageKey, String defaultMessage, String acceptLanguage) {
+        String i18nMsg = getMessageByLanguage(messageKey, acceptLanguage);
+        return StrUtil.isNotBlank(i18nMsg) ? i18nMsg : defaultMessage;
+    }
+
+    /**
+     * 根据消息键名获取翻译，如果未找到使用默认语言
+     */
+    public static String getMessage(String messageKey, String defaultMessage) {
+        return getMessage(messageKey, defaultMessage, getAcceptLanguage());
     }
 
     /**
      * 根据消息键名获取翻译
      *
-     * @param messageKey      消息键名
+     * @param messageKey     消息键名
      * @param acceptLanguage Accept-Language
      * @return 翻译后的文本，未找到返回 null
      */
-    public static String getMessage(String messageKey, String acceptLanguage) {
+    public static String getMessageByLanguage(String messageKey, String acceptLanguage) {
         if (i18nCommonApi == null) {
             return null;
         }
@@ -87,7 +107,7 @@ public class I18nUtils {
             }
         } catch (Exception ignored) {
         }
-        return Locale.getDefault().toLanguageTag();
+        return i18nCommonApi.getBackDefaultLanguageLocale();
     }
 
     /**
@@ -101,7 +121,7 @@ public class I18nUtils {
      */
     public static String parsePrimaryLocale(String acceptLanguage) {
         if (StrUtil.isBlank(acceptLanguage)) {
-            return Locale.getDefault().toLanguageTag();
+            return i18nCommonApi.getDefaultLanguageLocale(InfraModuleConstants.DEFAULT_LOCALE_TARGET);
         }
 
         String[] parts = acceptLanguage.split(",");
@@ -114,6 +134,6 @@ public class I18nUtils {
             return primary.replace('_', '-');
         }
 
-        return Locale.getDefault().toLanguageTag();
+        return i18nCommonApi.getDefaultLanguageLocale(InfraModuleConstants.DEFAULT_LOCALE_TARGET);
     }
 }

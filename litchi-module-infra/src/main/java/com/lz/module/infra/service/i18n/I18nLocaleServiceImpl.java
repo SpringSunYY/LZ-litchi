@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.redis.core.RedisUtils;
 import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nLocalePageReqVO;
@@ -14,8 +15,10 @@ import com.lz.module.infra.dal.mysql.i18n.I18nLocaleMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
+import com.lz.module.infra.framework.i18n.config.I18nProperties;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -38,6 +41,9 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
 
     @Resource
     private RedisUtils redisUtils;
+
+    @Resource
+    private I18nProperties i18nProperties;
 
     @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
@@ -155,5 +161,20 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Override
     public void clearI18nCache() {
         redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE, RedisKeyConstants.I18N_MESSAGE);
+    }
+
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE, key = "#localeTarget")
+    @Override
+    public String getI18nLocaleDefaultLangByLocalTarget(Integer localeTarget) {
+        //获取默认使用语言
+        I18nLocaleDO i18nLocaleDO = i18nLocaleMapper.selectOne(
+                new LambdaQueryWrapperX<I18nLocaleDO>()
+                        .in(I18nLocaleDO::getLocaleTarget, localeTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
+                        .eq(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus())
+                        .orderByDesc(I18nLocaleDO::getLocaleTarget)
+                        .last("LIMIT 1")
+        );
+        //默认语言,如果没查到返回默认语言
+        return ObjectUtils.isNotNull(i18nLocaleDO) ? i18nLocaleDO.getLocale() : i18nProperties.getDefaultLocale();
     }
 }

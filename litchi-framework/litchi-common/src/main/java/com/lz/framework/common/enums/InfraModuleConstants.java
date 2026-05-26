@@ -20,4 +20,9 @@ public class InfraModuleConstants {
      * 国际化字典前缀
      */
     public static final String I18N_DICT_PREFIX = "dict";
+
+    /**
+     * 默认端，当前后端
+     */
+    public static final Integer DEFAULT_LOCALE_TARGET = 1;
 }

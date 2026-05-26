@@ -6,17 +6,19 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import com.lz.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
+import com.lz.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
+import com.lz.framework.common.enums.I18nErrorCodeConstants;
 import com.lz.framework.common.exception.ServiceException;
 import com.lz.framework.common.exception.util.ServiceExceptionUtil;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.util.collection.SetUtils;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import com.lz.framework.common.util.json.JsonUtils;
 import com.lz.framework.common.util.monitor.TracerUtils;
 import com.lz.framework.common.util.servlet.ServletUtils;
 import com.lz.framework.web.core.util.WebFrameworkUtils;
-import com.lz.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
-import com.lz.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
-import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -70,7 +72,7 @@ public class GlobalExceptionHandler {
      * 因为 Filter 不走 SpringMVC 的流程，但是我们又需要兜底处理异常，所以这里提供一个全量的异常处理过程，保持逻辑统一。
      *
      * @param request 请求
-     * @param ex 异常
+     * @param ex      异常
      * @return 通用返回
      */
     public CommonResult<?> allExceptionHandler(HttpServletRequest request, Throwable ex) {
@@ -112,24 +114,26 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理 SpringMVC 请求参数缺失
-     *
+     * <p>
      * 例如说，接口上设置了 @RequestParam("xx") 参数，结果并未传递 xx 参数
      */
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public CommonResult<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
         log.warn("[missingServletRequestParameterExceptionHandler]", ex);
-        return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数缺失:%s", ex.getParameterName()));
+        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_MISSING, "请求参数缺失");
+        return CommonResult.error(BAD_REQUEST.getCode(), message + " " + ex.getParameterName());
     }
 
     /**
      * 处理 SpringMVC 请求参数类型错误
-     *
+     * <p>
      * 例如说，接口上设置了 @RequestParam("xx") 参数为 Integer，结果传递 xx 参数类型为 String
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public CommonResult<?> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException ex) {
         log.warn("[methodArgumentTypeMismatchExceptionHandler]", ex);
-        return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数类型错误:%s", ex.getMessage()));
+        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
+        return CommonResult.error(BAD_REQUEST.getCode(), message + ex.getMessage());
     }
 
     /**
@@ -154,7 +158,10 @@ public class GlobalExceptionHandler {
         if (StrUtil.isEmpty(errorMessage)) {
             return CommonResult.error(BAD_REQUEST);
         }
-        return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数不正确:%s", errorMessage));
+        return CommonResult.error(
+                BAD_REQUEST.getCode(),
+                I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_INVALID, "参数不正确")
+                        + " " + errorMessage);
     }
 
     /**
@@ -165,21 +172,25 @@ public class GlobalExceptionHandler {
         log.warn("[handleBindException]", ex);
         FieldError fieldError = ex.getFieldError();
         assert fieldError != null; // 断言，避免告警
-        return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数不正确:%s", fieldError.getDefaultMessage()));
+        String errorMessage = fieldError.getDefaultMessage();
+        return CommonResult.error(BAD_REQUEST.getCode(),
+                I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_INVALID, "参数不正确")
+                        + " " + errorMessage);
     }
 
     /**
      * 处理 SpringMVC 请求参数类型错误
-     *
+     * <p>
      * 例如说，接口上设置了 @RequestBody实体中 xx 属性类型为 Integer，结果传递 xx 参数类型为 String
      */
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public CommonResult<?> methodArgumentTypeInvalidFormatExceptionHandler(HttpMessageNotReadableException ex) {
         log.warn("[methodArgumentTypeInvalidFormatExceptionHandler]", ex);
-        if(ex.getCause() instanceof InvalidFormatException) {
+        if (ex.getCause() instanceof InvalidFormatException) {
             InvalidFormatException invalidFormatException = (InvalidFormatException) ex.getCause();
-            return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数类型错误:%s", invalidFormatException.getValue()));
-        }else {
+            String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
+            return CommonResult.error(BAD_REQUEST.getCode(), message + " " + invalidFormatException.getValue());
+        } else {
             return defaultExceptionHandler(ServletUtils.getRequest(), ex);
         }
     }
@@ -191,7 +202,9 @@ public class GlobalExceptionHandler {
     public CommonResult<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         log.warn("[constraintViolationExceptionHandler]", ex);
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
-        return CommonResult.error(BAD_REQUEST.getCode(), String.format("请求参数不正确:%s", constraintViolation.getMessage()));
+        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
+        message += " " + constraintViolation.getMessage();
+        return CommonResult.error(BAD_REQUEST.getCode(), message);
     }
 
     /**
@@ -206,7 +219,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理 SpringMVC 请求地址不存在
-     *
+     * <p>
      * 注意，它需要设置如下两个配置项：
      * 1. spring.mvc.throw-exception-if-no-handler-found 为 true
      * 2. spring.mvc.static-path-pattern 为 /statics/**
@@ -214,7 +227,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public CommonResult<?> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
         log.warn("[noHandlerFoundExceptionHandler]", ex);
-        return CommonResult.error(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getRequestURL()));
+        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_ADDRESS_NOT_FOUND, "请求地址不存在");
+        return CommonResult.error(NOT_FOUND.getCode(), message + " " + ex.getRequestURL());
     }
 
     /**
@@ -223,23 +237,25 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     private CommonResult<?> noResourceFoundExceptionHandler(HttpServletRequest req, NoResourceFoundException ex) {
         log.warn("[noResourceFoundExceptionHandler]", ex);
-        return CommonResult.error(NOT_FOUND.getCode(), String.format("请求地址不存在:%s", ex.getResourcePath()));
+        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_ADDRESS_NOT_FOUND, "请求地址不存在");
+        return CommonResult.error(NOT_FOUND.getCode(), message + " " + ex.getResourcePath());
     }
 
     /**
      * 处理 SpringMVC 请求方法不正确
-     *
+     * <p>
      * 例如说，A 接口的方法为 GET 方式，结果请求方法为 POST 方式，导致不匹配
      */
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public CommonResult<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
         log.warn("[httpRequestMethodNotSupportedExceptionHandler]", ex);
-        return CommonResult.error(METHOD_NOT_ALLOWED.getCode(), String.format("请求方法不正确:%s", ex.getMessage()));
+        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_METHOD_NOT_SUPPORTED, "请求方法不正确");
+        return CommonResult.error(METHOD_NOT_ALLOWED.getCode(), message + " " + ex.getMessage());
     }
 
     /**
      * 处理 Spring Security 权限不足的异常
-     *
+     * <p>
      * 来源是，使用 @PreAuthorize 注解，AOP 进行权限拦截
      */
     @ExceptionHandler(value = AccessDeniedException.class)
@@ -251,7 +267,7 @@ public class GlobalExceptionHandler {
 
     /**
      * 处理业务异常 ServiceException
-     *
+     * <p>
      * 例如说，商品库存不足，用户手机号已存在。
      */
     @ExceptionHandler(value = ServiceException.class)
@@ -303,7 +319,7 @@ public class GlobalExceptionHandler {
             // 执行插入 errorLog
             apiErrorLogApi.createApiErrorLogAsync(errorLog);
         } catch (Throwable th) {
-            log.error("[createExceptionLog][url({}) log({}) 发生异常]", req.getRequestURI(),  JsonUtils.toJsonString(errorLog), th);
+            log.error("[createExceptionLog][url({}) log({}) 发生异常]", req.getRequestURI(), JsonUtils.toJsonString(errorLog), th);
         }
     }
 

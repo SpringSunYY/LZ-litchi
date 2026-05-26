@@ -73,4 +73,11 @@ public interface I18nLocaleService {
      */
     void clearI18nCache();
 
+    /**
+     * 获得国际化国家默认语言
+     *
+     * @param localeTarget 国际化目标
+     * @return 默认语言
+     */
+    String getI18nLocaleDefaultLangByLocalTarget(Integer localeTarget);
 }
