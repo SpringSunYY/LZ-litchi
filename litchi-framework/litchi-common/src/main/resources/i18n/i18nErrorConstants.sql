@@ -23,14 +23,13 @@ SET
 @CREATOR = '0';
 SET
 @REMARK = 'ai auto generate';
-
+SET @ORDER_NUM = 5;
 -- =============================================
 -- 请求参数校验
 -- =============================================
 
 -- 1. 请求参数无效
-SET
-@ORDER_NUM = 1;
+
 DELETE
 FROM infra_i18n_key
 WHERE message_key = 'validation.request.parameter.invalid';
@@ -59,8 +58,7 @@ VALUES ('请求参数无效', 'validation.request.parameter.invalid', @LOCALE_ZH
         @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数无效', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 2. 请求参数类型错误
-SET
-@ORDER_NUM = 2;
+
 DELETE
 FROM infra_i18n_key
 WHERE message_key = 'validation.request.parameter.type.error';
@@ -90,8 +88,7 @@ VALUES ('请求参数类型错误', 'validation.request.parameter.type.error', @
         0);
 
 -- 3. 请求参数缺失
-SET
-@ORDER_NUM = 3;
+
 DELETE
 FROM infra_i18n_key
 WHERE message_key = 'validation.request.parameter.missing';
@@ -120,8 +117,7 @@ VALUES ('请求参数缺失', 'validation.request.parameter.missing', @LOCALE_ZH
         @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数缺失', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 4. 请求方法不支持
-SET
-@ORDER_NUM = 4;
+
 DELETE
 FROM infra_i18n_key
 WHERE message_key = 'validation.request.method.not.supported';
@@ -150,8 +146,7 @@ VALUES ('请求方法不支持', 'validation.request.method.not.supported', @LOC
         @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求方法不支持', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 5. 请求地址不存在
-SET
-@ORDER_NUM = 5;
+
 DELETE
 FROM infra_i18n_key
 WHERE message_key = 'validation.request.address.not.found';

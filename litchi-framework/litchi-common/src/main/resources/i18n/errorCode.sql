@@ -15,7 +15,7 @@ SET @LOCALE_EN = 'en-US';
 SET @LOCALE_ZH_CN = 'zh-CN';
 SET @CREATOR = '0';
 SET @REMARK = 'ai auto generate';
-SET @ORDER_NUM = 5;
+
 
 -- =============================================
 -- 请求参数校验

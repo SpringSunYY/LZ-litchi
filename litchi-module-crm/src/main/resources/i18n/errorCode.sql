@@ -15,13 +15,13 @@ SET @LOCALE_EN = 'en-US';
 SET @LOCALE_ZH_CN = 'zh-CN';
 SET @CREATOR = '0';
 SET @REMARK = 'ai auto generate';
-
+SET @ORDER_NUM = 5;
 -- =============================================
 -- 合同管理 1-020-000-000
 -- =============================================
 
 -- 1. 合同-不存在
-SET @ORDER_NUM = 1;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contract.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('合同-不存在', 'crm.contract.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -37,7 +37,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('合同-不存在', 'crm.contract.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '合同不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 2. 合同-状态变更无效
-SET @ORDER_NUM = 2;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contract.back.statusInvalid';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('合同-状态变更无效', 'crm.contract.back.statusInvalid', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -53,7 +53,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('合同-状态变更无效', 'crm.contract.back.statusInvalid', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '合同更新失败，原因：合同不是草稿状态', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 3. 合同-序列号生成失败
-SET @ORDER_NUM = 3;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contract.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('合同-序列号生成失败', 'crm.contract.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -69,7 +69,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('合同-序列号生成失败', 'crm.contract.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成合同序列号重复，请重试', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 4. 合同-有关联引用
-SET @ORDER_NUM = 4;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contract.back.hasReference';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('合同-有关联引用', 'crm.contract.back.hasReference', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -89,7 +89,7 @@ VALUES ('合同-有关联引用', 'crm.contract.back.hasReference', @LOCALE_ZH_C
 -- =============================================
 
 -- 5. 线索-不存在
-SET @ORDER_NUM = 5;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.clue.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('线索-不存在', 'crm.clue.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -105,7 +105,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('线索-不存在', 'crm.clue.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '线索不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 6. 线索-已转化
-SET @ORDER_NUM = 6;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.clue.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('线索-已转化', 'crm.clue.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -125,7 +125,7 @@ VALUES ('线索-已转化', 'crm.clue.back.processed', @LOCALE_ZH_CN, @LOCALE_TA
 -- =============================================
 
 -- 7. 商机-不存在
-SET @ORDER_NUM = 7;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.business.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机-不存在', 'crm.business.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -141,7 +141,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机-不存在', 'crm.business.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '商机不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 8. 商机-有关联引用
-SET @ORDER_NUM = 8;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.business.back.hasReference';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机-有关联引用', 'crm.business.back.hasReference', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -157,7 +157,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机-有关联引用', 'crm.business.back.hasReference', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '商机已关联合同，不能删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 9. 商机-状态变更无效
-SET @ORDER_NUM = 9;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.business.back.statusInvalid';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机-状态变更无效', 'crm.business.back.statusInvalid', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -173,7 +173,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机-状态变更无效', 'crm.business.back.statusInvalid', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '更新商机状态失败，原因：已经是结束状态', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 10. 商机-状态未变
-SET @ORDER_NUM = 10;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.business.back.statusEquals';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机-状态未变', 'crm.business.back.statusEquals', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -193,7 +193,7 @@ VALUES ('商机-状态未变', 'crm.business.back.statusEquals', @LOCALE_ZH_CN, 
 -- =============================================
 
 -- 11. 联系人-不存在
-SET @ORDER_NUM = 11;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contact.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('联系人-不存在', 'crm.contact.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -209,7 +209,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('联系人-不存在', 'crm.contact.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '联系人不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 12. 联系人-有关联引用
-SET @ORDER_NUM = 12;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contact.back.hasReference';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('联系人-有关联引用', 'crm.contact.back.hasReference', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -225,7 +225,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('联系人-有关联引用', 'crm.contact.back.hasReference', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '联系人已关联合同，不能删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 13. 联系人-负责人更新失败
-SET @ORDER_NUM = 13;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.contact.back.ownerUpdateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('联系人-负责人更新失败', 'crm.contact.back.ownerUpdateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -245,7 +245,7 @@ VALUES ('联系人-负责人更新失败', 'crm.contact.back.ownerUpdateFail', @
 -- =============================================
 
 -- 14. 回款-不存在
-SET @ORDER_NUM = 14;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-不存在', 'crm.receivable.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -261,7 +261,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款-不存在', 'crm.receivable.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '回款不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 15. 回款-禁止编辑
-SET @ORDER_NUM = 15;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.prohibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-禁止编辑', 'crm.receivable.back.prohibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -277,7 +277,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款-禁止编辑', 'crm.receivable.back.prohibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '更新回款失败，原因：禁止编辑', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 16. 回款-禁止删除
-SET @ORDER_NUM = 16;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.prohibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-禁止删除', 'crm.receivable.back.prohibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -293,7 +293,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款-禁止删除', 'crm.receivable.back.prohibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '删除回款失败，原因：被回款计划所使用，不允许删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 17. 回款-审批通过禁止删除
-SET @ORDER_NUM = 17;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-审批通过禁止删除', 'crm.receivable.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -309,7 +309,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款-审批通过禁止删除', 'crm.receivable.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '删除回款失败，原因：回款审批已通过', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 18. 回款-序列号生成失败
-SET @ORDER_NUM = 18;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-序列号生成失败', 'crm.receivable.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -325,7 +325,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款-序列号生成失败', 'crm.receivable.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成回款序列号重复，请重试', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 19. 回款-合同未审核
-SET @ORDER_NUM = 19;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.contractNotApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-合同未审核', 'crm.receivable.back.contractNotApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -341,7 +341,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款-合同未审核', 'crm.receivable.back.contractNotApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '创建回款失败，原因：合同不是审核通过状态', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 20. 回款-金额超限
-SET @ORDER_NUM = 20;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivable.back.amountExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款-金额超限', 'crm.receivable.back.amountExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -361,7 +361,7 @@ VALUES ('回款-金额超限', 'crm.receivable.back.amountExceed', @LOCALE_ZH_CN
 -- =============================================
 
 -- 21. 回款计划-不存在
-SET @ORDER_NUM = 21;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivablePlan.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款计划-不存在', 'crm.receivablePlan.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -377,7 +377,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('回款计划-不存在', 'crm.receivablePlan.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '回款计划不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 22. 回款计划-有关联引用
-SET @ORDER_NUM = 22;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.receivablePlan.back.hasReference';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('回款计划-有关联引用', 'crm.receivablePlan.back.hasReference', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -397,7 +397,7 @@ VALUES ('回款计划-有关联引用', 'crm.receivablePlan.back.hasReference', 
 -- =============================================
 
 -- 23. 客户-不存在
-SET @ORDER_NUM = 23;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-不存在', 'crm.customer.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -413,7 +413,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-不存在', 'crm.customer.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 24. 客户-负责人已存在
-SET @ORDER_NUM = 24;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.ownerExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-负责人已存在', 'crm.customer.back.ownerExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -429,7 +429,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-负责人已存在', 'crm.customer.back.ownerExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户【{}】已存在所属负责人', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 25. 客户-已锁定
-SET @ORDER_NUM = 25;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.locked';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-已锁定', 'crm.customer.back.locked', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -445,7 +445,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-已锁定', 'crm.customer.back.locked', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户【{}】状态已锁定', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 26. 客户-已交易
-SET @ORDER_NUM = 26;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.dealStatusInvalid';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-已交易', 'crm.customer.back.dealStatusInvalid', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -461,7 +461,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-已交易', 'crm.customer.back.dealStatusInvalid', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户已交易', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 27. 客户-已在公海
-SET @ORDER_NUM = 27;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.alreadyInPool';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-已在公海', 'crm.customer.back.alreadyInPool', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -477,7 +477,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-已在公海', 'crm.customer.back.alreadyInPool', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户【{}】放入公海失败，原因：已经是公海客户', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 28. 客户-公海失败已锁定
-SET @ORDER_NUM = 28;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.poolFailLocked';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-公海失败已锁定', 'crm.customer.back.poolFailLocked', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -493,7 +493,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-公海失败已锁定', 'crm.customer.back.poolFailLocked', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户【{}】放入公海失败，原因：客户已锁定', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 29. 客户-负责人更新失败
-SET @ORDER_NUM = 29;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.ownerUpdateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-负责人更新失败', 'crm.customer.back.ownerUpdateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -509,7 +509,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-负责人更新失败', 'crm.customer.back.ownerUpdateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '更新客户【{}】负责人失败, 原因：系统异常', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 30. 客户-已锁定
-SET @ORDER_NUM = 30;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.alreadyLocked';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-已锁定', 'crm.customer.back.alreadyLocked', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -525,7 +525,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-已锁定', 'crm.customer.back.alreadyLocked', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '锁定客户失败，它已经处于锁定状态', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 31. 客户-已解锁
-SET @ORDER_NUM = 31;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.alreadyUnlocked';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-已解锁', 'crm.customer.back.alreadyUnlocked', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -541,7 +541,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-已解锁', 'crm.customer.back.alreadyUnlocked', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '解锁客户失败，它已经处于未锁定状态', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 32. 客户-锁定超限
-SET @ORDER_NUM = 32;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.lockQuotaExceeded';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-锁定超限', 'crm.customer.back.lockQuotaExceeded', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -557,7 +557,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-锁定超限', 'crm.customer.back.lockQuotaExceeded', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '锁定客户失败，超出锁定规则上限', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 33. 客户-拥有数量超限
-SET @ORDER_NUM = 33;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.ownerQuotaExceeded';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-拥有数量超限', 'crm.customer.back.ownerQuotaExceeded', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -573,7 +573,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-拥有数量超限', 'crm.customer.back.ownerQuotaExceeded', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '操作失败，超出客户数拥有上限', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 34. 客户-有关联引用
-SET @ORDER_NUM = 34;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.hasReference';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-有关联引用', 'crm.customer.back.hasReference', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -589,7 +589,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-有关联引用', 'crm.customer.back.hasReference', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '删除客户失败，有关联{}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 35. 客户-导入为空
-SET @ORDER_NUM = 35;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.importEmpty';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-导入为空', 'crm.customer.back.importEmpty', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -605,7 +605,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-导入为空', 'crm.customer.back.importEmpty', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '导入客户数据不能为空！', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 36. 客户-名称必填
-SET @ORDER_NUM = 36;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.nameRequired';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-名称必填', 'crm.customer.back.nameRequired', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -621,7 +621,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-名称必填', 'crm.customer.back.nameRequired', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户名称不能为空！', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 37. 客户-名称已存在
-SET @ORDER_NUM = 37;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.nameExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-名称已存在', 'crm.customer.back.nameExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -637,7 +637,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-名称已存在', 'crm.customer.back.nameExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '已存在名为【{}】的客户！', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 38. 客户-成交状态未变
-SET @ORDER_NUM = 38;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.back.dealStatusEquals';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-成交状态未变', 'crm.customer.back.dealStatusEquals', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -657,7 +657,7 @@ VALUES ('客户-成交状态未变', 'crm.customer.back.dealStatusEquals', @LOCA
 -- =============================================
 
 -- 39. 数据权限-不存在
-SET @ORDER_NUM = 39;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-不存在', 'crm.permission.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -673,7 +673,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-不存在', 'crm.permission.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '数据权限不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 40. 数据权限-拒绝
-SET @ORDER_NUM = 40;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.denied';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-拒绝', 'crm.permission.back.denied', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -689,7 +689,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-拒绝', 'crm.permission.back.denied', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '{}操作失败，原因：没有权限', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 41. 数据权限-负责人相同
-SET @ORDER_NUM = 41;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.ownerSame';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-负责人相同', 'crm.permission.back.ownerSame', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -705,7 +705,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-负责人相同', 'crm.permission.back.ownerSame', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '{}操作失败，原因：转移对象已经是该负责人', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 42. 数据权限-批量删除失败
-SET @ORDER_NUM = 42;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.batchDeleteFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-批量删除失败', 'crm.permission.back.batchDeleteFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -721,7 +721,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-批量删除失败', 'crm.permission.back.batchDeleteFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '删除数据权限失败，原因：批量删除权限的时候，只能属于同一个 bizId 下', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 43. 数据权限-删除拒绝
-SET @ORDER_NUM = 43;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.deleteDenied';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-删除拒绝', 'crm.permission.back.deleteDenied', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -737,7 +737,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-删除拒绝', 'crm.permission.back.deleteDenied', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '删除数据权限失败，原因：没有权限', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 44. 数据权限-负责人禁止删除
-SET @ORDER_NUM = 44;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.ownerProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-负责人禁止删除', 'crm.permission.back.ownerProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -753,7 +753,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-负责人禁止删除', 'crm.permission.back.ownerProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '删除数据权限失败，原因：不能删除负责人', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 45. 数据权限-创建失败
-SET @ORDER_NUM = 45;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.createFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-创建失败', 'crm.permission.back.createFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -769,7 +769,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('数据权限-创建失败', 'crm.permission.back.createFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '创建数据权限失败，原因：所加用户已有权限', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 46. 数据权限-已存在
-SET @ORDER_NUM = 46;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.permission.back.permissionExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('数据权限-已存在', 'crm.permission.back.permissionExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -789,7 +789,7 @@ VALUES ('数据权限-已存在', 'crm.permission.back.permissionExists', @LOCAL
 -- =============================================
 
 -- 47. 产品-不存在
-SET @ORDER_NUM = 47;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.product.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品-不存在', 'crm.product.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -805,7 +805,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品-不存在', 'crm.product.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 48. 产品-编号已存在
-SET @ORDER_NUM = 48;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.product.back.codeExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品-编号已存在', 'crm.product.back.codeExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -821,7 +821,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品-编号已存在', 'crm.product.back.codeExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品编号已存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 49. 产品-已禁用
-SET @ORDER_NUM = 49;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.product.back.notEnabled';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品-已禁用', 'crm.product.back.notEnabled', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -841,7 +841,7 @@ VALUES ('产品-已禁用', 'crm.product.back.notEnabled', @LOCALE_ZH_CN, @LOCAL
 -- =============================================
 
 -- 50. 产品分类-不存在
-SET @ORDER_NUM = 50;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.productCategory.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-不存在', 'crm.productCategory.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -857,7 +857,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-不存在', 'crm.productCategory.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品分类不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 51. 产品分类-名称已存在
-SET @ORDER_NUM = 51;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.productCategory.back.nameExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-名称已存在', 'crm.productCategory.back.nameExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -873,7 +873,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-名称已存在', 'crm.productCategory.back.nameExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品分类已存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 52. 产品分类-有关联产品
-SET @ORDER_NUM = 52;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.productCategory.back.hasProduct';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-有关联产品', 'crm.productCategory.back.hasProduct', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -889,7 +889,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-有关联产品', 'crm.productCategory.back.hasProduct', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品分类已关联产品', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 53. 产品分类-父分类不存在
-SET @ORDER_NUM = 53;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.productCategory.back.parentNotExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-父分类不存在', 'crm.productCategory.back.parentNotExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -905,7 +905,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-父分类不存在', 'crm.productCategory.back.parentNotExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '父分类不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 54. 产品分类-父分类类型错误
-SET @ORDER_NUM = 54;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.productCategory.back.parentTypeError';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-父分类类型错误', 'crm.productCategory.back.parentTypeError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -921,7 +921,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-父分类类型错误', 'crm.productCategory.back.parentTypeError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '父分类不能是二级分类', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 55. 产品分类-存在子级
-SET @ORDER_NUM = 55;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.productCategory.back.hasChildren';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-存在子级', 'crm.productCategory.back.hasChildren', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -941,7 +941,7 @@ VALUES ('产品分类-存在子级', 'crm.productCategory.back.hasChildren', @LO
 -- =============================================
 
 -- 56. 商机状态组-不存在
-SET @ORDER_NUM = 56;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.businessStatusType.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机状态组-不存在', 'crm.businessStatusType.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -957,7 +957,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机状态组-不存在', 'crm.businessStatusType.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '商机状态组不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 57. 商机状态组-名称已存在
-SET @ORDER_NUM = 57;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.businessStatusType.back.nameExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机状态组-名称已存在', 'crm.businessStatusType.back.nameExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -973,7 +973,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机状态组-名称已存在', 'crm.businessStatusType.back.nameExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '商机状态组的名称已存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 58. 商机状态组-禁止更新
-SET @ORDER_NUM = 58;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.businessStatusType.back.prohibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机状态组-禁止更新', 'crm.businessStatusType.back.prohibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -989,7 +989,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机状态组-禁止更新', 'crm.businessStatusType.back.prohibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '已经被使用的商机状态组，无法进行更新', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 59. 商机状态组-禁止删除
-SET @ORDER_NUM = 59;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.businessStatusType.back.prohibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机状态组-禁止删除', 'crm.businessStatusType.back.prohibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1005,7 +1005,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('商机状态组-禁止删除', 'crm.businessStatusType.back.prohibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '已经被使用的商机状态组，无法进行删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 60. 商机状态-不存在
-SET @ORDER_NUM = 60;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.businessStatus.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('商机状态-不存在', 'crm.businessStatus.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1025,7 +1025,7 @@ VALUES ('商机状态-不存在', 'crm.businessStatus.back.notExists', @LOCALE_Z
 -- =============================================
 
 -- 61. 客户限制配置-不存在
-SET @ORDER_NUM = 61;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customerLimitConfig.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户限制配置-不存在', 'crm.customerLimitConfig.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1045,7 +1045,7 @@ VALUES ('客户限制配置-不存在', 'crm.customerLimitConfig.back.notExists'
 -- =============================================
 
 -- 62. 跟进记录-不存在
-SET @ORDER_NUM = 62;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.followUpRecord.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('跟进记录-不存在', 'crm.followUpRecord.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1061,7 +1061,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('跟进记录-不存在', 'crm.followUpRecord.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '跟进记录不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 63. 跟进记录-删除拒绝
-SET @ORDER_NUM = 63;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.followUpRecord.back.deleteDenied';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('跟进记录-删除拒绝', 'crm.followUpRecord.back.deleteDenied', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

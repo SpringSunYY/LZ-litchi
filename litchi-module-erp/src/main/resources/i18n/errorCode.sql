@@ -15,13 +15,13 @@ SET @LOCALE_EN = 'en-US';
 SET @LOCALE_ZH_CN = 'zh-CN';
 SET @CREATOR = '0';
 SET @REMARK = 'ai auto generate';
-
+SET @ORDER_NUM = 5;
 -- =============================================
 -- ERP 供应商（1-030-100-000）
 -- =============================================
 
 -- 1. 供应商-不存在
-SET @ORDER_NUM = 1;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.supplier.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('供应商-不存在', 'erp.supplier.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -37,7 +37,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('供应商-不存在', 'erp.supplier.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '供应商不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 2. 供应商-未启用
-SET @ORDER_NUM = 2;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.supplier.back.notEnabled';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('供应商-未启用', 'erp.supplier.back.notEnabled', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -57,7 +57,7 @@ VALUES ('供应商-未启用', 'erp.supplier.back.notEnabled', @LOCALE_ZH_CN, @L
 -- =============================================
 
 -- 3. 采购订单-不存在
-SET @ORDER_NUM = 3;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-不存在', 'erp.purchaseOrder.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -73,7 +73,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-不存在', 'erp.purchaseOrder.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购订单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 4. 采购订单-已审核无法删除
-SET @ORDER_NUM = 4;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-已审核无法删除', 'erp.purchaseOrder.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -89,7 +89,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-已审核无法删除', 'erp.purchaseOrder.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购订单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 5. 采购订单-反审核失败
-SET @ORDER_NUM = 5;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-反审核失败', 'erp.purchaseOrder.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -105,7 +105,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-反审核失败', 'erp.purchaseOrder.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的采购订单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 6. 采购订单-审核失败
-SET @ORDER_NUM = 6;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-审核失败', 'erp.purchaseOrder.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -121,7 +121,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-审核失败', 'erp.purchaseOrder.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的采购订单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 7. 采购订单-生成单号失败
-SET @ORDER_NUM = 7;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-生成单号失败', 'erp.purchaseOrder.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -137,7 +137,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-生成单号失败', 'erp.purchaseOrder.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成采购单号失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 8. 采购订单-已审核无法修改
-SET @ORDER_NUM = 8;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-已审核无法修改', 'erp.purchaseOrder.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -153,7 +153,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-已审核无法修改', 'erp.purchaseOrder.back.approveProhibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购订单({})已审核，无法修改', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 9. 采购订单-未审核无法操作
-SET @ORDER_NUM = 9;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.operationNotAllowed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-未审核无法操作', 'erp.purchaseOrder.back.operationNotAllowed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -169,7 +169,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-未审核无法操作', 'erp.purchaseOrder.back.operationNotAllowed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购订单未审核，无法操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 10. 采购订单项-超过最大允许入库数量
-SET @ORDER_NUM = 10;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.stockInExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单项-超过最大允许入库数量', 'erp.purchaseOrder.back.stockInExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -185,7 +185,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单项-超过最大允许入库数量', 'erp.purchaseOrder.back.stockInExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购订单项({})超过最大允许入库数量({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 11. 采购订单-反审核失败已存在入库单
-SET @ORDER_NUM = 11;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.stockInExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-反审核失败已存在入库单', 'erp.purchaseOrder.back.stockInExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -201,7 +201,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单-反审核失败已存在入库单', 'erp.purchaseOrder.back.stockInExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，已存在对应的采购入库单', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 12. 采购订单项-超过最大允许退货数量
-SET @ORDER_NUM = 12;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.returnExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单项-超过最大允许退货数量', 'erp.purchaseOrder.back.returnExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -217,7 +217,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购订单项-超过最大允许退货数量', 'erp.purchaseOrder.back.returnExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购订单项({})超过最大允许退货数量({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 13. 采购订单-反审核失败已存在退货单
-SET @ORDER_NUM = 13;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseOrder.back.returnExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购订单-反审核失败已存在退货单', 'erp.purchaseOrder.back.returnExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -237,7 +237,7 @@ VALUES ('采购订单-反审核失败已存在退货单', 'erp.purchaseOrder.bac
 -- =============================================
 
 -- 14. 采购入库单-不存在
-SET @ORDER_NUM = 14;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-不存在', 'erp.purchaseIn.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -253,7 +253,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-不存在', 'erp.purchaseIn.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购入库单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 15. 采购入库单-已审核无法删除
-SET @ORDER_NUM = 15;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-已审核无法删除', 'erp.purchaseIn.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -269,7 +269,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-已审核无法删除', 'erp.purchaseIn.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购入库单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 16. 采购入库单-反审核失败
-SET @ORDER_NUM = 16;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-反审核失败', 'erp.purchaseIn.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -285,7 +285,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-反审核失败', 'erp.purchaseIn.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的入库单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 17. 采购入库单-审核失败
-SET @ORDER_NUM = 17;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-审核失败', 'erp.purchaseIn.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -301,7 +301,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-审核失败', 'erp.purchaseIn.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的入库单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 18. 采购入库单-生成单号失败
-SET @ORDER_NUM = 18;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-生成单号失败', 'erp.purchaseIn.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -317,7 +317,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-生成单号失败', 'erp.purchaseIn.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成入库单失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 19. 采购入库单-已审核无法修改
-SET @ORDER_NUM = 19;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-已审核无法修改', 'erp.purchaseIn.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -333,7 +333,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-已审核无法修改', 'erp.purchaseIn.back.approveProhibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购入库单({})已审核，无法修改', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 20. 采购入库单-未审核无法操作
-SET @ORDER_NUM = 20;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.operationNotAllowed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-未审核无法操作', 'erp.purchaseIn.back.operationNotAllowed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -349,7 +349,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-未审核无法操作', 'erp.purchaseIn.back.operationNotAllowed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购入库单未审核，无法操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 21. 采购入库单-付款金额超限
-SET @ORDER_NUM = 21;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.paymentExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-付款金额超限', 'erp.purchaseIn.back.paymentExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -365,7 +365,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购入库单-付款金额超限', 'erp.purchaseIn.back.paymentExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '付款金额({})超过采购入库单总金额({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 22. 采购入库单-反审核失败已存在付款单
-SET @ORDER_NUM = 22;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseIn.back.paymentExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购入库单-反审核失败已存在付款单', 'erp.purchaseIn.back.paymentExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -385,7 +385,7 @@ VALUES ('采购入库单-反审核失败已存在付款单', 'erp.purchaseIn.bac
 -- =============================================
 
 -- 23. 采购退货单-不存在
-SET @ORDER_NUM = 23;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-不存在', 'erp.purchaseReturn.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -401,7 +401,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-不存在', 'erp.purchaseReturn.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购退货单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 24. 采购退货单-已审核无法删除
-SET @ORDER_NUM = 24;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-已审核无法删除', 'erp.purchaseReturn.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -417,7 +417,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-已审核无法删除', 'erp.purchaseReturn.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购退货单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 25. 采购退货单-反审核失败
-SET @ORDER_NUM = 25;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-反审核失败', 'erp.purchaseReturn.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -433,7 +433,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-反审核失败', 'erp.purchaseReturn.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的退货单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 26. 采购退货单-审核失败
-SET @ORDER_NUM = 26;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-审核失败', 'erp.purchaseReturn.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -449,7 +449,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-审核失败', 'erp.purchaseReturn.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的退货单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 27. 采购退货单-生成单号失败
-SET @ORDER_NUM = 27;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-生成单号失败', 'erp.purchaseReturn.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -465,7 +465,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-生成单号失败', 'erp.purchaseReturn.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成退货单失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 28. 采购退货单-已审核无法修改
-SET @ORDER_NUM = 28;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-已审核无法修改', 'erp.purchaseReturn.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -481,7 +481,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-已审核无法修改', 'erp.purchaseReturn.back.approveProhibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购退货单({})已审核，无法修改', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 29. 采购退货单-未审核无法操作
-SET @ORDER_NUM = 29;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.operationNotAllowed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-未审核无法操作', 'erp.purchaseReturn.back.operationNotAllowed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -497,7 +497,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-未审核无法操作', 'erp.purchaseReturn.back.operationNotAllowed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '采购退货单未审核，无法操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 30. 采购退货单-退款金额超限
-SET @ORDER_NUM = 30;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.refundExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-退款金额超限', 'erp.purchaseReturn.back.refundExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -513,7 +513,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('采购退货单-退款金额超限', 'erp.purchaseReturn.back.refundExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '退款金额({})超过采购退货单总金额({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 31. 采购退货单-反审核失败已存在退款单
-SET @ORDER_NUM = 31;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.purchaseReturn.back.refundExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('采购退货单-反审核失败已存在退款单', 'erp.purchaseReturn.back.refundExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -533,7 +533,7 @@ VALUES ('采购退货单-反审核失败已存在退款单', 'erp.purchaseReturn
 -- =============================================
 
 -- 32. 客户-不存在
-SET @ORDER_NUM = 32;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.customer.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-不存在', 'erp.customer.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -549,7 +549,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-不存在', 'erp.customer.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '客户不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 33. 客户-未启用
-SET @ORDER_NUM = 33;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.customer.back.notEnabled';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('客户-未启用', 'erp.customer.back.notEnabled', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -569,7 +569,7 @@ VALUES ('客户-未启用', 'erp.customer.back.notEnabled', @LOCALE_ZH_CN, @LOCA
 -- =============================================
 
 -- 34. 销售订单-不存在
-SET @ORDER_NUM = 34;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-不存在', 'erp.saleOrder.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -585,7 +585,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-不存在', 'erp.saleOrder.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售订单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 35. 销售订单-已审核无法删除
-SET @ORDER_NUM = 35;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-已审核无法删除', 'erp.saleOrder.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -601,7 +601,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-已审核无法删除', 'erp.saleOrder.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售订单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 36. 销售订单-反审核失败
-SET @ORDER_NUM = 36;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-反审核失败', 'erp.saleOrder.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -617,7 +617,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-反审核失败', 'erp.saleOrder.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的销售订单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 37. 销售订单-审核失败
-SET @ORDER_NUM = 37;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-审核失败', 'erp.saleOrder.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -633,7 +633,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-审核失败', 'erp.saleOrder.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的销售订单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 38. 销售订单-生成单号失败
-SET @ORDER_NUM = 38;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-生成单号失败', 'erp.saleOrder.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -649,7 +649,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-生成单号失败', 'erp.saleOrder.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成销售单号失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 39. 销售订单-已审核无法修改
-SET @ORDER_NUM = 39;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-已审核无法修改', 'erp.saleOrder.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -665,7 +665,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-已审核无法修改', 'erp.saleOrder.back.approveProhibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售订单({})已审核，无法修改', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 40. 销售订单-未审核无法操作
-SET @ORDER_NUM = 40;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.operationNotAllowed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-未审核无法操作', 'erp.saleOrder.back.operationNotAllowed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -681,7 +681,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-未审核无法操作', 'erp.saleOrder.back.operationNotAllowed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售订单未审核，无法操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 41. 销售订单项-超过最大允许出库数量
-SET @ORDER_NUM = 41;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.stockOutExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单项-超过最大允许出库数量', 'erp.saleOrder.back.stockOutExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -697,7 +697,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单项-超过最大允许出库数量', 'erp.saleOrder.back.stockOutExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售订单项({})超过最大允许出库数量({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 42. 销售订单-反审核失败已存在出库单
-SET @ORDER_NUM = 42;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.stockOutExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-反审核失败已存在出库单', 'erp.saleOrder.back.stockOutExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -713,7 +713,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单-反审核失败已存在出库单', 'erp.saleOrder.back.stockOutExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，已存在对应的销售出库单', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 43. 销售订单项-超过最大允许退货数量
-SET @ORDER_NUM = 43;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.returnExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单项-超过最大允许退货数量', 'erp.saleOrder.back.returnExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -729,7 +729,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售订单项-超过最大允许退货数量', 'erp.saleOrder.back.returnExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售订单项({})超过最大允许退货数量({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 44. 销售订单-反审核失败已存在退货单
-SET @ORDER_NUM = 44;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOrder.back.returnExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售订单-反审核失败已存在退货单', 'erp.saleOrder.back.returnExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -749,7 +749,7 @@ VALUES ('销售订单-反审核失败已存在退货单', 'erp.saleOrder.back.re
 -- =============================================
 
 -- 45. 销售出库单-不存在
-SET @ORDER_NUM = 45;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-不存在', 'erp.saleOut.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -765,7 +765,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-不存在', 'erp.saleOut.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售出库单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 46. 销售出库单-已审核无法删除
-SET @ORDER_NUM = 46;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-已审核无法删除', 'erp.saleOut.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -781,7 +781,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-已审核无法删除', 'erp.saleOut.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售出库单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 47. 销售出库单-反审核失败
-SET @ORDER_NUM = 47;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-反审核失败', 'erp.saleOut.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -797,7 +797,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-反审核失败', 'erp.saleOut.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的出库单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 48. 销售出库单-审核失败
-SET @ORDER_NUM = 48;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-审核失败', 'erp.saleOut.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -813,7 +813,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-审核失败', 'erp.saleOut.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的出库单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 49. 销售出库单-生成单号失败
-SET @ORDER_NUM = 49;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-生成单号失败', 'erp.saleOut.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -829,7 +829,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-生成单号失败', 'erp.saleOut.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成出库单失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 50. 销售出库单-已审核无法修改
-SET @ORDER_NUM = 50;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-已审核无法修改', 'erp.saleOut.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -845,7 +845,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-已审核无法修改', 'erp.saleOut.back.approveProhibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售出库单({})已审核，无法修改', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 51. 销售出库单-未审核无法操作
-SET @ORDER_NUM = 51;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.operationNotAllowed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-未审核无法操作', 'erp.saleOut.back.operationNotAllowed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -861,7 +861,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-未审核无法操作', 'erp.saleOut.back.operationNotAllowed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售出库单未审核，无法操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 52. 销售出库单-收款金额超限
-SET @ORDER_NUM = 52;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.receiptExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-收款金额超限', 'erp.saleOut.back.receiptExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -877,7 +877,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售出库单-收款金额超限', 'erp.saleOut.back.receiptExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '收款金额({})超过销售出库单总金额({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 53. 销售出库单-反审核失败已存在收款单
-SET @ORDER_NUM = 53;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleOut.back.receiptExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售出库单-反审核失败已存在收款单', 'erp.saleOut.back.receiptExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -897,7 +897,7 @@ VALUES ('销售出库单-反审核失败已存在收款单', 'erp.saleOut.back.r
 -- =============================================
 
 -- 54. 销售退货单-不存在
-SET @ORDER_NUM = 54;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-不存在', 'erp.saleReturn.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -913,7 +913,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-不存在', 'erp.saleReturn.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售退货单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 55. 销售退货单-已审核无法删除
-SET @ORDER_NUM = 55;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-已审核无法删除', 'erp.saleReturn.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -929,7 +929,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-已审核无法删除', 'erp.saleReturn.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售退货单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 56. 销售退货单-反审核失败
-SET @ORDER_NUM = 56;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-反审核失败', 'erp.saleReturn.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -945,7 +945,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-反审核失败', 'erp.saleReturn.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的退货单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 57. 销售退货单-审核失败
-SET @ORDER_NUM = 57;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-审核失败', 'erp.saleReturn.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -961,7 +961,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-审核失败', 'erp.saleReturn.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的退货单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 58. 销售退货单-生成单号失败
-SET @ORDER_NUM = 58;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-生成单号失败', 'erp.saleReturn.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -977,7 +977,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-生成单号失败', 'erp.saleReturn.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成退货单失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 59. 销售退货单-已审核无法修改
-SET @ORDER_NUM = 59;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-已审核无法修改', 'erp.saleReturn.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -993,7 +993,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-已审核无法修改', 'erp.saleReturn.back.approveProhibitUpdate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售退货单({})已审核，无法修改', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 60. 销售退货单-未审核无法操作
-SET @ORDER_NUM = 60;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.operationNotAllowed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-未审核无法操作', 'erp.saleReturn.back.operationNotAllowed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1009,7 +1009,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-未审核无法操作', 'erp.saleReturn.back.operationNotAllowed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '销售退货单未审核，无法操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 61. 销售退货单-退款金额超限
-SET @ORDER_NUM = 61;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.refundExceed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-退款金额超限', 'erp.saleReturn.back.refundExceed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1025,7 +1025,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('销售退货单-退款金额超限', 'erp.saleReturn.back.refundExceed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '退款金额({})超过销售退货单总金额({})', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 62. 销售退货单-反审核失败已存在退款单
-SET @ORDER_NUM = 62;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.saleReturn.back.refundExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('销售退货单-反审核失败已存在退款单', 'erp.saleReturn.back.refundExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1045,7 +1045,7 @@ VALUES ('销售退货单-反审核失败已存在退款单', 'erp.saleReturn.bac
 -- =============================================
 
 -- 63. 仓库-不存在
-SET @ORDER_NUM = 63;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.warehouse.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('仓库-不存在', 'erp.warehouse.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1061,7 +1061,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('仓库-不存在', 'erp.warehouse.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '仓库不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 64. 仓库-未启用
-SET @ORDER_NUM = 64;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.warehouse.back.notEnabled';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('仓库-未启用', 'erp.warehouse.back.notEnabled', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1081,7 +1081,7 @@ VALUES ('仓库-未启用', 'erp.warehouse.back.notEnabled', @LOCALE_ZH_CN, @LOC
 -- =============================================
 
 -- 65. 其它入库单-不存在
-SET @ORDER_NUM = 65;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockIn.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它入库单-不存在', 'erp.stockIn.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1097,7 +1097,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它入库单-不存在', 'erp.stockIn.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '其它入库单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 66. 其它入库单-已审核无法删除
-SET @ORDER_NUM = 66;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockIn.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它入库单-已审核无法删除', 'erp.stockIn.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1113,7 +1113,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它入库单-已审核无法删除', 'erp.stockIn.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '其它入库单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 67. 其它入库单-反审核失败
-SET @ORDER_NUM = 67;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockIn.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它入库单-反审核失败', 'erp.stockIn.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1129,7 +1129,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它入库单-反审核失败', 'erp.stockIn.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的入库单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 68. 其它入库单-审核失败
-SET @ORDER_NUM = 68;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockIn.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它入库单-审核失败', 'erp.stockIn.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1145,7 +1145,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它入库单-审核失败', 'erp.stockIn.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的入库单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 69. 其它入库单-生成单号失败
-SET @ORDER_NUM = 69;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockIn.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它入库单-生成单号失败', 'erp.stockIn.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1161,7 +1161,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它入库单-生成单号失败', 'erp.stockIn.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成入库单失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 70. 其它入库单-已审核无法修改
-SET @ORDER_NUM = 70;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockIn.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它入库单-已审核无法修改', 'erp.stockIn.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1181,7 +1181,7 @@ VALUES ('其它入库单-已审核无法修改', 'erp.stockIn.back.approveProhib
 -- =============================================
 
 -- 71. 其它出库单-不存在
-SET @ORDER_NUM = 71;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockOut.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它出库单-不存在', 'erp.stockOut.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1197,7 +1197,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它出库单-不存在', 'erp.stockOut.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '其它出库单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 72. 其它出库单-已审核无法删除
-SET @ORDER_NUM = 72;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockOut.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它出库单-已审核无法删除', 'erp.stockOut.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1213,7 +1213,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它出库单-已审核无法删除', 'erp.stockOut.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '其它出库单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 73. 其它出库单-反审核失败
-SET @ORDER_NUM = 73;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockOut.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它出库单-反审核失败', 'erp.stockOut.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1229,7 +1229,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它出库单-反审核失败', 'erp.stockOut.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的出库单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 74. 其它出库单-审核失败
-SET @ORDER_NUM = 74;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockOut.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它出库单-审核失败', 'erp.stockOut.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1245,7 +1245,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它出库单-审核失败', 'erp.stockOut.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的出库单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 75. 其它出库单-生成单号失败
-SET @ORDER_NUM = 75;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockOut.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它出库单-生成单号失败', 'erp.stockOut.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1261,7 +1261,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('其它出库单-生成单号失败', 'erp.stockOut.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成出库单失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 76. 其它出库单-已审核无法修改
-SET @ORDER_NUM = 76;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockOut.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('其它出库单-已审核无法修改', 'erp.stockOut.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1281,7 +1281,7 @@ VALUES ('其它出库单-已审核无法修改', 'erp.stockOut.back.approveProhi
 -- =============================================
 
 -- 77. 库存调拨单-不存在
-SET @ORDER_NUM = 77;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockMove.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存调拨单-不存在', 'erp.stockMove.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1297,7 +1297,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存调拨单-不存在', 'erp.stockMove.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '库存调拨单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 78. 库存调拨单-已审核无法删除
-SET @ORDER_NUM = 78;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockMove.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存调拨单-已审核无法删除', 'erp.stockMove.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1313,7 +1313,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存调拨单-已审核无法删除', 'erp.stockMove.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '库存调拨单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 79. 库存调拨单-反审核失败
-SET @ORDER_NUM = 79;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockMove.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存调拨单-反审核失败', 'erp.stockMove.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1329,7 +1329,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存调拨单-反审核失败', 'erp.stockMove.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的调拨单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 80. 库存调拨单-审核失败
-SET @ORDER_NUM = 80;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockMove.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存调拨单-审核失败', 'erp.stockMove.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1345,7 +1345,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存调拨单-审核失败', 'erp.stockMove.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的调拨单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 81. 库存调拨单-生成单号失败
-SET @ORDER_NUM = 81;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockMove.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存调拨单-生成单号失败', 'erp.stockMove.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1361,7 +1361,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存调拨单-生成单号失败', 'erp.stockMove.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成调拨单号失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 82. 库存调拨单-已审核无法修改
-SET @ORDER_NUM = 82;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockMove.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存调拨单-已审核无法修改', 'erp.stockMove.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1381,7 +1381,7 @@ VALUES ('库存调拨单-已审核无法修改', 'erp.stockMove.back.approveProh
 -- =============================================
 
 -- 83. 库存盘点单-不存在
-SET @ORDER_NUM = 83;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCheck.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存盘点单-不存在', 'erp.stockCheck.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1397,7 +1397,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存盘点单-不存在', 'erp.stockCheck.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '库存盘点单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 84. 库存盘点单-已审核无法删除
-SET @ORDER_NUM = 84;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCheck.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存盘点单-已审核无法删除', 'erp.stockCheck.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1413,7 +1413,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存盘点单-已审核无法删除', 'erp.stockCheck.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '库存盘点单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 85. 库存盘点单-反审核失败
-SET @ORDER_NUM = 85;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCheck.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存盘点单-反审核失败', 'erp.stockCheck.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1429,7 +1429,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存盘点单-反审核失败', 'erp.stockCheck.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的盘点单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 86. 库存盘点单-审核失败
-SET @ORDER_NUM = 86;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCheck.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存盘点单-审核失败', 'erp.stockCheck.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1445,7 +1445,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存盘点单-审核失败', 'erp.stockCheck.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的盘点单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 87. 库存盘点单-生成单号失败
-SET @ORDER_NUM = 87;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCheck.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存盘点单-生成单号失败', 'erp.stockCheck.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1461,7 +1461,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('库存盘点单-生成单号失败', 'erp.stockCheck.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成盘点单号失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 88. 库存盘点单-已审核无法修改
-SET @ORDER_NUM = 88;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCheck.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('库存盘点单-已审核无法修改', 'erp.stockCheck.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1481,7 +1481,7 @@ VALUES ('库存盘点单-已审核无法修改', 'erp.stockCheck.back.approvePro
 -- =============================================
 
 -- 89. 产品库存-不足
-SET @ORDER_NUM = 89;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCount.back.insufficient';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品库存-不足', 'erp.stockCount.back.insufficient', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1497,7 +1497,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品库存-不足', 'erp.stockCount.back.insufficient', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '操作失败，产品({})所在仓库({})的库存：{}，小于变更数量：{}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 90. 产品库存-不足2
-SET @ORDER_NUM = 90;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.stockCount.back.insufficient2';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品库存-不足', 'erp.stockCount.back.insufficient2', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1517,7 +1517,7 @@ VALUES ('产品库存-不足', 'erp.stockCount.back.insufficient2', @LOCALE_ZH_C
 -- =============================================
 
 -- 91. 产品-不存在
-SET @ORDER_NUM = 91;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.product.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品-不存在', 'erp.product.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1533,7 +1533,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品-不存在', 'erp.product.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 92. 产品-未启用
-SET @ORDER_NUM = 92;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.product.back.notEnabled';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品-未启用', 'erp.product.back.notEnabled', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1553,7 +1553,7 @@ VALUES ('产品-未启用', 'erp.product.back.notEnabled', @LOCALE_ZH_CN, @LOCAL
 -- =============================================
 
 -- 93. 产品分类-不存在
-SET @ORDER_NUM = 93;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-不存在', 'erp.productCategory.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1569,7 +1569,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-不存在', 'erp.productCategory.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品分类不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 94. 产品分类-存在子级
-SET @ORDER_NUM = 94;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.hasChildren';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-存在子级', 'erp.productCategory.back.hasChildren', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1585,7 +1585,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-存在子级', 'erp.productCategory.back.hasChildren', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '存在子产品分类，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 95. 产品分类-父级不存在
-SET @ORDER_NUM = 95;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.parentNotExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-父级不存在', 'erp.productCategory.back.parentNotExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1601,7 +1601,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-父级不存在', 'erp.productCategory.back.parentNotExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '父级产品分类不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 96. 产品分类-不能设置自己为父级
-SET @ORDER_NUM = 96;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.parentSelfError';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-不能设置自己为父级', 'erp.productCategory.back.parentSelfError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1617,7 +1617,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-不能设置自己为父级', 'erp.productCategory.back.parentSelfError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '不能设置自己为父产品分类', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 97. 产品分类-名称重复
-SET @ORDER_NUM = 97;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.nameDuplicate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-名称重复', 'erp.productCategory.back.nameDuplicate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1633,7 +1633,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-名称重复', 'erp.productCategory.back.nameDuplicate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '已经存在该分类名称的产品分类', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 98. 产品分类-不能设置子级为父级
-SET @ORDER_NUM = 98;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.parentChildError';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-不能设置子级为父级', 'erp.productCategory.back.parentChildError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1649,7 +1649,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品分类-不能设置子级为父级', 'erp.productCategory.back.parentChildError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '不能设置自己的子分类为父分类', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 99. 产品分类-存在产品使用该分类
-SET @ORDER_NUM = 99;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productCategory.back.hasProduct';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品分类-存在产品使用该分类', 'erp.productCategory.back.hasProduct', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1669,7 +1669,7 @@ VALUES ('产品分类-存在产品使用该分类', 'erp.productCategory.back.ha
 -- =============================================
 
 -- 100. 产品单位-不存在
-SET @ORDER_NUM = 100;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productUnit.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品单位-不存在', 'erp.productUnit.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1685,7 +1685,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品单位-不存在', 'erp.productUnit.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '产品单位不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 101. 产品单位-名称重复
-SET @ORDER_NUM = 101;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productUnit.back.nameDuplicate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品单位-名称重复', 'erp.productUnit.back.nameDuplicate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1701,7 +1701,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('产品单位-名称重复', 'erp.productUnit.back.nameDuplicate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '已存在该名字的产品单位', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 102. 产品单位-存在产品使用该单位
-SET @ORDER_NUM = 102;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.productUnit.back.hasProduct';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('产品单位-存在产品使用该单位', 'erp.productUnit.back.hasProduct', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1721,7 +1721,7 @@ VALUES ('产品单位-存在产品使用该单位', 'erp.productUnit.back.hasPro
 -- =============================================
 
 -- 103. 结算账户-不存在
-SET @ORDER_NUM = 103;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.account.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('结算账户-不存在', 'erp.account.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1737,7 +1737,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('结算账户-不存在', 'erp.account.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '结算账户不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 104. 结算账户-未启用
-SET @ORDER_NUM = 104;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.account.back.notEnabled';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('结算账户-未启用', 'erp.account.back.notEnabled', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1757,7 +1757,7 @@ VALUES ('结算账户-未启用', 'erp.account.back.notEnabled', @LOCALE_ZH_CN, 
 -- =============================================
 
 -- 105. 付款单-不存在
-SET @ORDER_NUM = 105;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financePayment.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('付款单-不存在', 'erp.financePayment.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1773,7 +1773,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('付款单-不存在', 'erp.financePayment.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '付款单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 106. 付款单-已审核无法删除
-SET @ORDER_NUM = 106;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financePayment.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('付款单-已审核无法删除', 'erp.financePayment.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1789,7 +1789,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('付款单-已审核无法删除', 'erp.financePayment.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '付款单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 107. 付款单-反审核失败
-SET @ORDER_NUM = 107;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financePayment.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('付款单-反审核失败', 'erp.financePayment.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1805,7 +1805,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('付款单-反审核失败', 'erp.financePayment.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的付款单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 108. 付款单-审核失败
-SET @ORDER_NUM = 108;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financePayment.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('付款单-审核失败', 'erp.financePayment.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1821,7 +1821,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('付款单-审核失败', 'erp.financePayment.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的付款单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 109. 付款单-生成单号失败
-SET @ORDER_NUM = 109;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financePayment.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('付款单-生成单号失败', 'erp.financePayment.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1837,7 +1837,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('付款单-生成单号失败', 'erp.financePayment.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成付款单号失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 110. 付款单-已审核无法修改
-SET @ORDER_NUM = 110;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financePayment.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('付款单-已审核无法修改', 'erp.financePayment.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1857,7 +1857,7 @@ VALUES ('付款单-已审核无法修改', 'erp.financePayment.back.approveProhi
 -- =============================================
 
 -- 111. 收款单-不存在
-SET @ORDER_NUM = 111;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financeReceipt.back.notExists';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('收款单-不存在', 'erp.financeReceipt.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1873,7 +1873,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('收款单-不存在', 'erp.financeReceipt.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '收款单不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 112. 收款单-已审核无法删除
-SET @ORDER_NUM = 112;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financeReceipt.back.approveProhibitDelete';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('收款单-已审核无法删除', 'erp.financeReceipt.back.approveProhibitDelete', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1889,7 +1889,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('收款单-已审核无法删除', 'erp.financeReceipt.back.approveProhibitDelete', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '收款单({})已审核，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 113. 收款单-反审核失败
-SET @ORDER_NUM = 113;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financeReceipt.back.processed';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('收款单-反审核失败', 'erp.financeReceipt.back.processed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1905,7 +1905,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('收款单-反审核失败', 'erp.financeReceipt.back.processed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '反审核失败，只有已审核的收款单才能反审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 114. 收款单-审核失败
-SET @ORDER_NUM = 114;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financeReceipt.back.notApproved';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('收款单-审核失败', 'erp.financeReceipt.back.notApproved', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1921,7 +1921,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('收款单-审核失败', 'erp.financeReceipt.back.notApproved', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '审核失败，只有未审核的收款单才能审核', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 115. 收款单-生成单号失败
-SET @ORDER_NUM = 115;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financeReceipt.back.codeGenerateFail';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('收款单-生成单号失败', 'erp.financeReceipt.back.codeGenerateFail', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
@@ -1937,7 +1937,7 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('收款单-生成单号失败', 'erp.financeReceipt.back.codeGenerateFail', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '生成收款单号失败，请重新提交', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 116. 收款单-已审核无法修改
-SET @ORDER_NUM = 116;
+
 DELETE FROM infra_i18n_key WHERE message_key = 'erp.financeReceipt.back.approveProhibitUpdate';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('收款单-已审核无法修改', 'erp.financeReceipt.back.approveProhibitUpdate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
