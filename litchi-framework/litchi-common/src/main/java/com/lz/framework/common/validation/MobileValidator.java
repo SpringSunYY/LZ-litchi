@@ -1,15 +1,24 @@
 package com.lz.framework.common.validation;
 
 import cn.hutool.core.util.StrUtil;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import com.lz.framework.common.util.validation.ValidationUtils;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
+/**
+ * 手机号校验器
+ */
 public class MobileValidator implements ConstraintValidator<Mobile, String> {
+
+    private String i18nKey;
+    private String message;
 
     @Override
     public void initialize(Mobile annotation) {
+        this.i18nKey = annotation.i18nKey();
+        this.message = annotation.message();
     }
 
     @Override
@@ -19,7 +28,13 @@ public class MobileValidator implements ConstraintValidator<Mobile, String> {
             return true;
         }
         // 校验手机
-        return ValidationUtils.isMobile(value);
+        boolean valid = ValidationUtils.isMobile(value);
+        if (!valid) {
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(I18nUtils.getMessage(i18nKey,message))
+                    .addConstraintViolation();
+        }
+        return valid;
     }
 
 }

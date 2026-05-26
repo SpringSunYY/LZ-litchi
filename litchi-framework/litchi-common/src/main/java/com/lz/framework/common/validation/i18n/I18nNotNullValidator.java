@@ -1,6 +1,5 @@
 package com.lz.framework.common.validation.i18n;
 
-import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.util.i18n.I18nUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
@@ -31,10 +30,7 @@ public class I18nNotNullValidator implements ConstraintValidator<I18nNotNull, Ob
     }
 
     private String getI18nMessage() {
-        if (StrUtil.isBlank(i18nKey)) {
-            return message.replace("{}", "");
-        }
-        String i18nMsg = I18nUtils.getMessage(i18nKey);
-        return StrUtil.isNotBlank(i18nMsg) ? i18nMsg : message.replace("{}", "");
+        String message = I18nUtils.getMessage(i18nKey, this.message);
+        return message.replace("{}", "");
     }
 }

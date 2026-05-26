@@ -53,6 +53,9 @@ public class I18nUtils {
      * 根据消息键名获取翻译，如果未找到使用默认语言
      */
     public static String getMessage(String messageKey, String defaultMessage) {
+        if (StrUtil.isBlank(messageKey)){
+            return defaultMessage;
+        }
         return getMessage(messageKey, defaultMessage, getAcceptLanguage());
     }
 

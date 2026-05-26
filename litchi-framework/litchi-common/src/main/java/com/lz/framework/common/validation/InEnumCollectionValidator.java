@@ -1,7 +1,9 @@
 package com.lz.framework.common.validation;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.core.ArrayValuable;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -10,9 +12,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 枚举值集合校验器 - 校验集合中所有元素都在指定枚举范围内
+ */
 public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Collection<?>> {
 
     private List<?> values;
+    private String i18nKey;
+    private String message;
 
     @Override
     public void initialize(InEnum annotation) {
@@ -22,6 +29,8 @@ public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Co
         } else {
             this.values = Arrays.asList(values[0].array());
         }
+        this.i18nKey = annotation.i18nKey();
+        this.message = annotation.message();
     }
 
     @Override
@@ -34,9 +43,9 @@ public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Co
             return true;
         }
         // 校验不通过，自定义提示语句
-        context.disableDefaultConstraintViolation(); // 禁用默认的 message 的值
-        context.buildConstraintViolationWithTemplate(context.getDefaultConstraintMessageTemplate()
-                .replaceAll("\\{value}", CollUtil.join(list, ","))).addConstraintViolation(); // 重新添加错误提示语句
+        context.disableDefaultConstraintViolation();
+        context.buildConstraintViolationWithTemplate(I18nUtils.getMessage(i18nKey,message)
+                .replace("{value}", CollUtil.join(list, ","))).addConstraintViolation();
         return false;
     }
 
