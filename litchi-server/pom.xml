@@ -52,6 +52,12 @@
             <artifactId>litchi-module-erp</artifactId>
             <version>${revision}</version>
         </dependency>
+        <!-- AI 大模型相关模块。默认注释，保证编译速度 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-module-ai</artifactId>
+            <version>${revision}</version>
+        </dependency>
 
         <!-- spring boot 配置所需依赖 -->
         <dependency>

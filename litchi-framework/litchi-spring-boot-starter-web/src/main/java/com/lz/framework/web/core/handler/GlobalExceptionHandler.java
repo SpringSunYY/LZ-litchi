@@ -370,6 +370,12 @@ public class GlobalExceptionHandler {
             return CommonResult.error(NOT_IMPLEMENTED.getCode(),
                     "[工作流模块 litchi-module-bpm - 表结构未导入][参考 https://cloud.iocoder.cn/bpm/ 开启]");
         }
+        // 8. AI 大模型
+        if (message.contains("ai_")) {
+            log.error("[AI 大模型 litchi-module-ai - 表结构未导入][参考 https://cloud.iocoder.cn/ai/build/ 开启]");
+            return CommonResult.error(NOT_IMPLEMENTED.getCode(),
+                    "[AI 大模型 litchi-module-ai - 表结构未导入][参考 https://cloud.iocoder.cn/ai/build/ 开启]");
+        }
         // 5. ERP 系统
         if (message.contains("erp_")) {
             log.error("[ERP 系统 litchi-module-erp - 表结构未导入][参考 https://cloud.iocoder.cn/erp/build/ 开启]");

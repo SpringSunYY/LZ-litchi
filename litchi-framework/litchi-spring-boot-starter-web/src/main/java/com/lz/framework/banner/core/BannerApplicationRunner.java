@@ -39,6 +39,10 @@ public class BannerApplicationRunner implements ApplicationRunner {
             if (isNotPresent("com.lz.module.crm.framework.web.config.CrmWebConfiguration")) {
                 System.out.println("[CRM 系统 litchi-module-crm - 已禁用][参考 https://doc.iocoder.cn/crm/build/ 开启]");
             }
+            // AI 大模型
+            if (isNotPresent("com.lz.module.ai.framework.web.config.AiWebConfiguration")) {
+                System.out.println("[AI 大模型 litchi-module-ai - 已禁用][参考 https://doc.iocoder.cn/ai/build/ 开启]");
+            }
         });
     }
 
