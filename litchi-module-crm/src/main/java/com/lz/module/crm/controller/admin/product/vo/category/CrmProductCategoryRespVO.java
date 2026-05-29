@@ -1,7 +1,8 @@
 package com.lz.module.crm.controller.admin.product.vo.category;
 
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.*;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 

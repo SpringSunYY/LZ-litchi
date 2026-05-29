@@ -3,6 +3,7 @@ package com.lz.module.crm.controller.admin.customer.vo.customer;
 import com.lz.framework.common.validation.InEnum;
 import com.lz.framework.common.validation.Mobile;
 import com.lz.framework.common.validation.Telephone;
+import com.lz.framework.common.validation.i18n.*;
 import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.module.crm.enums.customer.CrmCustomerLevelEnum;
 import com.lz.module.crm.framework.operatelog.core.CrmCustomerIndustryParseFunction;
@@ -11,10 +12,6 @@ import com.lz.module.crm.framework.operatelog.core.CrmCustomerSourceParseFunctio
 import com.lz.module.crm.framework.operatelog.core.SysAreaParseFunction;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,7 +29,7 @@ public class CrmCustomerSaveReqVO {
 
     @Schema(description = "客户名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "赵六")
     @DiffLogField(name = "客户名称")
-    @NotEmpty(message = "客户名称不能为空")
+    @I18nNotEmpty(i18nKey = "crm.customer.back.name.notEmpty", message = "客户名称不能为空")
     private String name;
 
     @Schema(description = "下次联系时间")
@@ -41,7 +38,7 @@ public class CrmCustomerSaveReqVO {
     private LocalDateTime contactNextTime;
 
     @Schema(description = "负责人的用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "13563")
-    @NotNull(message = "负责人的用户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.customer.back.ownerUserId.notNull", message = "负责人的用户编号不能为空")
     private Long ownerUserId;
 
     @Schema(description = "手机", example = "18000000000")
@@ -56,18 +53,18 @@ public class CrmCustomerSaveReqVO {
 
     @Schema(description = "QQ", example = "123456789")
     @DiffLogField(name = "QQ")
-    @Size(max = 20, message = "QQ长度不能超过 20 个字符")
+    @I18nSize(max = 20, i18nKey = "crm.customer.back.qq.length", message = "QQ长度不能超过 20 个字符")
     private String qq;
 
     @Schema(description = "微信", example = "123456789")
     @DiffLogField(name = "微信")
-    @Size(max = 255, message = "微信长度不能超过 255 个字符")
+    @I18nSize(max = 255, i18nKey = "crm.customer.back.wechat.length", message = "微信长度不能超过 255 个字符")
     private String wechat;
 
     @Schema(description = "邮箱", example = "123456789@qq.com")
     @DiffLogField(name = "邮箱")
-    @Email(message = "邮箱格式不正确")
-    @Size(max = 255, message = "邮箱长度不能超过 255 个字符")
+    @I18nEmail(i18nKey = "crm.customer.back.email.email", message = "邮箱格式不正确")
+    @I18nSize(max = 255, i18nKey = "crm.customer.back.email.length", message = "邮箱长度不能超过 255 个字符")
     private String email;
 
     @Schema(description = "地区编号", example = "20158")

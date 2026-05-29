@@ -2,11 +2,11 @@ package com.lz.module.crm.controller.admin.contact.vo;
 
 import com.lz.framework.common.validation.Mobile;
 import com.lz.framework.common.validation.Telephone;
+import com.lz.framework.common.validation.i18n.I18nEmail;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.framework.operatelog.core.*;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -22,12 +22,12 @@ public class CrmContactSaveReqVO {
     private Long id;
 
     @Schema(description = "姓名", example = "YY")
-    @NotNull(message = "姓名不能为空")
+    @I18nNotNull(i18nKey = "crm.contact.back.name.notNull", message = "姓名不能为空")
     @DiffLogField(name = "姓名")
     private String name;
 
     @Schema(description = "客户编号", example = "10795")
-    @NotNull(message = "客户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.contact.back.customerId.notNull", message = "客户不能为空")
     @DiffLogField(name = "客户", function = CrmCustomerParseFunction.NAME)
     private Long customerId;
 
@@ -37,7 +37,7 @@ public class CrmContactSaveReqVO {
     private LocalDateTime contactNextTime;
 
     @Schema(description = "负责人用户编号", example = "14334")
-    @NotNull(message = "负责人不能为空")
+    @I18nNotNull(i18nKey = "crm.contact.back.ownerUserId.notNull", message = "负责人不能为空")
     @DiffLogField(name = "负责人", function = SysAdminUserParseFunction.NAME)
     private Long ownerUserId;
 
@@ -60,8 +60,8 @@ public class CrmContactSaveReqVO {
     private String wechat;
 
     @Schema(description = "电子邮箱", example = "1111@22.com")
+    @I18nEmail(i18nKey = "crm.contact.back.email.email", message = "邮箱格式不正确")
     @DiffLogField(name = "邮箱")
-    @Email
     private String email;
 
     @Schema(description = "地区编号", example = "20158")

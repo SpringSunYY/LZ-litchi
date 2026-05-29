@@ -1,6 +1,7 @@
 package com.lz.module.crm.controller.admin.product.vo.product;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.lz.module.crm.dal.dataobject.product.CrmProductCategoryDO;
 import com.lz.module.crm.enums.DictTypeConstants;
@@ -22,28 +23,34 @@ public class CrmProductRespVO implements VO {
 
     @Schema(description = "产品编号", example = "20529")
     @ExcelProperty("产品编号")
+    @ExcelI18n(i18nKey = "crm.product.field.id")
     private Long id;
 
     @Schema(description = "产品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "好产品")
     @ExcelProperty("产品名称")
+    @ExcelI18n(i18nKey = "crm.product.field.name")
     private String name;
 
     @Schema(description = "产品编码", requiredMode = Schema.RequiredMode.REQUIRED, example = "12306")
     @ExcelProperty("产品编码")
+    @ExcelI18n(i18nKey = "crm.product.field.no")
     private String no;
 
     @Schema(description = "单位", example = "2")
     @ExcelProperty(value = "单位", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.CRM_PRODUCT_UNIT)
+    @ExcelColumnSelect(dictType = DictTypeConstants.CRM_PRODUCT_UNIT, i18n = true)
+    @ExcelI18n(i18nKey = "crm.product.field.unit")
     private Integer unit;
 
     @Schema(description = "价格, 单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "8911")
     @ExcelProperty("价格，单位：分")
+    @ExcelI18n(i18nKey = "crm.product.field.price")
     private BigDecimal price;
 
     @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "上架")
-    @ExcelProperty(value = "单位", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.CRM_PRODUCT_STATUS)
+    @ExcelProperty(value = "状态", converter = DictConvert.class)
+    @ExcelColumnSelect(dictType = DictTypeConstants.CRM_PRODUCT_STATUS, i18n = true)
+    @ExcelI18n(i18nKey = "crm.product.field.status")
     private Integer status;
 
     @Schema(description = "产品分类编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
@@ -51,10 +58,12 @@ public class CrmProductRespVO implements VO {
     private Long categoryId;
     @Schema(description = "产品分类名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "衣服")
     @ExcelProperty("产品分类")
+    @ExcelI18n(i18nKey = "crm.product.field.categoryName")
     private String categoryName;
 
     @Schema(description = "产品描述", example = "你说的对")
     @ExcelProperty("产品描述")
+    @ExcelI18n(i18nKey = "crm.product.field.description")
     private String description;
 
     @Schema(description = "负责人的用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "31926")
@@ -63,6 +72,7 @@ public class CrmProductRespVO implements VO {
     private Long ownerUserId;
     @Schema(description = "负责人的用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝源码")
     @ExcelProperty("负责人")
+    @ExcelI18n(i18nKey = "crm.product.field.ownerUserName")
     private String ownerUserName;
 
     @Schema(description = "创建人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
@@ -71,14 +81,17 @@ public class CrmProductRespVO implements VO {
     private String creator;
     @Schema(description = "创建人名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝源码")
     @ExcelProperty("创建人")
+    @ExcelI18n(i18nKey = "crm.product.field.creatorName")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "crm.product.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("更新时间")
+    @ExcelI18n(i18nKey = "crm.product.field.updateTime")
     private LocalDateTime updateTime;
 
 }

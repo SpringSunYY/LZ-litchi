@@ -1,7 +1,7 @@
 package com.lz.module.crm.controller.admin.receivable.vo.plan;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -18,22 +18,22 @@ public class CrmReceivablePlanSaveReqVO {
     private Long customerId; // 该字段不通过前端传递，而是 contractId 查询出来设置进去
 
     @Schema(description = "合同编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "合同编号不能为空")
+    @I18nNotNull(i18nKey = "crm.receivablePlan.back.contractId.notNull", message = "合同编号不能为空")
     private Long contractId;
 
     @Schema(description = "负责人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "负责人编号不能为空")
+    @I18nNotNull(i18nKey = "crm.receivablePlan.back.ownerUserId.notNull", message = "负责人编号不能为空")
     private Long ownerUserId;
 
     @Schema(description = "计划回款日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2024-02-02")
-    @NotNull(message = "计划回款日期不能为空")
+    @I18nNotNull(i18nKey = "crm.receivablePlan.back.returnTime.notNull", message = "计划回款日期不能为空")
     private LocalDateTime returnTime;
 
     @Schema(description = "回款方式", example = "1")
     private Integer returnType;
 
     @Schema(description = "计划回款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "9000")
-    @NotNull(message = "计划回款金额不能为空")
+    @I18nNotNull(i18nKey = "crm.receivablePlan.back.price.notNull", message = "计划回款金额不能为空")
     private BigDecimal price;
 
     @Schema(description = "提前几天提醒", example = "1")

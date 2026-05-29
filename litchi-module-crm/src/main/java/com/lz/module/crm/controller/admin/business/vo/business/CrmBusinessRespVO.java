@@ -2,6 +2,7 @@ package com.lz.module.crm.controller.admin.business.vo.business;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,92 +19,114 @@ public class CrmBusinessRespVO {
 
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "32129")
     @ExcelProperty("编号")
+    @ExcelI18n(i18nKey = "crm.business.field.id")
     private Long id;
 
     @Schema(description = "商机名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
     @ExcelProperty("商机名称")
+    @ExcelI18n(i18nKey = "crm.business.field.name")
     private String name;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10299")
     private Long customerId;
     @Schema(description = "客户名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
     @ExcelProperty("客户名称")
+    @ExcelI18n(i18nKey = "crm.business.field.customerName")
     private String customerName;
 
     @Schema(description = "跟进状态", requiredMode = Schema.RequiredMode.REQUIRED, example ="true")
     @ExcelProperty("跟进状态")
+    @ExcelI18n(i18nKey = "crm.business.field.followUpStatus")
     private Boolean followUpStatus;
 
     @Schema(description = "最后跟进时间")
     @ExcelProperty("最后跟进时间")
+    @ExcelI18n(i18nKey = "crm.business.field.contactLastTime")
     private LocalDateTime contactLastTime;
 
     @Schema(description = "下次联系时间")
     @ExcelProperty("下次联系时间")
+    @ExcelI18n(i18nKey = "crm.business.field.contactNextTime")
     private LocalDateTime contactNextTime;
 
     @Schema(description = "负责人的用户编号", example = "25682")
     @ExcelProperty("负责人的用户编号")
+    @ExcelI18n(i18nKey = "crm.business.field.ownerUserId")
     private Long ownerUserId;
     @Schema(description = "负责人名字", example = "25682")
     @ExcelProperty("负责人名字")
+    @ExcelI18n(i18nKey = "crm.business.field.ownerUserName")
     private String ownerUserName;
     @Schema(description = "负责人部门")
     @ExcelProperty("负责人部门")
+    @ExcelI18n(i18nKey = "crm.business.field.ownerUserDeptName")
     private String ownerUserDeptName;
 
     @Schema(description = "商机状态组编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "25714")
     private Long statusTypeId;
     @Schema(description = "商机状组名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "进行中")
     @ExcelProperty("商机状态组")
+    @ExcelI18n(i18nKey = "crm.business.field.statusTypeName")
     private String statusTypeName;
 
     @Schema(description = "商机状态编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "30320")
     private Long statusId;
     @Schema(description = "状态名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "跟进中")
     @ExcelProperty("商机状态")
+    @ExcelI18n(i18nKey = "crm.business.field.statusName")
     private String statusName;
 
     @Schema
     @ExcelProperty("结束状态")
+    @ExcelI18n(i18nKey = "crm.business.field.endStatus")
     private Integer endStatus;
 
     @ExcelProperty("结束时的备注")
+    @ExcelI18n(i18nKey = "crm.business.field.endRemark")
     private String endRemark;
 
     @Schema(description = "预计成交日期")
     @ExcelProperty("预计成交日期")
+    @ExcelI18n(i18nKey = "crm.business.field.dealTime")
     private LocalDateTime dealTime;
 
     @Schema(description = "产品总金额", example = "12025")
     @ExcelProperty("产品总金额")
+    @ExcelI18n(i18nKey = "crm.business.field.totalProductPrice")
     private BigDecimal totalProductPrice;
 
     @Schema(description = "整单折扣")
     @ExcelProperty("整单折扣")
+    @ExcelI18n(i18nKey = "crm.business.field.discountPercent")
     private BigDecimal discountPercent;
 
     @Schema(description = "商机总金额", example = "12371")
     @ExcelProperty("商机总金额")
+    @ExcelI18n(i18nKey = "crm.business.field.totalPrice")
     private BigDecimal totalPrice;
 
     @Schema(description = "备注", example = "随便")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "crm.business.field.remark")
     private String remark;
 
     @Schema(description = "创建人", example = "1024")
     @ExcelProperty("创建人")
+    @ExcelI18n(i18nKey = "crm.business.field.creator")
     private String creator;
     @Schema(description = "创建人名字", example = "荔枝源码")
     @ExcelProperty("创建人名字")
+    @ExcelI18n(i18nKey = "crm.business.field.creatorName")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "crm.business.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("更新时间")
+    @ExcelI18n(i18nKey = "crm.business.field.updateTime")
     private LocalDateTime updateTime;
 
     @Schema(description = "产品列表")

@@ -153,6 +153,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         //查询通用和类型是这个的target
         LambdaQueryWrapper<I18nLocaleDO> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(
+                I18nLocaleDO::getLocaleTarget,
                 I18nLocaleDO::getLocaleName,
                 I18nLocaleDO::getLocale,
                 I18nLocaleDO::getIsDefault);

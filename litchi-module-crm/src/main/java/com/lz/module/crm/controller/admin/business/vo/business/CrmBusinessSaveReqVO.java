@@ -3,8 +3,9 @@ package com.lz.module.crm.controller.admin.business.vo.business;
 import com.lz.module.crm.framework.operatelog.core.CrmCustomerParseFunction;
 import com.lz.module.crm.framework.operatelog.core.SysAdminUserParseFunction;
 import com.mzt.logapi.starter.annotation.DiffLogField;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,12 +26,12 @@ public class CrmBusinessSaveReqVO {
 
     @Schema(description = "商机名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
     @DiffLogField(name = "商机名称")
-    @NotNull(message = "商机名称不能为空")
+    @I18nNotNull(i18nKey = "crm.business.back.name.notNull", message = "商机名称不能为空")
     private String name;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10299")
     @DiffLogField(name = "客户", function = CrmCustomerParseFunction.NAME)
-    @NotNull(message = "客户不能为空")
+    @I18nNotNull(i18nKey = "crm.business.back.customerId.notNull", message = "客户不能为空")
     private Long customerId;
 
     @Schema(description = "下次联系时间")
@@ -39,13 +40,13 @@ public class CrmBusinessSaveReqVO {
     private LocalDateTime contactNextTime;
 
     @Schema(description = "负责人用户编号", example = "14334")
-    @NotNull(message = "负责人不能为空")
+    @I18nNotNull(i18nKey = "crm.business.back.ownerUserId.notNull", message = "负责人不能为空")
     @DiffLogField(name = "负责人", function = SysAdminUserParseFunction.NAME)
     private Long ownerUserId;
 
     @Schema(description = "商机状态组编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "25714")
     @DiffLogField(name = "商机状态组")
-    @NotNull(message = "商机状态组不能为空")
+    @I18nNotNull(i18nKey = "crm.business.back.statusTypeId.notNull", message = "商机状态组不能为空")
     private Long statusTypeId;
 
     @Schema(description = "预计成交日期")
@@ -55,7 +56,7 @@ public class CrmBusinessSaveReqVO {
 
     @Schema(description = "整单折扣", requiredMode = Schema.RequiredMode.REQUIRED, example = "55.00")
     @DiffLogField(name = "整单折扣")
-    @NotNull(message = "整单折扣不能为空")
+    @I18nNotNull(i18nKey = "crm.business.back.discountPercent.notNull", message = "整单折扣不能为空")
     private BigDecimal discountPercent;
 
     @Schema(description = "备注", example = "随便")
@@ -65,7 +66,8 @@ public class CrmBusinessSaveReqVO {
     @Schema(description = "联系人编号", example = "110")
     private Long contactId; // 使用场景，在【联系人详情】添加商机时，如果需要关联两者，需要传递 contactId 字段
 
-    @Schema(description = "产品列表")
+    @Schema(description = "产品列表", requiredMode = Schema.RequiredMode.REQUIRED)
+    @Valid
     private List<BusinessProduct> products;
 
     @Schema(description = "产品列表")
@@ -75,19 +77,19 @@ public class CrmBusinessSaveReqVO {
     public static class BusinessProduct {
 
         @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "20529")
-        @NotNull(message = "产品编号不能为空")
+        @I18nNotNull(i18nKey = "crm.businessProduct.back.productId.notNull", message = "产品编号不能为空")
         private Long productId;
 
         @Schema(description = "产品单价", requiredMode = Schema.RequiredMode.REQUIRED, example = "123.00")
-        @NotNull(message = "产品单价不能为空")
+        @I18nNotNull(i18nKey = "crm.businessProduct.back.productPrice.notNull", message = "产品单价不能为空")
         private BigDecimal productPrice;
 
         @Schema(description = "商机价格", requiredMode = Schema.RequiredMode.REQUIRED, example = "123.00")
-        @NotNull(message = "商机价格不能为空")
+        @I18nNotNull(i18nKey = "crm.businessProduct.back.businessPrice.notNull", message = "商机价格不能为空")
         private BigDecimal businessPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "8911")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "crm.businessProduct.back.count.notNull", message = "产品数量不能为空")
         private Integer count;
 
     }

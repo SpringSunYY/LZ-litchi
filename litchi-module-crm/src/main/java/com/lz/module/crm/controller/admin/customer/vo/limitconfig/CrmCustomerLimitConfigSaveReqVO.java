@@ -1,10 +1,10 @@
 package com.lz.module.crm.controller.admin.customer.vo.limitconfig;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.framework.operatelog.core.SysAdminUserParseFunction;
 import com.lz.module.crm.framework.operatelog.core.SysDeptParseFunction;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -17,7 +17,7 @@ public class CrmCustomerLimitConfigSaveReqVO {
     private Long id;
 
     @Schema(description = "规则类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "规则类型不能为空")
+    @I18nNotNull(i18nKey = "crm.customerLimitConfig.back.type.notNull", message = "规则类型不能为空")
     @DiffLogField(name = "规则类型")
     private Integer type;
 
@@ -30,7 +30,7 @@ public class CrmCustomerLimitConfigSaveReqVO {
     private List<Long> deptIds;
 
     @Schema(description = "数量上限", requiredMode = Schema.RequiredMode.REQUIRED, example = "28384")
-    @NotNull(message = "数量上限不能为空")
+    @I18nNotNull(i18nKey = "crm.customerLimitConfig.back.maxCount.notNull", message = "数量上限不能为空")
     @DiffLogField(name = "数量上限")
     private Integer maxCount;
 

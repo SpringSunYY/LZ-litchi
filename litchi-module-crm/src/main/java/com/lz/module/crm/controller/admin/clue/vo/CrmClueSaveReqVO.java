@@ -3,6 +3,10 @@ package com.lz.module.crm.controller.admin.clue.vo;
 import com.lz.framework.common.validation.InEnum;
 import com.lz.framework.common.validation.Mobile;
 import com.lz.framework.common.validation.Telephone;
+import com.lz.framework.common.validation.i18n.I18nEmail;
+import com.lz.framework.common.validation.i18n.I18nLength;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.module.crm.enums.customer.CrmCustomerLevelEnum;
 import com.lz.module.crm.framework.operatelog.core.CrmCustomerIndustryParseFunction;
@@ -11,10 +15,6 @@ import com.lz.module.crm.framework.operatelog.core.CrmCustomerSourceParseFunctio
 import com.lz.module.crm.framework.operatelog.core.SysAreaParseFunction;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -32,7 +32,7 @@ public class CrmClueSaveReqVO {
 
     @Schema(description = "线索名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "线索xxx")
     @DiffLogField(name = "线索名称")
-    @NotEmpty(message = "线索名称不能为空")
+    @I18nNotEmpty(i18nKey = "crm.clue.back.name.notEmpty", message = "线索名称不能为空")
     private String name;
 
     @Schema(description = "最后跟进时间")
@@ -46,7 +46,7 @@ public class CrmClueSaveReqVO {
     private LocalDateTime contactNextTime;
 
     @Schema(description = "负责人编号", example = "2048")
-    @NotNull(message = "负责人编号不能为空")
+    @I18nNotNull(i18nKey = "crm.clue.back.ownerUserId.notNull", message = "负责人编号不能为空")
     private Long ownerUserId;
 
     @Schema(description = "手机号", example = "18000000000")
@@ -61,18 +61,18 @@ public class CrmClueSaveReqVO {
 
     @Schema(description = "QQ", example = "123456789")
     @DiffLogField(name = "QQ")
-    @Size(max = 20, message = "QQ长度不能超过 20 个字符")
+    @I18nLength(i18nKey = "crm.clue.back.qq.length", max = 20, message = "QQ长度不能超过 20 个字符")
     private String qq;
 
     @Schema(description = "微信", example = "123456789")
     @DiffLogField(name = "微信")
-    @Size(max = 255, message = "微信长度不能超过 255 个字符")
+    @I18nLength(i18nKey = "crm.clue.back.wechat.length", max = 255, message = "微信长度不能超过 255 个字符")
     private String wechat;
 
     @Schema(description = "邮箱", example = "123456789@qq.com")
     @DiffLogField(name = "邮箱")
-    @Email(message = "邮箱格式不正确")
-    @Size(max = 255, message = "邮箱长度不能超过 255 个字符")
+    @I18nEmail(i18nKey = "crm.clue.back.email.email", message = "邮箱格式不正确")
+    @I18nLength(i18nKey = "crm.clue.back.email.length", max = 255, message = "邮箱长度不能超过 255 个字符")
     private String email;
 
     @Schema(description = "地区编号", example = "20158")
@@ -99,7 +99,7 @@ public class CrmClueSaveReqVO {
 
     @Schema(description = "客户描述", example = "任意文字")
     @DiffLogField(name = "客户描述")
-    @Size(max = 4096, message = "客户描述长度不能超过 4096 个字符")
+    @I18nLength(i18nKey = "crm.clue.back.description.length", max = 4096, message = "客户描述长度不能超过 4096 个字符")
     private String description;
 
     @Schema(description = "备注", example = "随便")

@@ -1,11 +1,10 @@
 package com.lz.module.crm.controller.admin.contact.vo;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.enums.permission.CrmPermissionLevelEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import jakarta.validation.constraints.NotNull;
 import lombok.NoArgsConstructor;
 
 @Schema(description = "管理后台 - CRM 联系人转移 Request VO")
@@ -15,14 +14,14 @@ import lombok.NoArgsConstructor;
 public class CrmContactTransferReqVO {
 
     @Schema(description = "联系人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10430")
-    @NotNull(message = "联系人编号不能为空")
+    @I18nNotNull(i18nKey = "crm.contact.back.id.notNull", message = "联系人编号不能为空")
     private Long id;
 
     /**
      * 新负责人的用户编号
      */
     @Schema(description = "新负责人的用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10430")
-    @NotNull(message = "新负责人的用户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.contact.back.newOwnerUserId.notNull", message = "新负责人的用户编号不能为空")
     private Long newOwnerUserId;
 
     /**

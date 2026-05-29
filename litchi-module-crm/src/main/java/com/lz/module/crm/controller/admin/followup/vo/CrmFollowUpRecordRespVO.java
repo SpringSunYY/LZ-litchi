@@ -1,6 +1,7 @@
 package com.lz.module.crm.controller.admin.followup.vo;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.module.crm.controller.admin.business.vo.business.CrmBusinessRespVO;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -27,7 +28,9 @@ public class CrmFollowUpRecordRespVO {
     private Long bizId;
 
     @Schema(description = "跟进类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @DictFormat(CRM_FOLLOW_UP_TYPE)
+    @ExcelProperty(value = "跟进类型")
+    @ExcelColumnSelect(dictType = CRM_FOLLOW_UP_TYPE, i18n = true)
+    @ExcelI18n(i18nKey = "crm.followUpRecord.field.type")
     private Integer type;
 
     @Schema(description = "跟进内容", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -52,10 +55,12 @@ public class CrmFollowUpRecordRespVO {
     private List<String> fileUrls;
 
     @Schema(description = "创建人", example = "1024")
-    @ExcelProperty("创建人")
+    @ExcelProperty(value = "创建人")
+    @ExcelI18n(i18nKey = "crm.followUpRecord.field.creator")
     private String creator;
     @Schema(description = "创建人名字", example = "荔枝源码")
-    @ExcelProperty("创建人名字")
+    @ExcelProperty(value = "创建人名字")
+    @ExcelI18n(i18nKey = "crm.followUpRecord.field.creatorName")
     private String creatorName;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)

@@ -2,9 +2,9 @@ package com.lz.module.crm.controller.admin.contract.vo.config;
 
 import cn.hutool.core.util.BooleanUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lz.framework.common.validation.i18n.I18nAssertTrue;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.AssertTrue;
 import lombok.Data;
 
 import java.util.Objects;
@@ -21,7 +21,7 @@ public class CrmContractConfigSaveReqVO {
     @DiffLogField(name = "提前提醒天数")
     private Integer notifyDays;
 
-    @AssertTrue(message = "提前提醒天数不能为空")
+    @I18nAssertTrue(i18nKey = "crm.contractConfig.back.notifyDaysValid.assertTrue", message = "提前提醒天数不能为空")
     @JsonIgnore
     public boolean isNotifyDaysValid() {
         if (!BooleanUtil.isTrue(getNotifyEnabled())) {

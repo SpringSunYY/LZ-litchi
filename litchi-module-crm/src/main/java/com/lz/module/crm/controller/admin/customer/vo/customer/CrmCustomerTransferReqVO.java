@@ -1,8 +1,8 @@
 package com.lz.module.crm.controller.admin.customer.vo.customer;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.enums.permission.CrmPermissionLevelEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.List;
 public class CrmCustomerTransferReqVO {
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10430")
-    @NotNull(message = "客户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.customer.back.id.notNull", message = "客户编号不能为空")
     private Long id;
 
     /**
      * 新负责人的用户编号
      */
     @Schema(description = "新负责人的用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10430")
-    @NotNull(message = "新负责人的用户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.customer.back.newOwnerUserId.notNull", message = "新负责人的用户编号不能为空")
     private Long newOwnerUserId;
 
     /**

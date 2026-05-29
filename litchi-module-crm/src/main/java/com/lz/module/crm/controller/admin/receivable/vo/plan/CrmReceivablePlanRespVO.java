@@ -3,6 +3,7 @@ package com.lz.module.crm.controller.admin.receivable.vo.plan;
 import com.lz.module.crm.controller.admin.receivable.vo.receivable.CrmReceivableRespVO;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -16,77 +17,97 @@ public class CrmReceivablePlanRespVO {
 
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("编号")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.id")
     private Long id;
 
     @Schema(description = "期数", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("期数")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.period")
     private Integer period;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("客户编号")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.customerId")
     private Long customerId;
     @Schema(description = "客户名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "test")
     @ExcelProperty("客户名字")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.customerName")
     private String customerName;
 
     @Schema(description = "合同编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("合同编号")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.contractId")
     private Long contractId;
     @Schema(description = "合同编号", example = "Q110")
     @ExcelProperty("合同编号")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.contractNo")
     private String contractNo;
 
     @Schema(description = "负责人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("负责人编号")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.ownerUserId")
     private Long ownerUserId;
     @Schema(description = "负责人", example = "test")
     @ExcelProperty("负责人")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.ownerUserName")
     private String ownerUserName;
 
     @Schema(description = "计划回款日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2024-02-02")
     @ExcelProperty("计划回款日期")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.returnTime")
     private LocalDateTime returnTime;
 
     @Schema(description = "计划回款方式", example = "1")
     @ExcelProperty("计划回款方式")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.returnType")
     private Integer returnType;
 
     @Schema(description = "计划回款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "9000")
     @ExcelProperty("计划回款金额")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.price")
     private BigDecimal price;
 
     @Schema(description = "回款编号", example = "19852")
     @ExcelProperty("回款编号")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.receivableId")
     private Long receivableId;
     @Schema(description = "回款信息")
     @ExcelProperty("回款信息")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.receivable")
     private CrmReceivableRespVO receivable;
 
     @Schema(description = "提前几天提醒", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty("提前几天提醒")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.remindDays")
     private Integer remindDays;
 
     @Schema(description = "提醒日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2024-02-02")
     @ExcelProperty("提醒日期")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.remindTime")
     private LocalDateTime remindTime;
 
     @Schema(description = "备注", example = "备注")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.remark")
     private String remark;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("更新时间")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.updateTime")
     private LocalDateTime updateTime;
 
     @Schema(description = "创建人", example = "1024")
     @ExcelProperty("创建人")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.creator")
     private String creator;
     @Schema(description = "创建人名字", example = "荔枝源码")
     @ExcelProperty("创建人名字")
+    @ExcelI18n(i18nKey = "crm.receivablePlan.field.creatorName")
     private String creatorName;
 
 }

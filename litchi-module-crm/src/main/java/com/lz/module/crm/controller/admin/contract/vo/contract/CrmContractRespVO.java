@@ -2,6 +2,7 @@ package com.lz.module.crm.controller.admin.contract.vo.contract;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -18,110 +19,137 @@ public class CrmContractRespVO {
 
     @Schema(description = "合同编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "10430")
     @ExcelProperty("合同编号")
+    @ExcelI18n(i18nKey = "crm.contract.field.id")
     private Long id;
 
     @Schema(description = "合同名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
     @ExcelProperty("合同名称")
+    @ExcelI18n(i18nKey = "crm.contract.field.name")
     private String name;
 
     @Schema(description = "合同编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "20230101")
     @ExcelProperty("合同编号")
+    @ExcelI18n(i18nKey = "crm.contract.field.no")
     private String no;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "18336")
     @ExcelProperty("客户编号")
+    @ExcelI18n(i18nKey = "crm.contract.field.customerId")
     private Long customerId;
     @Schema(description = "客户名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "18336")
     @ExcelProperty("客户名称")
+    @ExcelI18n(i18nKey = "crm.contract.field.customerName")
     private String customerName;
 
     @Schema(description = "商机编号", example = "10864")
     @ExcelProperty("商机编号")
+    @ExcelI18n(i18nKey = "crm.contract.field.businessId")
     private Long businessId;
     @Schema(description = "商机名称", example = "10864")
     @ExcelProperty("商机名称")
+    @ExcelI18n(i18nKey = "crm.contract.field.businessName")
     private String businessName;
 
     @Schema(description = "最后跟进时间")
     @ExcelProperty("最后跟进时间")
+    @ExcelI18n(i18nKey = "crm.contract.field.contactLastTime")
     private LocalDateTime contactLastTime;
 
     @Schema(description = "负责人的用户编号", example = "25682")
     @ExcelProperty("负责人的用户编号")
+    @ExcelI18n(i18nKey = "crm.contract.field.ownerUserId")
     private Long ownerUserId;
     @Schema(description = "负责人名字", example = "25682")
     @ExcelProperty("负责人名字")
+    @ExcelI18n(i18nKey = "crm.contract.field.ownerUserName")
     private String ownerUserName;
     @Schema(description = "负责人部门")
     @ExcelProperty("负责人部门")
+    @ExcelI18n(i18nKey = "crm.contract.field.ownerUserDeptName")
     private String ownerUserDeptName;
 
     @Schema(description = "工作流编号", example = "1043")
     @ExcelProperty("工作流编号")
+    @ExcelI18n(i18nKey = "crm.contract.field.processInstanceId")
     private String processInstanceId;
 
     @Schema(description = "审批状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
     @ExcelProperty("审批状态")
+    @ExcelI18n(i18nKey = "crm.contract.field.auditStatus")
     private Integer auditStatus;
 
     @Schema(description = "下单日期", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("下单日期")
+    @ExcelI18n(i18nKey = "crm.contract.field.orderDate")
     private LocalDateTime orderDate;
 
     @Schema(description = "开始时间")
     @ExcelProperty("开始时间")
+    @ExcelI18n(i18nKey = "crm.contract.field.startTime")
     private LocalDateTime startTime;
 
     @Schema(description = "结束时间")
     @ExcelProperty("结束时间")
+    @ExcelI18n(i18nKey = "crm.contract.field.endTime")
     private LocalDateTime endTime;
 
     @Schema(description = "产品总金额", example = "19510")
     @ExcelProperty("产品总金额")
+    @ExcelI18n(i18nKey = "crm.contract.field.totalProductPrice")
     private BigDecimal totalProductPrice;
 
     @Schema(description = "整单折扣")
     @ExcelProperty("整单折扣")
+    @ExcelI18n(i18nKey = "crm.contract.field.discountPercent")
     private BigDecimal discountPercent;
 
     @Schema(description = "合同金额", example = "5617")
     @ExcelProperty("合同金额")
+    @ExcelI18n(i18nKey = "crm.contract.field.totalPrice")
     private BigDecimal totalPrice;
 
     @Schema(description = "已回款金额", example = "5617")
     @ExcelProperty("已回款金额")
+    @ExcelI18n(i18nKey = "crm.contract.field.totalReceivablePrice")
     private BigDecimal totalReceivablePrice;
 
     @Schema(description = "客户签约人编号", example = "18546")
     private Long signContactId;
     @Schema(description = "客户签约人", example = "小豆")
     @ExcelProperty("客户签约人")
+    @ExcelI18n(i18nKey = "crm.contract.field.signContactName")
     private String signContactName;
 
     @Schema(description = "公司签约人", example = "14036")
     private Long signUserId;
     @Schema(description = "公司签约人", example = "小明")
     @ExcelProperty("公司签约人")
+    @ExcelI18n(i18nKey = "crm.contract.field.signUserName")
     private String signUserName;
 
     @Schema(description = "备注", example = "你猜")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "crm.contract.field.remark")
     private String remark;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "crm.contract.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "创建人", example = "25682")
     @ExcelProperty("创建人")
+    @ExcelI18n(i18nKey = "crm.contract.field.creator")
     private String creator;
 
     @Schema(description = "创建人名字", example = "test")
     @ExcelProperty("创建人名字")
+    @ExcelI18n(i18nKey = "crm.contract.field.creatorName")
     private String creatorName;
 
     @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("更新时间")
+    @ExcelI18n(i18nKey = "crm.contract.field.updateTime")
     private LocalDateTime updateTime;
 
     @Schema(description = "产品列表")

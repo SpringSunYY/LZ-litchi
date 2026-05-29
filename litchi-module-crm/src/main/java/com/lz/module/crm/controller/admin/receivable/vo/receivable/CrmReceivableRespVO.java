@@ -1,6 +1,7 @@
 package com.lz.module.crm.controller.admin.receivable.vo.receivable;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.lz.module.crm.controller.admin.contract.vo.contract.CrmContractRespVO;
 import com.lz.module.crm.enums.DictTypeConstants;
@@ -19,37 +20,45 @@ public class CrmReceivableRespVO {
 
     @Schema(description = "编号", example = "25787")
     @ExcelProperty("编号")
+    @ExcelI18n(i18nKey = "crm.receivable.field.id")
     private Long id;
 
     @Schema(description = "回款编号", example = "31177")
     @ExcelProperty("回款编号")
+    @ExcelI18n(i18nKey = "crm.receivable.field.no")
     private String no;
 
     @Schema(description = "回款计划编号", example = "1024")
     @ExcelProperty("回款计划编号")
+    @ExcelI18n(i18nKey = "crm.receivable.field.planId")
     private Long planId;
 
     @Schema(description = "回款方式", example = "2")
     @ExcelProperty(value = "回款方式", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.CRM_RECEIVABLE_RETURN_TYPE)
+    @ExcelColumnSelect(dictType = DictTypeConstants.CRM_RECEIVABLE_RETURN_TYPE, i18n = true)
+    @ExcelI18n(i18nKey = "crm.receivable.field.returnType")
     private Integer returnType;
 
     @Schema(description = "回款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "9000")
     @ExcelProperty("回款金额")
+    @ExcelI18n(i18nKey = "crm.receivable.field.price")
     private BigDecimal price;
 
     @Schema(description = "计划回款日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2024-02-02")
     @ExcelProperty("计划回款日期")
+    @ExcelI18n(i18nKey = "crm.receivable.field.returnTime")
     private LocalDateTime returnTime;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     private Long customerId;
     @Schema(description = "客户名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "test")
     @ExcelProperty("客户名字")
+    @ExcelI18n(i18nKey = "crm.receivable.field.customerName")
     private String customerName;
 
     @Schema(description = "合同编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("合同编号")
+    @ExcelI18n(i18nKey = "crm.receivable.field.contractId")
     private Long contractId;
     @Schema(description = "合同信息")
     private CrmContractRespVO contract;
@@ -58,36 +67,44 @@ public class CrmReceivableRespVO {
     private Long ownerUserId;
     @Schema(description = "负责人名字", example = "25682")
     @ExcelProperty("负责人名字")
+    @ExcelI18n(i18nKey = "crm.receivable.field.ownerUserName")
     private String ownerUserName;
     @Schema(description = "负责人部门")
     @ExcelProperty("负责人部门")
+    @ExcelI18n(i18nKey = "crm.receivable.field.ownerUserDeptName")
     private String ownerUserDeptName;
 
     @Schema(description = "工作流编号", example = "1043")
     @ExcelProperty("工作流编号")
+    @ExcelI18n(i18nKey = "crm.receivable.field.processInstanceId")
     private String processInstanceId;
 
     @Schema(description = "审批状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "0")
     @ExcelProperty(value = "审批状态", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.CRM_AUDIT_STATUS)
+    @ExcelColumnSelect(dictType = DictTypeConstants.CRM_AUDIT_STATUS, i18n = true)
+    @ExcelI18n(i18nKey = "crm.receivable.field.auditStatus")
     private Integer auditStatus;
 
     @Schema(description = "工作流编号", example = "备注")
     @ExcelProperty("工作流编号")
+    @ExcelI18n(i18nKey = "crm.receivable.field.remark")
     private String remark;
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "crm.receivable.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "更新时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("更新时间")
+    @ExcelI18n(i18nKey = "crm.receivable.field.updateTime")
     private LocalDateTime updateTime;
 
     @Schema(description = "创建人", example = "25682")
     private String creator;
     @Schema(description = "创建人名字", example = "test")
     @ExcelProperty("创建人名字")
+    @ExcelI18n(i18nKey = "crm.receivable.field.creatorName")
     private String creatorName;
 
 }

@@ -1,12 +1,12 @@
 package com.lz.module.crm.controller.admin.contract.vo.contract;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.framework.operatelog.core.CrmBusinessParseFunction;
 import com.lz.module.crm.framework.operatelog.core.CrmContactParseFunction;
 import com.lz.module.crm.framework.operatelog.core.CrmCustomerParseFunction;
 import com.lz.module.crm.framework.operatelog.core.SysAdminUserParseFunction;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,12 +27,12 @@ public class CrmContractSaveReqVO {
 
     @Schema(description = "合同名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
     @DiffLogField(name = "合同名称")
-    @NotNull(message = "合同名称不能为空")
+    @I18nNotNull(i18nKey = "crm.contract.back.name.notNull", message = "合同名称不能为空")
     private String name;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "18336")
     @DiffLogField(name = "客户", function = CrmCustomerParseFunction.NAME)
-    @NotNull(message = "客户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.contract.back.customerId.notNull", message = "客户编号不能为空")
     private Long customerId;
 
     @Schema(description = "商机编号", example = "10864")
@@ -41,13 +41,13 @@ public class CrmContractSaveReqVO {
 
     @Schema(description = "负责人的用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "17144")
     @DiffLogField(name = "负责人", function = SysAdminUserParseFunction.NAME)
-    @NotNull(message = "负责人不能为空")
+    @I18nNotNull(i18nKey = "crm.contract.back.ownerUserId.notNull", message = "负责人不能为空")
     private Long ownerUserId;
 
     @Schema(description = "下单日期", requiredMode = Schema.RequiredMode.REQUIRED)
     @DiffLogField(name = "下单日期")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
-    @NotNull(message = "下单日期不能为空")
+    @I18nNotNull(i18nKey = "crm.contract.back.orderDate.notNull", message = "下单日期不能为空")
     private LocalDateTime orderDate;
 
     @Schema(description = "开始时间")
@@ -62,7 +62,7 @@ public class CrmContractSaveReqVO {
 
     @Schema(description = "整单折扣", requiredMode = Schema.RequiredMode.REQUIRED, example = "55.00")
     @DiffLogField(name = "整单折扣")
-    @NotNull(message = "整单折扣不能为空")
+    @I18nNotNull(i18nKey = "crm.contract.back.discountPercent.notNull", message = "整单折扣不能为空")
     private BigDecimal discountPercent;
 
     @Schema(description = "合同金额", example = "5617")
@@ -91,19 +91,19 @@ public class CrmContractSaveReqVO {
     public static class Product {
 
         @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "20529")
-        @NotNull(message = "产品编号不能为空")
+        @I18nNotNull(i18nKey = "crm.contractProduct.back.productId.notNull", message = "产品编号不能为空")
         private Long productId;
 
         @Schema(description = "产品单价", requiredMode = Schema.RequiredMode.REQUIRED, example = "123.00")
-        @NotNull(message = "产品单价不能为空")
+        @I18nNotNull(i18nKey = "crm.contractProduct.back.productPrice.notNull", message = "产品单价不能为空")
         private BigDecimal productPrice;
 
         @Schema(description = "合同价格", requiredMode = Schema.RequiredMode.REQUIRED, example = "123.00")
-        @NotNull(message = "合同价格不能为空")
+        @I18nNotNull(i18nKey = "crm.contractProduct.back.contractPrice.notNull", message = "合同价格不能为空")
         private BigDecimal contractPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "8911")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "crm.contractProduct.back.count.notNull", message = "产品数量不能为空")
         private Integer count;
 
     }

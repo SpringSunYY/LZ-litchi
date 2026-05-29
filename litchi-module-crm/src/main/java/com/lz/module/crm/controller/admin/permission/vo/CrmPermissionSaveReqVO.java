@@ -1,12 +1,11 @@
 package com.lz.module.crm.controller.admin.permission.vo;
 
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.enums.common.CrmBizTypeEnum;
 import com.lz.module.crm.enums.permission.CrmPermissionLevelEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
-
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
@@ -15,21 +14,21 @@ import java.util.List;
 public class CrmPermissionSaveReqVO {
 
     @Schema(description = "用户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "123456")
-    @NotNull(message = "用户编号不能为空")
+    @I18nNotNull(i18nKey = "crm.permission.back.userId.notNull", message = "用户编号不能为空")
     private Long userId;
 
     @Schema(description = "CRM 类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @InEnum(CrmBizTypeEnum.class)
-    @NotNull(message = "CRM 类型不能为空")
+    @I18nNotNull(i18nKey = "crm.permission.back.bizType.notNull", message = "CRM 类型不能为空")
     private Integer bizType;
 
     @Schema(description = "CRM 类型数据编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    @NotNull(message = "CRM 类型数据编号不能为空")
+    @I18nNotNull(i18nKey = "crm.permission.back.bizId.notNull", message = "CRM 类型数据编号不能为空")
     private Long bizId;
 
     @Schema(description = "权限级别", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @InEnum(CrmPermissionLevelEnum.class)
-    @NotNull(message = "权限级别不能为空")
+    @I18nNotNull(i18nKey = "crm.permission.back.level.notNull", message = "权限级别不能为空")
     private Integer level;
 
     /**

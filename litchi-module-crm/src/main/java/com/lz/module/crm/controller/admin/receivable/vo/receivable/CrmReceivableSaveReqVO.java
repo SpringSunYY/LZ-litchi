@@ -1,11 +1,11 @@
 package com.lz.module.crm.controller.admin.receivable.vo.receivable;
 
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.crm.enums.receivable.CrmReceivableReturnTypeEnum;
 import com.lz.module.crm.framework.operatelog.core.*;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -20,7 +20,7 @@ public class CrmReceivableSaveReqVO {
 
     @Schema(description = "负责人编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @DiffLogField(name = "负责人", function = SysAdminUserParseFunction.NAME)
-    @NotNull(message = "负责人编号不能为空")
+    @I18nNotNull(i18nKey = "crm.receivable.back.ownerUserId.notNull", message = "负责人编号不能为空")
     private Long ownerUserId;
 
     @Schema(description = "客户编号", example = "2")
@@ -29,7 +29,7 @@ public class CrmReceivableSaveReqVO {
 
     @Schema(description = "合同编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @DiffLogField(name = "合同", function = CrmContractParseFunction.NAME)
-    @NotNull(message = "合同编号不能为空")
+    @I18nNotNull(i18nKey = "crm.receivable.back.contractId.notNull", message = "合同编号不能为空")
     private Long contractId;
 
     @Schema(description = "回款计划编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
@@ -43,11 +43,11 @@ public class CrmReceivableSaveReqVO {
 
     @Schema(description = "回款金额", requiredMode = Schema.RequiredMode.REQUIRED, example = "9000")
     @DiffLogField(name = "回款金额")
-    @NotNull(message = "回款金额不能为空")
+    @I18nNotNull(i18nKey = "crm.receivable.back.price.notNull", message = "回款金额不能为空")
     private BigDecimal price;
 
     @Schema(description = "回款日期", requiredMode = Schema.RequiredMode.REQUIRED, example = "2024-02-02")
-    @NotNull(message = "回款日期不能为空")
+    @I18nNotNull(i18nKey = "crm.receivable.back.returnTime.notNull", message = "回款日期不能为空")
     @DiffLogField(name = "回款日期")
     private LocalDateTime returnTime;
 
