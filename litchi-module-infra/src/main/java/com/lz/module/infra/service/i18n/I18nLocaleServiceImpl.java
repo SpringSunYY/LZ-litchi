@@ -45,6 +45,9 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Resource
     private I18nProperties i18nProperties;
 
+    @Resource
+    private I18nMessageService i18nMessageService;
+
     @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public Long createI18nLocale(I18nLocaleSaveReqVO createReqVO) {
@@ -149,6 +152,10 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     public List<I18nLocaleDO> getI18nLocaleByLocaleTarget(Integer localeTarget) {
         //查询通用和类型是这个的target
         LambdaQueryWrapper<I18nLocaleDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(
+                I18nLocaleDO::getLocaleName,
+                I18nLocaleDO::getLocale,
+                I18nLocaleDO::getIsDefault);
         queryWrapper.and(wrapper ->
                 wrapper.eq(I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
                         .or()
@@ -161,6 +168,12 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Override
     public void clearI18nCache() {
         redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE, RedisKeyConstants.I18N_MESSAGE);
+        //重新缓存一次国际化信息
+        //查询到国家，每个国家都要缓存
+        List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleMapper.selectList();
+        for (I18nLocaleDO i18nLocaleDO : i18nLocaleDOList) {
+            i18nMessageService.getI18nLocaleByLocaleTargetAndLocale(i18nLocaleDO.getLocaleTarget(), i18nLocaleDO.getLocale());
+        }
     }
 
     @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE, key = "#localeTarget")

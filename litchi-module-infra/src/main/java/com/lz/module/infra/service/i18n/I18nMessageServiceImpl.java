@@ -10,6 +10,7 @@ import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
@@ -130,15 +131,21 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
     @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     @Override
-    public List<I18nMessageDO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage) {
+    public List<I18nMessageSimpVO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage) {
         //查询通用和类型是这个的target
         LambdaQueryWrapper<I18nMessageDO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(
+                I18nMessageDO::getMessageKey,
+                I18nMessageDO::getMessage,
+                I18nMessageDO::getLocale
+        );
         queryWrapper.and(wrapper ->
                 wrapper.eq(I18nMessageDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
                         .or()
                         .eq(I18nMessageDO::getLocaleTarget, localeTarget));
         queryWrapper.eq(I18nMessageDO::getLocale, acceptLanguage);
-        return i18nMessageMapper.selectList(queryWrapper);
+        List<I18nMessageDO> i18nMessageDOS = i18nMessageMapper.selectList(queryWrapper);
+        return BeanUtils.toBean(i18nMessageDOS, I18nMessageSimpVO.class);
     }
 
     @Override

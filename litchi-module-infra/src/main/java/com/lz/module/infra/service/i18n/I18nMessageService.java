@@ -5,6 +5,7 @@ import java.util.*;
 import com.lz.framework.common.core.DictI18nDTO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
 import jakarta.validation.*;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.framework.common.pojo.PageResult;
@@ -68,7 +69,7 @@ public interface I18nMessageService {
      * @param acceptLanguage 接受的语言
      * @return 国际化信息列表
      */
-    List<I18nMessageDO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage);
+    List<I18nMessageSimpVO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage);
 
     /**
      * 获得国际化信息

@@ -67,8 +67,7 @@ public class I18nServiceImpl implements I18nService {
 
     @Override
     public List<I18nMessageSimpVO> getI18nLocaleMessage(Integer localeTarget, String acceptLanguage) {
-        List<I18nMessageDO> i18nMessageDOList = i18nMessageService.getI18nLocaleByLocaleTargetAndLocale(localeTarget, acceptLanguage);
-        return BeanUtils.toBean(i18nMessageDOList, I18nMessageSimpVO.class);
+        return i18nMessageService.getI18nLocaleByLocaleTargetAndLocale(localeTarget, acceptLanguage);
     }
 
     @Override
