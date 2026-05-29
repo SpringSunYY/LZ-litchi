@@ -1,9 +1,10 @@
 package com.lz.module.erp.controller.admin.finance.vo.payment;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -61,6 +62,7 @@ public class ErpFinancePaymentRespVO {
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "erp.financePayment.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "付款项列表", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -88,7 +90,7 @@ public class ErpFinancePaymentRespVO {
         private BigDecimal paidPrice;
 
         @Schema(description = "本次付款，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "10000")
-        @NotNull(message = "本次付款不能为空")
+        @I18nNotNull(i18nKey = "erp.financePaymentItem.back.paymentPrice.notNull", message = "本次付款不能为空")
         private BigDecimal paymentPrice;
 
         @Schema(description = "备注", example = "随便")

@@ -1,8 +1,8 @@
 package com.lz.module.erp.controller.admin.product.vo.product;
 
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -15,23 +15,23 @@ public class ProductSaveReqVO {
     private Long id;
 
     @Schema(description = "产品名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
-    @NotEmpty(message = "产品名称不能为空")
+    @I18nNotEmpty(i18nKey = "erp.product.back.name.notEmpty", message = "产品名称不能为空")
     private String name;
 
     @Schema(description = "产品条码", requiredMode = Schema.RequiredMode.REQUIRED, example = "X110")
-    @NotEmpty(message = "产品条码不能为空")
+    @I18nNotEmpty(i18nKey = "erp.product.back.barCode.notEmpty", message = "产品条码不能为空")
     private String barCode;
 
     @Schema(description = "产品分类编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11161")
-    @NotNull(message = "产品分类编号不能为空")
+    @I18nNotNull(i18nKey = "erp.product.back.categoryId.notNull", message = "产品分类编号不能为空")
     private Long categoryId;
 
     @Schema(description = "单位编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "8869")
-    @NotNull(message = "单位编号不能为空")
+    @I18nNotNull(i18nKey = "erp.product.back.unitId.notNull", message = "单位编号不能为空")
     private Long unitId;
 
     @Schema(description = "产品状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "产品状态不能为空")
+    @I18nNotNull(i18nKey = "erp.product.back.status.notNull", message = "产品状态不能为空")
     private Integer status;
 
     @Schema(description = "产品规格", example = "红色")

@@ -1,5 +1,6 @@
 package com.lz.module.erp.controller.admin.purchase.vo.order;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -16,14 +17,14 @@ public class ErpPurchaseOrderSaveReqVO {
     private Long id;
 
     @Schema(description = "供应商编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
-    @NotNull(message = "供应商编号不能为空")
+    @I18nNotNull(i18nKey = "erp.purchaseOrder.back.supplierId.notNull", message = "供应商编号不能为空")
     private Long supplierId;
 
     @Schema(description = "结算账户编号", example = "31189")
     private Long accountId;
 
     @Schema(description = "采购时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "采购时间不能为空")
+    @I18nNotNull(i18nKey = "erp.purchaseOrder.back.orderTime.notNull", message = "采购时间不能为空")
     private LocalDateTime orderTime;
 
     @Schema(description = "优惠率，百分比", requiredMode = Schema.RequiredMode.REQUIRED, example = "99.88")
@@ -48,18 +49,18 @@ public class ErpPurchaseOrderSaveReqVO {
         private Long id;
 
         @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品编号不能为空")
+        @I18nNotNull(i18nKey = "erp.purchaseOrderItem.back.productId.notNull", message = "产品编号不能为空")
         private Long productId;
 
         @Schema(description = "产品单位单位", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品单位单位不能为空")
+        @I18nNotNull(i18nKey = "erp.purchaseOrderItem.back.productUnitId.notNull", message = "产品单位单位不能为空")
         private Long productUnitId;
 
         @Schema(description = "产品单价", example = "100.00")
         private BigDecimal productPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "erp.purchaseOrderItem.back.count.notNull", message = "产品数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "税率，百分比", example = "99.88")

@@ -1,5 +1,7 @@
 package com.lz.module.erp.controller.admin.stock.vo.in;
 
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -21,7 +23,7 @@ public class ErpStockInSaveReqVO {
     private Long supplierId;
 
     @Schema(description = "入库时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "入库时间不能为空")
+    @I18nNotNull(i18nKey = "erp.stockIn.back.inTime.notNull", message = "入库时间不能为空")
     private LocalDateTime inTime;
 
     @Schema(description = "备注", example = "随便")
@@ -31,7 +33,7 @@ public class ErpStockInSaveReqVO {
     private String fileUrl;
 
     @Schema(description = "入库项列表", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "入库项列表不能为空")
+    @I18nNotEmpty(i18nKey = "erp.stockIn.back.items.notEmpty", message = "入库项列表不能为空")
     @Valid
     private List<Item> items;
 
@@ -42,18 +44,18 @@ public class ErpStockInSaveReqVO {
         private Long id;
 
         @Schema(description = "仓库编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "仓库编号不能为空")
+        @I18nNotNull(i18nKey = "erp.stockInItem.back.warehouseId.notNull", message = "仓库编号不能为空")
         private Long warehouseId;
 
         @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品编号不能为空")
+        @I18nNotNull(i18nKey = "erp.stockInItem.back.productId.notNull", message = "产品编号不能为空")
         private Long productId;
 
         @Schema(description = "产品单价", example = "100.00")
         private BigDecimal productPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "erp.stockInItem.back.count.notNull", message = "产品数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "备注", example = "随便")

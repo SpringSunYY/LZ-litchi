@@ -1,6 +1,7 @@
 package com.lz.module.erp.controller.admin.stock.vo.move;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -20,31 +21,38 @@ public class ErpStockMoveRespVO {
 
     @Schema(description = "调拨编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11756")
     @ExcelProperty("调拨编号")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.id")
     private Long id;
 
     @Schema(description = "调拨单号", requiredMode = Schema.RequiredMode.REQUIRED, example = "S123")
     @ExcelProperty("调拨单号")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.no")
     private String no;
 
     @Schema(description = "调拨时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("调拨时间")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.moveTime")
     private LocalDateTime moveTime;
 
     @Schema(description = "合计数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "15663")
     @ExcelProperty("合计数量")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.totalCount")
     private BigDecimal totalCount;
 
     @Schema(description = "合计金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "24906")
     @ExcelProperty("合计金额")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.totalPrice")
     private BigDecimal totalPrice;
 
     @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
     @ExcelProperty(value = "状态", converter = DictConvert.class)
-    @DictFormat(AUDIT_STATUS)
+    @ExcelColumnSelect(dictType = AUDIT_STATUS, i18n = true)
+    @ExcelI18n(i18nKey = "erp.stockMove.field.status")
     private Integer status;
 
     @Schema(description = "备注", example = "随便")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.remark")
     private String remark;
 
     @Schema(description = "附件 URL", example = "https://www.iocoder.cn/1.doc")
@@ -57,6 +65,7 @@ public class ErpStockMoveRespVO {
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "调拨项列表", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -64,6 +73,7 @@ public class ErpStockMoveRespVO {
 
     @Schema(description = "产品信息", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("产品信息")
+    @ExcelI18n(i18nKey = "erp.stockMove.field.productNames")
     private String productNames;
 
     @Data
@@ -100,7 +110,7 @@ public class ErpStockMoveRespVO {
         private String productUnitName;
 
         @Schema(description = "库存数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        private BigDecimal stockCount; // 该字段仅仅在“详情”和“编辑”时使用
+        private BigDecimal stockCount; // 该字段仅仅在"详情"和"编辑"时使用
 
     }
 

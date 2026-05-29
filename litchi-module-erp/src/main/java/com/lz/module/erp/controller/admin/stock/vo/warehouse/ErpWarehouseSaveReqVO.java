@@ -2,6 +2,8 @@ package com.lz.module.erp.controller.admin.stock.vo.warehouse;
 
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotBlank;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -17,14 +19,14 @@ public class ErpWarehouseSaveReqVO {
     private Long id;
 
     @Schema(description = "仓库名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
-    @NotEmpty(message = "仓库名称不能为空")
+    @I18nNotBlank(i18nKey = "erp.warehouse.back.name.notBlank", message = "仓库名称不能为空")
     private String name;
 
     @Schema(description = "仓库地址", example = "上海陆家嘴")
     private String address;
 
     @Schema(description = "排序", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
-    @NotNull(message = "排序不能为空")
+    @I18nNotNull(i18nKey = "erp.warehouse.back.sort.notNull", message = "排序不能为空")
     private Long sort;
 
     @Schema(description = "备注", example = "随便")
@@ -40,7 +42,7 @@ public class ErpWarehouseSaveReqVO {
     private BigDecimal truckagePrice;
 
     @Schema(description = "开启状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "开启状态不能为空")
+    @I18nNotNull(i18nKey = "erp.warehouse.back.status.notNull", message = "开启状态不能为空")
     @InEnum(CommonStatusEnum.class)
     private Integer status;
 

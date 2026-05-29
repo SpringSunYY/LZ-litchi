@@ -1,5 +1,7 @@
 package com.lz.module.erp.controller.admin.purchase.vo.in;
 
+import com.lz.framework.excel.core.annotations.ExcelI18n;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -17,28 +19,34 @@ public class ErpPurchaseInRespVO {
 
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "17386")
     @ExcelProperty("编号")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.id")
     private Long id;
 
     @Schema(description = "入库单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "XS001")
     @ExcelProperty("入库单编号")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.no")
     private String no;
 
     @Schema(description = "入库状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("入库状态")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.status")
     private Integer status;
 
     @Schema(description = "供应商编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
     private Long supplierId;
     @Schema(description = "供应商名称", example = "荔枝")
     @ExcelProperty("供应商名称")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.supplierName")
     private String supplierName;
 
     @Schema(description = "结算账户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "311.89")
     @ExcelProperty("结算账户编号")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.accountId")
     private Long accountId;
 
     @Schema(description = "入库时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("入库时间")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.inTime")
     private LocalDateTime inTime;
 
     @Schema(description = "采购订单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "17386")
@@ -48,9 +56,11 @@ public class ErpPurchaseInRespVO {
 
     @Schema(description = "合计数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "15663")
     @ExcelProperty("合计数量")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.totalCount")
     private BigDecimal totalCount;
     @Schema(description = "最终合计价格", requiredMode = Schema.RequiredMode.REQUIRED, example = "24906")
     @ExcelProperty("最终合计价格")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.totalPrice")
     private BigDecimal totalPrice;
     @Schema(description = "已付款金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
     private BigDecimal paymentPrice;
@@ -67,15 +77,17 @@ public class ErpPurchaseInRespVO {
     @Schema(description = "优惠金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
     private BigDecimal discountPrice;
 
-    @Schema(description = "定金金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
+    @Schema(description = "其它金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
     private BigDecimal otherPrice;
 
     @Schema(description = "附件地址", example = "https://www.iocoder.cn")
     @ExcelProperty("附件地址")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.fileUrl")
     private String fileUrl;
 
     @Schema(description = "备注", example = "你猜")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.remark")
     private String remark;
 
     @Schema(description = "创建人", example = "荔枝")
@@ -85,6 +97,7 @@ public class ErpPurchaseInRespVO {
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "入库项列表", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -92,6 +105,7 @@ public class ErpPurchaseInRespVO {
 
     @Schema(description = "产品信息", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("产品信息")
+    @ExcelI18n(i18nKey = "erp.purchaseIn.field.productNames")
     private String productNames;
 
     @Data
@@ -138,7 +152,7 @@ public class ErpPurchaseInRespVO {
         private String productUnitName;
 
         @Schema(description = "库存数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        private BigDecimal stockCount; // 该字段仅仅在“详情”和“编辑”时使用
+        private BigDecimal stockCount; // 该字段仅仅在"详情"和"编辑"时使用
 
     }
 

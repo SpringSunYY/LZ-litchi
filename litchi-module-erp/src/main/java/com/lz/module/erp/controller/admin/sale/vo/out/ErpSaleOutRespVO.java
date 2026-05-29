@@ -2,6 +2,8 @@ package com.lz.module.erp.controller.admin.sale.vo.out;
 
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -17,24 +19,29 @@ public class ErpSaleOutRespVO {
 
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "17386")
     @ExcelProperty("编号")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.id")
     private Long id;
 
     @Schema(description = "出库单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "XS001")
     @ExcelProperty("出库单编号")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.no")
     private String no;
 
     @Schema(description = "出库状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
     @ExcelProperty("出库状态")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.status")
     private Integer status;
 
     @Schema(description = "客户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1724")
     private Long customerId;
     @Schema(description = "客户名称", example = "荔枝")
     @ExcelProperty("客户名称")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.customerName")
     private String customerName;
 
     @Schema(description = "结算账户编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "311.89")
     @ExcelProperty("结算账户编号")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.accountId")
     private Long accountId;
 
     @Schema(description = "出库员编号", example = "1888")
@@ -42,6 +49,7 @@ public class ErpSaleOutRespVO {
 
     @Schema(description = "出库时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("出库时间")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.outTime")
     private LocalDateTime outTime;
 
     @Schema(description = "销售订单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "17386")
@@ -51,9 +59,11 @@ public class ErpSaleOutRespVO {
 
     @Schema(description = "合计数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "15663")
     @ExcelProperty("合计数量")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.totalCount")
     private BigDecimal totalCount;
     @Schema(description = "最终合计价格", requiredMode = Schema.RequiredMode.REQUIRED, example = "24906")
     @ExcelProperty("最终合计价格")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.totalPrice")
     private BigDecimal totalPrice;
     @Schema(description = "已收款金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "7127")
     private BigDecimal receiptPrice;
@@ -75,10 +85,12 @@ public class ErpSaleOutRespVO {
 
     @Schema(description = "附件地址", example = "https://www.iocoder.cn")
     @ExcelProperty("附件地址")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.fileUrl")
     private String fileUrl;
 
     @Schema(description = "备注", example = "你猜")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.remark")
     private String remark;
 
     @Schema(description = "创建人", example = "荔枝")
@@ -88,6 +100,7 @@ public class ErpSaleOutRespVO {
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "出库项列表", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -95,6 +108,7 @@ public class ErpSaleOutRespVO {
 
     @Schema(description = "产品信息", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("产品信息")
+    @ExcelI18n(i18nKey = "erp.saleOut.field.productNames")
     private String productNames;
 
     @Data
@@ -119,7 +133,7 @@ public class ErpSaleOutRespVO {
         private BigDecimal productPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "erp.saleOutItem.back.count.notNull", message = "产品数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "税率，百分比", example = "99.88")

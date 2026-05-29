@@ -1,7 +1,7 @@
 package com.lz.module.erp.controller.admin.sale.vo.out;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,11 +22,11 @@ public class ErpSaleOutSaveReqVO {
     private Long saleUserId;
 
     @Schema(description = "出库时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "出库时间不能为空")
+    @I18nNotNull(i18nKey = "erp.saleOut.back.outTime.notNull", message = "出库时间不能为空")
     private LocalDateTime outTime;
 
     @Schema(description = "销售订单编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "17386")
-    @NotNull(message = "销售订单编号不能为空")
+    @I18nNotNull(i18nKey = "erp.saleOut.back.orderId.notNull", message = "销售订单编号不能为空")
     private Long orderId;
 
     @Schema(description = "优惠率，百分比", requiredMode = Schema.RequiredMode.REQUIRED, example = "99.88")
@@ -51,26 +51,26 @@ public class ErpSaleOutSaveReqVO {
         private Long id;
 
         @Schema(description = "销售订单项编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11756")
-        @NotNull(message = "销售订单项编号不能为空")
+        @I18nNotNull(i18nKey = "erp.saleOutItem.back.orderItemId.notNull", message = "销售订单项编号不能为空")
         private Long orderItemId;
 
         @Schema(description = "仓库编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "仓库编号不能为空")
+        @I18nNotNull(i18nKey = "erp.saleOutItem.back.warehouseId.notNull", message = "仓库编号不能为空")
         private Long warehouseId;
 
         @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品编号不能为空")
+        @I18nNotNull(i18nKey = "erp.saleOutItem.back.productId.notNull", message = "产品编号不能为空")
         private Long productId;
 
         @Schema(description = "产品单位单位", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品单位单位不能为空")
+        @I18nNotNull(i18nKey = "erp.saleOutItem.back.productUnitId.notNull", message = "产品单位单位不能为空")
         private Long productUnitId;
 
         @Schema(description = "产品单价", example = "100.00")
         private BigDecimal productPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "erp.saleOutItem.back.count.notNull", message = "产品数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "税率，百分比", example = "99.88")

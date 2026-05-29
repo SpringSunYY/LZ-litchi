@@ -1,9 +1,10 @@
 package com.lz.module.erp.controller.admin.finance.vo.receipt;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -61,6 +62,7 @@ public class ErpFinanceReceiptRespVO {
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "erp.financeReceipt.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "收款项列表", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -88,7 +90,7 @@ public class ErpFinanceReceiptRespVO {
         private BigDecimal receiptedPrice;
 
         @Schema(description = "本次收款，单位：分", requiredMode = Schema.RequiredMode.REQUIRED, example = "10000")
-        @NotNull(message = "本次收款不能为空")
+        @I18nNotNull(i18nKey = "erp.financeReceiptItem.back.receiptPrice.notNull", message = "本次收款不能为空")
         private BigDecimal receiptPrice;
 
         @Schema(description = "备注", example = "随便")

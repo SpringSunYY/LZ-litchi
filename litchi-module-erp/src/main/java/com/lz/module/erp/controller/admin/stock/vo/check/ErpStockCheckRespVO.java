@@ -1,11 +1,12 @@
 package com.lz.module.erp.controller.admin.stock.vo.check;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -21,31 +22,38 @@ public class ErpStockCheckRespVO {
 
     @Schema(description = "盘点编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "11756")
     @ExcelProperty("盘点编号")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.id")
     private Long id;
 
     @Schema(description = "盘点单号", requiredMode = Schema.RequiredMode.REQUIRED, example = "S123")
     @ExcelProperty("盘点单号")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.no")
     private String no;
 
     @Schema(description = "盘点时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("盘点时间")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.checkTime")
     private LocalDateTime checkTime;
 
     @Schema(description = "合计数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "15663")
     @ExcelProperty("合计数量")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.totalCount")
     private BigDecimal totalCount;
 
     @Schema(description = "合计金额，单位：元", requiredMode = Schema.RequiredMode.REQUIRED, example = "24906")
     @ExcelProperty("合计金额")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.totalPrice")
     private BigDecimal totalPrice;
 
     @Schema(description = "状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
     @ExcelProperty(value = "状态", converter = DictConvert.class)
-    @DictFormat(AUDIT_STATUS)
+    @ExcelColumnSelect(dictType = AUDIT_STATUS, i18n = true)
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.status")
     private Integer status;
 
     @Schema(description = "备注", example = "随便")
     @ExcelProperty("备注")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.remark")
     private String remark;
 
     @Schema(description = "附件 URL", example = "https://www.iocoder.cn/1.doc")
@@ -58,6 +66,7 @@ public class ErpStockCheckRespVO {
 
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("创建时间")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.createTime")
     private LocalDateTime createTime;
 
     @Schema(description = "盘点项列表", requiredMode = Schema.RequiredMode.REQUIRED)
@@ -65,6 +74,7 @@ public class ErpStockCheckRespVO {
 
     @Schema(description = "产品信息", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("产品信息")
+    @ExcelI18n(i18nKey = "erp.stockCheck.field.productNames")
     private String productNames;
 
     @Data
@@ -83,15 +93,15 @@ public class ErpStockCheckRespVO {
         private BigDecimal productPrice;
 
         @Schema(description = "账面数量（当前库存）", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "账面数量不能为空")
+        @I18nNotNull(i18nKey = "erp.stockCheckItem.back.stockCount.notNull", message = "账面数量不能为空")
         private BigDecimal stockCount;
 
         @Schema(description = "实际数量（实际库存）", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "实际数量不能为空")
+        @I18nNotNull(i18nKey = "erp.stockCheckItem.back.actualCount.notNull", message = "实际数量不能为空")
         private BigDecimal actualCount;
 
         @Schema(description = "盈亏数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "盈亏数量不能为空")
+        @I18nNotNull(i18nKey = "erp.stockCheckItem.back.count.notNull", message = "盈亏数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "备注", example = "随便")

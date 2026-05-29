@@ -2,6 +2,9 @@ package com.lz.module.erp.controller.admin.stock.vo.move;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lz.framework.common.validation.i18n.I18nAssertTrue;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.AssertTrue;
@@ -24,7 +27,7 @@ public class ErpStockMoveSaveReqVO {
     private Long customerId;
 
     @Schema(description = "调拨时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "调拨时间不能为空")
+    @I18nNotNull(i18nKey = "erp.stockMove.back.moveTime.notNull", message = "调拨时间不能为空")
     private LocalDateTime moveTime;
 
     @Schema(description = "备注", example = "随便")
@@ -34,7 +37,7 @@ public class ErpStockMoveSaveReqVO {
     private String fileUrl;
 
     @Schema(description = "调拨项列表", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "调拨项列表不能为空")
+    @I18nNotEmpty(i18nKey = "erp.stockMove.back.items.notEmpty", message = "调拨项列表不能为空")
     @Valid
     private List<Item> items;
 
@@ -45,28 +48,28 @@ public class ErpStockMoveSaveReqVO {
         private Long id;
 
         @Schema(description = "调出仓库编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "调出仓库编号不能为空")
+        @I18nNotNull(i18nKey = "erp.stockMoveItem.back.fromWarehouseId.notNull", message = "调出仓库编号不能为空")
         private Long fromWarehouseId;
 
         @Schema(description = "调入仓库编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "888")
-        @NotNull(message = "调入仓库编号不能为空")
+        @I18nNotNull(i18nKey = "erp.stockMoveItem.back.toWarehouseId.notNull", message = "调入仓库编号不能为空")
         private Long toWarehouseId;
 
         @Schema(description = "产品编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "3113")
-        @NotNull(message = "产品编号不能为空")
+        @I18nNotNull(i18nKey = "erp.stockMoveItem.back.productId.notNull", message = "产品编号不能为空")
         private Long productId;
 
         @Schema(description = "产品单价", example = "100.00")
         private BigDecimal productPrice;
 
         @Schema(description = "产品数量", requiredMode = Schema.RequiredMode.REQUIRED, example = "100.00")
-        @NotNull(message = "产品数量不能为空")
+        @I18nNotNull(i18nKey = "erp.stockMoveItem.back.count.notNull", message = "产品数量不能为空")
         private BigDecimal count;
 
         @Schema(description = "备注", example = "随便")
         private String remark;
 
-        @AssertTrue(message = "调出、调仓仓库不能相同")
+        @I18nAssertTrue(i18nKey = "erp.stockMoveItem.back.warehouseValid.assertTrue", message = "调出、调仓仓库不能相同")
         @JsonIgnore
         public boolean isWarehouseValid() {
             return ObjectUtil.notEqual(fromWarehouseId, toWarehouseId);
