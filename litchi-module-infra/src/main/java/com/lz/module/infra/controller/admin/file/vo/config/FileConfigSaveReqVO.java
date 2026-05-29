@@ -1,7 +1,8 @@
 package com.lz.module.infra.controller.admin.file.vo.config;
 
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -15,27 +16,27 @@ public class FileConfigSaveReqVO {
     private Long id;
 
     @Schema(description = "配置键", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "配置键不能为空")
+    @I18nNotEmpty(i18nKey = "infra.fileConfig.back.configKey.notEmpty", message = "配置键不能为空")
     private String configKey;
 
     @Schema(description = "配置名", requiredMode = Schema.RequiredMode.REQUIRED, example = "王五")
-    @NotEmpty(message = "配置名不能为空")
+    @I18nNotEmpty(i18nKey = "infra.fileConfig.back.name.notEmpty", message = "配置名不能为空")
     private String name;
 
     @Schema(description = "存储器", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "存储器不能为空")
+    @I18nNotNull(i18nKey = "infra.fileConfig.back.storage.notNull", message = "存储器不能为空")
     private Integer storage;
 
     @Schema(description = "路径类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "路径类型不能为空")
+    @I18nNotNull(i18nKey = "infra.fileConfig.back.pathType.notNull", message = "路径类型不能为空")
     private Integer pathType;
 
     @Schema(description = "返回类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "返回类型不能为空")
+    @I18nNotNull(i18nKey = "infra.fileConfig.back.returnType.notNull", message = "返回类型不能为空")
     private Integer returnType;
 
     @Schema(description = "文件大小", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "文件大小不能为空")
+    @I18nNotNull(i18nKey = "infra.fileConfig.back.maxSize.notNull", message = "文件大小不能为空")
     private Integer maxSize;
 
     @Schema(description = "文件类型", example = "1")
@@ -45,7 +46,7 @@ public class FileConfigSaveReqVO {
     private String remark;
 
     @Schema(description = "存储配置", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "存储配置不能为空")
+    @I18nNotEmpty(i18nKey = "infra.fileConfig.back.config.notEmpty", message = "存储配置不能为空")
     private Map<String, Object> config;
 
 }

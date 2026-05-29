@@ -1,7 +1,7 @@
 package com.lz.module.infra.controller.admin.file.vo.file;
 
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileUploadReqVO {
 
     @Schema(description = "文件附件", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "文件附件不能为空")
+    @I18nNotNull(i18nKey = "infra.file.back.file.notNull", message = "文件附件不能为空")
     private MultipartFile file;
 
     @Schema(description = "文件目录", example = "XXX/YYY")

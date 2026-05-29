@@ -2,8 +2,8 @@ package com.lz.module.infra.controller.admin.file.vo.config;
 
 import com.lz.framework.common.annotation.Sortable;
 import com.lz.framework.common.pojo.PageParam;
+import com.lz.framework.common.validation.i18n.I18nSize;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -31,7 +31,7 @@ public class FileConfigPageReqVO extends PageParam {
     private Integer returnType;
 
     @Sortable(value = "max_size")
-    @Size(max = 2, message = "文件大小长度不能超过2")
+    @I18nSize(i18nKey = "infra.fileConfig.back.maxSize.size", min = 0, max = 2, message = "文件大小长度不能超过2")
     @Schema(description = "文件大小")
     private Integer[] maxSize;
 
@@ -42,7 +42,7 @@ public class FileConfigPageReqVO extends PageParam {
     private Boolean master;
 
     @Sortable(value = "create_time")
-    @Size(max = 2, message = "创建时间长度不能超过2")
+    @I18nSize(i18nKey = "infra.fileConfig.back.createTime.size", min = 0, max = 2, message = "创建时间长度不能超过2")
     @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;

@@ -3,8 +3,8 @@ package com.lz.module.infra.controller.admin.codegen.vo;
 import com.lz.module.infra.controller.admin.codegen.vo.column.CodegenColumnSaveReqVO;
 import com.lz.module.infra.controller.admin.codegen.vo.table.CodegenTableSaveReqVO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -13,12 +13,12 @@ import java.util.List;
 @Data
 public class CodegenUpdateReqVO {
 
-    @Valid // 校验内嵌的字段
-    @NotNull(message = "表定义不能为空")
+    @Valid
+    @I18nNotNull(i18nKey = "infra.codegenTable.back.table.notNull", message = "表定义不能为空")
     private CodegenTableSaveReqVO table;
 
-    @Valid // 校验内嵌的字段
-    @NotNull(message = "字段定义不能为空")
+    @Valid
+    @I18nNotNull(i18nKey = "infra.codegenColumn.back.columns.notNull", message = "字段定义不能为空")
     private List<CodegenColumnSaveReqVO> columns;
 
 }

@@ -19,4 +19,11 @@ public interface DictTypeConstants {
 
     String OPERATE_TYPE = "infra_operate_type"; // 操作类型
 
+    // ========== 国际化相关 ==========
+    String I18N_KEY_IS_SYSTEM = "infra_i18n_key_is_system"; // 国际化键是否内置
+    String I18N_KEY_USE_TYPE = "infra_i18n_key_use_type"; // 国际化键使用类型
+    String I18N_LOCALE_TARGET = "infra_i18n_locale_target"; // 国际化国家使用端
+    String I18N_LOCALE_STATUS = "infra_i18n_locale_status"; // 国际化国家状态
+    String I18N_LOCALE_IS_DEFAULT = "infra_i18n_locale_is_default"; // 国际化国家是否默认
+
 }
