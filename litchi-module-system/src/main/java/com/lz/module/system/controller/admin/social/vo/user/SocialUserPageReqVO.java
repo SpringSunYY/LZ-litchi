@@ -1,4 +1,4 @@
-package com.lz.module.system.controller.admin.socail.vo.user;
+package com.lz.module.system.controller.admin.social.vo.user;
 
 import com.lz.framework.common.pojo.PageParam;
 import io.swagger.v3.oas.annotations.media.Schema;

@@ -1,6 +1,8 @@
 package com.lz.module.system.controller.admin.dept.vo.post;
 
 import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.lz.module.system.enums.DictTypeConstants;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
@@ -17,23 +19,28 @@ public class PostRespVO {
 
     @Schema(description = "岗位序号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     @ExcelProperty("岗位序号")
+    @ExcelI18n(i18nKey = "system.post.field.id")
     private Long id;
 
     @Schema(description = "岗位名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "小土豆")
     @ExcelProperty("岗位名称")
+    @ExcelI18n(i18nKey = "system.post.field.name")
     private String name;
 
     @Schema(description = "岗位编码", requiredMode = Schema.RequiredMode.REQUIRED, example = "litchi")
     @ExcelProperty("岗位编码")
+    @ExcelI18n(i18nKey = "system.post.field.code")
     private String code;
 
     @Schema(description = "显示顺序", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     @ExcelProperty("岗位排序")
+    @ExcelI18n(i18nKey = "system.post.field.sort")
     private Integer sort;
 
     @Schema(description = "状态，参见 CommonStatusEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty(value = "状态", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.COMMON_STATUS)
+    @ExcelColumnSelect(dictType = DictTypeConstants.COMMON_STATUS, i18n = true)
+    @ExcelI18n(i18nKey = "system.post.field.status")
     private Integer status;
 
     @Schema(description = "备注", example = "快乐的备注")

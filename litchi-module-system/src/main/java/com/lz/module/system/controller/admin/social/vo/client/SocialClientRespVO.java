@@ -1,4 +1,4 @@
-package com.lz.module.system.controller.admin.socail.vo.client;
+package com.lz.module.system.controller.admin.social.vo.client;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

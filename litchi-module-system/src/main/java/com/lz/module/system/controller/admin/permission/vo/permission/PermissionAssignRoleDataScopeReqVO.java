@@ -1,11 +1,11 @@
 package com.lz.module.system.controller.admin.permission.vo.permission;
 
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.system.enums.permission.DataScopeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import jakarta.validation.constraints.NotNull;
 import java.util.Collections;
 import java.util.Set;
 
@@ -14,11 +14,11 @@ import java.util.Set;
 public class PermissionAssignRoleDataScopeReqVO {
 
     @Schema(description = "角色编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "角色编号不能为空")
+    @I18nNotNull(i18nKey = "system.permission.back.roleId.notNull", message = "角色编号不能为空")
     private Long roleId;
 
     @Schema(description = "数据范围，参见 DataScopeEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "数据范围不能为空")
+    @I18nNotNull(i18nKey = "system.permission.back.dataScope.notNull", message = "数据范围不能为空")
     @InEnum(value = DataScopeEnum.class, message = "数据范围必须是 {value}")
     private Integer dataScope;
 

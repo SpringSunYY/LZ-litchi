@@ -1,5 +1,6 @@
 package com.lz.module.system.controller.admin.auth.vo;
 
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
@@ -11,7 +12,7 @@ public class CaptchaVerificationReqVO {
     // ========== 图片验证码相关 ==========
     @Schema(description = "验证码，验证码开启时，需要传递", requiredMode = Schema.RequiredMode.REQUIRED,
             example = "PfcH6mgr8tpXuMWFjvW6YVaqrswIuwmWI5dsVZSg7sGpWtDCUbHuDEXl3cFB1+VvCC/rAkSwK8Fad52FSuncVg==")
-    @NotEmpty(message = "验证码不能为空", groups = CodeEnableGroup.class)
+    @I18nNotEmpty(i18nKey = "system.captchaVerification.back.captchaVerification.notEmpty", message = "验证码不能为空", groups = CodeEnableGroup.class)
     private String captchaVerification;
 
     /**

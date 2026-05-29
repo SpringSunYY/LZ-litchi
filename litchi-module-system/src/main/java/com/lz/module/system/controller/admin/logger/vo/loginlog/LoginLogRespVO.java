@@ -1,6 +1,7 @@
 package com.lz.module.system.controller.admin.logger.vo.loginlog;
 
-import com.lz.framework.excel.core.annotations.DictFormat;
+import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
 import com.lz.module.system.enums.DictTypeConstants;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
@@ -17,11 +18,13 @@ public class LoginLogRespVO {
 
     @Schema(description = "日志编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
     @ExcelProperty("日志主键")
+    @ExcelI18n(i18nKey = "system.loginLog.field.id")
     private Long id;
 
     @Schema(description = "日志类型，参见 LoginLogTypeEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty(value = "日志类型", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.LOGIN_TYPE)
+    @ExcelColumnSelect(dictType = DictTypeConstants.LOGIN_TYPE, i18n = true)
+    @ExcelI18n(i18nKey = "system.loginLog.field.logType")
     private Integer logType;
 
     @Schema(description = "用户编号", example = "666")
@@ -35,23 +38,28 @@ public class LoginLogRespVO {
 
     @Schema(description = "用户账号", requiredMode = Schema.RequiredMode.REQUIRED, example = "litchi")
     @ExcelProperty("用户账号")
+    @ExcelI18n(i18nKey = "system.loginLog.field.username")
     private String username;
 
     @Schema(description = "登录结果，参见 LoginResultEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @ExcelProperty(value = "登录结果", converter = DictConvert.class)
-    @DictFormat(DictTypeConstants.LOGIN_RESULT)
+    @ExcelColumnSelect(dictType = DictTypeConstants.LOGIN_RESULT, i18n = true)
+    @ExcelI18n(i18nKey = "system.loginLog.field.result")
     private Integer result;
 
     @Schema(description = "用户 IP", requiredMode = Schema.RequiredMode.REQUIRED, example = "127.0.0.1")
     @ExcelProperty("登录 IP")
+    @ExcelI18n(i18nKey = "system.loginLog.field.userIp")
     private String userIp;
 
     @Schema(description = "浏览器 UserAgent", example = "Mozilla/5.0")
     @ExcelProperty("浏览器 UA")
+    @ExcelI18n(i18nKey = "system.loginLog.field.userAgent")
     private String userAgent;
 
     @Schema(description = "登录时间", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("登录时间")
+    @ExcelI18n(i18nKey = "system.loginLog.field.createTime")
     private LocalDateTime createTime;
 
 }

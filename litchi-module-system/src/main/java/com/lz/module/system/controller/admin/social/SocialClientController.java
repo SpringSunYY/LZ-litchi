@@ -1,13 +1,13 @@
-package com.lz.module.system.controller.admin.socail;
+package com.lz.module.system.controller.admin.social;
 
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.system.api.social.SocialClientApi;
 import com.lz.module.system.api.social.dto.SocialWxaSubscribeMessageSendReqDTO;
-import com.lz.module.system.controller.admin.socail.vo.client.SocialClientPageReqVO;
-import com.lz.module.system.controller.admin.socail.vo.client.SocialClientRespVO;
-import com.lz.module.system.controller.admin.socail.vo.client.SocialClientSaveReqVO;
+import com.lz.module.system.controller.admin.social.vo.client.SocialClientPageReqVO;
+import com.lz.module.system.controller.admin.social.vo.client.SocialClientRespVO;
+import com.lz.module.system.controller.admin.social.vo.client.SocialClientSaveReqVO;
 import com.lz.module.system.dal.dataobject.social.SocialClientDO;
 import com.lz.module.system.service.social.SocialClientService;
 import io.swagger.v3.oas.annotations.Operation;

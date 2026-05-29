@@ -2,15 +2,18 @@ package com.lz.module.system.controller.admin.user.vo.user;
 
 import cn.hutool.core.util.ObjectUtil;
 import com.lz.framework.common.validation.Mobile;
+import com.lz.framework.common.validation.i18n.I18nAssertTrue;
+import com.lz.framework.common.validation.i18n.I18nEmail;
+import com.lz.framework.common.validation.i18n.I18nLength;
+import com.lz.framework.common.validation.i18n.I18nNotBlank;
+import com.lz.framework.common.validation.i18n.I18nPattern;
 import com.lz.module.system.framework.operatelog.core.DeptParseFunction;
 import com.lz.module.system.framework.operatelog.core.PostParseFunction;
 import com.lz.module.system.framework.operatelog.core.SexParseFunction;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mzt.logapi.starter.annotation.DiffLogField;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
 import lombok.Data;
-import org.hibernate.validator.constraints.Length;
 
 import java.util.Set;
 
@@ -22,14 +25,14 @@ public class UserSaveReqVO {
     private Long id;
 
     @Schema(description = "用户账号", requiredMode = Schema.RequiredMode.REQUIRED, example = "litchi")
-    @NotBlank(message = "用户账号不能为空")
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "用户账号由 数字、字母 组成")
-    @Size(min = 4, max = 30, message = "用户账号长度为 4-30 个字符")
+    @I18nNotBlank(i18nKey = "system.user.back.username.notBlank", message = "用户账号不能为空")
+    @I18nPattern(i18nKey = "system.user.back.username.pattern", regexp = "^[a-zA-Z0-9]+$", message = "用户账号由 数字、字母 组成")
+    @I18nLength(i18nKey = "system.user.back.username.length", min = 4, max = 30, message = "用户账号长度为 4-30 个字符")
     @DiffLogField(name = "用户账号")
     private String username;
 
     @Schema(description = "用户昵称", requiredMode = Schema.RequiredMode.REQUIRED, example = "YY")
-    @Size(max = 30, message = "用户昵称长度不能超过30个字符")
+    @I18nLength(i18nKey = "system.user.back.nickname.length", max = 30, message = "用户昵称长度不能超过30个字符")
     @DiffLogField(name = "用户昵称")
     private String nickname;
 
@@ -46,8 +49,8 @@ public class UserSaveReqVO {
     private Set<Long> postIds;
 
     @Schema(description = "用户邮箱", example = "litchi@iocoder.cn")
-    @Email(message = "邮箱格式不正确")
-    @Size(max = 50, message = "邮箱长度不能超过 50 个字符")
+    @I18nEmail(i18nKey = "system.user.back.email.email")
+    @I18nLength(i18nKey = "system.user.back.email.length", max = 50, message = "邮箱长度不能超过 50 个字符")
     @DiffLogField(name = "用户邮箱")
     private String email;
 
@@ -67,10 +70,10 @@ public class UserSaveReqVO {
     // ========== 仅【创建】时，需要传递的字段 ==========
 
     @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED, example = "123456")
-    @Length(min = 4, max = 16, message = "密码长度为 4-16 位")
+    @I18nLength(i18nKey = "system.user.back.password.length", min = 4, max = 16, message = "密码长度为 4-16 位")
     private String password;
 
-    @AssertTrue(message = "密码不能为空")
+    @I18nAssertTrue(i18nKey = "system.user.back.password.notBlank", message = "密码不能为空")
     @JsonIgnore
     public boolean isPasswordValid() {
         return id != null // 修改时，不需要传递

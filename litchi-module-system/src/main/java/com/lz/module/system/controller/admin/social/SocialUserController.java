@@ -1,14 +1,14 @@
-package com.lz.module.system.controller.admin.socail;
+package com.lz.module.system.controller.admin.social;
 
 import com.lz.framework.common.enums.UserTypeEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.system.api.social.dto.SocialUserBindReqDTO;
-import com.lz.module.system.controller.admin.socail.vo.user.SocialUserBindReqVO;
-import com.lz.module.system.controller.admin.socail.vo.user.SocialUserPageReqVO;
-import com.lz.module.system.controller.admin.socail.vo.user.SocialUserRespVO;
-import com.lz.module.system.controller.admin.socail.vo.user.SocialUserUnbindReqVO;
+import com.lz.module.system.controller.admin.social.vo.user.SocialUserBindReqVO;
+import com.lz.module.system.controller.admin.social.vo.user.SocialUserPageReqVO;
+import com.lz.module.system.controller.admin.social.vo.user.SocialUserRespVO;
+import com.lz.module.system.controller.admin.social.vo.user.SocialUserUnbindReqVO;
 import com.lz.module.system.dal.dataobject.social.SocialUserDO;
 import com.lz.module.system.service.social.SocialUserService;
 import io.swagger.v3.oas.annotations.Operation;

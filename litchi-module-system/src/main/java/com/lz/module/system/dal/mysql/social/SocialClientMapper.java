@@ -3,7 +3,7 @@ package com.lz.module.system.dal.mysql.social;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.mybatis.core.mapper.BaseMapperX;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
-import com.lz.module.system.controller.admin.socail.vo.client.SocialClientPageReqVO;
+import com.lz.module.system.controller.admin.social.vo.client.SocialClientPageReqVO;
 import com.lz.module.system.dal.dataobject.social.SocialClientDO;
 import org.apache.ibatis.annotations.Mapper;
 
