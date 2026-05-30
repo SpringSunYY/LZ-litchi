@@ -1,8 +1,9 @@
 package com.lz.module.bpm.controller.admin.oa.vo;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lz.framework.common.validation.i18n.I18nAssertTrue;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.AssertTrue;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -17,12 +18,12 @@ import static com.lz.framework.common.util.date.DateUtils.FORMAT_YEAR_MONTH_DAY_
 public class BpmOALeaveCreateReqVO {
 
     @Schema(description = "请假的开始时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "开始时间不能为空")
+    @I18nNotNull(i18nKey = "bpm.oaLeave.back.startTime.notNull", message = "开始时间不能为空")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime startTime;
 
     @Schema(description = "请假的结束时间", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "结束时间不能为空")
+    @I18nNotNull(i18nKey = "bpm.oaLeave.back.endTime.notNull", message = "结束时间不能为空")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime endTime;
 
@@ -35,7 +36,8 @@ public class BpmOALeaveCreateReqVO {
     @Schema(description = "发起人自选审批人 Map", example = "{taskKey1: [1, 2]}")
     private Map<String, List<Long>> startUserSelectAssignees;
 
-    @AssertTrue(message = "结束时间，需要在开始时间之后")
+    @JsonIgnore
+    @I18nAssertTrue(i18nKey = "bpm.oaLeave.back.endTimeValid.assertTrue", message = "结束时间，需要在开始时间之后")
     public boolean isEndTimeValid() {
         return !getEndTime().isBefore(getStartTime());
     }

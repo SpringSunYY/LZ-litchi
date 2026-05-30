@@ -1,8 +1,8 @@
 package com.lz.module.bpm.controller.admin.task.vo.task;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 
 import java.util.Collection;
 
@@ -11,11 +11,11 @@ import java.util.Collection;
 public class BpmTaskCopyReqVO {
 
     @Schema(description = "任务编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    @NotEmpty(message = "任务编号不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.taskCopy.back.id.notEmpty", message = "任务编号不能为空")
     private String id;
 
     @Schema(description = "抄送的用户编号数组", requiredMode = Schema.RequiredMode.REQUIRED, example = "[1,2]")
-    @NotEmpty(message = "抄送用户不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.taskCopy.back.copyUserIds.notEmpty", message = "抄送用户不能为空")
     private Collection<Long> copyUserIds;
 
     @Schema(description = "抄送意见", example = "帮忙看看！")

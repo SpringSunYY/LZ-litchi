@@ -2,6 +2,9 @@ package com.lz.module.bpm.controller.admin.definition.vo.model;
 
 import com.lz.framework.common.core.KeyValue;
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
+import com.lz.framework.common.validation.i18n.I18nURL;
 import com.lz.module.bpm.controller.admin.definition.vo.model.simple.BpmSimpleModelNodeVO;
 import com.lz.module.bpm.enums.definition.BpmAutoApproveTypeEnum;
 import com.lz.module.bpm.enums.definition.BpmModelFormTypeEnum;
@@ -11,7 +14,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.List;
 
@@ -29,20 +31,20 @@ import java.util.List;
 public class BpmModelMetaInfoVO {
 
     @Schema(description = "流程图标", example = "https://www.iocoder.cn/litchi.jpg")
-    @URL(message = "流程图标格式不正确")
+    @I18nURL(i18nKey = "bpm.processDefinitionInfo.back.icon.url", message = "流程图标格式不正确")
     private String icon;
 
     @Schema(description = "流程描述", example = "我是描述")
     private String description;
 
     @Schema(description = "流程类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
+    @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.type.notNull", message = "流程类型不能为空")
     @InEnum(BpmModelTypeEnum.class)
-    @NotNull(message = "流程类型不能为空")
     private Integer type;
 
     @Schema(description = "表单类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "10")
+    @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.formType.notNull", message = "表单类型不能为空")
     @InEnum(BpmModelFormTypeEnum.class)
-    @NotNull(message = "表单类型不能为空")
     private Integer formType;
     @Schema(description = "表单编号", example = "1024")
     private Long formId; // formType 为 NORMAL 使用，必须非空
@@ -53,7 +55,7 @@ public class BpmModelMetaInfoVO {
     private String formCustomViewPath; // 表单类型为 CUSTOM 时，必须非空
 
     @Schema(description = "是否可见", requiredMode = Schema.RequiredMode.REQUIRED, example = "true")
-    @NotNull(message = "是否可见不能为空")
+    @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.visible.notNull", message = "是否可见不能为空")
     private Boolean visible;
 
     @Schema(description = "可发起用户编号数组", example = "[1,2,3]")
@@ -63,7 +65,7 @@ public class BpmModelMetaInfoVO {
     private List<Long> startDeptIds;
 
     @Schema(description = "可管理用户编号数组", requiredMode = Schema.RequiredMode.REQUIRED, example = "[2,4,6]")
-    @NotEmpty(message = "可管理用户编号数组不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.processDefinitionInfo.back.managerUserIds.notEmpty", message = "可管理用户编号数组不能为空")
     private List<Long> managerUserIds;
 
     @Schema(description = "排序", example = "1")
@@ -103,7 +105,7 @@ public class BpmModelMetaInfoVO {
     public static class ProcessIdRule {
 
         @Schema(description = "是否启用", example = "false")
-        @NotNull(message = "是否启用不能为空")
+        @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.processIdRule.enable.notNull", message = "是否启用不能为空")
         private Boolean enable;
 
         @Schema(description = "前缀", example = "XX")
@@ -116,7 +118,7 @@ public class BpmModelMetaInfoVO {
         private String postfix;
 
         @Schema(description = "序列长度", example = "5")
-        @NotNull(message = "序列长度不能为空")
+        @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.processIdRule.length.notNull", message = "序列长度不能为空")
         private Integer length;
 
     }
@@ -127,7 +129,7 @@ public class BpmModelMetaInfoVO {
     public static class TitleSetting {
 
         @Schema(description = "是否自定义", example = "false")
-        @NotNull(message = "是否自定义不能为空")
+        @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.titleSetting.enable.notNull", message = "是否自定义不能为空")
         private Boolean enable;
 
         @Schema(description = "标题", example = "流程标题")
@@ -141,7 +143,7 @@ public class BpmModelMetaInfoVO {
     public static class SummarySetting {
 
         @Schema(description = "是否自定义", example = "false")
-        @NotNull(message = "是否自定义不能为空")
+        @I18nNotNull(i18nKey = "bpm.processDefinitionInfo.back.summarySetting.enable.notNull", message = "是否自定义不能为空")
         private Boolean enable;
 
         @Schema(description = "摘要字段数组", example = "[]")
@@ -154,8 +156,8 @@ public class BpmModelMetaInfoVO {
     public static class HttpRequestSetting {
 
         @Schema(description = "请求路径", example = "http://127.0.0.1")
-        @NotEmpty(message = "请求 URL 不能为空")
-        @URL(message = "请求 URL 格式不正确")
+        @I18nNotEmpty(i18nKey = "bpm.processDefinitionInfo.back.httpRequestSetting.url.notEmpty", message = "请求 URL 不能为空")
+        @I18nURL(i18nKey = "bpm.processDefinitionInfo.back.httpRequestSetting.url.url", message = "请求 URL 格式不正确")
         private String url;
 
         @Schema(description = "请求头参数设置", example = "[]")

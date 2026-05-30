@@ -1,7 +1,8 @@
 package com.lz.module.bpm.controller.admin.definition.vo.form;
 
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,19 +16,19 @@ public class BpmFormRespVO {
     private Long id;
 
     @Schema(description = "表单名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝")
-    @NotNull(message = "表单名称不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.form.back.name.notEmpty", message = "表单名称不能为空")
     private String name;
 
     @Schema(description = "表单的配置-JSON 字符串", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "表单的配置不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.form.back.conf.notEmpty", message = "表单的配置不能为空")
     private String conf;
 
     @Schema(description = "表单项的数组-JSON 字符串的数组", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotNull(message = "表单项的数组不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.form.back.fields.notEmpty", message = "表单项的数组不能为空")
     private List<String> fields;
 
     @Schema(description = "表单状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "表单状态不能为空")
+    @I18nNotNull(i18nKey = "bpm.form.back.status.notNull", message = "表单状态不能为空")
     private Integer status; // 参见 CommonStatusEnum 枚举
 
     @Schema(description = "备注", example = "我是备注")

@@ -228,7 +228,12 @@ private Integer sex;
 > - `@ExcelProperty(value = "中文表头")` 作为 fallback
 > - `@ExcelI18n(i18nKey = "...")` 指定字段国际化 key
 > - **只对已有 `@ExcelProperty` 注解的字段添加 `@ExcelI18n`**，原本没有 Excel 导出注解的字段不要额外添加（不在代码层面改变 Excel 导出能力）
-> - **field.sql 的字段来源**：以 DO 的 JavaDoc 字段描述为准，每个字段都需要生成国际化 SQL，与 VO 上是否有 `@ExcelProperty` 无关
+> - **字段来源规则**：field.sql 以 DO + VO 字段的**并集**为准。
+- DO 继承父类后，字段是 DO 本身 + 父类字段的并集。父类字段（如 BaseDO 的 createTime、creator、updater、updateTime、deleted）也属于 DO 的字段。
+- VO 可能还有 DO 没有的字段（如 Flowable 自带的 `version`、`name`、`key`、`bpmnXml` 等字段）。
+- 实际操作中，需要**同时扫描 VO 和 DO**，取两者字段的并集，每个字段都要生成 field.sql 条目。
+
+**field.sql 的字段来源**：以 DO 的 JavaDoc 字段描述为准，每个字段都需要生成国际化 SQL，与 VO 上是否有 `@ExcelProperty` 无关。
 > - 字典值本身的翻译（如"系统配置"、"会员"）由字典模块统一处理，field.sql 只需生成字段名的国际化 key
 > - **字典类型字段**：将 `@DictFormat` 替换为 `@ExcelColumnSelect(i18n = true)`，`@ExcelProperty` 和 `@ExcelI18n` 均保留
 > - **`dictType` 的值必须使用 `DictTypeConstants` 常量类中定义的常量，禁止硬编码字符串**；如果常量不存在，需要先在 `DictTypeConstants` 中新增常量后再使用

@@ -2,6 +2,7 @@ package com.lz.module.bpm.controller.admin.task.vo.instance;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.lz.framework.common.validation.i18n.I18nAssertTrue;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.AssertTrue;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class BpmApprovalDetailReqVO {
     private String taskId; // 用于获取表单权限。1）从待审批/已审批界面进来时，传递 taskId 任务编号，可获取任务节点的变得权限
 
     @AssertTrue(message = "流程定义的编号和流程实例的编号不能同时为空")
+    @I18nAssertTrue(i18nKey = "bpm.approvalDetail.back.validProcessParam.assertTrue", message = "流程定义的编号和流程实例的编号不能同时为空")
     @JsonIgnore
     public boolean isValidProcessParam() {
         return StrUtil.isNotEmpty(processDefinitionId) || StrUtil.isNotEmpty(processInstanceId);

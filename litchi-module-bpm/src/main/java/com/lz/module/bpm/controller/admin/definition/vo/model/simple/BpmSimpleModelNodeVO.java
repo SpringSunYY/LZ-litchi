@@ -2,17 +2,17 @@ package com.lz.module.bpm.controller.admin.definition.vo.model.simple;
 
 import com.lz.framework.common.core.KeyValue;
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
+import com.lz.framework.common.validation.i18n.I18nURL;
 import com.lz.module.bpm.enums.definition.*;
 import com.lz.module.bpm.framework.flowable.core.enums.BpmTaskCandidateStrategyEnum;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.flowable.bpmn.model.IOParameter;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.List;
 import java.util.Map;
@@ -24,11 +24,11 @@ import java.util.Set;
 public class BpmSimpleModelNodeVO {
 
     @Schema(description = "模型节点编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "StartEvent_1")
-    @NotEmpty(message = "模型节点编号不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.modelNode.back.id.notEmpty", message = "模型节点编号不能为空")
     private String id;
 
     @Schema(description = "模型节点类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "模型节点类型不能为空")
+    @I18nNotNull(i18nKey = "bpm.modelNode.back.type.notNull", message = "模型节点类型不能为空")
     @InEnum(BpmSimpleModelNodeTypeEnum.class)
     private Integer type;
 
@@ -141,7 +141,7 @@ public class BpmSimpleModelNodeVO {
     public static class ListenerHandler {
 
         @Schema(description = "是否开启任务监听器", example = "false")
-        @NotNull(message = "是否开启任务监听器不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.listenerHandler.enable.notNull", message = "是否开启任务监听器不能为空")
         private Boolean enable;
 
         @Schema(description = "请求路径", example = "http://xxxxx")
@@ -161,15 +161,15 @@ public class BpmSimpleModelNodeVO {
 
         @Schema(description = "值类型", example = "1")
         @InEnum(BpmHttpRequestParamTypeEnum.class)
-        @NotNull(message = "值类型不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.httpRequestParam.type.notNull", message = "值类型不能为空")
         private Integer type;
 
         @Schema(description = "键", example = "xxx")
-        @NotEmpty(message = "键不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.httpRequestParam.key.notEmpty", message = "键不能为空")
         private String key;
 
         @Schema(description = "值", example = "xxx")
-        @NotEmpty(message = "值不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.httpRequestParam.value.notEmpty", message = "值不能为空")
         private String value;
 
     }
@@ -192,16 +192,16 @@ public class BpmSimpleModelNodeVO {
     public static class TimeoutHandler {
 
         @Schema(description = "是否开启超时处理", requiredMode = Schema.RequiredMode.REQUIRED, example = "false")
-        @NotNull(message = "是否开启超时处理不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.timeoutHandler.enable.notNull", message = "是否开启超时处理不能为空")
         private Boolean enable;
 
         @Schema(description = "任务超时未处理的行为", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        @NotNull(message = "任务超时未处理的行为不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.timeoutHandler.type.notNull", message = "任务超时未处理的行为不能为空")
         @InEnum(BpmUserTaskTimeoutHandlerTypeEnum.class)
         private Integer type;
 
         @Schema(description = "超时时间", requiredMode = Schema.RequiredMode.REQUIRED, example = "PT6H")
-        @NotEmpty(message = "超时时间不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.timeoutHandler.timeDuration.notEmpty", message = "超时时间不能为空")
         private String timeDuration;
 
         @Schema(description = "最大提醒次数", example = "1")
@@ -214,7 +214,7 @@ public class BpmSimpleModelNodeVO {
     public static class AssignEmptyHandler {
 
         @Schema(description = "空处理类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-        @NotNull(message = "空处理类型不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.assignEmptyHandler.type.notNull", message = "空处理类型不能为空")
         @InEnum(BpmUserTaskAssignEmptyHandlerTypeEnum.class)
         private Integer type;
 
@@ -266,11 +266,11 @@ public class BpmSimpleModelNodeVO {
     public static class ConditionGroups {
 
         @Schema(description = "条件组下的条件关系是否为与关系", example = "true")
-        @NotNull(message = "条件关系不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.conditionGroups.and.notNull", message = "条件关系不能为空")
         private Boolean and;
 
         @Schema(description = "条件组下的条件", example = "[]")
-        @NotEmpty(message = "条件不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.conditionGroups.conditions.notEmpty", message = "条件不能为空")
         private List<Condition> conditions;
     }
 
@@ -280,11 +280,11 @@ public class BpmSimpleModelNodeVO {
     public static class Condition {
 
         @Schema(description = "条件下的规则关系是否为与关系", example = "true")
-        @NotNull(message = "规则关系不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.condition.and.notNull", message = "规则关系不能为空")
         private Boolean and;
 
         @Schema(description = "条件下的规则", example = "[]")
-        @NotEmpty(message = "规则不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.condition.rules.notEmpty", message = "规则不能为空")
         private List<ConditionRule> rules;
     }
 
@@ -294,15 +294,15 @@ public class BpmSimpleModelNodeVO {
     public static class ConditionRule {
 
         @Schema(description = "运行符号", example = "==")
-        @NotEmpty(message = "运行符号不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.conditionRule.opCode.notEmpty", message = "运行符号不能为空")
         private String opCode;
 
         @Schema(description = "运算符左边的值,例如某个流程变量", example = "startUserId")
-        @NotEmpty(message = "运算符左边的值不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.conditionRule.leftSide.notEmpty", message = "运算符左边的值不能为空")
         private String leftSide;
 
         @Schema(description = "运算符右边的值", example = "1")
-        @NotEmpty(message = "运算符右边的值不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.conditionRule.rightSide.notEmpty", message = "运算符右边的值不能为空")
         private String rightSide;
     }
 
@@ -312,12 +312,12 @@ public class BpmSimpleModelNodeVO {
     public static class DelaySetting {
 
         @Schema(description = "延迟时间类型", example = "1")
-        @NotNull(message = "延迟时间类型不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.delaySetting.delayType.notNull", message = "延迟时间类型不能为空")
         @InEnum(BpmDelayTimerTypeEnum.class)
         private Integer delayType;
 
         @Schema(description = "延迟时间表达式", example = "PT1H,2025-01-01T00:00:00")
-        @NotEmpty(message = "延迟时间表达式不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.delaySetting.delayTime.notEmpty", message = "延迟时间表达式不能为空")
         private String delayTime;
     }
 
@@ -327,12 +327,12 @@ public class BpmSimpleModelNodeVO {
     public static class RouterSetting {
 
         @Schema(description = "节点 Id", example = "Activity_xxx") // 跳转到该节点
-        @NotEmpty(message = "节点 Id 不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.routerSetting.nodeId.notEmpty", message = "节点 Id 不能为空")
         private String nodeId;
 
         @Schema(description = "条件类型", example = "1")
         @InEnum(BpmSimpleModeConditionTypeEnum.class)
-        @NotNull(message = "条件类型不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.routerSetting.conditionType.notNull", message = "条件类型不能为空")
         private Integer conditionType;
 
         @Schema(description = "条件表达式", example = "${day>3}")
@@ -349,7 +349,7 @@ public class BpmSimpleModelNodeVO {
 
         @Schema(description = "触发器类型", example = "1")
         @InEnum(BpmTriggerTypeEnum.class)
-        @NotNull(message = "触发器类型不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.triggerSetting.type.notNull", message = "触发器类型不能为空")
         private Integer type;
 
         /**
@@ -368,8 +368,8 @@ public class BpmSimpleModelNodeVO {
         public static class HttpRequestTriggerSetting {
 
             @Schema(description = "请求路径", example = "http://127.0.0.1")
-            @NotEmpty(message = "请求 URL 不能为空")
-            @URL(message = "请求 URL 格式不正确")
+            @I18nNotEmpty(i18nKey = "bpm.modelNode.back.httpRequestTriggerSetting.url.notEmpty", message = "请求 URL 不能为空")
+            @I18nURL(i18nKey = "bpm.modelNode.back.httpRequestTriggerSetting.url.url", message = "请求 URL 格式不正确")
             private String url;
 
             @Schema(description = "请求头参数设置", example = "[]")
@@ -425,15 +425,15 @@ public class BpmSimpleModelNodeVO {
     public static class ChildProcessSetting {
 
         @Schema(description = "被调用流程", requiredMode = Schema.RequiredMode.REQUIRED, example = "xxx")
-        @NotEmpty(message = "被调用流程不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.childProcessSetting.calledProcessDefinitionKey.notEmpty", message = "被调用流程不能为空")
         private String calledProcessDefinitionKey;
 
         @Schema(description = "被调用流程名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "xxx")
-        @NotEmpty(message = "被调用流程名称不能为空")
+        @I18nNotEmpty(i18nKey = "bpm.modelNode.back.childProcessSetting.calledProcessDefinitionName.notEmpty", message = "被调用流程名称不能为空")
         private String calledProcessDefinitionName;
 
         @Schema(description = "是否异步", requiredMode = Schema.RequiredMode.REQUIRED, example = "false")
-        @NotNull(message = "是否异步不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.async.notNull", message = "是否异步不能为空")
         private Boolean async;
 
         @Schema(description = "输入参数(主->子)", example = "[]")
@@ -443,11 +443,11 @@ public class BpmSimpleModelNodeVO {
         private List<IOParameter> outVariables;
 
         @Schema(description = "是否自动跳过子流程发起节点", requiredMode = Schema.RequiredMode.REQUIRED, example = "false")
-        @NotNull(message = "是否自动跳过子流程发起节点不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.skipStartUserNode.notNull", message = "是否自动跳过子流程发起节点不能为空")
         private Boolean skipStartUserNode;
 
         @Schema(description = "子流程发起人配置", requiredMode = Schema.RequiredMode.REQUIRED, example = "{}")
-        @NotNull(message = "子流程发起人配置不能为空")
+        @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.startUserSetting.notNull", message = "子流程发起人配置不能为空")
         private StartUserSetting startUserSetting;
 
         @Schema(description = "超时设置", requiredMode = Schema.RequiredMode.REQUIRED, example = "{}")
@@ -462,7 +462,7 @@ public class BpmSimpleModelNodeVO {
         public static class StartUserSetting {
 
             @Schema(description = "子流程发起人类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-            @NotNull(message = "子流程发起人类型")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.startUserSetting.type.notNull", message = "子流程发起人类型")
             @InEnum(BpmChildProcessStartUserTypeEnum.class)
             private Integer type;
 
@@ -470,7 +470,7 @@ public class BpmSimpleModelNodeVO {
             private String formField;
 
             @Schema(description = "当子流程发起人为空时类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-            @NotNull(message = "当子流程发起人为空时类型不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.startUserSetting.emptyType.notNull", message = "当子流程发起人为空时类型不能为空")
             @InEnum(BpmChildProcessStartUserEmptyTypeEnum.class)
             private Integer emptyType;
 
@@ -482,7 +482,7 @@ public class BpmSimpleModelNodeVO {
         public static class TimeoutSetting {
 
             @Schema(description = "是否开启超时设置", requiredMode = Schema.RequiredMode.REQUIRED, example = "false")
-            @NotNull(message = "是否开启超时设置不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.timeoutSetting.enable.notNull", message = "是否开启超时设置不能为空")
             private Boolean enable;
 
             @Schema(description = "时间类型", example = "1")
@@ -500,24 +500,24 @@ public class BpmSimpleModelNodeVO {
         public static class MultiInstanceSetting {
 
             @Schema(description = "是否开启多实例", requiredMode = Schema.RequiredMode.REQUIRED, example = "false")
-            @NotNull(message = "是否开启多实例不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.multiInstanceSetting.enable.notNull", message = "是否开启多实例不能为空")
             private Boolean enable;
 
             @Schema(description = "是否串行", requiredMode = Schema.RequiredMode.REQUIRED, example = "false")
-            @NotNull(message = "是否串行不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.multiInstanceSetting.sequential.notNull", message = "是否串行不能为空")
             private Boolean sequential;
 
             @Schema(description = "完成比例", requiredMode = Schema.RequiredMode.REQUIRED, example = "100")
-            @NotNull(message = "完成比例不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.multiInstanceSetting.approveRatio.notNull", message = "完成比例不能为空")
             private Integer approveRatio;
 
             @Schema(description = "多实例来源类型", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-            @NotNull(message = "多实例来源类型不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.multiInstanceSetting.sourceType.notNull", message = "多实例来源类型不能为空")
             @InEnum(BpmChildProcessMultiInstanceSourceTypeEnum.class)
             private Integer sourceType;
 
             @Schema(description = "多实例来源", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-            @NotNull(message = "多实例来源不能为空")
+            @I18nNotNull(i18nKey = "bpm.modelNode.back.childProcessSetting.multiInstanceSetting.source.notNull", message = "多实例来源不能为空")
             private String source;
 
         }

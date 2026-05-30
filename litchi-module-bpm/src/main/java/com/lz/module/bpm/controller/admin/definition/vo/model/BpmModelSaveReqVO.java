@@ -1,6 +1,7 @@
 package com.lz.module.bpm.controller.admin.definition.vo.model;
 
 import com.lz.module.bpm.controller.admin.definition.vo.model.simple.BpmSimpleModelNodeVO;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
@@ -14,11 +15,11 @@ public class BpmModelSaveReqVO extends BpmModelMetaInfoVO {
     private String id;
 
     @Schema(description = "流程标识", requiredMode = Schema.RequiredMode.REQUIRED, example = "process_litchi")
-    @NotEmpty(message = "流程标识不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.processDefinitionInfo.back.key.notEmpty", message = "流程标识不能为空")
     private String key;
 
     @Schema(description = "流程名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "荔枝")
-    @NotEmpty(message = "流程名称不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.processDefinitionInfo.back.name.notEmpty", message = "流程名称不能为空")
     private String name;
 
     @Schema(description = "流程分类", example = "1")

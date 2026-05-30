@@ -2,6 +2,7 @@ package com.lz.module.bpm.controller.admin.task.vo.instance;
 
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.bpm.enums.task.BpmProcessInstanceStatusEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

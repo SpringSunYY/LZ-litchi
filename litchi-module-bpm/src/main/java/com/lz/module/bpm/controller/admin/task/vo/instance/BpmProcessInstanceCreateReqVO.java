@@ -3,7 +3,7 @@ package com.lz.module.bpm.controller.admin.task.vo.instance;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
-import jakarta.validation.constraints.NotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +12,7 @@ import java.util.Map;
 public class BpmProcessInstanceCreateReqVO {
 
     @Schema(description = "流程定义的编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1024")
-    @NotEmpty(message = "流程定义编号不能为空")
+    @I18nNotEmpty(i18nKey = "bpm.processInstance.back.processDefinitionId.notEmpty", message = "流程定义编号不能为空")
     private String processDefinitionId;
 
     @Schema(description = "变量实例（动态表单）")
