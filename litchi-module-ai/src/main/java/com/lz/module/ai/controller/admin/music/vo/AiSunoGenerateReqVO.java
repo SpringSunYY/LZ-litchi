@@ -1,9 +1,9 @@
 package com.lz.module.ai.controller.admin.music.vo;
 
+import com.lz.framework.common.validation.i18n.I18nNotBlank;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
 public class AiSunoGenerateReqVO {
 
     @Schema(description = "平台", requiredMode = Schema.RequiredMode.REQUIRED, example = "Suno")
-    @NotBlank(message = "平台不能为空")
+    @I18nNotBlank(i18nKey = "ai.music.back.platform.notBlank", message = "平台不能为空")
     private String platform; // 参见 AiPlatformEnum 枚举
 
     /**
@@ -21,7 +21,7 @@ public class AiSunoGenerateReqVO {
      * 2. 歌词模式：歌词 + 音乐风格 + 标题 + 模型
      */
     @Schema(description = "生成模式", requiredMode = Schema.RequiredMode.REQUIRED, example = "2")
-    @NotNull(message = "生成模式不能为空")
+    @I18nNotNull(i18nKey = "ai.music.back.generateMode.notNull", message = "生成模式不能为空")
     private Integer generateMode; // 参见 AiMusicGenerateModeEnum 枚举
 
     @Schema(description = "用于生成音乐音频的歌词提示",
@@ -45,7 +45,7 @@ public class AiSunoGenerateReqVO {
     private Boolean makeInstrumental;
 
     @Schema(description = "模型", requiredMode = Schema.RequiredMode.REQUIRED, example = "chirp-v3.5")
-    @NotEmpty(message = "模型不能为空")
+    @I18nNotEmpty(i18nKey = "ai.music.back.model.notEmpty", message = "模型不能为空")
     private String model;
 
     @Schema(description = "音乐风格", example = "[\"pop\",\"jazz\",\"punk\"]")

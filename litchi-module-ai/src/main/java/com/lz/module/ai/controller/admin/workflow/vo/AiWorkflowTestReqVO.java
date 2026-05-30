@@ -1,8 +1,8 @@
 package com.lz.module.ai.controller.admin.workflow.vo;
 
 import cn.hutool.core.util.StrUtil;
+import com.lz.framework.common.validation.i18n.I18nAssertTrue;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.AssertTrue;
 import lombok.Data;
 
 import java.util.Map;
@@ -20,7 +20,7 @@ public class AiWorkflowTestReqVO {
     @Schema(description = "参数", requiredMode = Schema.RequiredMode.REQUIRED, example = "{}")
     private Map<String, Object> params;
 
-    @AssertTrue(message = "工作流或模型，必须传递一个")
+    @I18nAssertTrue(i18nKey = "ai.workflow.back.assertTrue", message = "工作流或模型，必须传递一个")
     public boolean isGraphValid() {
         return id != null || StrUtil.isNotEmpty(graph);
     }

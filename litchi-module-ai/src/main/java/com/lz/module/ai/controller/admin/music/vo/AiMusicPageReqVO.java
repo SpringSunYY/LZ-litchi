@@ -23,11 +23,11 @@ public class AiMusicPageReqVO extends PageParam {
     private String title;
 
     @Schema(description = "音乐状态", example = "20")
-    @InEnum(AiMusicStatusEnum.class)
+    @InEnum(value = AiMusicStatusEnum.class, i18nKey = "ai.music.back.status.inEnum")
     private Integer status;
 
     @Schema(description = "生成模式", example = "1")
-    @InEnum(AiMusicGenerateModeEnum.class)
+    @InEnum(value = AiMusicGenerateModeEnum.class, i18nKey = "ai.music.back.generateMode.inEnum")
     private Integer generateMode;
 
     @Schema(description = "是否发布", example = "true")

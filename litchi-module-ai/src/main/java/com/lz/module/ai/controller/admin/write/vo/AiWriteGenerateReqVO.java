@@ -1,9 +1,9 @@
 package com.lz.module.ai.controller.admin.write.vo;
 
 import com.lz.framework.common.validation.InEnum;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import com.lz.module.ai.enums.write.AiWriteTypeEnum;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Schema(description = "管理后台 - AI 写作生成 Request VO")
@@ -21,19 +21,19 @@ public class AiWriteGenerateReqVO {
     private String originalContent;
 
     @Schema(description = "长度", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "长度不能为空")
+    @I18nNotNull(i18nKey = "ai.aiWrite.back.length.notNull", message = "长度不能为空")
     private Integer length;
 
     @Schema(description = "格式", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "格式不能为空")
+    @I18nNotNull(i18nKey = "ai.aiWrite.back.format.notNull", message = "格式不能为空")
     private Integer format;
 
     @Schema(description = "语气", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "语气不能为空")
+    @I18nNotNull(i18nKey = "ai.aiWrite.back.tone.notNull", message = "语气不能为空")
     private Integer tone;
 
     @Schema(description = "语言", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
-    @NotNull(message = "语言不能为空")
+    @I18nNotNull(i18nKey = "ai.aiWrite.back.language.notNull", message = "语言不能为空")
     private Integer language;
 
 }

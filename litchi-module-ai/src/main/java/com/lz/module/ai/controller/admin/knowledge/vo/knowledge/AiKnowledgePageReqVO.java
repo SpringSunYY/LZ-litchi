@@ -19,7 +19,7 @@ public class AiKnowledgePageReqVO extends PageParam {
     private String name;
 
     @Schema(description = "是否启用", example = "1")
-    @InEnum(CommonStatusEnum.class)
+    @InEnum(value = CommonStatusEnum.class)
     private Integer status;
 
     @Schema(description = "创建时间")

@@ -1,7 +1,7 @@
 package com.lz.module.ai.controller.admin.knowledge.vo.segment;
 
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 @Schema(description = "管理后台 - AI 新增/修改知识库段落 request VO")
@@ -15,7 +15,7 @@ public class AiKnowledgeSegmentSaveReqVO {
     private Long documentId;
 
     @Schema(description = "切片内容", requiredMode = Schema.RequiredMode.REQUIRED, example = "Java 开发手册")
-    @NotEmpty(message = "切片内容不能为空")
+    @I18nNotEmpty(i18nKey = "ai.knowledgeSegment.back.content.notEmpty", message = "切片内容不能为空")
     private String content;
 
 }

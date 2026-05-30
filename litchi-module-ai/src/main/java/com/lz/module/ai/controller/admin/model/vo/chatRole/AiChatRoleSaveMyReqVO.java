@@ -1,7 +1,8 @@
 package com.lz.module.ai.controller.admin.model.vo.chatRole;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nURL;
 import lombok.Data;
 import org.hibernate.validator.constraints.URL;
 
@@ -15,20 +16,20 @@ public class AiChatRoleSaveMyReqVO {
     private Long id;
 
     @Schema(description = "角色名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "李四")
-    @NotEmpty(message = "角色名称不能为空")
+    @I18nNotEmpty(i18nKey = "ai.chatRole.back.name.notEmpty", message = "角色名称不能为空")
     private String name;
 
     @Schema(description = "角色头像", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://www.iocoder.cn/1.png")
-    @NotEmpty(message = "角色头像不能为空")
-    @URL(message = "角色头像必须是 URL 格式")
+    @I18nNotEmpty(i18nKey = "ai.chatRole.back.avatar.notEmpty", message = "角色头像不能为空")
+    @I18nURL(i18nKey = "ai.chatRole.back.avatar.url", message = "角色头像必须是 URL 格式")
     private String avatar;
 
     @Schema(description = "角色描述", requiredMode = Schema.RequiredMode.REQUIRED, example = "你说的对")
-    @NotEmpty(message = "角色描述不能为空")
+    @I18nNotEmpty(i18nKey = "ai.chatRole.back.description.notEmpty", message = "角色描述不能为空")
     private String description;
 
     @Schema(description = "角色设定", requiredMode = Schema.RequiredMode.REQUIRED, example = "现在开始你扮演一位程序员，你是一名优秀的程序员，具有很强的逻辑思维能力，总能高效的解决问题")
-    @NotEmpty(message = "角色设定不能为空")
+    @I18nNotEmpty(i18nKey = "ai.chatRole.back.systemMessage.notEmpty", message = "角色设定不能为空")
     private String systemMessage;
 
     @Schema(description = "引用的知识库编号列表", example = "1,2,3")

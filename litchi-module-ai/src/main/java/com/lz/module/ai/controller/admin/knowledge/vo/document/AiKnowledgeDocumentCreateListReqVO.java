@@ -1,11 +1,11 @@
 package com.lz.module.ai.controller.admin.knowledge.vo.document;
 
+import com.lz.framework.common.validation.i18n.I18nNotBlank;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
+import com.lz.framework.common.validation.i18n.I18nURL;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import org.hibernate.validator.constraints.URL;
 
 import java.util.List;
 
@@ -14,15 +14,15 @@ import java.util.List;
 public class AiKnowledgeDocumentCreateListReqVO {
 
     @Schema(description = "知识库编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1204")
-    @NotNull(message = "知识库编号不能为空")
+    @I18nNotNull(i18nKey = "ai.knowledgeDocument.back.knowledgeId.notNull", message = "知识库编号不能为空")
     private Long knowledgeId;
 
     @Schema(description = "分段的最大 Token 数", requiredMode = Schema.RequiredMode.REQUIRED, example = "800")
-    @NotNull(message = "分段的最大 Token 数不能为空")
+    @I18nNotNull(i18nKey = "ai.knowledgeDocument.back.segmentMaxTokens.notNull", message = "分段的最大 Token 数不能为空")
     private Integer segmentMaxTokens;
 
     @Schema(description = "文档列表", requiredMode = Schema.RequiredMode.REQUIRED)
-    @NotEmpty(message = "文档列表不能为空")
+    @I18nNotEmpty(i18nKey = "ai.knowledgeDocument.back.list.notEmpty", message = "文档列表不能为空")
     private List<Document> list;
 
     @Schema(description = "文档")
@@ -30,11 +30,11 @@ public class AiKnowledgeDocumentCreateListReqVO {
     public static class Document {
 
         @Schema(description = "文档名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "三方登陆")
-        @NotBlank(message = "文档名称不能为空")
+        @I18nNotBlank(i18nKey = "ai.knowledgeDocument.back.name.notBlank", message = "文档名称不能为空")
         private String name;
 
         @Schema(description = "文档 URL", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://doc.iocoder.cn")
-        @URL(message = "文档 URL 格式不正确")
+        @I18nURL(i18nKey = "ai.knowledgeDocument.back.url.url", message = "文档 URL 格式不正确")
         private String url;
 
     }

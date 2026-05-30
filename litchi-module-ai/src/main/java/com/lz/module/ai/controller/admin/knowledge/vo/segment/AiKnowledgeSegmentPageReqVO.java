@@ -17,7 +17,7 @@ public class AiKnowledgeSegmentPageReqVO extends PageParam {
     private String content;
 
     @Schema(description = "分段状态", example = "1")
-    @InEnum(CommonStatusEnum.class)
+    @InEnum(value = CommonStatusEnum.class)
     private Integer status;
 
 }
