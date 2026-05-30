@@ -52,3 +52,4 @@ application-my.yaml
 
 /litchi-ui-app/unpackage/
 **/.DS_Store
+/i18n_consolidated.sql
