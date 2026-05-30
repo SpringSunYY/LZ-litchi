@@ -417,7 +417,7 @@ VALUES ('OAuth2用户-岗位编号', 'system.oauth2User.field.postId', @LOCALE_Z
 -- 36. post.name - 岗位名称
 DELETE FROM infra_i18n_key WHERE message_key = 'system.oauth2User.field.postName';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('OAuth2用户-岗位名称', 'system.oauth2User.field.postName', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FORM, @ORDER_NUM, @REMARK, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('OAuth2用户-岗位名称', 'system.oauth2User.field.postName', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FORM, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 DELETE FROM infra_i18n_message WHERE message_key = 'system.oauth2User.field.postName' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('OAuth2用户-岗位名称', 'system.oauth2User.field.postName', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FORM, 'post name', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
