@@ -1,4 +1,4 @@
-package com.lz.module.infra.controller.admin.i18n.vo;
+package com.lz.module.infra.controller.admin.i18n.vo.i18nLocale;
 
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
 import com.lz.framework.excel.core.annotations.ExcelI18n;

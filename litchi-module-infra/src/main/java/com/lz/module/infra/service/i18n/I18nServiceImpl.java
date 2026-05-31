@@ -2,8 +2,8 @@ package com.lz.module.infra.service.i18n;
 
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.infra.constants.RedisKeyConstants;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSimpRespVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSimpRespVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageSimpVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;

@@ -1,4 +1,4 @@
-package com.lz.module.infra.controller.admin.i18n.vo;
+package com.lz.module.infra.controller.admin.i18n.vo.i18nMessage;
 
 import lombok.*;
 import io.swagger.v3.oas.annotations.media.Schema;

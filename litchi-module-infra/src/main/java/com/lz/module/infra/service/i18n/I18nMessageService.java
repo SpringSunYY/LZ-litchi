@@ -3,9 +3,7 @@ package com.lz.module.infra.service.i18n;
 import java.util.*;
 
 import com.lz.framework.common.core.DictI18nDTO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
 import jakarta.validation.*;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.framework.common.pojo.PageResult;
@@ -105,4 +103,12 @@ public interface I18nMessageService {
      * @param dictDataMap 字典数据
      */
     boolean saveI18nMessage(Map<String, DictI18nDTO> dictDataMap);
+
+    /**
+     * 导入国际化信息
+     *
+     * @param list 国际化信息列表
+     * @return 导入结果
+     */
+    I18nMessageExcelRespVO importI18nMessageList(List<I18nMessageExcelVO> list);
 }

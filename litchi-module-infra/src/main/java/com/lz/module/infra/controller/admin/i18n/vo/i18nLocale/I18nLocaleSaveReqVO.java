@@ -1,10 +1,8 @@
-package com.lz.module.infra.controller.admin.i18n.vo;
+package com.lz.module.infra.controller.admin.i18n.vo.i18nLocale;
 
 import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import com.lz.framework.common.validation.i18n.I18nNotNull;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 @Schema(description = "管理后台 - 国际化国家新增/修改 Request VO")

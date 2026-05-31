@@ -27,4 +27,5 @@ public interface DictTypeConstants {
     String I18N_LOCALE_STATUS = "infra_i18n_locale_status"; // 国际化国家状态
     String I18N_LOCALE_IS_DEFAULT = "infra_i18n_locale_is_default"; // 国际化国家是否默认
 
+    String SYSTEM_MODULE_TYPE = "system_module_type";// 系统模块
 }

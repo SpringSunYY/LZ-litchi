@@ -2,8 +2,8 @@ package com.lz.module.infra.controller.admin.i18n;
 
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSimpRespVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSimpRespVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageSimpVO;
 import com.lz.module.infra.service.i18n.I18nService;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.annotation.Resource;

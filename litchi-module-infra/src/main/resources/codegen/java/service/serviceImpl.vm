@@ -429,7 +429,7 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
     @Transactional(rollbackFor = Exception.class)
     public ${excelRespVOClass} import${simpleClassName}List(List<${excelReqVOClass}> list) {
         if (CollUtil.isEmpty(list)) {
-            throw exception(ERROR_CODE_IMPORT_DATA_EMPTY);
+            throw exception(${simpleClassName_underlineCase.toUpperCase()}_IMPORT_DATA_EMPTY);
         }
         List<${table.className}DO> createList = new ArrayList<>(list.size());
         for (int i = 0; i < list.size(); i++) {

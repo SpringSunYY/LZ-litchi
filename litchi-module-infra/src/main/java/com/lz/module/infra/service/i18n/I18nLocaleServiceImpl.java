@@ -8,8 +8,8 @@ import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.redis.core.RedisUtils;
 import com.lz.module.infra.constants.RedisKeyConstants;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocalePageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocalePageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nLocaleMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleIsDefaultEnum;
@@ -160,7 +160,8 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         queryWrapper.and(wrapper ->
                 wrapper.eq(I18nLocaleDO::getLocaleTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
                         .or()
-                        .eq(I18nLocaleDO::getLocaleTarget, localeTarget));
+                        .eq(I18nLocaleDO::getLocaleTarget, localeTarget)
+                        .eq(I18nLocaleDO::getLocaleStatus, InfraI18nLocaleStatusEnum.LOCALE_STATUS_0.getStatus()));
         queryWrapper.eq(I18nLocaleDO::getLocaleStatus, InfraI18nLocaleStatusEnum.LOCALE_STATUS_0.getStatus());
         queryWrapper.orderByAsc(I18nLocaleDO::getOrderNum);
         return i18nLocaleMapper.selectList(queryWrapper);
@@ -185,6 +186,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                 new LambdaQueryWrapperX<I18nLocaleDO>()
                         .in(I18nLocaleDO::getLocaleTarget, localeTarget, InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())
                         .eq(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus())
+                        .eq(I18nLocaleDO::getLocaleStatus, InfraI18nLocaleStatusEnum.LOCALE_STATUS_0.getStatus())
                         .orderByDesc(I18nLocaleDO::getLocaleTarget)
                         .last("LIMIT 1")
         );

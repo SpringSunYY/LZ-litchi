@@ -9,7 +9,10 @@ import com.alibaba.excel.metadata.GlobalConfiguration;
 import com.alibaba.excel.metadata.data.ReadCellData;
 import com.alibaba.excel.metadata.data.WriteCellData;
 import com.alibaba.excel.metadata.property.ExcelContentProperty;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
+import com.lz.framework.common.util.cache.CacheUtils;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
@@ -17,8 +20,12 @@ import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelType;
 import com.lz.framework.common.util.i18n.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.NonNull;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 /**
  * Excel 字典数据转换器
@@ -32,6 +39,44 @@ import java.util.List;
  */
 @Slf4j
 public class DictConvert implements Converter<Object> {
+
+    /**
+     * 静态缓存：dictType + importLabel -> matchedLabel（字典的 label 值）
+     * <p>
+     * 用于导入时，通过国际化翻译结果反向匹配字典 label。
+     * 同一个 dictType 的同一个 importLabel，在缓存有效期内只计算一次。
+     * <p>
+     * 使用 Optional&lt;String&gt; 区分"未匹配到"和"查询异常"，避免用 __NULL__ 魔法值。
+     */
+    private static final LoadingCache<String, Optional<String>> MATCH_CACHE = CacheUtils.buildAsyncReloadingCache(
+            Duration.ofMinutes(5L),
+            new CacheLoader<String, Optional<String>>() {
+                @Override
+                public Optional<String> load(String cacheKey) {
+                    String[] parts = cacheKey.split("::", 2);
+                    String dictType = parts[0];
+                    String importLabel = parts[1];
+                    return doMatchLabelByI18n(dictType, importLabel);
+                }
+            });
+
+    /**
+     * 静态缓存：dictType + value -> translatedLabel（国际化翻译后的 label）
+     * <p>
+     * 用于导出时，将字典 value 翻译为当前语言的 label。
+     * 同一个 dictType 的同一个 value，在缓存有效期内只翻译一次。
+     */
+    private static final LoadingCache<String, String> TRANSLATE_CACHE = CacheUtils.buildAsyncReloadingCache(
+            Duration.ofMinutes(5L),
+            new CacheLoader<String, String>() {
+                @Override
+                public String load(String cacheKey) {
+                    String[] parts = cacheKey.split("::", 2);
+                    String dictType = parts[0];
+                    String value = parts[1];
+                    return doTranslateLabelByI18n(dictType, value);
+                }
+            });
 
     @Override
     public Class<?> supportJavaTypeKey() {
@@ -100,7 +145,8 @@ public class DictConvert implements Converter<Object> {
             }
             // @ExcelColumnSelect(i18n=true) 下拉选项里只有翻译后的 label，匹配不到就不要再兜底了
             if (isColumnSelectI18n) {
-                return label;
+                // 匹配失败时，尝试将 label 转换为字段的声明类型，避免 ClassCastException
+                return Convert.convert(contentProperty.getField().getType(), label);
             }
         }
 
@@ -152,11 +198,27 @@ public class DictConvert implements Converter<Object> {
     }
 
     /**
-     * 导出时，根据字典值查询国际化后的标签
-     * <p>
-     * 直接取字典数据中的国际化 key 查询翻译，如果为空则使用原始 label。
+     * 导出时，根据字典值查询国际化后的标签（带静态缓存）
      */
     private String translateLabelByI18n(String dictType, String value) {
+        String cacheKey = dictType + "::" + value;
+        String translated = TRANSLATE_CACHE.getUnchecked(cacheKey);
+        return StrUtil.isNotEmpty(translated) ? translated : value;
+    }
+
+    /**
+     * 导入时，尝试用国际化翻译匹配原始 label（带静态缓存）
+     */
+    private String tryMatchLabelByI18n(String dictType, String importLabel) {
+        String cacheKey = dictType + "::" + importLabel;
+        Optional<String> result = MATCH_CACHE.getUnchecked(cacheKey);
+        return result.orElse(null);
+    }
+
+    /**
+     * 导出时，翻译标签的实际逻辑（由 LoadingCache 调用）
+     */
+    private static String doTranslateLabelByI18n(String dictType, String value) {
         String label = DictFrameworkUtils.parseDictDataLabel(dictType, value);
         if (label == null) {
             return value;
@@ -172,17 +234,15 @@ public class DictConvert implements Converter<Object> {
     }
 
     /**
-     * 导入时，尝试用国际化翻译匹配原始 label
+     * 导入时，匹配 label 的实际逻辑（由 LoadingCache 调用）
      * <p>
-     * 1. 先用当前语言的国际化 key 查询翻译，匹配原始 label
-     * 2. 如果未匹配到，查询所有语言的翻译，遍历匹配
-     * 3. 如果仍未匹配到，返回 null，由后续逻辑处理
+     * 返回 Optional：如果匹配到了则返回 matched label，否则返回 empty。
      */
-    private String tryMatchLabelByI18n(String dictType, String importLabel) {
+    private static Optional<String> doMatchLabelByI18n(String dictType, String importLabel) {
         List<DictDataRespDTO> dictDatas = DictFrameworkUtils.getDictDataList(dictType);
         if (CollUtil.isEmpty(dictDatas)) {
-            log.warn("[tryMatchLabelByI18n] dictType={} has no data", dictType);
-            return null;
+            log.warn("[doMatchLabelByI18n] dictType={} has no data", dictType);
+            return Optional.empty();
         }
 
         // 1. 用当前语言的国际化 key 查询翻译，直接匹配 import label
@@ -190,7 +250,7 @@ public class DictConvert implements Converter<Object> {
             if (StrUtil.isNotEmpty(data.getI18n())) {
                 String translated = I18nUtils.getMessage(data.getI18n());
                 if (importLabel.equals(translated)) {
-                    return data.getLabel();
+                    return Optional.ofNullable(data.getLabel());
                 }
             }
         }
@@ -200,13 +260,13 @@ public class DictConvert implements Converter<Object> {
             if (StrUtil.isNotEmpty(data.getI18n())) {
                 List<String> allMessages = I18nUtils.getAllLocaleMessages(data.getI18n());
                 if (CollUtil.contains(allMessages, importLabel)) {
-                    return data.getLabel();
+                    return Optional.ofNullable(data.getLabel());
                 }
             }
         }
 
-        log.warn("[tryMatchLabelByI18n] no match found for importLabel={}, dictType={}", importLabel, dictType);
-        return null;
+        log.warn("[doMatchLabelByI18n] no match found for importLabel={}, dictType={}", importLabel, dictType);
+        return Optional.empty();
     }
 
     /**
@@ -218,7 +278,7 @@ public class DictConvert implements Converter<Object> {
             return null;
         }
         for (DictDataRespDTO data : dictDatas) {
-            if (value.equals(data.getValue())) {
+            if (Objects.equals(value, data.getValue())) {
                 return data;
             }
         }

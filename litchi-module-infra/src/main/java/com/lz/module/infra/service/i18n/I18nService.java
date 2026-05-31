@@ -1,7 +1,7 @@
 package com.lz.module.infra.service.i18n;
 
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSimpRespVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSimpRespVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageSimpVO;
 
 import java.util.List;
 

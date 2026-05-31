@@ -4,13 +4,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.lz.framework.common.core.DictI18nDTO;
 import com.lz.framework.common.enums.SystemModuleTypeEnum;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.common.util.collection.ArrayUtils;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
+import com.lz.framework.common.util.validation.ValidationUtils;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.constants.RedisKeyConstants;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSimpVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
@@ -33,8 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
-import static com.lz.module.infra.enums.ErrorCodeConstants.I18N_MESSAGE_EXISTS;
-import static com.lz.module.infra.enums.ErrorCodeConstants.I18N_MESSAGE_NOT_EXISTS;
+import static com.lz.module.infra.enums.ErrorCodeConstants.*;
 
 /**
  * 国际化信息 Service 实现类
@@ -157,6 +156,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     }
 
     @Override
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     public List<I18nMessageDO> getMessageListByMessageKey(String messageKey) {
         return i18nMessageMapper.selectListByMessageKey(messageKey);
     }
@@ -226,6 +226,27 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         }));
     }
 
+    @Override
+    public I18nMessageExcelRespVO importI18nMessageList(List<I18nMessageExcelVO> list) {
+        if (ArrayUtils.isEmpty(list)) {
+            throw exception(I18N_MESSAGE_IMPORT_DATA_EMPTY);
+        }
+        //判断必填数据
+        for (int i = 0; i < list.size(); i++) {
+            int index = i + 1;
+            I18nMessageExcelVO i18nMessageExcelVO = list.get(i);
+            ValidationUtils.validate(BeanUtils.toBean(i18nMessageExcelVO, I18nMessageSaveReqVO.class));
+        }
+        //首先去重key，查询key是否存在，如果不存在则直接新增key
+        List<String> allKeys = list.stream().map(I18nMessageExcelVO::getMessageKey).distinct().toList();
+        List<I18nKeyDO> i18nKeyDOS = i18nKeyMapper.selectList(new LambdaQueryWrapper<I18nKeyDO>()
+                .in(I18nKeyDO::getMessageKey, allKeys));
+        List<String> existKeys = i18nKeyDOS.stream().map(I18nKeyDO::getMessageKey).toList();
+        //删除已存在的key
+        allKeys.removeAll(existKeys);
+        return null;
+    }
+
     private static @NonNull I18nMessageDO getI18nMessageDO(String key, DictI18nDTO dictI18nDTO, String defaultLocale) {
         I18nMessageDO i18nMessageDO = new I18nMessageDO();
         i18nMessageDO.setMessageName(dictI18nDTO.getDictName());
@@ -234,7 +255,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         i18nMessageDO.setLocaleTarget(InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus());
         i18nMessageDO.setIsSystem(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus());
         i18nMessageDO.setModuleType(SystemModuleTypeEnum.MODULE_TYPE_SYSTEM.getStatus());
-        i18nMessageDO.setUseType(InfraI18nKeyUseTypeEnum.KEY_USE_TYPE_0.getStatus());
+        i18nMessageDO.setUseType(InfraI18nKeyUseTypeEnum.KEY_USE_TYPE_7.getStatus());
         i18nMessageDO.setMessage(dictI18nDTO.getLabel());
         i18nMessageDO.setRemark("system auto generate");
         return i18nMessageDO;
@@ -246,7 +267,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         i18nKeyDO.setMessageKey(key);
         i18nKeyDO.setIsSystem(InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_0.getStatus());
         i18nKeyDO.setModuleType(SystemModuleTypeEnum.MODULE_TYPE_SYSTEM.getStatus());
-        i18nKeyDO.setUseType(InfraI18nKeyUseTypeEnum.KEY_USE_TYPE_0.getStatus());
+        i18nKeyDO.setUseType(InfraI18nKeyUseTypeEnum.KEY_USE_TYPE_7.getStatus());
         i18nKeyDO.setOrderNum(0);
         i18nKeyDO.setRemark("system auto generate");
         return i18nKeyDO;

@@ -1,8 +1,8 @@
 package com.lz.module.infra.service.i18n;
 
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocalePageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nLocaleSaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocalePageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nLocaleDO;
 import jakarta.validation.Valid;
 

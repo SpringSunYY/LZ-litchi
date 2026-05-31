@@ -2,8 +2,8 @@ package com.lz.module.infra.service.i18n;
 
 import java.util.*;
 
-import com.lz.module.infra.controller.admin.i18n.vo.I18nKeyPageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nKeySaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyPageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeySaveReqVO;
 import jakarta.validation.*;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
 import com.lz.framework.common.pojo.PageResult;

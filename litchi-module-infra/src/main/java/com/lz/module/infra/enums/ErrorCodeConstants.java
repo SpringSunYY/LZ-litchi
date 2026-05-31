@@ -87,5 +87,5 @@ public interface ErrorCodeConstants {
     ErrorCode I18N_KEY_PROHIBIT_DELETE_SYSTEM = new ErrorCode(1_001_008_007, "infra.i18nKey.back.systemProhibitDelete", "国际化键名不允许删除内置键");
     ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "infra.i18nMessage.back.exists", "国际化信息已存在");
     ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_001_008_010, "infra.i18nMessage.back.notExists", "国际化信息不存在");
-
+    ErrorCode I18N_MESSAGE_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100, "infra.back.import.dataEmpty", "导入数据不能为空！");
 }

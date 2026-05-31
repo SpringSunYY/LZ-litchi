@@ -450,7 +450,7 @@ public class CodegenEngine {
         bindingMap.put("simpleClassName_underlineCase", toUnderlineCase(simpleClassName)); // 将 DictType 转换成 dict_type
         bindingMap.put("classNameVar", classNameVar); // 将 DictType 转换成 dictType，用于变量
         // 将 DictType 转换成 dict-type
-        String simpleClassNameStrikeCase = toSymbolCase(simpleClassName, '-');
+        String simpleClassNameStrikeCase = toSymbolCase(classNameVar, '-');
         bindingMap.put("simpleClassName_strikeCase", simpleClassNameStrikeCase);
         // permission 前缀
         bindingMap.put("permissionPrefix", table.getModuleName() + ":" + simpleClassNameStrikeCase);

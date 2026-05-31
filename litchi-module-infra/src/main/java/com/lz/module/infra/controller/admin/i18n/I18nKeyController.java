@@ -1,8 +1,8 @@
 package com.lz.module.infra.controller.admin.i18n;
 
-import com.lz.module.infra.controller.admin.i18n.vo.I18nKeyPageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nKeyRespVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nKeySaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyPageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyRespVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeySaveReqVO;
 import org.springframework.web.bind.annotation.*;
 import jakarta.annotation.Resource;
 import org.springframework.validation.annotation.Validated;

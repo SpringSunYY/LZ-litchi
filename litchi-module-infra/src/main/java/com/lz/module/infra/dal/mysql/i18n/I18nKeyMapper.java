@@ -3,7 +3,7 @@ package com.lz.module.infra.dal.mysql.i18n;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.mybatis.core.mapper.BaseMapperX;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nKeyPageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyPageReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
 import org.apache.ibatis.annotations.Mapper;
 

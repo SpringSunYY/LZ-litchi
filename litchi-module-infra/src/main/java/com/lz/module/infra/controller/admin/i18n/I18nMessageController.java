@@ -6,9 +6,7 @@ import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.excel.core.util.ExcelUtils;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessagePageReqVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageRespVO;
-import com.lz.module.infra.controller.admin.i18n.vo.I18nMessageSaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.service.i18n.I18nMessageService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -20,8 +18,10 @@ import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 import static com.lz.framework.apilog.core.enums.OperateTypeEnum.EXPORT;
@@ -95,8 +95,43 @@ public class I18nMessageController {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<I18nMessageDO> list = i18nMessageService.getI18nMessagePage(pageReqVO).getList();
         // 导出 Excel
-        ExcelUtils.write(response, "国际化信息.xls", "数据", I18nMessageRespVO.class,
-                BeanUtils.toBean(list, I18nMessageRespVO.class));
+        ExcelUtils.write(response, "国际化信息.xls", "数据", I18nMessageExcelVO.class,
+                BeanUtils.toBean(list, I18nMessageExcelVO.class));
     }
 
+    /**
+     * 获取国际化信息导入模板
+     */
+    @GetMapping("/get-import-template")
+    @PreAuthorize("@ss.hasPermission('infra:I18n-message:import')")
+    @Operation(summary = "获得国际化信息导入模板")
+    public void importTemplate(HttpServletResponse response) throws IOException {
+        // 手动创建导出 demo
+        List<I18nMessageExcelVO> list = Collections.singletonList(
+                I18nMessageExcelVO.builder()
+                        .messageName("赵六")
+                        .messageKey(null)
+                        .locale(null)
+                        .target(null)
+                        .isSystem(null)
+                        .moduleType("system")
+                        .useType(0)
+                        .message(null)
+                        .remark("你说的对")
+                        .build());
+        // 输出
+        ExcelUtils.write(response, "国际化信息导入模板.xls", "国际化信息模板", I18nMessageExcelVO.class, list);
+    }
+
+    /**
+     * 导入国际化信息
+     */
+    @PostMapping("/import")
+    @Operation(summary = "导入国际化信息")
+    @Parameter(name = "file", description = "Excel 文件", required = true)
+    @PreAuthorize("@ss.hasPermission('infra:i18n-message:import')")
+    public CommonResult<I18nMessageExcelRespVO> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
+        List<I18nMessageExcelVO> list = ExcelUtils.read(file, I18nMessageExcelVO.class);
+        return success(i18nMessageService.importI18nMessageList(list));
+    }
 }
