@@ -1,8 +1,13 @@
 package ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo;
 
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 import java.util.*;
+#if ($isI18n)
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
+#end
 import ${jakartaPackage}.validation.constraints.*;
 ## 处理 BigDecimal 字段的引入
 #foreach ($column in $columns)
@@ -43,10 +48,18 @@ public class ${sceneEnum.prefixClass}${table.className}SaveReqVO {
     @Schema(description = "${column.columnComment}"#if (!${column.nullable}), requiredMode = Schema.RequiredMode.REQUIRED#end#if ("$!column.example" != ""), example = "${column.example}"#end)
 ## 2. 处理 Validator 参数校验
 #if (!${column.nullable} && !${column.primaryKey})
+#if ($isI18n)
+#if (${column.javaType} == 'String')
+    @I18nNotEmpty(i18nKey = "${i18nModuleType}.${table.businessName}.back.${column.javaField}.notEmpty", message = "${column.columnComment}不能为空")
+#else
+    @I18nNotNull(i18nKey = "${i18nModuleType}.${table.businessName}.back.${column.javaField}.notNull", message = "${column.columnComment}不能为空")
+#end
+#else
 #if (${column.javaType} == 'String')
     @NotEmpty(message = "${column.columnComment}不能为空")
 #else
     @NotNull(message = "${column.columnComment}不能为空")
+#end
 #end
 #end
 ## 3. 处理字段定义
