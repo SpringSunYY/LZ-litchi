@@ -1,7 +1,7 @@
 package com.lz.framework.common.validation;
 
 import com.lz.framework.common.core.ArrayValuable;
-import com.lz.framework.common.enums.I18nErrorCodeConstants;
+import com.lz.framework.common.exception.enums.GlobalErrorCodeConstants;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
@@ -45,7 +45,7 @@ public @interface InEnum {
      *
      * @return i18n key
      */
-    String i18nKey() default I18nErrorCodeConstants.VALIDATION_IN_ENUM;
+    String i18nKey() default GlobalErrorCodeConstants.VALIDATION_IN_ENUM;
 
     /**
      * @return 实现 ArrayValuable 接口的类

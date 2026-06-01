@@ -1,44 +1,44 @@
 package com.lz.framework.excel.core.handler;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
-import com.alibaba.excel.write.handler.WorkbookWriteHandler;
-import com.alibaba.excel.write.metadata.holder.WriteWorkbookHolder;
-import com.lz.framework.excel.core.annotations.ExcelI18n;
+import com.alibaba.excel.write.handler.RowWriteHandler;
+import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
+import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.annotations.ExcelType;
 import com.lz.framework.common.util.i18n.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Excel 表头国际化处理器
+ * Excel 表头国际化处理器（写入 header 行时直接替换）
  *
- * @author YY
+ * @author lz
  */
 @Slf4j
-public class I18nHeadWriteHandler implements WorkbookWriteHandler {
+public class I18nHeadWriteHandler implements RowWriteHandler {
 
-    private static final String DICT_SHEET_NAME = "dict sheet";
-
-    private final Map<Integer, String> translatedHeadMap = new LinkedHashMap<>();
+    /**
+     * 列索引 -> 翻译后的值
+     */
+    private final Map<Integer, String> i18nHeadMap = new LinkedHashMap<>();
 
     public I18nHeadWriteHandler(Class<?> head) {
-        buildTranslatedHeadMap(head);
+        buildI18nHeadMap(head);
     }
 
-    private void buildTranslatedHeadMap(Class<?> head) {
+    private void buildI18nHeadMap(Class<?> head) {
         int colIndex = 0;
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
 
@@ -62,8 +62,8 @@ public class I18nHeadWriteHandler implements WorkbookWriteHandler {
 
             if (excelI18n != null) {
                 String translated = I18nUtils.getMessage(excelI18n.i18nKey());
-                if (translated != null) {
-                    translatedHeadMap.put(fieldColIndex, translated);
+                if (StrUtil.isNotEmpty(translated)) {
+                    i18nHeadMap.put(fieldColIndex, translated);
                 }
             }
 
@@ -85,32 +85,21 @@ public class I18nHeadWriteHandler implements WorkbookWriteHandler {
     }
 
     @Override
-    public void afterWorkbookDispose(WriteWorkbookHolder writeWorkbookHolder) {
-        if (CollUtil.isEmpty(translatedHeadMap)) {
+    public void afterRowDispose(WriteSheetHolder writeSheetHolder, WriteTableHolder writeTableHolder,
+                               Row row, Integer relativeRowIndex, Boolean isHead) {
+        // 只处理 header 行
+        if (isHead == null || !isHead) {
+            return;
+        }
+        if (CollUtil.isEmpty(i18nHeadMap)) {
             return;
         }
 
-        Workbook workbook = writeWorkbookHolder.getWorkbook();
-        Iterator<Sheet> sheetIterator = workbook.sheetIterator();
-        while (sheetIterator.hasNext()) {
-            Sheet sheet = sheetIterator.next();
-            // 跳过字典 sheet，避免修改下拉数据源
-            if (DICT_SHEET_NAME.equals(sheet.getSheetName())) {
-                continue;
-            }
-
-            Row headerRow = sheet.getRow(0);
-            if (headerRow == null) {
-                continue;
-            }
-
-            for (Map.Entry<Integer, String> entry : translatedHeadMap.entrySet()) {
-                Cell cell = headerRow.getCell(entry.getKey());
-                if (cell != null) {
-                    cell.setCellValue(entry.getValue());
-                }
+        for (Map.Entry<Integer, String> entry : i18nHeadMap.entrySet()) {
+            Cell cell = row.getCell(entry.getKey());
+            if (cell != null) {
+                cell.setCellValue(entry.getValue());
             }
         }
     }
-
 }

@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -31,6 +32,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/infra/i18n/message")
 @Validated
+@Slf4j
 public class I18nMessageController {
 
     @Resource
@@ -94,9 +96,9 @@ public class I18nMessageController {
                                        HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<I18nMessageDO> list = i18nMessageService.getI18nMessagePage(pageReqVO).getList();
+        List<I18nMessageExcelVO> excelList = BeanUtils.toBean(list, I18nMessageExcelVO.class);
         // 导出 Excel
-        ExcelUtils.write(response, "国际化信息.xls", "数据", I18nMessageExcelVO.class,
-                BeanUtils.toBean(list, I18nMessageExcelVO.class));
+        ExcelUtils.write(response, "国际化信息.xls", "数据", I18nMessageExcelVO.class, excelList);
     }
 
     /**
@@ -112,7 +114,7 @@ public class I18nMessageController {
                         .messageName("赵六")
                         .messageKey(null)
                         .locale(null)
-                        .target(null)
+                        .localeTarget(null)
                         .isSystem(null)
                         .moduleType("system")
                         .useType(0)
@@ -129,7 +131,7 @@ public class I18nMessageController {
     @PostMapping("/import")
     @Operation(summary = "导入国际化信息")
     @Parameter(name = "file", description = "Excel 文件", required = true)
-    @PreAuthorize("@ss.hasPermission('infra:i18n-message:import')")
+    @PreAuthorize("@ss.hasPermission('infra:message:import')")
     public CommonResult<I18nMessageExcelRespVO> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
         List<I18nMessageExcelVO> list = ExcelUtils.read(file, I18nMessageExcelVO.class);
         return success(i18nMessageService.importI18nMessageList(list));

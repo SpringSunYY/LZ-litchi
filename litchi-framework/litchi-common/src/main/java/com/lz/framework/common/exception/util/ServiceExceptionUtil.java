@@ -1,18 +1,18 @@
 package com.lz.framework.common.exception.util;
 
-import com.lz.framework.common.util.i18n.I18nUtils;
+import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.exception.ErrorCode;
 import com.lz.framework.common.exception.ServiceException;
 import com.lz.framework.common.exception.enums.GlobalErrorCodeConstants;
-import com.google.common.annotations.VisibleForTesting;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * {@link ServiceException} 工具类
- *
+ * <p>
  * 目的在于，格式化异常信息提示。
  * 考虑到 String.format 在参数不正确时会报错，因此使用 {} 作为占位符，并使用 {@link #doFormat(int, String, Object...)} 方法来格式化
- *
+ * <p>
  * 支持国际化：当 {@link ErrorCode#getI18n()} 不为空时，优先从 I18nUtils 获取翻译后的消息模板，再进行格式化。
  *
  */
@@ -52,6 +52,18 @@ public class ServiceExceptionUtil {
         return exception0(code, resolvedPattern, params);
     }
 
+    public static void exceptionExcel(ErrorCode errorCode, Integer rowNum, String message) {
+        //拿到错误码的国际化
+        String resolvedPattern = resolveI18nPattern(errorCode.getI18n(), errorCode.getMsg());
+        //拿到行异常
+        String rowNumError = I18nUtils.getMessage(GlobalErrorCodeConstants.IMPORT_ROW_ERROR, "第{}行");
+        //格式化行异常
+        String rowNumMessage = doFormat(errorCode.getCode(), rowNumError, rowNum);
+        //拼接错误信息
+        String allMessage = resolvedPattern + " " + rowNumMessage + " " + message;
+        throw new ServiceException(errorCode.getCode(), allMessage);
+    }
+
     public static ServiceException invalidParamException(String messagePattern, Object... params) {
         return exception0(GlobalErrorCodeConstants.BAD_REQUEST.getCode(), messagePattern, params);
     }
@@ -68,9 +80,7 @@ public class ServiceExceptionUtil {
         if (i18n == null || i18n.isEmpty()) {
             return fallback;
         }
-        String locale = I18nUtils.parsePrimaryLocale(I18nUtils.getAcceptLanguage());
-        String messagePattern = I18nUtils.getMessageByLanguage(i18n, locale);
-        return (messagePattern != null && !messagePattern.isEmpty()) ? messagePattern : fallback;
+        return I18nUtils.getMessage(i18n, fallback);
     }
 
     // ========== 格式化方法 ==========

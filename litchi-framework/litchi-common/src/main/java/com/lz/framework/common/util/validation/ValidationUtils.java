@@ -2,12 +2,14 @@ package com.lz.framework.common.util.validation;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.lang.Assert;
-import org.springframework.util.StringUtils;
-
+import com.lz.framework.common.exception.ErrorCode;
+import com.lz.framework.common.exception.util.ServiceExceptionUtil;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
+import org.springframework.util.StringUtils;
+
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -23,6 +25,8 @@ public class ValidationUtils {
     private static final Pattern PATTERN_URL = Pattern.compile("^(https?|ftp|file)://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 
     private static final Pattern PATTERN_XML_NCNAME = Pattern.compile("[a-zA-Z_][\\-_.0-9_a-zA-Z$]*");
+    // 静态单例，线程安全
+    private static final Validator VALIDATOR = Validation.buildDefaultValidatorFactory().getValidator();
 
     public static boolean isMobile(String mobile) {
         return StringUtils.hasText(mobile)
@@ -45,10 +49,20 @@ public class ValidationUtils {
         validate(validator, object, groups);
     }
 
+
     public static void validate(Validator validator, Object object, Class<?>... groups) {
         Set<ConstraintViolation<Object>> constraintViolations = validator.validate(object, groups);
         if (CollUtil.isNotEmpty(constraintViolations)) {
             throw new ConstraintViolationException(constraintViolations);
+        }
+    }
+
+
+    public static void validateExcel(Object object, Integer rowNum, ErrorCode errorCode, Class<?>... groups) {
+        Set<ConstraintViolation<Object>> validate = VALIDATOR.validate(object, groups);
+        if (CollUtil.isNotEmpty(validate)) {
+            ConstraintViolation<Object> constraintViolation = validate.iterator().next();
+            ServiceExceptionUtil.exceptionExcel(errorCode, rowNum, constraintViolation.getMessage());
         }
     }
 

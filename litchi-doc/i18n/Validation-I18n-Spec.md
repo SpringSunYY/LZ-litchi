@@ -72,7 +72,7 @@ litchi-framework/litchi-common/src/main/java/com/lz/framework/common/validation/
 
 ### 3.3 上级包中的自定义校验注解（有默认 i18nKey）
 
-这些注解有默认的 `i18nKey` 常量（来自 `I18nErrorCodeConstants`）：
+这些注解有默认的 `i18nKey` 常量（来自 `GlobalErrorCodeConstants`）：
 
 | # | 注解类 | 默认 i18nKey | errorType | 说明 |
 |---|---|---|---|---|
@@ -84,12 +84,12 @@ litchi-framework/litchi-common/src/main/java/com/lz/framework/common/validation/
 
 > **注意**：这些注解的 `i18nKey` 有默认值，可以直接使用，也可以覆盖。
 
-### 3.4 i18nKey 常量定义（I18nErrorCodeConstants）
+### 3.4 i18nKey 常量定义（GlobalErrorCodeConstants）
 
 ```java
-// litchi-framework/litchi-common/src/main/java/com/lz/framework/common/enums/I18nErrorCodeConstants.java
+// litchi-framework/litchi-common/src/main/java/com/lz/framework/common/enums/GlobalErrorCodeConstants.java
 
-public interface I18nErrorCodeConstants {
+public interface GlobalErrorCodeConstants {
 
     // ========== 请求参数校验 ==========
     String REQUEST_PARAMETER_INVALID = "validation.request.parameter.invalid";

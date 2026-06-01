@@ -63,7 +63,7 @@ public class DictFrameworkUtils {
             return null;
         }
         DictDataRespDTO dictData = CollUtil.findOne(dictDatas, data -> Objects.equals(data.getValue(), value));
-        return dictData != null ? dictData.getLabel(): null;
+        return dictData != null ? dictData.getLabel() : null;
     }
 
     @SneakyThrows

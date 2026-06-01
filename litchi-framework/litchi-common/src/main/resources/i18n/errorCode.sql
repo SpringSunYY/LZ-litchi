@@ -7,7 +7,7 @@
 -- ---------------------------------------------
 -- 变量定义（运行时可覆盖）
 -- ---------------------------------------------
-SET @IS_SYSTEM = 1;
+SET @IS_SYSTEM = 0;
 SET @USE_TYPE_EXCEPTION = 5;
 SET @MODULE_TYPE = 'common';
 SET @LOCALE_TARGET_BACKEND = 1;
@@ -154,3 +154,16 @@ VALUES ('排序字段及方式不合法', 'validation.sort.by', @LOCALE_EN, @LOC
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.sort.by' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('排序字段及方式不合法', 'validation.sort.by', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '排序字段或排序方式不合法，字段必须在{}中，排序方式必须为 asc 或 desc', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 11. 导入行错误
+DELETE FROM infra_i18n_key WHERE message_key = 'validation.import.row.error';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('导入行错误', 'validation.import.row.error', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'validation.import.row.error' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('导入行错误', 'validation.import.row.error', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'row {}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'validation.import.row.error' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('导入行错误', 'validation.import.row.error', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '第{}行', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

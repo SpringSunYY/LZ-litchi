@@ -9,8 +9,8 @@ import cn.hutool.extra.servlet.JakartaServletUtil;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lz.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
 import com.lz.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
-import com.lz.framework.common.enums.I18nErrorCodeConstants;
 import com.lz.framework.common.exception.ServiceException;
+import com.lz.framework.common.exception.enums.GlobalErrorCodeConstants;
 import com.lz.framework.common.exception.util.ServiceExceptionUtil;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.util.collection.SetUtils;
@@ -120,7 +120,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(value = MissingServletRequestParameterException.class)
     public CommonResult<?> missingServletRequestParameterExceptionHandler(MissingServletRequestParameterException ex) {
         log.warn("[missingServletRequestParameterExceptionHandler]", ex);
-        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_MISSING, "请求参数缺失");
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_MISSING, "请求参数缺失");
         return CommonResult.error(BAD_REQUEST.getCode(), message + " " + ex.getParameterName());
     }
 
@@ -132,7 +132,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public CommonResult<?> methodArgumentTypeMismatchExceptionHandler(MethodArgumentTypeMismatchException ex) {
         log.warn("[methodArgumentTypeMismatchExceptionHandler]", ex);
-        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
         return CommonResult.error(BAD_REQUEST.getCode(), message + ex.getMessage());
     }
 
@@ -160,7 +160,7 @@ public class GlobalExceptionHandler {
         }
         return CommonResult.error(
                 BAD_REQUEST.getCode(),
-                I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_INVALID, "参数不正确")
+                I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_INVALID, "请求参数不正确")
                         + " " + errorMessage);
     }
 
@@ -174,7 +174,7 @@ public class GlobalExceptionHandler {
         assert fieldError != null; // 断言，避免告警
         String errorMessage = fieldError.getDefaultMessage();
         return CommonResult.error(BAD_REQUEST.getCode(),
-                I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_INVALID, "参数不正确")
+                I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_INVALID, "请求参数不正确")
                         + " " + errorMessage);
     }
 
@@ -188,7 +188,7 @@ public class GlobalExceptionHandler {
         log.warn("[methodArgumentTypeInvalidFormatExceptionHandler]", ex);
         if (ex.getCause() instanceof InvalidFormatException) {
             InvalidFormatException invalidFormatException = (InvalidFormatException) ex.getCause();
-            String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
+            String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
             return CommonResult.error(BAD_REQUEST.getCode(), message + " " + invalidFormatException.getValue());
         } else {
             return defaultExceptionHandler(ServletUtils.getRequest(), ex);
@@ -202,7 +202,7 @@ public class GlobalExceptionHandler {
     public CommonResult<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         log.warn("[constraintViolationExceptionHandler]", ex);
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
-        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR, "请求参数类型错误");
         message += " " + constraintViolation.getMessage();
         return CommonResult.error(BAD_REQUEST.getCode(), message);
     }
@@ -227,7 +227,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoHandlerFoundException.class)
     public CommonResult<?> noHandlerFoundExceptionHandler(NoHandlerFoundException ex) {
         log.warn("[noHandlerFoundExceptionHandler]", ex);
-        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_ADDRESS_NOT_FOUND, "请求地址不存在");
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_ADDRESS_NOT_FOUND, "请求地址不存在");
         return CommonResult.error(NOT_FOUND.getCode(), message + " " + ex.getRequestURL());
     }
 
@@ -237,7 +237,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoResourceFoundException.class)
     private CommonResult<?> noResourceFoundExceptionHandler(HttpServletRequest req, NoResourceFoundException ex) {
         log.warn("[noResourceFoundExceptionHandler]", ex);
-        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_ADDRESS_NOT_FOUND, "请求地址不存在");
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_ADDRESS_NOT_FOUND, "请求地址不存在");
         return CommonResult.error(NOT_FOUND.getCode(), message + " " + ex.getResourcePath());
     }
 
@@ -249,7 +249,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public CommonResult<?> httpRequestMethodNotSupportedExceptionHandler(HttpRequestMethodNotSupportedException ex) {
         log.warn("[httpRequestMethodNotSupportedExceptionHandler]", ex);
-        String message = I18nUtils.getMessage(I18nErrorCodeConstants.REQUEST_METHOD_NOT_SUPPORTED, "请求方法不正确");
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_METHOD_NOT_SUPPORTED, "请求方法不正确");
         return CommonResult.error(METHOD_NOT_ALLOWED.getCode(), message + " " + ex.getMessage());
     }
 

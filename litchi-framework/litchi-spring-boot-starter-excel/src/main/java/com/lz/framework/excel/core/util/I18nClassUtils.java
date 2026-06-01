@@ -59,7 +59,6 @@ public class I18nClassUtils {
         // 构建：i18n 翻译后的列头 -> 字段信息（带缓存）
         Map<String, I18nFieldInfo> i18nFieldInfos = FIELD_INFO_CACHE.computeIfAbsent(head, k -> buildI18nFieldInfos0(head));
         if (CollUtil.isEmpty(i18nFieldInfos)) {
-            log.info("[I18nClassUtils] no i18n field, using original class");
             return head;
         }
 
@@ -67,7 +66,6 @@ public class I18nClassUtils {
         boolean hasTranslation = i18nFieldInfos.keySet().stream()
                 .anyMatch(headStr -> !headStr.equals(i18nFieldInfos.get(headStr).originalValue()));
         if (!hasTranslation) {
-            log.info("[I18nClassUtils] no i18n translation found, using original class");
             return head;
         }
 
@@ -125,8 +123,6 @@ public class I18nClassUtils {
                 String originalValue = excelProperty.value().length > 0 ? excelProperty.value()[0] : "";
                 if (i18nValue != null && !i18nValue.equals(originalValue)) {
                     map.put(i18nValue, new I18nFieldInfo(field, originalValue));
-                } else {
-                    log.info("[I18nClassUtils] i18n not translated field={}", field.getName());
                 }
             }
         }
@@ -209,7 +205,6 @@ public class I18nClassUtils {
                     av.visitEnd();
 
                     sfv.visitEnd();
-                    log.info("[I18nClassGenerator] generated shadow field '{}' with @ExcelProperty('{}')", fieldName, i18nHead);
                 }
             }
 

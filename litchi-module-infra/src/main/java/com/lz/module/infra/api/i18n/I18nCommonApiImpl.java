@@ -34,24 +34,20 @@ public class I18nCommonApiImpl implements I18nCommonApi {
             return null;
         }
         String locale = parsePrimaryLocale(acceptLanguage);
-        boolean isDefaultLocale = false;
-        //如果语言匹配不到，则返回默认语言
-        if (locale == null || locale.isEmpty()) {
-            locale = getBackDefaultLanguageLocale();
-            isDefaultLocale = true;
-        }
         try {
             // 1. 先精确匹配：locale
             I18nMessageDO message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, locale);
             if (message != null && StrUtil.isNotEmpty(message.getMessage())) {
                 return message.getMessage();
             }
+            //如果语言匹配不到，则返回默认语言
+            String backDefaultLanguageLocale = getBackDefaultLanguageLocale();
             // 2. 匹配不到匹配默认语言
             //如果就是默认语言不用查了
-            if (isDefaultLocale) {
+            if (StrUtil.isNotEmpty(backDefaultLanguageLocale) && !locale.equals(backDefaultLanguageLocale)) {
                 return null;
             }
-            message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, getBackDefaultLanguageLocale());
+            message = i18nMessageService.getMessageByMessageKeyAndLocale(messageKey, backDefaultLanguageLocale);
             if (message != null && StrUtil.isNotEmpty(message.getMessage())) {
                 return message.getMessage();
             }
@@ -100,7 +96,7 @@ public class I18nCommonApiImpl implements I18nCommonApi {
     }
 
     @Override
-    public String getBackDefaultLanguageLocale(){
+    public String getBackDefaultLanguageLocale() {
         return i18nLocaleService.getI18nLocaleDefaultLangByLocalTarget(InfraI18nLocaleTargetEnum.LOCALE_TARGET_1.getStatus());
     }
 

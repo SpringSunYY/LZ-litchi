@@ -2,7 +2,6 @@ package com.lz.framework.common.validation.i18n;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import jakarta.validation.constraints.NotNull;
 
 import java.lang.annotation.*;
 
@@ -32,7 +31,6 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 @Constraint(validatedBy = I18nNotNullValidator.class)
-@NotNull
 public @interface I18nNotNull {
 
     /**

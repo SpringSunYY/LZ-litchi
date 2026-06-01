@@ -1,6 +1,6 @@
 package com.lz.framework.common.validation;
 
-import com.lz.framework.common.enums.I18nErrorCodeConstants;
+import com.lz.framework.common.exception.enums.GlobalErrorCodeConstants;
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 import java.lang.annotation.*;
@@ -41,7 +41,7 @@ public @interface Mobile {
      *
      * @return i18n key
      */
-    String i18nKey() default I18nErrorCodeConstants.VALIDATION_MOBILE;
+    String i18nKey() default GlobalErrorCodeConstants.VALIDATION_MOBILE;
 
     String message() default "手机号格式不正确";
 

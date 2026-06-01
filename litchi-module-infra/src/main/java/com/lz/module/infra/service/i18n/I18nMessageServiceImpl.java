@@ -231,14 +231,18 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         if (ArrayUtils.isEmpty(list)) {
             throw exception(I18N_MESSAGE_IMPORT_DATA_EMPTY);
         }
+        System.out.println("list = " + list.size());
         //判断必填数据
         for (int i = 0; i < list.size(); i++) {
             int index = i + 1;
             I18nMessageExcelVO i18nMessageExcelVO = list.get(i);
-            ValidationUtils.validate(BeanUtils.toBean(i18nMessageExcelVO, I18nMessageSaveReqVO.class));
+            if (i < 10) {
+                System.out.println("i18nMessageExcelVO = " + i18nMessageExcelVO);
+            }
+            ValidationUtils.validateExcel(BeanUtils.toBean(i18nMessageExcelVO, I18nMessageSaveReqVO.class), index, I18N_MESSAGE_IMPORT_DATA_EMPTY);
         }
         //首先去重key，查询key是否存在，如果不存在则直接新增key
-        List<String> allKeys = list.stream().map(I18nMessageExcelVO::getMessageKey).distinct().toList();
+        List<String> allKeys = new ArrayList<>(list.stream().map(I18nMessageExcelVO::getMessageKey).distinct().toList());
         List<I18nKeyDO> i18nKeyDOS = i18nKeyMapper.selectList(new LambdaQueryWrapper<I18nKeyDO>()
                 .in(I18nKeyDO::getMessageKey, allKeys));
         List<String> existKeys = i18nKeyDOS.stream().map(I18nKeyDO::getMessageKey).toList();

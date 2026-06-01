@@ -13,14 +13,13 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
 import com.lz.framework.common.util.cache.CacheUtils;
+import com.lz.framework.common.util.i18n.I18nUtils;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.DictFormat;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.annotations.ExcelType;
-import com.lz.framework.common.util.i18n.I18nUtils;
 import lombok.extern.slf4j.Slf4j;
-import org.jspecify.annotations.NonNull;
 
 import java.time.Duration;
 import java.util.List;
@@ -42,11 +41,6 @@ public class DictConvert implements Converter<Object> {
 
     /**
      * 静态缓存：dictType + importLabel -> matchedLabel（字典的 label 值）
-     * <p>
-     * 用于导入时，通过国际化翻译结果反向匹配字典 label。
-     * 同一个 dictType 的同一个 importLabel，在缓存有效期内只计算一次。
-     * <p>
-     * 使用 Optional&lt;String&gt; 区分"未匹配到"和"查询异常"，避免用 __NULL__ 魔法值。
      */
     private static final LoadingCache<String, Optional<String>> MATCH_CACHE = CacheUtils.buildAsyncReloadingCache(
             Duration.ofMinutes(5L),
@@ -61,7 +55,7 @@ public class DictConvert implements Converter<Object> {
             });
 
     /**
-     * 静态缓存：dictType + value -> translatedLabel（国际化翻译后的 label）
+     * 静态缓存：dictType + value  -> translatedLabel（国际化翻译后的 label）
      * <p>
      * 用于导出时，将字典 value 翻译为当前语言的 label。
      * 同一个 dictType 的同一个 value，在缓存有效期内只翻译一次。
@@ -96,11 +90,9 @@ public class DictConvert implements Converter<Object> {
         }
 
         String label = readCellData.getStringValue();
-        String fieldName = contentProperty.getField().getName();
         CellDataTypeEnum cellType = readCellData.getType();
         if (StrUtil.isEmpty(label)) {
             if (cellType == CellDataTypeEnum.EMPTY) {
-                log.info("[convertToJavaData] field={}, cell is EMPTY, return null", fieldName);
                 return null;
             }
             return label;
@@ -112,7 +104,7 @@ public class DictConvert implements Converter<Object> {
         // ExcelColumnSelect 下拉场景：不需要兜底解析
         boolean isColumnSelectI18n = false;
 
-        // 优先尝试 @ExcelColumnSelect(i18n=true)
+        // 优先尝试 @ExcelColumnSelect(i18n=true)：下拉选项已是翻译后的 label，直接解析字典值
         ExcelColumnSelect columnSelect = getColumnSelect(contentProperty);
         if (columnSelect != null && columnSelect.i18n() && StrUtil.isNotEmpty(columnSelect.dictType())) {
             dictType = columnSelect.dictType();
@@ -120,20 +112,18 @@ public class DictConvert implements Converter<Object> {
             isColumnSelectI18n = true;
         }
 
-        // 其次尝试 @DictFormat(i18n=true)
+        // 其次尝试 @DictFormat(i18n=true)：需要通过 i18n 翻译反向匹配字典 label
         DictFormat dictFormat = getDictFormat(contentProperty);
         if (dictType == null && dictFormat != null && dictFormat.i18n()) {
             dictType = dictFormat.value();
             i18nEnabled = true;
         }
 
-        // 国际化场景：尝试用国际化翻译匹配原始 label
+        // 国际化场景：尝试用国际化翻译匹配原始 label（仅 @DictFormat(i18n=true) 需要）
         if (i18nEnabled) {
             String matchedLabel = tryMatchLabelByI18n(dictType, label);
             if (matchedLabel != null) {
                 label = matchedLabel;
-            } else {
-                log.warn("[convertToJavaData] field={}, i18n not matched for label={}, dictType={}", fieldName, label, dictType);
             }
         }
 
@@ -156,7 +146,6 @@ public class DictConvert implements Converter<Object> {
         }
 
         // 无任何字典注解，原样返回
-        log.info("[convertToJavaData] field={}, no dict annotation, return as-is: {}", fieldName, label);
         return label;
     }
 
@@ -203,7 +192,12 @@ public class DictConvert implements Converter<Object> {
     private String translateLabelByI18n(String dictType, String value) {
         String cacheKey = dictType + "::" + value;
         String translated = TRANSLATE_CACHE.getUnchecked(cacheKey);
-        return StrUtil.isNotEmpty(translated) ? translated : value;
+        if (StrUtil.isNotEmpty(translated)) {
+            return translated;
+        }
+        String label = DictFrameworkUtils.parseDictDataLabel(dictType, value);
+        log.warn("[translateLabelByI18n] dictType={}, value={}, fallback label={}", dictType, value, label);
+        return StrUtil.isNotEmpty(label) ? label : value;
     }
 
     /**
@@ -235,17 +229,14 @@ public class DictConvert implements Converter<Object> {
 
     /**
      * 导入时，匹配 label 的实际逻辑（由 LoadingCache 调用）
-     * <p>
-     * 返回 Optional：如果匹配到了则返回 matched label，否则返回 empty。
      */
     private static Optional<String> doMatchLabelByI18n(String dictType, String importLabel) {
         List<DictDataRespDTO> dictDatas = DictFrameworkUtils.getDictDataList(dictType);
         if (CollUtil.isEmpty(dictDatas)) {
-            log.warn("[doMatchLabelByI18n] dictType={} has no data", dictType);
             return Optional.empty();
         }
 
-        // 1. 用当前语言的国际化 key 查询翻译，直接匹配 import label
+        // 1. 用当前语言的 i18n key 翻译匹配
         for (DictDataRespDTO data : dictDatas) {
             if (StrUtil.isNotEmpty(data.getI18n())) {
                 String translated = I18nUtils.getMessage(data.getI18n());
@@ -255,7 +246,7 @@ public class DictConvert implements Converter<Object> {
             }
         }
 
-        // 2. 查询所有语言的翻译，遍历匹配
+        // 2. 查询所有语言的翻译，遍历匹配（处理英文导入但字典是中文的情况）
         for (DictDataRespDTO data : dictDatas) {
             if (StrUtil.isNotEmpty(data.getI18n())) {
                 List<String> allMessages = I18nUtils.getAllLocaleMessages(data.getI18n());
@@ -265,7 +256,6 @@ public class DictConvert implements Converter<Object> {
             }
         }
 
-        log.warn("[doMatchLabelByI18n] no match found for importLabel={}, dictType={}", importLabel, dictType);
         return Optional.empty();
     }
 
@@ -299,6 +289,14 @@ public class DictConvert implements Converter<Object> {
             return false;
         }
         return excelType.value() == excludeType;
+    }
+
+    /**
+     * 清除缓存（当国际化配置变更时调用）
+     */
+    public static void clearCache() {
+        MATCH_CACHE.invalidateAll();
+        TRANSLATE_CACHE.invalidateAll();
     }
 
 }
