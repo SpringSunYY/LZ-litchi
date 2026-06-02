@@ -62,6 +62,10 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
     private final Map<Integer, List<String>> selectMap = new HashMap<>();
 
     public SelectSheetWriteHandler(Class<?> head) {
+        this(head, ExcelDirection.EXPORT);
+    }
+
+    public SelectSheetWriteHandler(Class<?> head, ExcelDirection direction) {
         int colIndex = 0;
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
         for (Field field : head.getDeclaredFields()) {
@@ -72,12 +76,12 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
+            if (isIgnoreByExcelType(field, ExcelDirection.EXPORT)) {
+                colIndex++;
+                continue;
+            }
 
             if (field.isAnnotationPresent(ExcelColumnSelect.class)) {
-                if (isIgnoreByExcelType(field, ExcelDirection.EXPORT)) {
-                    colIndex++;
-                    continue;
-                }
                 ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
                 if (excelProperty != null && excelProperty.index() != -1) {
                     colIndex = excelProperty.index();
@@ -95,7 +99,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
      * @param field 字段
      * @return 是否是静态的、最终的、transient 的
      */
-    private boolean isStaticFinalOrTransient(Field field) {
+    private static boolean isStaticFinalOrTransient(Field field) {
         return (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 || Modifier.isTransient(field.getModifiers());
     }

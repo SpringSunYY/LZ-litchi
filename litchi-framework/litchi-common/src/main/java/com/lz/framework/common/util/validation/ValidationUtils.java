@@ -10,6 +10,7 @@ import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import org.springframework.util.StringUtils;
 
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
@@ -58,11 +59,29 @@ public class ValidationUtils {
     }
 
 
-    public static void validateExcel(Object object, Integer rowNum, ErrorCode errorCode, Class<?>... groups) {
-        Set<ConstraintViolation<Object>> validate = VALIDATOR.validate(object, groups);
-        if (CollUtil.isNotEmpty(validate)) {
-            ConstraintViolation<Object> constraintViolation = validate.iterator().next();
-            ServiceExceptionUtil.exceptionExcel(errorCode, rowNum, constraintViolation.getMessage());
+    /**
+     * 校验列表，批量抛出 Excel 异常
+     *
+     * @param sources 数据列表
+     * @param errorCode 错误码
+     * @param groups 校验组
+     */
+    public static void validateList(List<?> sources, ErrorCode errorCode, Class<?>... groups) {
+        if (CollUtil.isEmpty(sources)) {
+            return;
+        }
+        int index = 1;
+        for (Object item : sources) {
+            Set<ConstraintViolation<Object>> violations = VALIDATOR.validate(item, groups);
+            if (CollUtil.isNotEmpty(violations)) {
+                StringBuilder message= new StringBuilder();
+                for (ConstraintViolation<Object> v : violations) {
+                    message.append(v.getMessage()).append("、");
+                }
+                message.deleteCharAt(message.length() - 1);
+                ServiceExceptionUtil.exceptionExcel(errorCode, index, message.toString());
+            }
+            index++;
         }
     }
 

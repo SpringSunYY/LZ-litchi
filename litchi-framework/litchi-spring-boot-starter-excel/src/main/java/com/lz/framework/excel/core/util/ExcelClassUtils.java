@@ -14,27 +14,26 @@ import lombok.extern.slf4j.Slf4j;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Excel 导入时的 i18n 表头 VO 类生成器
- * <p>
- * 核心职责：生成 i18n VO 子类，将 @ExcelI18n 字段的 @ExcelProperty value 替换为 i18n 翻译后的表头
+ * Excel VO 类分析工具
  * <ul>
- *   <li>开启国际化：使用 i18n 翻译后的值作为表头</li>
- *   <li>关闭国际化：直接使用原始 VO</li>
+ *   <li>根据方向分析需要排除的字段名</li>
+ *   <li>生成 i18n VO 子类，将 @ExcelI18n 字段的 @ExcelProperty value 替换为 i18n 翻译后的表头</li>
  * </ul>
  *
  * @author lz
  */
 @Slf4j
-public class I18nClassUtils {
+public class ExcelClassUtils {
 
     /**
-     * i18n VO 子类缓存：原始类 -> i18n 子类
+     * i18n VO 子类缓存：原始类 + direction -> i18n 子类
      */
-    private static final Map<Class<?>, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
+    private static final Map<String, Class<?>> CLASS_CACHE = new ConcurrentHashMap<>();
 
     /**
      * i18n 字段信息缓存：原始类 -> 字段信息列表
@@ -42,42 +41,82 @@ public class I18nClassUtils {
     private static final Map<Class<?>, Map<String, I18nFieldInfo>> FIELD_INFO_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * 构建 i18n VO 类（将 @ExcelProperty value 替换为 i18n 翻译后的值）
+     * 根据方向计算需要排除的字段名
      *
-     * @param head 原始 VO 类
-     * @param <T>  VO 类型
+     * @param head      头类
+     * @param direction 方向：EXPORT=导出，IMPORT=导入
+     * @return 需要排除的字段名集合
+     */
+    public static List<String> getExcludeColumnFiledNames(Class<?> head, ExcelDirection direction) {
+        List<String> excludeFields = new java.util.ArrayList<>();
+        boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
+
+        for (Field field : head.getDeclaredFields()) {
+            if (isStaticFinalOrTransient(field)) {
+                continue;
+            }
+            if (field.isAnnotationPresent(ExcelIgnore.class)) {
+                continue;
+            }
+            if (ignoreUnannotated && !field.isAnnotationPresent(ExcelProperty.class)) {
+                continue;
+            }
+
+            ExcelType excelType = field.getAnnotation(ExcelType.class);
+            if (excelType == null) {
+                continue;
+            }
+
+            if (direction == ExcelDirection.EXPORT && excelType.value() == ExcelDirection.IMPORT) {
+                excludeFields.add(field.getName());
+            } else if (direction == ExcelDirection.IMPORT && excelType.value() == ExcelDirection.EXPORT) {
+                excludeFields.add(field.getName());
+            }
+        }
+        return excludeFields;
+    }
+
+    /**
+     * 构建 i18n VO 类（将 @ExcelProperty value 替换为 i18n 翻译后的值，排除 direction 方向的字段）
+     *
+     * @param head      原始 VO 类
+     * @param direction 方向：IMPORT=导入（排除 EXPORT 字段），EXPORT=导出（排除 IMPORT 字段）
+     * @param <T>       VO 类型
      * @return i18n VO 子类，如果无需国际化则返回原始类
      */
     @SuppressWarnings("unchecked")
-    public static <T> Class<? extends T> buildI18nClass(Class<T> head) {
-        // 先检查缓存
-        Class<?> cached = CLASS_CACHE.get(head);
+    public static <T> Class<? extends T> buildI18nClass(Class<T> head, ExcelDirection direction) {
+        String cacheKey = head.getName() + "_" + direction;
+        Class<?> cached = CLASS_CACHE.get(cacheKey);
         if (cached != null) {
             return (Class<? extends T>) cached;
         }
 
-        // 构建：i18n 翻译后的列头 -> 字段信息（带缓存）
+        List<String> excludeFields = getExcludeColumnFiledNames(head, direction);
         Map<String, I18nFieldInfo> i18nFieldInfos = FIELD_INFO_CACHE.computeIfAbsent(head, k -> buildI18nFieldInfos0(head));
-        if (CollUtil.isEmpty(i18nFieldInfos)) {
-            return head;
-        }
-
-        // 检查是否有实际翻译（翻译后的值和原始值不同）
-        boolean hasTranslation = i18nFieldInfos.keySet().stream()
+        boolean hasTranslation = !i18nFieldInfos.isEmpty() && i18nFieldInfos.keySet().stream()
                 .anyMatch(headStr -> !headStr.equals(i18nFieldInfos.get(headStr).originalValue()));
-        if (!hasTranslation) {
+
+        if (!hasTranslation && excludeFields.isEmpty()) {
             return head;
         }
 
         try {
-            I18nClassGenerator generator = new I18nClassGenerator(head, i18nFieldInfos);
+            I18nClassGenerator generator = new I18nClassGenerator(head, i18nFieldInfos, excludeFields);
             Class<? extends T> result = (Class<? extends T>) generator.generate();
-            CLASS_CACHE.put(head, result);
+            CLASS_CACHE.put(cacheKey, result);
             return result;
         } catch (Exception e) {
-            log.warn("[I18nClassUtils] generate i18n class failed: {}", e.getMessage());
+            log.warn("[ExcelClassUtils] generate i18n class failed: {}", e.getMessage());
             return head;
         }
+    }
+
+    /**
+     * 构建 i18n VO 类（默认 IMPORT 方向）
+     */
+    public static <T> Class<? extends T> buildI18nClass(Class<T> head) {
+        return buildI18nClass(head, ExcelDirection.IMPORT);
     }
 
     /**
@@ -93,9 +132,6 @@ public class I18nClassUtils {
      */
     private record I18nFieldInfo(Field field, String originalValue) {}
 
-    /**
-     * 构建 i18n 字段信息列表（实际执行）
-     */
     private static Map<String, I18nFieldInfo> buildI18nFieldInfos0(Class<?> head) {
         Map<String, I18nFieldInfo> map = new LinkedHashMap<>();
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
@@ -150,11 +186,14 @@ public class I18nClassUtils {
 
         private final Class<?> original;
         private final Map<String, I18nFieldInfo> i18nFieldInfos;
+        private final List<String> excludeFields;
         private final Map<Field, String> fieldToI18nHead = new LinkedHashMap<>();
 
-        I18nClassGenerator(Class<?> original, Map<String, I18nFieldInfo> i18nFieldInfos) {
+        I18nClassGenerator(Class<?> original, Map<String, I18nFieldInfo> i18nFieldInfos,
+                           List<String> excludeFields) {
             this.original = original;
             this.i18nFieldInfos = i18nFieldInfos;
+            this.excludeFields = excludeFields;
             for (Map.Entry<String, I18nFieldInfo> entry : i18nFieldInfos.entrySet()) {
                 fieldToI18nHead.put(entry.getValue().field(), entry.getKey());
             }
@@ -174,7 +213,6 @@ public class I18nClassUtils {
             cw.visit(Opcodes.V1_8, Opcodes.ACC_SUPER + Opcodes.ACC_PUBLIC,
                     className.replace('.', '/'), null, superClassName, null);
 
-            // 构造函数
             MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
             mv.visitCode();
             mv.visitVarInsn(Opcodes.ALOAD, 0);
@@ -183,27 +221,30 @@ public class I18nClassUtils {
             mv.visitMaxs(1, 1);
             mv.visitEnd();
 
-            // 遍历原始类的所有字段，生成 i18n shadow field
+            // 遍历原始类的所有字段，生成 shadow field
             for (Field field : original.getDeclaredFields()) {
                 if (isStaticFinalOrTransient(field)) {
                     continue;
                 }
 
-                // 检查是否是 i18n 字段，生成 shadow field（覆盖父类的 @ExcelProperty）
                 String i18nHead = fieldToI18nHead.get(field);
-                if (i18nHead != null) {
+                if (excludeFields.contains(field.getName())) {
+                    // 生成带 @ExcelIgnore 的 shadow field，EasyExcel 会跳过此字段
                     String fieldName = field.getName();
                     String fieldDesc = getTypeDesc(field.getType());
-
-                    // 生成 public shadow field，@ExcelProperty(value = { i18nHead })
                     FieldVisitor sfv = cw.visitField(Opcodes.ACC_PUBLIC, fieldName, fieldDesc, null, null);
-
+                    sfv.visitAnnotation("Lcom/alibaba/excel/annotation/ExcelIgnore;", true);
+                    sfv.visitEnd();
+                } else if (i18nHead != null) {
+                    // 生成带 i18n 表头的 shadow field（覆盖父类的 @ExcelProperty）
+                    String fieldName = field.getName();
+                    String fieldDesc = getTypeDesc(field.getType());
+                    FieldVisitor sfv = cw.visitField(Opcodes.ACC_PUBLIC, fieldName, fieldDesc, null, null);
                     AnnotationVisitor av = sfv.visitAnnotation("Lcom/alibaba/excel/annotation/ExcelProperty;", true);
                     AnnotationVisitor avValue = av.visitArray("value");
                     avValue.visit(null, i18nHead);
                     avValue.visitEnd();
                     av.visitEnd();
-
                     sfv.visitEnd();
                 }
             }
@@ -228,12 +269,9 @@ public class I18nClassUtils {
         private static boolean isStaticFinalOrTransient(Field field) {
             int modifiers = field.getModifiers();
             return (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))
-                    || Modifier.isTransient(modifiers);
+                    || Modifier.isTransient(field.getModifiers());
         }
 
-        /**
-         * 自定义 ClassLoader，用于加载动态生成的 i18n VO 子类
-         */
         private static class I18nClassLoader extends ClassLoader {
 
             private final I18nClassGenerator generator;
@@ -243,9 +281,6 @@ public class I18nClassUtils {
                 this.generator = generator;
             }
 
-            /**
-             * 加载 i18n VO 类字节码为 Class
-             */
             public Class<?> loadClass(String name, byte[] bytecode) {
                 return defineClass(name, bytecode, 0, bytecode.length);
             }

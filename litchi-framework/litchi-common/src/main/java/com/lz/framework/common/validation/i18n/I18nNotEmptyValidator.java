@@ -26,7 +26,10 @@ public class I18nNotEmptyValidator implements ConstraintValidator<I18nNotEmpty, 
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         if (value == null) {
-            return true; // null 值由 @NotNull 处理
+            context.disableDefaultConstraintViolation();
+            context.buildConstraintViolationWithTemplate(getI18nMessage())
+                    .addConstraintViolation();
+            return false; // null 表示为空不可为空
         }
 
         boolean isEmpty = false;

@@ -3,8 +3,8 @@ package com.lz.framework.excel.core.handler;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.alibaba.excel.annotation.ExcelIgnore;
-import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
+import com.alibaba.excel.annotation.ExcelProperty;
 import com.alibaba.excel.write.handler.RowWriteHandler;
 import com.alibaba.excel.write.metadata.holder.WriteSheetHolder;
 import com.alibaba.excel.write.metadata.holder.WriteTableHolder;
@@ -22,7 +22,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Excel 表头国际化处理器（写入 header 行时直接替换）
+ * Excel 表头国际化处理器（写入 header 行时直接替换表头文字）
  *
  * @author lz
  */
@@ -35,10 +35,14 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
     private final Map<Integer, String> i18nHeadMap = new LinkedHashMap<>();
 
     public I18nHeadWriteHandler(Class<?> head) {
-        buildI18nHeadMap(head);
+        this(head, ExcelDirection.EXPORT);
     }
 
-    private void buildI18nHeadMap(Class<?> head) {
+    public I18nHeadWriteHandler(Class<?> head, ExcelDirection direction) {
+        buildI18nHeadMap(head, direction);
+    }
+
+    private void buildI18nHeadMap(Class<?> head, ExcelDirection direction) {
         int colIndex = 0;
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
 
@@ -50,7 +54,9 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
-            if (isIgnoreByExcelType(field, ExcelDirection.IMPORT)) {
+            // 跳过排除方向的字段（列排除由 ExcelUtils.excludeColumnFiledNames 处理，这里仅影响 i18n 表头构建）
+            if (shouldExcludeByDirection(field, direction)) {
+                colIndex++;
                 continue;
             }
 
@@ -76,12 +82,17 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
                 || Modifier.isTransient(field.getModifiers());
     }
 
-    private static boolean isIgnoreByExcelType(Field field, ExcelDirection excludeType) {
+    private static boolean shouldExcludeByDirection(Field field, ExcelDirection direction) {
         ExcelType excelType = field.getAnnotation(ExcelType.class);
         if (excelType == null) {
             return false;
         }
-        return excelType.value() == excludeType;
+        if (direction == ExcelDirection.EXPORT) {
+            return excelType.value() == ExcelDirection.IMPORT;
+        } else if (direction == ExcelDirection.IMPORT) {
+            return excelType.value() == ExcelDirection.EXPORT;
+        }
+        return false;
     }
 
     @Override
