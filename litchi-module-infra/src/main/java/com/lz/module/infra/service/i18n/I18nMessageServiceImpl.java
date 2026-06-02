@@ -10,7 +10,10 @@ import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.common.util.validation.ValidationUtils;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.constants.RedisKeyConstants;
-import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageExcelVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessagePageReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageSaveReqVO;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageSimpVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
@@ -31,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.infra.enums.ErrorCodeConstants.*;
@@ -53,6 +57,9 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
     @Resource
     private I18nProperties i18nProperties;
+
+    @Resource
+    private I18nLocaleService i18nLocaleService;
 
     @Resource
     private TransactionTemplate transactionTemplate;
@@ -227,28 +234,100 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     }
 
     @Override
-    public I18nMessageExcelRespVO importI18nMessageList(List<I18nMessageExcelVO> list) {
+    public void importI18nMessageList(List<I18nMessageExcelVO> list, Boolean updateSupport) {
         if (ArrayUtils.isEmpty(list)) {
             throw exception(I18N_MESSAGE_IMPORT_DATA_EMPTY);
         }
-        System.out.println("list = " + list.size());
-        //判断必填数据
-        for (int i = 0; i < list.size(); i++) {
-            int index = i + 1;
-            I18nMessageExcelVO i18nMessageExcelVO = list.get(i);
-            if (i < 10) {
-                System.out.println("i18nMessageExcelVO = " + i18nMessageExcelVO);
-            }
-            ValidationUtils.validateExcel(BeanUtils.toBean(i18nMessageExcelVO, I18nMessageSaveReqVO.class), index, I18N_MESSAGE_IMPORT_DATA_EMPTY);
-        }
+        // 直接对 ExcelVO 列表做校验，无需 Bean 转换
+        ValidationUtils.validateList(list, I18N_MESSAGE_IMPORT_DATA_EMPTY);
         //首先去重key，查询key是否存在，如果不存在则直接新增key
         List<String> allKeys = new ArrayList<>(list.stream().map(I18nMessageExcelVO::getMessageKey).distinct().toList());
-        List<I18nKeyDO> i18nKeyDOS = i18nKeyMapper.selectList(new LambdaQueryWrapper<I18nKeyDO>()
-                .in(I18nKeyDO::getMessageKey, allKeys));
-        List<String> existKeys = i18nKeyDOS.stream().map(I18nKeyDO::getMessageKey).toList();
-        //删除已存在的key
-        allKeys.removeAll(existKeys);
-        return null;
+
+        //如果是需要更新已存在的key
+        //处理key
+        ArrayList<I18nKeyDO> i18nKeyDOList = new ArrayList<>(allKeys.size());
+        if (updateSupport) {
+            List<I18nKeyDO> i18nKeyDOS = i18nKeyMapper.selectList(new LambdaQueryWrapper<I18nKeyDO>()
+                    .in(I18nKeyDO::getMessageKey, allKeys));
+            //dos转为map，根据key
+            Map<String, I18nKeyDO> i18nKeyDOMap = i18nKeyDOS.stream().collect(Collectors.toMap(I18nKeyDO::getMessageKey, i18nKeyDO -> i18nKeyDO));
+            i18nKeyDOList.addAll(getI18nKeyDOS(list, i18nKeyDOMap));
+        }
+
+
+        //处理 message，message不关更新什么事，如果有就更新，没有就新增
+        ArrayList<I18nMessageDO> i18nMessageDOList = getI18nMessageDOS(list, allKeys);
+        transactionTemplate.executeWithoutResult(result -> {
+            if (!i18nKeyDOList.isEmpty()) {
+                i18nKeyMapper.insertOrUpdate(i18nKeyDOList);
+            }
+            i18nMessageMapper.insertOrUpdate(i18nMessageDOList);
+        });
+        i18nLocaleService.clearI18nCache();
+    }
+
+    private static @NonNull ArrayList<I18nKeyDO> getI18nKeyDOS(List<I18nMessageExcelVO> list, Map<String, I18nKeyDO> i18nKeyDOMap) {
+        //查询到message第一个出现的key,赋值给key
+        //先根据message的key,key为messageKey+local,value为messageVo创建一个map
+        // 使用合并函数处理相同messageKey但不同locale的情况,保留第一个值
+        Map<String, I18nMessageExcelVO> messageKeyMap = list.stream()
+                .collect(Collectors.toMap(
+                        I18nMessageExcelVO::getMessageKey,
+                        message -> message,
+                        (existing, replacement) -> existing // 遇到重复key时保留第一个
+                ));
+        //处理key
+        ArrayList<I18nKeyDO> i18nKeyDOList = new ArrayList<>();
+        //新增key
+        messageKeyMap.forEach((key, value) -> {
+            //如果是更新的话一般都有，更新名字，如果不是的话，则创建一个key
+            I18nKeyDO i18nKeyDO = i18nKeyDOMap.getOrDefault(key, null);
+            String messageName = value.getMessageName();
+            if (ObjectUtils.isNotNull(i18nKeyDO)) {
+                i18nKeyDO.setMessageName(messageName);
+            } else {
+                i18nKeyDO = new I18nKeyDO();
+                //排序默认使用使用类型
+                i18nKeyDO.setOrderNum(value.getUseType());
+            }
+            i18nKeyDO.setMessageName(messageName);
+            i18nKeyDO.setMessageKey(key);
+            i18nKeyDO.setIsSystem(value.getIsSystem());
+            i18nKeyDO.setModuleType(value.getModuleType());
+            i18nKeyDO.setUseType(value.getUseType());
+            i18nKeyDOList.add(i18nKeyDO);
+        });
+        return i18nKeyDOList;
+    }
+
+    private @NonNull ArrayList<I18nMessageDO> getI18nMessageDOS(List<I18nMessageExcelVO> list, List<String> allKeys) {
+        //先查询数据库，根据key查询
+        List<I18nMessageDO> i18nMessageDOS = i18nMessageMapper.selectList(new LambdaQueryWrapper<I18nMessageDO>()
+                .in(I18nMessageDO::getMessageKey, allKeys));
+        //使用国家和语言构建一个map，key为messageKey+locale，value为messageVo
+        Map<String, I18nMessageDO> messageKeyLocaleMap = i18nMessageDOS.stream()
+                .collect(Collectors.toMap(
+                        message -> message.getMessageKey() + "-" + message.getLocale(),
+                        message -> message,
+                        (existing, replacement) -> existing // 遇到重复key时保留第一个
+                ));
+        ArrayList<I18nMessageDO> i18nMessageDOList = new ArrayList<>();
+        for (I18nMessageExcelVO i18nMessageExcelVO : list) {
+            String key = i18nMessageExcelVO.getMessageKey() + "-" + i18nMessageExcelVO.getLocale();
+            I18nMessageDO existMessageDO = messageKeyLocaleMap.get(key);
+
+            I18nMessageDO messageDO;
+            if (ObjectUtils.isNotNull(existMessageDO)) {
+                // 如果存在，更新已有对象的字段
+                BeanUtils.copyProperties(i18nMessageExcelVO, existMessageDO);
+                messageDO = existMessageDO;
+            } else {
+                // 如果不存在，创建新对象
+                messageDO = BeanUtils.toBean(i18nMessageExcelVO, I18nMessageDO.class);
+            }
+            i18nMessageDOList.add(messageDO);
+        }
+        return i18nMessageDOList;
     }
 
     private static @NonNull I18nMessageDO getI18nMessageDO(String key, DictI18nDTO dictI18nDTO, String defaultLocale) {

@@ -1,12 +1,13 @@
 package com.lz.module.infra.service.i18n;
 
-import java.util.*;
-
 import com.lz.framework.common.core.DictI18nDTO;
-import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
-import jakarta.validation.*;
-import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
+import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
+import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * 国际化信息 Service 接口
@@ -38,10 +39,10 @@ public interface I18nMessageService {
     void deleteI18nMessage(Long id);
 
     /**
-    * 批量删除国际化信息
-    *
-    * @param ids 编号
-    */
+     * 批量删除国际化信息
+     *
+     * @param ids 编号
+     */
     void deleteI18nMessageListByIds(List<Long> ids);
 
     /**
@@ -63,7 +64,7 @@ public interface I18nMessageService {
     /**
      * 获得国际化信息列表
      *
-     * @param localeTarget 使用端
+     * @param localeTarget   使用端
      * @param acceptLanguage 接受的语言
      * @return 国际化信息列表
      */
@@ -72,7 +73,7 @@ public interface I18nMessageService {
     /**
      * 获得国际化信息
      *
-     * @param messageKey 国际化键名
+     * @param messageKey     国际化键名
      * @param acceptLanguage 语言
      * @return 国际化信息
      */
@@ -89,12 +90,11 @@ public interface I18nMessageService {
     /**
      * 根据国际化键名、语言和使用端查询翻译
      *
-     * @param messageKey  国际化键名
-     * @param locale      语言
+     * @param messageKey 国际化键名
+     * @param locale     语言
      * @return 国际化信息
      */
     I18nMessageDO getMessageByMessageKeyAndLocale(String messageKey, String locale);
-
 
 
     /**
@@ -107,8 +107,8 @@ public interface I18nMessageService {
     /**
      * 导入国际化信息
      *
-     * @param list 国际化信息列表
-     * @return 导入结果
+     * @param list          国际化信息列表
+     * @param updateSupport 是否更新已经存在的国际化key信息
      */
-    I18nMessageExcelRespVO importI18nMessageList(List<I18nMessageExcelVO> list);
+    void importI18nMessageList(List<I18nMessageExcelVO> list, Boolean updateSupport);
 }
