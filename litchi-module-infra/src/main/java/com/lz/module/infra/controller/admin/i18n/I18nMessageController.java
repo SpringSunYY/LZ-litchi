@@ -26,8 +26,9 @@ import java.util.Collections;
 import java.util.List;
 
 import static com.lz.framework.apilog.core.enums.OperateTypeEnum.EXPORT;
+import static com.lz.framework.apilog.core.enums.OperateTypeEnum.IMPORT;
 import static com.lz.framework.common.pojo.CommonResult.success;
-import static com.lz.framework.excel.core.annotations.ExcelDirection.IMPORT;
+import static com.lz.framework.excel.core.annotations.ExcelDirection.ONLY_IMPORT;
 
 @Tag(name = "管理后台 - 国际化信息")
 @RestController
@@ -123,7 +124,7 @@ public class I18nMessageController {
                         .remark("你说的对")
                         .build());
         // 输出（生成导入模板，排除导出专用字段）
-        ExcelUtils.write(response, "国际化信息导入模板.xls", "国际化信息模板", I18nMessageExcelVO.class, list, IMPORT);
+        ExcelUtils.write(response, "国际化信息导入模板.xls", "国际化信息模板", I18nMessageExcelVO.class, list, ONLY_IMPORT);
     }
 
     /**
@@ -133,6 +134,7 @@ public class I18nMessageController {
     @Operation(summary = "导入国际化信息")
     @Parameter(name = "file", description = "Excel 文件", required = true)
     @PreAuthorize("@ss.hasPermission('infra:message:import')")
+    @ApiAccessLog(operateType = IMPORT)
     public CommonResult<Boolean> importExcel(
             @RequestParam("file") MultipartFile file,
             @RequestParam(value = "updateSupport", required = false, defaultValue = "false") Boolean updateSupport) throws Exception {

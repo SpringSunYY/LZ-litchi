@@ -97,8 +97,12 @@ export function delete${simpleClassName}List(ids: number[]) {
 #end
 
 /** 导出${table.classComment} */
-export function export${simpleClassName}(params: any) {
-  return requestClient.download('${baseURL}/export-excel', {params});
+export function export${simpleClassName}(params: ${simpleClassName}Api.${simpleClassName}) {
+  return requestClient.download('${baseURL}/export-excel',
+          {
+            params,
+            timeout:300_00
+          });
 }
 
 ## 导入功能（当 extendConfig.isImport 为 1 时关闭）
@@ -110,7 +114,10 @@ export function import${simpleClassName}Template() {
 
 /** 导入${table.classComment} */
 export function import${simpleClassName}(file: File) {
-  return requestClient.upload('${baseURL}/import', {file});
+  return requestClient.upload('${baseURL}/import',
+          {file},
+          {timeout:300_00}
+  );
 }
 #end
 

@@ -28,14 +28,14 @@ public class Demo01ContactImportVO {
     @Schema(description = "名字", example = "王五")
     @ExcelProperty("名字")
     @ExcelI18n(i18nKey = "infra:demo01-contact:field:name")
-    @ExcelType(ExcelDirection.IMPORT)
+    @ExcelType(ExcelDirection.ONLY_IMPORT)
     private String name;
 
     @Schema(description = "性别")
     @ExcelProperty(value = "性别", converter = DictConvert.class)
     @ExcelColumnSelect(dictType = "system_user_sex")
     @ExcelI18n(i18nKey = "infra:demo01-contact:field:sex")
-    @ExcelType(ExcelDirection.EXPORT)
+    @ExcelType(ExcelDirection.ONLY_EXPORT)
     private Integer sex;
 
     @Schema(description = "出生年")

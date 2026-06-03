@@ -27,6 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
@@ -59,6 +60,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     private I18nProperties i18nProperties;
 
     @Resource
+    @Lazy
     private I18nLocaleService i18nLocaleService;
 
     @Resource

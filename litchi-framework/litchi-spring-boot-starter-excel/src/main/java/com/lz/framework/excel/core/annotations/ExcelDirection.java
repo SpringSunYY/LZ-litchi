@@ -15,12 +15,12 @@ public enum ExcelDirection {
     /**
      * 仅导出
      */
-    EXPORT(1),
+    ONLY_EXPORT(1),
 
     /**
      * 仅导入
      */
-    IMPORT(2);
+    ONLY_IMPORT(2);
 
     private final int value;
 

@@ -62,7 +62,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
     private final Map<Integer, List<String>> selectMap = new HashMap<>();
 
     public SelectSheetWriteHandler(Class<?> head) {
-        this(head, ExcelDirection.EXPORT);
+        this(head, ExcelDirection.ONLY_EXPORT);
     }
 
     public SelectSheetWriteHandler(Class<?> head, ExcelDirection direction) {
@@ -76,7 +76,7 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
-            if (isIgnoreByExcelType(field, ExcelDirection.EXPORT)) {
+            if (isIgnoreByExcelType(field, ExcelDirection.ONLY_EXPORT)) {
                 colIndex++;
                 continue;
             }

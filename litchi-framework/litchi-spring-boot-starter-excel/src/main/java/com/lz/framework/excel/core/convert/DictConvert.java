@@ -85,7 +85,7 @@ public class DictConvert implements Converter<Object> {
     @Override
     public Object convertToJavaData(ReadCellData readCellData, ExcelContentProperty contentProperty,
                                     GlobalConfiguration globalConfiguration) {
-        if (isIgnoreByExcelType(contentProperty, ExcelDirection.EXPORT)) {
+        if (isIgnoreByExcelType(contentProperty, ExcelDirection.ONLY_EXPORT)) {
             return readCellData.getStringValue();
         }
 
@@ -155,7 +155,7 @@ public class DictConvert implements Converter<Object> {
         if (object == null) {
             return new WriteCellData<>("");
         }
-        if (isIgnoreByExcelType(contentProperty, ExcelDirection.IMPORT)) {
+        if (isIgnoreByExcelType(contentProperty, ExcelDirection.ONLY_IMPORT)) {
             return new WriteCellData<>(String.valueOf(object));
         }
 

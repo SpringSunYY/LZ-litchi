@@ -40,6 +40,7 @@ import ${basePackage}.module.${table.moduleName}.dal.dataobject.${table.business
 import ${basePackage}.module.${subTable.moduleName}.dal.dataobject.${subTable.businessName}.${subTable.className}DO;
 #end
 import ${basePackage}.module.${table.moduleName}.service.${table.businessName}.${table.className}Service;
+import static com.lz.framework.excel.core.annotations.ExcelDirection.ONLY_IMPORT;
 
 /**
  * ${table.classComment} Controller
@@ -235,7 +236,7 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #end
                         .build());
         // 输出
-        ExcelUtils.write(response, "${table.classComment}导入模板.xls", "${table.classComment}模板", ${excelReqVOClass}.class, list);
+        ExcelUtils.write(response, "${table.classComment}导入模板.xls", "${table.classComment}模板", ${excelReqVOClass}.class, list,ONLY_IMPORT);
     }
 
     /**
@@ -247,6 +248,7 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:import')")
 #end
+    @ApiAccessLog(operateType = IMPORT)
     public CommonResult<${excelRespVOClass}> importExcel(@RequestParam("file") MultipartFile file) throws Exception {
         List<${excelReqVOClass}> list = ExcelUtils.read(file, ${excelReqVOClass}.class);
         return success(${classNameVar}Service.import${simpleClassName}List(list));

@@ -35,7 +35,7 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
     private final Map<Integer, String> i18nHeadMap = new LinkedHashMap<>();
 
     public I18nHeadWriteHandler(Class<?> head) {
-        this(head, ExcelDirection.EXPORT);
+        this(head, ExcelDirection.ONLY_EXPORT);
     }
 
     public I18nHeadWriteHandler(Class<?> head, ExcelDirection direction) {
@@ -87,10 +87,10 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
         if (excelType == null) {
             return false;
         }
-        if (direction == ExcelDirection.EXPORT) {
-            return excelType.value() == ExcelDirection.IMPORT;
-        } else if (direction == ExcelDirection.IMPORT) {
-            return excelType.value() == ExcelDirection.EXPORT;
+        if (direction == ExcelDirection.ONLY_EXPORT) {
+            return excelType.value() == ExcelDirection.ONLY_IMPORT;
+        } else if (direction == ExcelDirection.ONLY_IMPORT) {
+            return excelType.value() == ExcelDirection.ONLY_EXPORT;
         }
         return false;
     }

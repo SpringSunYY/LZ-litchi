@@ -1,6 +1,5 @@
 package com.lz.framework.excel.core.util;
 
-import cn.hutool.core.collection.CollUtil;
 import com.alibaba.excel.annotation.ExcelIgnore;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -67,9 +66,9 @@ public class ExcelClassUtils {
                 continue;
             }
 
-            if (direction == ExcelDirection.EXPORT && excelType.value() == ExcelDirection.IMPORT) {
+            if (direction == ExcelDirection.ONLY_EXPORT && excelType.value() == ExcelDirection.ONLY_IMPORT) {
                 excludeFields.add(field.getName());
-            } else if (direction == ExcelDirection.IMPORT && excelType.value() == ExcelDirection.EXPORT) {
+            } else if (direction == ExcelDirection.ONLY_IMPORT && excelType.value() == ExcelDirection.ONLY_EXPORT) {
                 excludeFields.add(field.getName());
             }
         }
@@ -116,7 +115,7 @@ public class ExcelClassUtils {
      * 构建 i18n VO 类（默认 IMPORT 方向）
      */
     public static <T> Class<? extends T> buildI18nClass(Class<T> head) {
-        return buildI18nClass(head, ExcelDirection.IMPORT);
+        return buildI18nClass(head, ExcelDirection.ONLY_IMPORT);
     }
 
     /**
@@ -144,7 +143,7 @@ public class ExcelClassUtils {
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
-            if (isIgnoreByExcelType(field, ExcelDirection.IMPORT)) {
+            if (isIgnoreByExcelType(field, ExcelDirection.ONLY_IMPORT)) {
                 continue;
             }
 

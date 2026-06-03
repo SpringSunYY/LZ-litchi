@@ -37,7 +37,7 @@ public class ExcelUtils {
      */
     public static <T> void write(HttpServletResponse response, String filename, String sheetName,
                                  Class<T> head, List<T> data) throws IOException {
-        write(response, filename, sheetName, head, data, ExcelDirection.EXPORT);
+        write(response, filename, sheetName, head, data, ExcelDirection.ONLY_EXPORT);
     }
 
     /**
@@ -81,7 +81,7 @@ public class ExcelUtils {
     }
 
     public static <T> List<T> read(MultipartFile file, Class<T> head) throws IOException {
-        return read(file, head, ExcelDirection.IMPORT);
+        return read(file, head, ExcelDirection.ONLY_IMPORT);
     }
 
     /**

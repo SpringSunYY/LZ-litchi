@@ -69,6 +69,22 @@ public class ${sceneEnum.prefixClass}${table.className}ExcelVO {
     @ExcelI18n(i18nKey = "${i18nModuleType}.${table.businessName}.field.${column.javaField}")
 #end
 #end
+## 2. 处理 Validator 参数校验
+#if (!${column.nullable} && !${column.primaryKey})
+    #if ($isI18n)
+    #if (${column.javaType} == 'String')
+    @I18nNotEmpty(i18nKey = "${i18nModuleType}.${table.businessName}.back.${column.javaField}.notEmpty", message = "${column.columnComment}不能为空")
+    #else
+    @I18nNotNull(i18nKey = "${i18nModuleType}.${table.businessName}.back.${column.javaField}.notNull", message = "${column.columnComment}不能为空")
+    #end
+    #else
+    #if (${column.javaType} == 'String')
+    @NotEmpty(message = "${column.columnComment}不能为空")
+    #else
+    @NotNull(message = "${column.columnComment}不能为空")
+    #end
+    #end
+#end
     private ${column.javaType} ${column.javaField};
 
 #end
