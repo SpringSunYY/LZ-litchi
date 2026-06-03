@@ -104,4 +104,37 @@ public class StrUtils {
         });
     }
 
+    /**
+     * 使用 {} 占位符格式化字符串。
+     * <p>
+     * 规则：
+     * 1. 如果 params 为空，直接返回 messagePattern
+     * 2. 如果参数过多，只替换能匹配的，剩余占位符保留
+     * 3. 如果参数过少，剩余占位符保留在原位
+     *
+     * @param messagePattern 消息模板，使用 {} 作为占位符
+     * @param params        参数
+     * @return 格式化后的字符串
+     */
+    public static String format(String messagePattern, Object... params) {
+        if (params == null || params.length == 0) {
+            return messagePattern;
+        }
+        StringBuilder sbuf = new StringBuilder(messagePattern.length() + 50);
+        int i = 0;
+        int j;
+        for (int l = 0; l < params.length; l++) {
+            j = messagePattern.indexOf("{}", i);
+            if (j == -1) {
+                sbuf.append(messagePattern.substring(i));
+                return sbuf.toString();
+            }
+            sbuf.append(messagePattern, i, j);
+            sbuf.append(params[l]);
+            i = j + 2;
+        }
+        sbuf.append(messagePattern.substring(i));
+        return sbuf.toString();
+    }
+
 }

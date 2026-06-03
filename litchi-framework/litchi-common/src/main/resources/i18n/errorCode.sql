@@ -28,11 +28,11 @@ VALUES ('请求参数无效', 'validation.request.parameter.invalid', @IS_SYSTEM
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.parameter.invalid' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求参数无效', 'validation.request.parameter.invalid', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request parameter is invalid', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求参数无效', 'validation.request.parameter.invalid', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request parameter is invalid.', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.parameter.invalid' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求参数无效', 'validation.request.parameter.invalid', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数无效', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求参数无效', 'validation.request.parameter.invalid', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数无效。', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 2. 请求参数类型错误
 DELETE FROM infra_i18n_key WHERE message_key = 'validation.request.parameter.type.error';
@@ -41,11 +41,11 @@ VALUES ('请求参数类型错误', 'validation.request.parameter.type.error', @
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.parameter.type.error' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求参数类型错误', 'validation.request.parameter.type.error', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request parameter type error', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求参数类型错误', 'validation.request.parameter.type.error', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request parameter type error,, need value is {}, current value is {}.', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.parameter.type.error' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求参数类型错误', 'validation.request.parameter.type.error', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数类型错误', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求参数类型错误', 'validation.request.parameter.type.error', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数类型错误，需要的类型为{}，当前值为{}。', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 3. 请求参数缺失
 DELETE FROM infra_i18n_key WHERE message_key = 'validation.request.parameter.missing';
@@ -54,11 +54,11 @@ VALUES ('请求参数缺失', 'validation.request.parameter.missing', @IS_SYSTEM
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.parameter.missing' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求参数缺失', 'validation.request.parameter.missing', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request parameter is missing', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求参数缺失', 'validation.request.parameter.missing', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request parameter is missing.', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.parameter.missing' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求参数缺失', 'validation.request.parameter.missing', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数缺失', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求参数缺失', 'validation.request.parameter.missing', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求参数缺失。', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 4. 请求方法不支持
 DELETE FROM infra_i18n_key WHERE message_key = 'validation.request.method.not.supported';
@@ -67,11 +67,11 @@ VALUES ('请求方法不支持', 'validation.request.method.not.supported', @IS_
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.method.not.supported' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求方法不支持', 'validation.request.method.not.supported', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request method not supported', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求方法不支持', 'validation.request.method.not.supported', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request method not supported.', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.method.not.supported' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求方法不支持', 'validation.request.method.not.supported', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求方法不支持', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求方法不支持', 'validation.request.method.not.supported', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求方法不支持。', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 5. 请求地址不存在
 DELETE FROM infra_i18n_key WHERE message_key = 'validation.request.address.not.found';
@@ -80,11 +80,11 @@ VALUES ('请求地址不存在', 'validation.request.address.not.found', @IS_SYS
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.address.not.found' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求地址不存在', 'validation.request.address.not.found', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request address not found', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求地址不存在', 'validation.request.address.not.found', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'request address not found.', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.request.address.not.found' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('请求地址不存在', 'validation.request.address.not.found', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求地址不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('请求地址不存在', 'validation.request.address.not.found', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '请求地址不存在。', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- =============================================
 -- 字段校验注解
@@ -175,8 +175,8 @@ VALUES ('字典值不合法', 'validation.in.dict', @IS_SYSTEM, @MODULE_TYPE, @U
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.in.dict' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'invalid dict value, must be one of {value}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'invalid dict value, must be one of {}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.in.dict' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '字典值不合法，请在{value}中选择', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '字典值不合法，请在{}中选择', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

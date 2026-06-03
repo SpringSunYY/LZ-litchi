@@ -44,8 +44,11 @@ public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Co
         }
         // 校验不通过，自定义提示语句
         context.disableDefaultConstraintViolation();
-        context.buildConstraintViolationWithTemplate(I18nUtils.getMessage(i18nKey,message)
-                .replace("{value}", CollUtil.join(list, ","))).addConstraintViolation();
+        context.buildConstraintViolationWithTemplate(
+                        StrUtil.format(
+                                I18nUtils.getMessage(i18nKey, message)
+                                , CollUtil.join(list, ",")))
+                .addConstraintViolation();
         return false;
     }
 

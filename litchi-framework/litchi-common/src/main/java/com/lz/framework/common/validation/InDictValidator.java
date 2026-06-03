@@ -2,6 +2,7 @@ package com.lz.framework.common.validation;
 
 import com.lz.framework.common.util.dict.DictUtils;
 import com.lz.framework.common.util.i18n.I18nUtils;
+import com.lz.framework.common.util.string.StrUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -34,8 +35,9 @@ public class InDictValidator implements ConstraintValidator<InDict, Object> {
         // 校验不通过，自定义提示语句
         context.disableDefaultConstraintViolation();
         context.buildConstraintViolationWithTemplate(
-                I18nUtils.getMessage(i18nKey, message)
-                        .replace("{value}", dictType))
+                        StrUtils.format(
+                                I18nUtils.getMessage(i18nKey, message),
+                                dictType))
                 .addConstraintViolation();
         return false;
     }

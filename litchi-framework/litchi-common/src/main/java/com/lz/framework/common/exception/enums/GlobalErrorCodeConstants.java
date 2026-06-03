@@ -41,7 +41,7 @@ public interface GlobalErrorCodeConstants {
     // ========== 请求参数校验 ==========
 
     String REQUEST_PARAMETER_INVALID = "validation.request.parameter.invalid"; // 请求参数无效 / request parameter is invalid
-    String REQUEST_PARAMETER_TYPE_ERROR = "validation.request.parameter.type.error"; // 请求参数类型错误 / request parameter type error
+    String REQUEST_PARAMETER_TYPE_ERROR = "validation.request.parameter.type.error"; // 请求参数类型错误，需要的类型为{}，当前类型为{} / request parameter type error, need type is {}, current type is {}
     String REQUEST_PARAMETER_MISSING = "validation.request.parameter.missing"; // 请求参数缺失 / request parameter is missing
     String REQUEST_METHOD_NOT_SUPPORTED = "validation.request.method.not.supported"; // 请求方法不支持 / request method not supported
     String REQUEST_ADDRESS_NOT_FOUND = "validation.request.address.not.found"; // 请求地址不存在 / request address not found

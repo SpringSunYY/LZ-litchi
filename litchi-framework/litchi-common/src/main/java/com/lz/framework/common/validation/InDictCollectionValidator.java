@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
 import com.lz.framework.common.util.dict.DictUtils;
 import com.lz.framework.common.util.i18n.I18nUtils;
+import com.lz.framework.common.util.string.StrUtils;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
@@ -40,8 +41,9 @@ public class InDictCollectionValidator implements ConstraintValidator<InDict, Co
             if (!DictUtils.containsValue(dictType, String.valueOf(item))) {
                 context.disableDefaultConstraintViolation();
                 context.buildConstraintViolationWithTemplate(
-                        I18nUtils.getMessage(i18nKey, message)
-                                .replace("{value}", CollUtil.join(list, ",") + " => " + dictType))
+                                StrUtils.format(
+                                        I18nUtils.getMessage(i18nKey, message),
+                                        dictType))
                         .addConstraintViolation();
                 return false;
             }

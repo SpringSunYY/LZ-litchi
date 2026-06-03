@@ -52,7 +52,7 @@ public @interface InEnum {
      */
     Class<? extends ArrayValuable<?>> value();
 
-    String message() default "必须在指定范围 {value}";
+    String message() default "必须在指定范围 {}";
 
     Class<?>[] groups() default {};
 
