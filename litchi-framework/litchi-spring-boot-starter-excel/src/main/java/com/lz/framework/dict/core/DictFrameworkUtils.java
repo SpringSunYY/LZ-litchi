@@ -6,6 +6,7 @@ import com.lz.framework.common.util.cache.CacheUtils;
 import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.lz.framework.common.util.dict.DictUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 
@@ -23,7 +24,6 @@ import static com.lz.framework.common.util.collection.CollectionUtils.convertLis
 @Slf4j
 public class DictFrameworkUtils {
 
-    private static DictDataCommonApi dictDataApi;
 
     /**
      * 针对 dictType 的字段数据缓存
@@ -34,14 +34,11 @@ public class DictFrameworkUtils {
 
                 @Override
                 public List<DictDataRespDTO> load(String dictType) {
-                    return dictDataApi.getDictDataList(dictType);
+                    return DictUtils.getDictDataList(dictType);
                 }
 
             });
 
-    public static void init(DictDataCommonApi dictDataApi) {
-        DictFrameworkUtils.dictDataApi = dictDataApi;
-    }
 
     public static void clearCache() {
         GET_DICT_DATA_CACHE.invalidateAll();

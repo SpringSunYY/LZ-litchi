@@ -23,7 +23,6 @@
         <module>litchi-spring-boot-starter-mq</module>
 
         <module>litchi-spring-boot-starter-excel</module>
-        <module>litchi-spring-boot-starter-i18n</module>
         <module>litchi-spring-boot-starter-test</module>
 
         <module>litchi-spring-boot-starter-biz-tenant</module>
@@ -42,6 +41,6 @@
             2. 业务组件：和业务相关的组件的封装，例如说数据字典、操作日志等等。
         如果是业务组件，Maven 名字会包含 biz
     </description>
-    <url>https://github.com/SpringSunYY/litchi</url>
+    <url>https://github.com/SpringSunYY/LZ-litchi</url>
 
 </project>

@@ -1,5 +1,6 @@
 package com.lz.module.infra.controller.admin.demo.demo01.vo;
 
+import com.lz.framework.common.validation.InDict;
 import com.lz.framework.common.validation.i18n.I18nNotBlank;
 import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import com.lz.framework.common.validation.i18n.I18nNotNull;
@@ -21,6 +22,7 @@ public class Demo01ContactSaveReqVO {
 
     @Schema(description = "性别", requiredMode = Schema.RequiredMode.REQUIRED)
     @I18nNotNull(i18nKey = "demo01.contact.sex.notNull", message = "性别不能为空")
+    @InDict(dictType = "system_user_sex")
     private Integer sex;
 
     @Schema(description = "出生年", requiredMode = Schema.RequiredMode.REQUIRED)

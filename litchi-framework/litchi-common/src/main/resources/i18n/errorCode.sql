@@ -167,3 +167,16 @@ VALUES ('导入行错误', 'validation.import.row.error', @LOCALE_EN, @LOCALE_TA
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.import.row.error' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('导入行错误', 'validation.import.row.error', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '第{}行', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 12. 字典值校验
+DELETE FROM infra_i18n_key WHERE message_key = 'validation.in.dict';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('字典值不合法', 'validation.in.dict', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'validation.in.dict' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'invalid dict value, must be one of {value}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'validation.in.dict' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '字典值不合法，请在{value}中选择', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

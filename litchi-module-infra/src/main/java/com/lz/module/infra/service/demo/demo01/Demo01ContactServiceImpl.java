@@ -4,7 +4,11 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
-import com.lz.module.infra.controller.admin.demo.demo01.vo.*;
+import com.lz.framework.common.util.validation.ValidationUtils;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactExcelRespVO;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactExcelVO;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactPageReqVO;
+import com.lz.module.infra.controller.admin.demo.demo01.vo.Demo01ContactSaveReqVO;
 import com.lz.module.infra.dal.dataobject.demo.demo01.Demo01ContactDO;
 import com.lz.module.infra.dal.mysql.demo.demo01.Demo01ContactMapper;
 import jakarta.annotation.Resource;
@@ -90,6 +94,7 @@ public class Demo01ContactServiceImpl implements Demo01ContactService {
             throw exception(ERROR_CODE_IMPORT_DATA_EMPTY);
         }
         List<Demo01ContactDO> createList = new ArrayList<>(list.size());
+        ValidationUtils.validateList(list, ERROR_CODE_IMPORT_DATA_EMPTY);
         for (int i = 0; i < list.size(); i++) {
             Demo01ContactExcelVO importVO = list.get(i);
             Demo01ContactDO demo01Contact = BeanUtils.toBean(importVO, Demo01ContactDO.class);

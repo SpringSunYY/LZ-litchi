@@ -14,8 +14,11 @@ import com.lz.module.system.controller.admin.dict.vo.data.DictDataSaveReqVO;
 import com.lz.module.system.dal.dataobject.dict.DictDataDO;
 import com.lz.module.system.dal.dataobject.dict.DictTypeDO;
 import com.lz.module.system.dal.mysql.dict.DictDataMapper;
+import com.lz.module.system.dal.redis.RedisKeyConstants;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -53,6 +56,7 @@ public class DictDataServiceImpl implements DictDataService {
     private I18nApi i18nApi;
 
     @Override
+    @Cacheable(cacheNames = {RedisKeyConstants.DICT})
     public List<DictDataDO> getDictDataList(Integer status, String dictType) {
         List<DictDataDO> list = dictDataMapper.selectListByStatusAndDictType(status, dictType);
         list.sort(COMPARATOR_TYPE_AND_SORT);
@@ -70,6 +74,7 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
     public Long createDictData(DictDataSaveReqVO createReqVO) {
         // 校验字典类型有效
         validateDictTypeExists(createReqVO.getDictType());
@@ -83,6 +88,7 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
     public void updateDictData(DictDataSaveReqVO updateReqVO) {
         // 校验自己存在
         validateDictDataExists(updateReqVO.getId());
@@ -97,6 +103,7 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
+    @Cacheable(cacheNames = {RedisKeyConstants.DICT})
     public void deleteDictData(Long id) {
         // 校验是否存在
         validateDictDataExists(id);
@@ -106,6 +113,7 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
+    @Cacheable(cacheNames = {RedisKeyConstants.DICT})
     public void deleteDictDataList(List<Long> ids) {
         dictDataMapper.deleteByIds(ids);
     }

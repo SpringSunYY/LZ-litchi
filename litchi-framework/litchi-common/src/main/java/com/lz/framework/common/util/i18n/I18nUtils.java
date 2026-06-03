@@ -24,7 +24,6 @@ public class I18nUtils {
 
     public static void init(I18nCommonApi i18nCommonApi) {
         I18nUtils.i18nCommonApi = i18nCommonApi;
-        log.info("[init][初始化 I18nUtils 成功]");
     }
 
     /**

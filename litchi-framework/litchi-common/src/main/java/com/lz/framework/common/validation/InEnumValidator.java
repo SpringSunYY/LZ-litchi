@@ -49,4 +49,3 @@ public class InEnumValidator implements ConstraintValidator<InEnum, Object> {
     }
 
 }
-

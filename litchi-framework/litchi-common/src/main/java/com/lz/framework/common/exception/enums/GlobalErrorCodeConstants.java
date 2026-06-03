@@ -50,6 +50,7 @@ public interface GlobalErrorCodeConstants {
     String VALIDATION_MOBILE = "validation.mobile"; // 手机号码格式不正确 / invalid mobile phone format
     String VALIDATION_TELEPHONE = "validation.telephone"; // 电话号码格式不正确 / invalid telephone format
     String VALIDATION_IN_ENUM = "validation.in.enum"; // 枚举值不合法，请在{}中选择 / invalid enum value, must be one of {}
+    String VALIDATION_IN_DICT = "validation.in.dict"; // 字典值不合法，请在{}中选择 / invalid dict value, must be one of {}
     String VALIDATION_SORT = "validation.sort"; // 排序字段不合法，请在{}中选择 / invalid sort field, must be one of {}
     String VALIDATION_SORT_BY = "validation.sort.by"; // 排序字段或排序方式不合法 / invalid sort field or order, field must be one of {}, order must be asc or desc
 

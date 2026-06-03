@@ -18,7 +18,7 @@
         从而实现提供 RESTful API 给 litchi-ui-admin、litchi-ui-user 等前端项目。
         本质上来说，它就是个空壳（容器）！
     </description>
-    <url>https://github.com/SpringSunYY/litchi</url>
+    <url>https://github.com/SpringSunYY/LZ-litchi</url>
 
     <dependencies>
         <dependency>

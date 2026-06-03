@@ -4,3 +4,5 @@ com.lz.framework.swagger.config.LitchiSwaggerAutoConfiguration
 com.lz.framework.web.config.LitchiWebAutoConfiguration
 com.lz.framework.xss.config.LitchiXssAutoConfiguration
 com.lz.framework.banner.config.LitchiBannerAutoConfiguration
+com.lz.framework.dict.config.LitchiDictAutoConfiguration
+com.lz.framework.i18n.config.LitchiI18nAutoConfiguration

@@ -18,7 +18,7 @@
         2. 城市功能：查询城市编码对应的城市信息
             基于 https://github.com/modood/Administrative-divisions-of-China 实现
     </description>
-    <url>https://github.com/SpringSunYY/litchi</url>
+    <url>https://github.com/SpringSunYY/LZ-litchi</url>
 
     <dependencies>
         <dependency>

@@ -50,4 +50,3 @@ public class InEnumCollectionValidator implements ConstraintValidator<InEnum, Co
     }
 
 }
-

@@ -13,7 +13,7 @@
 
     <name>${project.artifactId}</name>
     <description>Excel 拓展</description>
-    <url>https://github.com/SpringSunYY/litchi</url>
+    <url>https://github.com/SpringSunYY/LZ-litchi</url>
 
     <dependencies>
         <dependency>

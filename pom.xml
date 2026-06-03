@@ -23,7 +23,7 @@
 
     <name>${project.artifactId}</name>
     <description>荔枝项目基础脚手架</description>
-    <url>https://github.com/SpringSunYY/litchi</url>
+    <url>https://github.com/SpringSunYY/LZ-litchi</url>
 
     <properties>
         <revision>2.6.0-SNAPSHOT</revision>

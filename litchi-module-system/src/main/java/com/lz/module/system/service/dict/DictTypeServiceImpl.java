@@ -9,7 +9,10 @@ import com.lz.module.system.controller.admin.dict.vo.type.DictTypePageReqVO;
 import com.lz.module.system.controller.admin.dict.vo.type.DictTypeSaveReqVO;
 import com.lz.module.system.dal.dataobject.dict.DictTypeDO;
 import com.lz.module.system.dal.mysql.dict.DictTypeMapper;
+import com.lz.module.system.dal.redis.RedisKeyConstants;
 import jakarta.annotation.Resource;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +52,7 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
     public Long createDictType(DictTypeSaveReqVO createReqVO) {
         // 校验字典类型的名字的唯一性
         validateDictTypeNameUnique(null, createReqVO.getName());
@@ -63,6 +67,7 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
     public void updateDictType(DictTypeSaveReqVO updateReqVO) {
         // 校验自己存在
         validateDictTypeExists(updateReqVO.getId());
@@ -78,6 +83,7 @@ public class DictTypeServiceImpl implements DictTypeService {
 
     @Transactional
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
     public void deleteDictType(Long id, Boolean isDeleteChildren) {
         // 校验是否存在
         DictTypeDO dictType = validateDictTypeExists(id);
@@ -94,6 +100,7 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
     public void deleteDictTypeList(List<Long> ids) {
         // 1. 校验是否有字典数据
         List<DictTypeDO> dictTypes = dictTypeMapper.selectByIds(ids);

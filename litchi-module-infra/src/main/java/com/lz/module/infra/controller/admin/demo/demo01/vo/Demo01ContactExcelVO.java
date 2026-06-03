@@ -1,6 +1,7 @@
 package com.lz.module.infra.controller.admin.demo.demo01.vo;
 
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.common.validation.InDict;
 import com.lz.framework.excel.core.annotations.ExcelColumnSelect;
 import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.lz.framework.excel.core.convert.DictConvert;
@@ -33,6 +34,7 @@ public class Demo01ContactExcelVO {
     @ExcelProperty(value = "性别", converter = DictConvert.class)
     @ExcelColumnSelect(dictType = "system_user_sex", i18n = true)
     @ExcelI18n(i18nKey = "infra.demo01Contact.field.sex")
+    @InDict(dictType = "system_user_sex")
     private Integer sex;
 
     /**

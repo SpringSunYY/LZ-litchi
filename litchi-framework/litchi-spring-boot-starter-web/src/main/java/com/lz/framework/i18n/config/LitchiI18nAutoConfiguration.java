@@ -19,7 +19,7 @@ public class LitchiI18nAutoConfiguration {
     @SuppressWarnings("InstantiationOfUtilityClass")
     public I18nUtils i18nUtils(I18nCommonApi i18nCommonApi) {
         I18nUtils.init(i18nCommonApi);
-        log.info("[init][初始化 JsonUtils 成功]");
+        log.info("[init][初始化 I18nUtils 成功]");
         return new I18nUtils();
     }
 

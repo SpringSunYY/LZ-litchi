@@ -122,4 +122,9 @@ public interface RedisKeyConstants {
      */
     String AREA_TREE = "area_tree";
 
+    /**
+     * 字典缓存
+     */
+    String DICT = "dict";
+
 }
