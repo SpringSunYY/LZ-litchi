@@ -53,7 +53,7 @@ SET @ORDER_NUM = 5;
 -- -----------------------------------------
 DELETE FROM infra_i18n_key WHERE message_key = '${i18nModuleType}.${table.businessName}.menu';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${table.classComment}-管理', '${i18nModuleType}.${table.businessName}.menu', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_MENU, @ORDER_NUM, 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.menu', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_MENU, @ORDER_NUM, 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- -----------------------------------------
 -- 表单（use_type = 2）
@@ -103,7 +103,7 @@ VALUES ('${table.classComment}-${column.columnComment}', '${i18nModuleType}.${ta
 -- -----------------------------------------
 DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}.menu' AND locale = @LOCALE_ZH_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${table.classComment}-管理', '${i18nModuleType}.${table.businessName}.menu', @LOCALE_ZH_EN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_MENU, '${businessNameReadable} management', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.menu', @LOCALE_ZH_EN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_MENU, '${businessNameReadable}', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- -----------------------------------------
 -- 表单（use_type = 2）
@@ -147,7 +147,7 @@ VALUES ('${table.classComment}-${column.columnComment}', '${i18nModuleType}.${ta
 -- -----------------------------------------
 DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}.menu' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${table.classComment}-管理', '${i18nModuleType}.${table.businessName}.menu', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_MENU, '${table.classComment}管理', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.menu', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_MENU, '${table.classComment}', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- -----------------------------------------
 -- 表单（use_type = 2）

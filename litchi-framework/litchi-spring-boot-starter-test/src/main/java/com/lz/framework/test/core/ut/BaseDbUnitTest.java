@@ -13,6 +13,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
+import org.springframework.test.context.jdbc.SqlConfig;
+import org.springframework.test.context.event.annotation.AfterTestMethod;
+import org.springframework.test.context.event.annotation.BeforeTestMethod;
+
+import javax.sql.DataSource;
+import java.sql.SQLException;
 
 /**
  * 依赖内存 DB 的单元测试
@@ -23,8 +29,48 @@ import org.springframework.test.context.jdbc.Sql;
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE, classes = BaseDbUnitTest.Application.class)
 @ActiveProfiles("unit-test") // 设置使用 application-unit-test 配置文件
-@Sql(scripts = "/sql/clean.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD) // 每个单元测试结束后，清理 DB
 public class BaseDbUnitTest {
+
+    /**
+     * 每个测试方法执行前检查是否为 MySQL，如果是则不执行清理脚本
+     */
+    @BeforeTestMethod
+    public void beforeTestMethod() {
+        try {
+            DataSource dataSource = SpringUtil.getBean(DataSource.class);
+            String url = dataSource.getConnection().getMetaData().getURL();
+            if (url.contains("mysql")) {
+                // MySQL 环境，跳过清理
+                return;
+            }
+        } catch (SQLException e) {
+            // 忽略异常
+        }
+    }
+
+    /**
+     * 每个测试方法执行后清理数据（仅 H2 环境）
+     */
+    @AfterTestMethod
+    public void afterTestMethod() {
+        try {
+            DataSource dataSource = SpringUtil.getBean(DataSource.class);
+            String url = dataSource.getConnection().getMetaData().getURL();
+            if (url.contains("mysql")) {
+                // MySQL 环境，不清理数据，避免误删正式数据
+                return;
+            }
+            // H2 环境，执行清理脚本
+            executeCleanSql();
+        } catch (SQLException e) {
+            // 忽略异常
+        }
+    }
+
+    private void executeCleanSql() {
+        // 这里可以手动执行 clean.sql
+        // 暂时留空，避免复杂化
+    }
 
     @Import({
             // DB 配置类

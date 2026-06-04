@@ -69,9 +69,17 @@ public interface I18nLocaleService {
     List<I18nLocaleDO> getI18nLocaleByLocaleTarget(Integer localeTarget);
 
     /**
-     * 清理国际化缓存
+     * 清理国际化缓存，同时传递更改国际化是否修改
      */
     void clearI18nCache();
+
+
+    /**
+     * 获得国际化国家是否更新
+     * @param updated 是否更新，和旧数据对比
+     * @return 是否更新
+     */
+    Boolean getI18nUpdate(boolean updated);
 
     /**
      * 获得国际化国家默认语言

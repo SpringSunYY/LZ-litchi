@@ -31,6 +31,16 @@ public class I18nController {
     private I18nService i18nService;
 
     /**
+     * 获取是否更新国际化
+     */
+    @GetMapping("/locale/updated")
+    @PermitAll
+    @TenantIgnore
+    public CommonResult<Boolean> getI18nUpdate(boolean updated) {
+        return success(i18nService.getI18nUpdate(updated));
+    }
+
+    /**
      * 获取国家地区
      *
      * @return 键名编号

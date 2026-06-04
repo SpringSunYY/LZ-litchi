@@ -61,4 +61,5 @@ public interface I18nKeyService {
      */
     PageResult<I18nKeyDO> getI18nKeyPage(I18nKeyPageReqVO pageReqVO);
 
+    List<I18nKeyDO> getI18nKeys(List<String> menuI18nList);
 }

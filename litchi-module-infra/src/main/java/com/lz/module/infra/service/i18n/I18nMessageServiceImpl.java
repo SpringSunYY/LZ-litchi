@@ -67,7 +67,6 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     private TransactionTemplate transactionTemplate;
 
     @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE)
     public Long createI18nMessage(I18nMessageSaveReqVO createReqVO) {
         // 插入
         I18nMessageDO i18nMessage = BeanUtils.toBean(createReqVO, I18nMessageDO.class);
@@ -80,12 +79,12 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             throw exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.insert(i18nMessage);
+        i18nLocaleService.clearI18nCache();
         // 返回
         return i18nMessage.getId();
     }
 
     @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     public void updateI18nMessage(I18nMessageSaveReqVO updateReqVO) {
         // 校验存在
         I18nMessageDO i18nMessageDO = validateI18nMessageExists(updateReqVO.getId());
@@ -100,22 +99,23 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             throw exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.updateById(updateObj);
+        i18nLocaleService.clearI18nCache();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nMessage(Long id) {
         // 校验存在
         validateI18nMessageExists(id);
         // 删除
         i18nMessageMapper.deleteById(id);
+        i18nLocaleService.clearI18nCache();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nMessageListByIds(List<Long> ids) {
         // 删除
         i18nMessageMapper.deleteByIds(ids);
+        i18nLocaleService.clearI18nCache();
     }
 
 
@@ -178,7 +178,6 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
 
     @Override
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     public boolean saveI18nMessage(Map<String, DictI18nDTO> dictDataMap) {
         //1、提取出所有的key，查询是否已经存在key，如果存在key不需要创建key
         List<String> keys = dictDataMap.keySet().stream().toList();
@@ -228,11 +227,13 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             i18nMessageDOSaveList.add(i18nMessageDO);
         }
 
-        return Boolean.TRUE.equals(transactionTemplate.execute(result -> {
+        boolean result = Boolean.TRUE.equals(transactionTemplate.execute(re -> {
             i18nKeyMapper.insertBatch(i18nKeyDOSavaList);
             i18nMessageMapper.insertBatch(i18nMessageDOSaveList);
             return true;
         }));
+        i18nLocaleService.clearI18nCache();
+        return result;
     }
 
     @Override

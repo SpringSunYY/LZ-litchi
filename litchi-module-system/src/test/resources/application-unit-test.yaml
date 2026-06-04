@@ -2,6 +2,9 @@ spring:
   main:
     lazy-initialization: true # 开启懒加载，加快速度
     banner-mode: off # 单元测试，禁用 Banner
+  sql:
+    init:
+      mode: never  # 禁用所有 SQL 初始化（包括 schema 和 data）
 
 --- #################### 数据库相关配置 ####################
 
@@ -9,16 +12,23 @@ spring:
   # 数据源配置项
   datasource:
     name: litchi
-    url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value; # MODE 使用 MySQL 模式；DATABASE_TO_UPPER 配置表和字段使用小写
-    driver-class-name: org.h2.Driver
-    username: sa
-    password:
+    # ========== 测试环境配置（H2 内存数据库）==========
+    # url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value; # MODE 使用 MySQL 模式；DATABASE_TO_UPPER 配置表和字段使用小写
+    # driver-class-name: org.h2.Driver
+    # username: sa
+    # password:
+    # ========== 正式环境配置（MySQL 数据库）==========
+    url: jdbc:mysql://127.0.0.1:3306/lz-litchi?useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true&nullCatalogMeansCurrent=true&rewriteBatchedStatements=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: yy0908..
     druid:
       async-init: true # 单元测试，异步初始化 Druid 连接池，提升启动速度
       initial-size: 1 # 单元测试，配置为 1，提升启动速度
-  sql:
-    init:
-      schema-locations: classpath:/sql/create_tables.sql
+  # sql:
+  #   init:
+  #     schema-locations: classpath:/sql/create_tables.sql  # H2 测试环境需要取消注释
+  #     mode: never  # 禁用 SQL 初始化脚本（连接正式数据库时不需要）
 
   # Redis 配置。Redisson 默认的配置足够使用，一般不需要进行调优
   data:

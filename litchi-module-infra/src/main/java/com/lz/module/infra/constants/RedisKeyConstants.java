@@ -9,4 +9,5 @@ public interface RedisKeyConstants {
 
     String I18N_MESSAGE = "i18n:message";
     String I18N_LOCALE = "i18n:locale";
+    String I18N_UPDATED="i18n:updated";
 }

@@ -1,4 +1,20 @@
 <configuration>
     <!-- 引用 Spring Boot 的 logback 基础配置 -->
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    
+    <!-- 控制台输出 -->
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+    
+    <!-- 根日志级别 -->
+    <root level="INFO">
+        <appender-ref ref="CONSOLE" />
+    </root>
+    
+    <!-- 当前模块的日志级别设置为 DEBUG -->
+    <logger name="com.lz.module.system" level="DEBUG"/>
 </configuration>

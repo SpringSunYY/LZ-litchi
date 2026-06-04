@@ -2,12 +2,14 @@ package com.lz.framework.test.config;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnSingleCandidate;
 import org.springframework.boot.autoconfigure.sql.init.SqlInitializationProperties;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.jdbc.init.DataSourceScriptDatabaseInitializer;
 import org.springframework.boot.sql.init.AbstractScriptDatabaseInitializer;
 import org.springframework.boot.sql.init.DatabaseInitializationSettings;
+import org.springframework.boot.sql.init.DatabaseInitializationMode;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -34,6 +36,16 @@ public class SqlInitializationTestConfiguration {
 	@Bean
 	public DataSourceScriptDatabaseInitializer dataSourceScriptDatabaseInitializer(DataSource dataSource,
 																				   SqlInitializationProperties initializationProperties) {
+		// 如果是 MySQL 数据库，禁用自动初始化（表已存在）
+		try {
+			String url = dataSource.getConnection().getMetaData().getURL();
+			if (url.contains("mysql")) {
+				// 返回一个不执行任何操作的 Initializer
+				return new DataSourceScriptDatabaseInitializer(dataSource, new DatabaseInitializationSettings());
+			}
+		} catch (Exception e) {
+			// 忽略异常，使用默认配置
+		}
 		DatabaseInitializationSettings settings = createFrom(initializationProperties);
 		return new DataSourceScriptDatabaseInitializer(dataSource, settings);
 	}

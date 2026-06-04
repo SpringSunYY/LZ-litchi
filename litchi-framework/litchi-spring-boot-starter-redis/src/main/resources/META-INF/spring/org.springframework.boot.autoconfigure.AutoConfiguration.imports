@@ -1,3 +1,3 @@
 com.lz.framework.redis.config.LitchiRedisAutoConfiguration
 com.lz.framework.redis.config.LitchiCacheAutoConfiguration
-com.lz.framework.redis.core.RedisUtils
+com.lz.framework.redis.config.RedisUtilsAutoConfiguration

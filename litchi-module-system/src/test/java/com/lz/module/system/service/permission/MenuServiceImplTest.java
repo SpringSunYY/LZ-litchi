@@ -1,22 +1,25 @@
 package com.lz.module.system.service.permission;
 
+import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.test.core.ut.BaseDbUnitTest;
+import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
+import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
+import com.lz.module.infra.service.i18n.I18nKeyService;
 import com.lz.module.system.controller.admin.permission.vo.menu.MenuListReqVO;
 import com.lz.module.system.controller.admin.permission.vo.menu.MenuSaveVO;
 import com.lz.module.system.dal.dataobject.permission.MenuDO;
 import com.lz.module.system.dal.mysql.permission.MenuMapper;
 import com.lz.module.system.enums.permission.MenuTypeEnum;
 import com.lz.module.system.service.tenant.TenantService;
+import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.context.annotation.Import;
 
-import jakarta.annotation.Resource;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static com.lz.framework.common.util.collection.SetUtils.asSet;
 import static com.lz.framework.common.util.object.ObjectUtils.cloneIgnoreId;
@@ -31,6 +34,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 
+@Slf4j
 @Import(MenuServiceImpl.class)
 public class MenuServiceImplTest extends BaseDbUnitTest {
 
@@ -44,6 +48,33 @@ public class MenuServiceImplTest extends BaseDbUnitTest {
     private PermissionService permissionService;
     @MockBean
     private TenantService tenantService;
+
+    @SpyBean
+    private I18nKeyMapper i18nKeyMapper;
+
+
+    @Test
+    public void testGetNotExistMenuI18n() {
+        //先拿到所有的菜单
+        List<MenuDO> menuDOList = menuMapper.selectList();
+        //提取出所有的i18n
+        List<String> menuI18nKeyList = menuDOList.stream().map(MenuDO::getI18n).toList();
+        //拿到所有的i18n
+        List<I18nKeyDO> i18nKeys = i18nKeyMapper.selectList(I18nKeyDO::getMessageKey, menuI18nKeyList);
+        //拿到所有的查询到的i18n
+        List<String> existI18nMenuI18n = i18nKeys.stream().map(I18nKeyDO::getMessageKey).toList();
+        //创建新的菜单，用于保存没有查到i18n的菜单
+        ArrayList<MenuDO> noExistI18nMenu = new ArrayList<>();
+        for (MenuDO menuDO : menuDOList) {
+            if (StrUtil.isNotEmpty(menuDO.getI18n()) && !existI18nMenuI18n.contains(menuDO.getI18n())) {
+                noExistI18nMenu.add(menuDO);
+            }
+        }
+        log.info("没有i18n的数量:{}", noExistI18nMenu.size());
+        for (MenuDO existI18nMenu : noExistI18nMenu) {
+            System.out.println(existI18nMenu);
+        }
+    }
 
     @Test
     public void testCreateMenu_success() {

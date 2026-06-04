@@ -14,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * i18n 国际化 Service 实现类
@@ -43,6 +45,11 @@ public class I18nServiceImpl implements I18nService {
             i18nLocaleDOList.remove(priorityDefault);
             i18nLocaleDOList.addFirst(priorityDefault);
         }
+        //去重语言，防止语言重复（保持原有顺序）
+        Map<String, Boolean> seen = new ConcurrentHashMap<>();
+        i18nLocaleDOList = i18nLocaleDOList.stream()
+                .filter(locale -> seen.putIfAbsent(locale.getLocale(), Boolean.TRUE) == null)
+                .toList();
         return BeanUtils.toBean(i18nLocaleDOList, I18nLocaleSimpRespVO.class);
     }
 
@@ -75,5 +82,10 @@ public class I18nServiceImpl implements I18nService {
     public String getMessageByMessageKey(String messageKey, String acceptLanguage) {
         I18nMessageDO i18nMessage = i18nMessageService.getMessageByMessageKey(messageKey, acceptLanguage);
         return i18nMessage != null ? i18nMessage.getMessage() : null;
+    }
+
+    @Override
+    public Boolean getI18nUpdate(boolean updated) {
+        return i18nLocaleService.getI18nUpdate(updated);
     }
 }

@@ -3,7 +3,6 @@ package com.lz.module.infra.service.i18n;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
-import com.lz.module.infra.constants.RedisKeyConstants;
 import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyPageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeySaveReqVO;
 import com.lz.module.infra.dal.dataobject.i18n.I18nKeyDO;
@@ -12,7 +11,6 @@ import com.lz.module.infra.dal.mysql.i18n.I18nKeyMapper;
 import com.lz.module.infra.dal.mysql.i18n.I18nMessageMapper;
 import com.lz.module.infra.enums.i18n.InfraI18nKeyIsSystemEnum;
 import jakarta.annotation.Resource;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
@@ -37,7 +35,9 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     @Resource
     private I18nMessageMapper i18nMessageMapper;
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
+    @Resource
+    private I18nLocaleService i18nLocaleService;
+
     @Override
     public Long createI18nKey(I18nKeySaveReqVO createReqVO) {
         // 插入
@@ -48,12 +48,11 @@ public class I18nKeyServiceImpl implements I18nKeyService {
             throw exception(I18N_KEY_EXISTS);
         }
         i18nKeyMapper.insert(i18nKey);
-
+        i18nLocaleService.clearI18nCache();
         // 返回
         return i18nKey.getId();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void updateI18nKey(I18nKeySaveReqVO updateReqVO) {
         // 校验存在
@@ -65,10 +64,10 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         // 更新
         I18nKeyDO updateObj = BeanUtils.toBean(updateReqVO, I18nKeyDO.class);
         i18nKeyMapper.updateById(updateObj);
+        i18nLocaleService.clearI18nCache();
     }
 
     @Transactional
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nKey(Long id, Boolean isDeleteChildren) {
         // 校验存在
@@ -83,13 +82,14 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         }
         // 删除
         i18nKeyMapper.deleteById(id);
+        i18nLocaleService.clearI18nCache();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_MESSAGE, allEntries = true)
     @Override
     public void deleteI18nKeyListByIds(List<Long> ids) {
         // 删除
         i18nKeyMapper.deleteByIds(ids);
+        i18nLocaleService.clearI18nCache();
     }
 
 
@@ -109,6 +109,11 @@ public class I18nKeyServiceImpl implements I18nKeyService {
     @Override
     public PageResult<I18nKeyDO> getI18nKeyPage(I18nKeyPageReqVO pageReqVO) {
         return i18nKeyMapper.selectPage(pageReqVO);
+    }
+
+    @Override
+    public List<I18nKeyDO> getI18nKeys(List<String> menuI18nList) {
+        return i18nKeyMapper.selectList(I18nKeyDO::getMessageKey, menuI18nList);
     }
 
 }

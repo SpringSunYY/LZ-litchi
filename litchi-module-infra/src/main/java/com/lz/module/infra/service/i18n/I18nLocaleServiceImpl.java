@@ -17,7 +17,6 @@ import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import com.lz.module.infra.framework.i18n.config.I18nProperties;
 import jakarta.annotation.Resource;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -48,7 +47,6 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Resource
     private I18nMessageService i18nMessageService;
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public Long createI18nLocale(I18nLocaleSaveReqVO createReqVO) {
         // 插入
@@ -74,12 +72,11 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                             .set(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()));
         }
         i18nLocaleMapper.insert(i18nLocale);
-
+        this.clearI18nCache();
         // 返回
         return i18nLocale.getId();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public void updateI18nLocale(I18nLocaleSaveReqVO updateReqVO) {
         // 校验存在
@@ -107,9 +104,9 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                             .set(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()));
         }
         i18nLocaleMapper.updateById(updateObj);
+        this.clearI18nCache();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public void deleteI18nLocale(Long id) {
         // 校验存在
@@ -120,9 +117,9 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         }
         // 删除
         i18nLocaleMapper.deleteById(id);
+        this.clearI18nCache();
     }
 
-    @CacheEvict(cacheNames = RedisKeyConstants.I18N_LOCALE, allEntries = true)
     @Override
     public void deleteI18nLocaleListByIds(List<Long> ids) {
         // 删除
@@ -176,6 +173,32 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         for (I18nLocaleDO i18nLocaleDO : i18nLocaleDOList) {
             i18nMessageService.getI18nLocaleByLocaleTargetAndLocale(i18nLocaleDO.getLocaleTarget(), i18nLocaleDO.getLocale());
         }
+        //拿到是否更新
+        Boolean updatedB = redisUtils.get(RedisKeyConstants.I18N_UPDATED);
+        if (ObjectUtils.isNull(updatedB)) {
+            updatedB = true;
+        } else {
+            updatedB = !updatedB;
+        }
+        redisUtils.set(RedisKeyConstants.I18N_UPDATED, updatedB);
+    }
+
+    @Override
+    public Boolean getI18nUpdate(boolean updated) {
+        //拿到是否更新
+        Boolean updatedB = redisUtils.get(RedisKeyConstants.I18N_UPDATED);
+        //如果为空先设置,提示已经更新
+        if (ObjectUtils.isNull(updatedB)) {
+            updatedB = true;
+            redisUtils.set(RedisKeyConstants.I18N_UPDATED, updatedB);
+            return true;
+        }
+        //如果为空则直接返回更新
+        if (ObjectUtils.isNull(updated)) {
+            updated = true;
+        }
+        //对比两次值，如果相同则返回false，否则返回true
+        return updatedB != updated;
     }
 
     @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE, key = "#localeTarget")
