@@ -36,8 +36,21 @@ public class I18nController {
     @GetMapping("/locale/updated")
     @PermitAll
     @TenantIgnore
-    public CommonResult<Boolean> getI18nUpdate(boolean updated) {
-        return success(i18nService.getI18nUpdate(updated));
+    public CommonResult<Boolean> getI18nUpdate(
+            @RequestParam(value = "updated") boolean updated,
+            @RequestParam(value = "locale") String locale
+    ) {
+        return success(i18nService.getI18nUpdate(updated,locale));
+    }
+
+    /**
+     * 获取当前状态
+     */
+    @GetMapping("/locale/status")
+    @PermitAll
+    @TenantIgnore
+    public CommonResult<Boolean> getI18nStatus(@RequestParam(value = "locale") String locale) {
+        return success(i18nService.getI18nStatus(locale));
     }
 
     /**

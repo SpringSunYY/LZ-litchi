@@ -1,5 +1,6 @@
 package com.lz.module.infra.service.i18n;
 
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lz.framework.common.pojo.PageResult;
@@ -72,7 +73,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                             .set(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()));
         }
         i18nLocaleMapper.insert(i18nLocale);
-        this.clearI18nCache();
+        this.clearI18nCache(i18nLocale.getLocale());
         // 返回
         return i18nLocale.getId();
     }
@@ -104,7 +105,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                             .set(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()));
         }
         i18nLocaleMapper.updateById(updateObj);
-        this.clearI18nCache();
+        this.clearI18nCache(updateObj.getLocale());
     }
 
     @Override
@@ -117,7 +118,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         }
         // 删除
         i18nLocaleMapper.deleteById(id);
-        this.clearI18nCache();
+        this.clearI18nCache(i18nLocaleDO.getLocale());
     }
 
     @Override
@@ -165,32 +166,47 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     }
 
     @Override
-    public void clearI18nCache() {
+    public void clearI18nCache(String locale) {
+        //虽然删除了所有的key，但是不修改对应语言是否更新，前端还是可以拿自己的缓存
         redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE, RedisKeyConstants.I18N_MESSAGE);
         //重新缓存一次国际化信息
         //查询到国家，每个国家都要缓存
+        boolean isEmpty = StrUtil.isEmpty(locale);
         List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleMapper.selectList();
         for (I18nLocaleDO i18nLocaleDO : i18nLocaleDOList) {
             i18nMessageService.getI18nLocaleByLocaleTargetAndLocale(i18nLocaleDO.getLocaleTarget(), i18nLocaleDO.getLocale());
+            //是空，每个国家都要改
+            if (isEmpty) {
+                resetI18nStatus(i18nLocaleDO.getLocale());
+            }
+        }
+        if (isEmpty) {
+            return;
         }
         //拿到是否更新
-        Boolean updatedB = redisUtils.get(RedisKeyConstants.I18N_UPDATED);
+        resetI18nStatus(locale);
+    }
+
+    private void resetI18nStatus(String locale) {
+        String key = RedisKeyConstants.I18N_UPDATED + locale;
+        Boolean updatedB = redisUtils.get(key);
         if (ObjectUtils.isNull(updatedB)) {
             updatedB = true;
         } else {
             updatedB = !updatedB;
         }
-        redisUtils.set(RedisKeyConstants.I18N_UPDATED, updatedB);
+        redisUtils.set(key, updatedB);
     }
 
     @Override
-    public Boolean getI18nUpdate(boolean updated) {
+    public Boolean getI18nUpdate(boolean updated, String locale) {
         //拿到是否更新
-        Boolean updatedB = redisUtils.get(RedisKeyConstants.I18N_UPDATED);
+        String key = RedisKeyConstants.I18N_UPDATED + locale;
+        Boolean updatedB = redisUtils.get(key);
         //如果为空先设置,提示已经更新
         if (ObjectUtils.isNull(updatedB)) {
             updatedB = true;
-            redisUtils.set(RedisKeyConstants.I18N_UPDATED, updatedB);
+            redisUtils.set(key, updatedB);
             return true;
         }
         //如果为空则直接返回更新
@@ -199,6 +215,21 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         }
         //对比两次值，如果相同则返回false，否则返回true
         return updatedB != updated;
+    }
+
+
+    @Override
+    public Boolean getI18nStatus(String locale) {
+        //拿到是否更新
+        String key = RedisKeyConstants.I18N_UPDATED + locale;
+        Boolean updatedB = redisUtils.get(key);
+        //如果为空先设置,提示已经更新
+        if (ObjectUtils.isNull(updatedB)) {
+            updatedB = true;
+            redisUtils.set(key, updatedB);
+            return true;
+        }
+        return updatedB;
     }
 
     @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE, key = "#localeTarget")

@@ -25,7 +25,6 @@ import com.lz.module.infra.framework.i18n.config.I18nProperties;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.jspecify.annotations.NonNull;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,7 @@ import org.springframework.validation.annotation.Validated;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
@@ -79,7 +79,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             throw exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.insert(i18nMessage);
-        i18nLocaleService.clearI18nCache();
+        i18nLocaleService.clearI18nCache(createReqVO.getLocale());
         // 返回
         return i18nMessage.getId();
     }
@@ -99,23 +99,24 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             throw exception(I18N_MESSAGE_EXISTS);
         }
         i18nMessageMapper.updateById(updateObj);
-        i18nLocaleService.clearI18nCache();
+        i18nLocaleService.clearI18nCache(updateObj.getLocale());
     }
 
     @Override
     public void deleteI18nMessage(Long id) {
         // 校验存在
-        validateI18nMessageExists(id);
+        I18nMessageDO i18nMessageDO = validateI18nMessageExists(id);
         // 删除
         i18nMessageMapper.deleteById(id);
-        i18nLocaleService.clearI18nCache();
+        i18nLocaleService.clearI18nCache(i18nMessageDO.getLocale());
     }
 
     @Override
     public void deleteI18nMessageListByIds(List<Long> ids) {
         // 删除
         i18nMessageMapper.deleteByIds(ids);
-        i18nLocaleService.clearI18nCache();
+        //当前还没实现，先不管
+        i18nLocaleService.clearI18nCache(null);
     }
 
 
@@ -232,7 +233,8 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             i18nMessageMapper.insertBatch(i18nMessageDOSaveList);
             return true;
         }));
-        i18nLocaleService.clearI18nCache();
+        //先写就是默认
+        i18nLocaleService.clearI18nCache(i18nProperties.getDefaultLocale());
         return result;
     }
 
@@ -266,7 +268,8 @@ public class I18nMessageServiceImpl implements I18nMessageService {
             }
             i18nMessageMapper.insertOrUpdate(i18nMessageDOList);
         });
-        i18nLocaleService.clearI18nCache();
+        Set<String> localeSet = i18nMessageDOList.stream().map(I18nMessageDO::getLocale).collect(Collectors.toSet());
+        localeSet.forEach(locale -> i18nLocaleService.clearI18nCache(locale));
     }
 
     private static @NonNull ArrayList<I18nKeyDO> getI18nKeyDOS(List<I18nMessageExcelVO> list, Map<String, I18nKeyDO> i18nKeyDOMap) {

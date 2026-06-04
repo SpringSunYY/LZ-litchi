@@ -42,7 +42,15 @@ public interface I18nService {
      * 获取国际化更新状态
      *
      * @param updated 更新状态,对比旧数据
+     * @param locale 语言
      * @return true 表示有更新
      */
-    Boolean getI18nUpdate(boolean updated);
+    Boolean getI18nUpdate(boolean updated, String locale);
+
+    /**
+     * 获取国际化状态
+     * 语言
+     * @return true
+     */
+    Boolean getI18nStatus(String locale);
 }

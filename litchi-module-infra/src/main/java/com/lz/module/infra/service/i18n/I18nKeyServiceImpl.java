@@ -16,6 +16,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.infra.enums.ErrorCodeConstants.*;
@@ -48,7 +50,6 @@ public class I18nKeyServiceImpl implements I18nKeyService {
             throw exception(I18N_KEY_EXISTS);
         }
         i18nKeyMapper.insert(i18nKey);
-        i18nLocaleService.clearI18nCache();
         // 返回
         return i18nKey.getId();
     }
@@ -64,7 +65,6 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         // 更新
         I18nKeyDO updateObj = BeanUtils.toBean(updateReqVO, I18nKeyDO.class);
         i18nKeyMapper.updateById(updateObj);
-        i18nLocaleService.clearI18nCache();
     }
 
     @Transactional
@@ -78,18 +78,21 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         }
         //如果需要删除子集
         if (isDeleteChildren) {
+            List<I18nMessageDO> i18nMessageDOS = i18nMessageMapper.selectList(I18nMessageDO::getMessageKey, i18nKeyDO.getMessageKey());
+            Set<String> collect = i18nMessageDOS.stream().map(I18nMessageDO::getLocale).collect(Collectors.toSet());
+            collect.forEach(locale -> {
+                i18nLocaleService.clearI18nCache(locale);
+            });
             i18nMessageMapper.delete(I18nMessageDO::getMessageKey, i18nKeyDO.getMessageKey());
         }
         // 删除
         i18nKeyMapper.deleteById(id);
-        i18nLocaleService.clearI18nCache();
     }
 
     @Override
     public void deleteI18nKeyListByIds(List<Long> ids) {
         // 删除
         i18nKeyMapper.deleteByIds(ids);
-        i18nLocaleService.clearI18nCache();
     }
 
 
