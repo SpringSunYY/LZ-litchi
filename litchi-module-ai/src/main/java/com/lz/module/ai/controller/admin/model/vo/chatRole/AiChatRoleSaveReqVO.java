@@ -27,7 +27,7 @@ public class AiChatRoleSaveReqVO {
 
     @Schema(description = "角色头像", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://www.iocoder.cn/1.png")
     @I18nNotEmpty(i18nKey = "ai.chatRole.back.avatar.notEmpty", message = "角色头像不能为空")
-    @I18nURL(i18nKey = "ai.chatRole.back.avatar.url", message = "角色头像必须是 URL 格式")
+//    @I18nURL(i18nKey = "ai.chatRole.back.avatar.url", message = "角色头像必须是 URL 格式")
     private String avatar;
 
     @Schema(description = "角色类别", requiredMode = Schema.RequiredMode.REQUIRED, example = "创作")
