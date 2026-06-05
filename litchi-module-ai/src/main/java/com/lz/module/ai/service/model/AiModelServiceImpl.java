@@ -1,7 +1,7 @@
 package com.lz.module.ai.service.model;
 
 import com.lz.module.ai.enums.model.AiPlatformEnum;
-import com.lz.module.ai.framework.ai.core.AiModelFactory;
+import com.lz.module.ai.framework.ai.core.model.AiModelFactory;
 import com.lz.module.ai.framework.ai.core.model.midjourney.api.MidjourneyApi;
 import com.lz.module.ai.framework.ai.core.model.suno.api.SunoApi;
 import com.lz.framework.common.enums.CommonStatusEnum;

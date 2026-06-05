@@ -1,8 +1,6 @@
 package com.lz.module.ai.dal.dataobject.model;
 
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
-import com.lz.module.ai.service.model.tool.DirectoryListToolFunction;
-import com.lz.module.ai.service.model.tool.WeatherQueryToolFunction;
 import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;

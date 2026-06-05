@@ -49,7 +49,7 @@ public class FileValidationUtils {
                 .map(String::trim)
                 .map(String::toLowerCase)
                 .filter(StrUtil::isNotEmpty)
-                .collect(Collectors.toList());
+                .toList();
 
         return allowedTypes.contains(extension);
     }

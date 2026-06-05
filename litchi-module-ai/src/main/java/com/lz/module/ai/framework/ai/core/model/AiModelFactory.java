@@ -1,4 +1,4 @@
-package com.lz.module.ai.framework.ai.core;
+package com.lz.module.ai.framework.ai.core.model;
 
 import com.lz.module.ai.enums.model.AiPlatformEnum;
 import com.lz.module.ai.framework.ai.core.model.midjourney.api.MidjourneyApi;

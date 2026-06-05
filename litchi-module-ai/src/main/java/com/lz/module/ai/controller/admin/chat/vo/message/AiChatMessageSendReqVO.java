@@ -6,6 +6,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.util.List;
+
 @Schema(description = "管理后台 - AI 聊天消息发送 Request VO")
 @Data
 public class AiChatMessageSendReqVO {
@@ -20,5 +22,11 @@ public class AiChatMessageSendReqVO {
 
     @Schema(description = "是否携带上下文", example = "true")
     private Boolean useContext;
+
+    @Schema(description = "是否联网搜索", example = "true")
+    private Boolean useSearch;
+
+    @Schema(description = "附件 URL 数组", example = "https://www.iocoder.cn/1.png")
+    private List<String> attachmentUrls;
 
 }

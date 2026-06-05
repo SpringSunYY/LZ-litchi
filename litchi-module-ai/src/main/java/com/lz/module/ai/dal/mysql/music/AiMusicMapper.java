@@ -40,5 +40,5 @@ public interface AiMusicMapper extends BaseMapperX<AiMusicDO> {
                 .eq(Boolean.FALSE.equals(reqVO.getPublicStatus()), AiMusicDO::getUserId, userId)
                 .orderByAsc(AiMusicDO::getId));
     }
-
+    
 }

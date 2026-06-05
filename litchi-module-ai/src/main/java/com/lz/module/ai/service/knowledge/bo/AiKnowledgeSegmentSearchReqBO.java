@@ -1,15 +1,14 @@
 package com.lz.module.ai.service.knowledge.bo;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import javax.validation.constraints.NotNull;
 
-import jakarta.validation.constraints.NotEmpty;
-
 /**
  * AI 知识库段落搜索 Request BO
  *
- * @author 荔枝源码
+ * @author 芋道源码
  */
 @Data
 public class AiKnowledgeSegmentSearchReqBO {

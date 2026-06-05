@@ -5,6 +5,7 @@ import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
+import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.infra.constants.FileConstants;
@@ -20,7 +21,6 @@ import com.lz.module.infra.framework.file.core.client.FileClient;
 import com.lz.module.infra.framework.file.core.client.s3.FilePresignedUrlRespDTO;
 import com.lz.module.infra.framework.file.core.utils.FileTypeUtils;
 import com.lz.module.infra.framework.file.core.utils.FileValidationUtils;
-import com.google.common.annotations.VisibleForTesting;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
@@ -41,13 +41,13 @@ public class FileServiceImpl implements FileService {
 
     /**
      * 上传文件的前缀，是否包含日期（yyyyMMdd）
-     *
+     * <p>
      * 目的：按照日期，进行分目录
      */
     static boolean PATH_PREFIX_DATE_ENABLE = true;
     /**
      * 上传文件的后缀，是否包含时间戳
-     *
+     * <p>
      * 目的：保证文件的唯一性，避免覆盖
      * 定制：可按需调整成 UUID、或者其他方式
      */
@@ -132,11 +132,12 @@ public class FileServiceImpl implements FileService {
         // 4. 拼接绝对路径和相对路径
         String absolutePath = url; // 绝对路径（完整URL）
         String relativePath = FileConstants.getFileGetPath(client.getConfigKey(), path); // 相对路径
-
+        // 4.1 拿到文件类型
+        String fileType = FileTypeUtils.getFileExtension(type);
         // 5. 保存到数据库
         fileMapper.insert(new FileDO().setConfigKey(client.getConfigKey())
                 .setName(name).setPath(path).setRelativePath(relativePath).setAbsolutePath(absolutePath)
-                .setType(type).setSize(content.length).setModuleType(moduleType));
+                .setType(fileType).setSize(content.length).setModuleType(moduleType));
 
         // 6. 根据配置返回路径
         return buildReturnPath(config, relativePath, absolutePath);
@@ -162,8 +163,8 @@ public class FileServiceImpl implements FileService {
         if (PATH_PREFIX_DATE_ENABLE) {
             LocalDateTime now = LocalDateTimeUtil.now();
             prefix = now.getYear() + StrUtil.SLASH
-                     + String.format("%02d", now.getMonthValue()) + StrUtil.SLASH
-                     + String.format("%02d", now.getDayOfMonth());
+                    + String.format("%02d", now.getMonthValue()) + StrUtil.SLASH
+                    + String.format("%02d", now.getDayOfMonth());
         }
         String suffix = null;
         if (PATH_SUFFIX_TIMESTAMP_ENABLE) {

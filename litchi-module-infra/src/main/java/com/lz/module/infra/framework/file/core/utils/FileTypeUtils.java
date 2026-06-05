@@ -72,6 +72,31 @@ public class FileTypeUtils {
     }
 
     /**
+     * 获得文件后缀
+     *
+     * @param fileName 文件名
+     * @return 文件后缀
+     */
+    public static String getFileExtension(String fileName) {
+        String extension = getExtension(fileName);
+        if (StrUtil.isEmpty( extension)) {
+            return null;
+        }
+        //去除符号
+        return StrUtil.removeAllPrefix(extension, ".");
+    }
+
+    /**
+     * 判断是否是图片
+     *
+     * @param mineType 类型
+     * @return 是否是图片
+     */
+    public static boolean isImage(String mineType) {
+        return StrUtil.startWith(mineType, "image/");
+    }
+
+    /**
      * 返回附件
      *
      * @param response 响应

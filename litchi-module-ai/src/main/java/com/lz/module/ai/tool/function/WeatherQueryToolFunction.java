@@ -1,4 +1,4 @@
-package com.lz.module.ai.service.model.tool;
+package com.lz.module.ai.tool.function;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.util.RandomUtil;
@@ -19,7 +19,7 @@ import static cn.hutool.core.date.DatePattern.NORM_DATETIME_PATTERN;
 /**
  * 工具：查询指定城市的天气信息
  *
- * @author 荔枝源码
+ * @author 芋道源码
  */
 @Component("weather_query")
 public class WeatherQueryToolFunction

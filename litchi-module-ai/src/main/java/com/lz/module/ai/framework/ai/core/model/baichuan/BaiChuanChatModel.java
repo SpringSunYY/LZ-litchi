@@ -12,7 +12,7 @@ import reactor.core.publisher.Flux;
 /**
  * 百川 {@link ChatModel} 实现类
  *
- * @author 荔枝源码
+ * @author 芋道源码
  */
 @Slf4j
 @RequiredArgsConstructor

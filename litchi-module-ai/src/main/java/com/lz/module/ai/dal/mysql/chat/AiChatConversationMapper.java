@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * AI 聊天对话 Mapper
  *
- * @author 荔枝源码
+ * @author 芋道源码
  */
 @Mapper
 public interface AiChatConversationMapper extends BaseMapperX<AiChatConversationDO> {

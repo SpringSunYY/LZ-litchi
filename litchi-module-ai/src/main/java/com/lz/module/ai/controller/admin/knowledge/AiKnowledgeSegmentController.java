@@ -91,7 +91,7 @@ public class AiKnowledgeSegmentController {
     })
     @PreAuthorize("@ss.hasPermission('ai:knowledge:query')")
     public CommonResult<List<AiKnowledgeSegmentRespVO>> splitContent(
-            @RequestParam("url") @URL String url,
+            @RequestParam("url")  String url,
             @RequestParam(value = "segmentMaxTokens") Integer segmentMaxTokens) {
         List<AiKnowledgeSegmentDO> segments = segmentService.splitContent(url, segmentMaxTokens);
         return success(BeanUtils.toBean(segments, AiKnowledgeSegmentRespVO.class));

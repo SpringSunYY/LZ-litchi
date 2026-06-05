@@ -26,18 +26,21 @@ public enum AiPlatformEnum implements ArrayValuable<String> {
     HUN_YUAN("HunYuan", "混元"), // 腾讯
     SILICON_FLOW("SiliconFlow", "硅基流动"), // 硅基流动
     MINI_MAX("MiniMax", "MiniMax"), // 稀宇科技
-    MOONSHOT("Moonshot", "月之暗灭"), // KIMI
+    MOONSHOT("Moonshot", "月之暗面"), // KIMI
     BAI_CHUAN("BaiChuan", "百川智能"), // 百川智能
 
     // ========== 国外平台 ==========
 
     OPENAI("OpenAI", "OpenAI"), // OpenAI 官方
     AZURE_OPENAI("AzureOpenAI", "AzureOpenAI"), // OpenAI 微软
+    ANTHROPIC("Anthropic", "Anthropic"), // Anthropic Claude
+    GEMINI("Gemini", "Gemini"), // 谷歌 Gemini
     OLLAMA("Ollama", "Ollama"),
 
     STABLE_DIFFUSION("StableDiffusion", "StableDiffusion"), // Stability AI
     MIDJOURNEY("Midjourney", "Midjourney"), // Midjourney
     SUNO("Suno", "Suno"), // Suno AI
+    GROK("Grok","Grok"), // Grok
 
     ;
 

@@ -1,7 +1,9 @@
 package com.lz.module.ai.dal.dataobject.chat;
 
+import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.lz.framework.mybatis.core.dataobject.BaseDO;
 import com.lz.framework.mybatis.core.type.LongListTypeHandler;
+import com.lz.framework.mybatis.core.type.StringListTypeHandler;
 import com.lz.module.ai.dal.dataobject.knowledge.AiKnowledgeSegmentDO;
 import com.lz.module.ai.dal.dataobject.model.AiChatRoleDO;
 import com.lz.module.ai.dal.dataobject.model.AiModelDO;
@@ -9,6 +11,7 @@ import com.baomidou.mybatisplus.annotation.KeySequence;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.lz.module.ai.framework.ai.core.webserch.AiWebSearchResponse;
 import lombok.*;
 import org.springframework.ai.chat.messages.MessageType;
 
@@ -87,6 +90,10 @@ public class AiChatMessageDO extends BaseDO {
      * 聊天内容
      */
     private String content;
+    /**
+     * 推理内容
+     */
+    private String reasoningContent;
 
     /**
      * 是否携带上下文
@@ -100,5 +107,17 @@ public class AiChatMessageDO extends BaseDO {
      */
     @TableField(typeHandler = LongListTypeHandler.class)
     private List<Long> segmentIds;
+
+    /**
+     * 联网搜索的网页内容数组
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private List<AiWebSearchResponse.WebPage> webSearchPages;
+
+    /**
+     * 附件 URL 数组
+     */
+    @TableField(typeHandler = StringListTypeHandler.class)
+    private List<String> attachmentUrls;
 
 }

@@ -29,12 +29,12 @@ import com.lz.module.infra.api.file.FileApi;
 import com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springaicommunity.qianfan.QianFanImageOptions;
 import org.springframework.ai.image.ImageModel;
 import org.springframework.ai.image.ImageOptions;
 import org.springframework.ai.image.ImagePrompt;
 import org.springframework.ai.image.ImageResponse;
 import org.springframework.ai.openai.OpenAiImageOptions;
-import org.springframework.ai.qianfan.QianFanImageOptions;
 import org.springframework.ai.stabilityai.api.StabilityAiImageOptions;
 import org.springframework.ai.zhipuai.ZhiPuAiImageOptions;
 import org.springframework.scheduling.annotation.Async;
@@ -109,6 +109,7 @@ public class AiImageServiceImpl implements AiImageService {
     }
 
     @Async
+    @SuppressWarnings("ConstantValue")
     public void executeDrawImage(AiImageDO image, AiImageDrawReqVO reqVO, AiModelDO model) {
         try {
             // 1.1 构建请求
@@ -140,10 +141,10 @@ public class AiImageServiceImpl implements AiImageService {
     private static ImageOptions buildImageOptions(AiImageDrawReqVO draw, AiModelDO model) {
         if (ObjUtil.equal(model.getPlatform(), AiPlatformEnum.OPENAI.getPlatform())) {
             // https://platform.openai.com/docs/api-reference/images/create
-            return OpenAiImageOptions.builder().withModel(model.getModel())
-                    .withHeight(draw.getHeight()).withWidth(draw.getWidth())
-                    .withStyle(MapUtil.getStr(draw.getOptions(), "style")) // 风格
-                    .withResponseFormat("b64_json")
+            return OpenAiImageOptions.builder().model(model.getModel())
+                    .height(draw.getHeight()).width(draw.getWidth())
+                    .style(MapUtil.getStr(draw.getOptions(), "style")) // 风格
+                    .responseFormat("b64_json")
                     .build();
         } else if (ObjUtil.equal(model.getPlatform(), AiPlatformEnum.SILICON_FLOW.getPlatform())) {
             // https://docs.siliconflow.cn/cn/api-reference/images/images-generations
@@ -164,8 +165,8 @@ public class AiImageServiceImpl implements AiImageService {
                     .build();
         } else if (ObjUtil.equal(model.getPlatform(), AiPlatformEnum.TONG_YI.getPlatform())) {
             return DashScopeImageOptions.builder()
-                    .withModel(model.getModel()).withN(1)
-                    .withHeight(draw.getHeight()).withWidth(draw.getWidth())
+                    .model(model.getModel()).n(1)
+                    .height(draw.getHeight()).width(draw.getWidth())
                     .build();
         } else if (ObjUtil.equal(model.getPlatform(), AiPlatformEnum.YI_YAN.getPlatform())) {
             return QianFanImageOptions.builder()
@@ -267,7 +268,7 @@ public class AiImageServiceImpl implements AiImageService {
             return 0;
         }
         // 1.2 调用 Midjourney Proxy 获取任务进展
-        MidjourneyApi midjourneyApi = modelService.getMidjourneyApi(images.get(0).getModelId());
+        MidjourneyApi midjourneyApi = modelService.getMidjourneyApi(images.getFirst().getModelId());
         List<MidjourneyApi.Notify> taskList = midjourneyApi.getTaskList(convertSet(images, AiImageDO::getTaskId));
         Map<String, MidjourneyApi.Notify> taskMap = convertMap(taskList, MidjourneyApi.Notify::id);
 

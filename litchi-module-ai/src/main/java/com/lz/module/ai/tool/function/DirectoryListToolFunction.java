@@ -1,4 +1,4 @@
-package com.lz.module.ai.service.model.tool;
+package com.lz.module.ai.tool.function;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import cn.hutool.core.io.FileUtil;
@@ -24,7 +24,7 @@ import static com.lz.framework.common.util.collection.CollectionUtils.convertLis
 /**
  * 工具：列出指定目录的文件列表
  *
- * @author 荔枝源码
+ * @author 芋道源码
  */
 @Component("directory_list")
 public class DirectoryListToolFunction implements Function<DirectoryListToolFunction.Request, DirectoryListToolFunction.Response> {

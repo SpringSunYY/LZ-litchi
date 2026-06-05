@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -15,9 +16,17 @@ import com.lz.module.ai.dal.dataobject.knowledge.AiKnowledgeDO;
 import com.lz.module.ai.dal.dataobject.knowledge.AiKnowledgeDocumentDO;
 import com.lz.module.ai.dal.dataobject.knowledge.AiKnowledgeSegmentDO;
 import com.lz.module.ai.dal.mysql.knowledge.AiKnowledgeSegmentMapper;
+import com.lz.module.ai.enums.AiDocumentSplitStrategyEnum;
 import com.lz.module.ai.service.knowledge.bo.AiKnowledgeSegmentSearchReqBO;
 import com.lz.module.ai.service.knowledge.bo.AiKnowledgeSegmentSearchRespBO;
+import com.lz.module.ai.service.knowledge.splitter.MarkdownQaSplitter;
+import com.lz.module.ai.service.knowledge.splitter.SemanticTextSplitter;
 import com.lz.module.ai.service.model.AiModelService;
+import com.alibaba.cloud.ai.dashscope.rerank.DashScopeRerankOptions;
+import com.alibaba.cloud.ai.model.RerankModel;
+import com.alibaba.cloud.ai.model.RerankRequest;
+import com.alibaba.cloud.ai.model.RerankResponse;
+import com.lz.module.infra.api.file.FileApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
@@ -27,6 +36,7 @@ import org.springframework.ai.transformer.splitter.TokenTextSplitter;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.ai.vectorstore.filter.FilterExpressionBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -34,8 +44,8 @@ import java.util.*;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.framework.common.util.collection.CollectionUtils.convertList;
-import static com.lz.module.ai.enums.ErrorCodeConstants.KNOWLEDGE_SEGMENT_CONTENT_TOO_LONG;
-import static com.lz.module.ai.enums.ErrorCodeConstants.KNOWLEDGE_SEGMENT_NOT_EXISTS;
+import static com.lz.module.ai.enums.ErrorCodeConstants.*;
+import static org.springframework.ai.vectorstore.SearchRequest.SIMILARITY_THRESHOLD_ACCEPT_ALL;
 
 /**
  * AI 知识库分片 Service 实现类
@@ -55,6 +65,11 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
             VECTOR_STORE_METADATA_DOCUMENT_ID, String.class,
             VECTOR_STORE_METADATA_SEGMENT_ID, String.class);
 
+    /**
+     * Rerank 在向量检索时，检索数量 * 该系数，目的是为了提升 Rerank 的效果
+     */
+    private static final Integer RERANK_RETRIEVAL_FACTOR = 4;
+
     @Resource
     private AiKnowledgeSegmentMapper segmentMapper;
 
@@ -69,6 +84,12 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
     @Resource
     private TokenCountEstimator tokenCountEstimator;
 
+    @Resource
+    private FileApi fileApi;
+
+    @Autowired(required = false) // 由于 spring.ai.model.rerank 配置项，可以关闭 RerankModel 的功能，所以这里只能不强制注入
+    private RerankModel rerankModel;
+
     @Override
     public PageResult<AiKnowledgeSegmentDO> getKnowledgeSegmentPage(AiKnowledgeSegmentPageReqVO pageReqVO) {
         return segmentMapper.selectPage(pageReqVO);
@@ -81,8 +102,9 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
         AiKnowledgeDO knowledgeDO = knowledgeService.validateKnowledgeExists(documentDO.getKnowledgeId());
         VectorStore vectorStore = getVectorStoreById(knowledgeDO);
 
-        // 2. 文档切片
-        List<Document> documentSegments = splitContentByToken(content, documentDO.getSegmentMaxTokens());
+        // 2. 文档切片（使用自动检测策略）
+        List<Document> documentSegments = splitContentByStrategy(content, documentDO.getSegmentMaxTokens(),
+                AiDocumentSplitStrategyEnum.AUTO, documentDO.getUrl());
 
         // 3.1 存储切片
         List<AiKnowledgeSegmentDO> segmentDOs = convertList(documentSegments, segment -> {
@@ -121,6 +143,19 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
             newSegment.setKnowledgeId(oldSegment.getKnowledgeId()).setDocumentId(oldSegment.getDocumentId());
             writeVectorStore(vectorStore, newSegment, new Document(newSegment.getContent()));
         }
+    }
+
+    @Override
+    public void deleteKnowledgeSegment(Long id) {
+        // 1. 校验段落存在
+        AiKnowledgeSegmentDO segment = validateKnowledgeSegmentExists(id);
+
+        // 2. 删除向量
+        VectorStore vectorStore = getVectorStoreById(segment.getKnowledgeId());
+        deleteVectorStore(vectorStore, segment);
+
+        // 3. 删除段落记录
+        segmentMapper.deleteById(id);
     }
 
     @Override
@@ -211,28 +246,19 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
         // 1. 校验
         AiKnowledgeDO knowledge = knowledgeService.validateKnowledgeExists(reqBO.getKnowledgeId());
 
-        // 2.1 向量检索
-        VectorStore vectorStore = getVectorStoreById(knowledge);
-        List<Document> documents = vectorStore.similaritySearch(SearchRequest.builder()
-                .query(reqBO.getContent())
-                .topK(ObjUtil.defaultIfNull(reqBO.getTopK(), knowledge.getTopK()))
-                .similarityThreshold(
-                        ObjUtil.defaultIfNull(reqBO.getSimilarityThreshold(), knowledge.getSimilarityThreshold()))
-                .filterExpression(new FilterExpressionBuilder()
-                        .eq(VECTOR_STORE_METADATA_KNOWLEDGE_ID, reqBO.getKnowledgeId().toString())
-                        .build())
-                .build());
+        // 2. 检索
+        List<Document> documents = searchDocument(knowledge, reqBO);
         if (CollUtil.isEmpty(documents)) {
             return ListUtil.empty();
         }
-        // 2.2 段落召回
+
+        // 3.1 段落召回
         List<AiKnowledgeSegmentDO> segments = segmentMapper
                 .selectListByVectorIds(convertList(documents, Document::getId));
         if (CollUtil.isEmpty(segments)) {
             return ListUtil.empty();
         }
-
-        // 3. 增加召回次数
+        // 3.2 增加召回次数
         segmentMapper.updateRetrievalCountIncrByIds(convertList(segments, AiKnowledgeSegmentDO::getId));
 
         // 4. 构建结果
@@ -249,13 +275,52 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
         return result;
     }
 
+    /**
+     * 基于 Embedding + Rerank Model，检索知识库中的文档
+     *
+     * @param knowledge 知识库
+     * @param reqBO 检索请求
+     * @return 文档列表
+     */
+    private List<Document> searchDocument(AiKnowledgeDO knowledge, AiKnowledgeSegmentSearchReqBO reqBO) {
+        VectorStore vectorStore = getVectorStoreById(knowledge);
+        Integer topK = ObjUtil.defaultIfNull(reqBO.getTopK(), knowledge.getTopK());
+        Double similarityThreshold = ObjUtil.defaultIfNull(reqBO.getSimilarityThreshold(), knowledge.getSimilarityThreshold());
+
+        // 1. 向量检索
+        int searchTopK = rerankModel != null ? topK * RERANK_RETRIEVAL_FACTOR : topK;
+        double searchSimilarityThreshold = rerankModel != null ? SIMILARITY_THRESHOLD_ACCEPT_ALL : similarityThreshold;
+        SearchRequest.Builder searchRequestBuilder = SearchRequest.builder()
+                .query(reqBO.getContent())
+                .topK(searchTopK).similarityThreshold(searchSimilarityThreshold)
+                .filterExpression(new FilterExpressionBuilder()
+                        .eq(VECTOR_STORE_METADATA_KNOWLEDGE_ID, reqBO.getKnowledgeId().toString()).build());
+        List<Document> documents = vectorStore.similaritySearch(searchRequestBuilder.build());
+        if (CollUtil.isEmpty(documents)) {
+            return documents;
+        }
+
+        // 2. Rerank 重排序
+        if (rerankModel != null) {
+            RerankResponse rerankResponse = rerankModel.call(new RerankRequest(reqBO.getContent(), documents,
+                    DashScopeRerankOptions.builder().withTopN(topK).build()));
+            documents = convertList(rerankResponse.getResults(),
+                    documentWithScore -> documentWithScore.getScore() >= similarityThreshold
+                            ? documentWithScore.getOutput() : null);
+        }
+        return documents;
+    }
+
     @Override
     public List<AiKnowledgeSegmentDO> splitContent(String url, Integer segmentMaxTokens) {
+        url=fileApi.getFilePath(url);
         // 1. 读取 URL 内容
         String content = knowledgeDocumentService.readUrl(url);
 
-        // 2. 文档切片
-        List<Document> documentSegments = splitContentByToken(content, segmentMaxTokens);
+        // 2.1 自动检测文档类型并选择策略
+        AiDocumentSplitStrategyEnum strategy = detectDocumentStrategy(content, url);
+        // 2.2 文档切片
+        List<Document> documentSegments = splitContentByStrategy(content, segmentMaxTokens, strategy, url);
 
         // 3. 转换为段落对象
         return convertList(documentSegments, segment -> {
@@ -292,11 +357,103 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
         return getVectorStoreById(knowledge);
     }
 
-    private static List<Document> splitContentByToken(String content, Integer segmentMaxTokens) {
-        TextSplitter textSplitter = buildTokenTextSplitter(segmentMaxTokens);
+    /**
+     * 根据策略切分内容
+     *
+     * @param content 文档内容
+     * @param segmentMaxTokens 分段的最大 Token 数
+     * @param strategy 切片策略
+     * @param url 文档 URL（用于自动检测文件类型）
+     * @return 切片后的文档列表
+     */
+    @SuppressWarnings("EnhancedSwitchMigration")
+    private List<Document> splitContentByStrategy(String content, Integer segmentMaxTokens,
+                                                  AiDocumentSplitStrategyEnum strategy, String url) {
+        // 自动检测策略
+        if (strategy == AiDocumentSplitStrategyEnum.AUTO) {
+            strategy = detectDocumentStrategy(content, url);
+            log.info("[splitContentByStrategy][自动检测到文档策略: {}]", strategy.getName());
+        }
+        // 根据策略切分
+        TextSplitter textSplitter;
+        switch (strategy) {
+            case MARKDOWN_QA:
+                textSplitter = new MarkdownQaSplitter(segmentMaxTokens);
+                break;
+            case SEMANTIC:
+                textSplitter = new SemanticTextSplitter(segmentMaxTokens);
+                break;
+            case PARAGRAPH:
+                textSplitter = new SemanticTextSplitter(segmentMaxTokens, 0); // 段落切分，无重叠
+                break;
+            case TOKEN:
+            default:
+                textSplitter = buildTokenTextSplitter(segmentMaxTokens);
+                break;
+        }
+        // 执行切分
         return textSplitter.apply(Collections.singletonList(new Document(content)));
     }
 
+    /**
+     * 自动检测文档类型并选择切片策略
+     *
+     * @param content 文档内容
+     * @param url 文档 URL
+     * @return 推荐的切片策略
+     */
+    private AiDocumentSplitStrategyEnum detectDocumentStrategy(String content, String url) {
+        if (StrUtil.isEmpty(content)) {
+            return AiDocumentSplitStrategyEnum.TOKEN;
+        }
+        // 1. 检测 Markdown QA 格式
+        if (isMarkdownQaFormat(content, url)) {
+            return AiDocumentSplitStrategyEnum.MARKDOWN_QA;
+        }
+        // 2. 检测普通 Markdown 文档
+        if (isMarkdownDocument(url)) {
+            return AiDocumentSplitStrategyEnum.SEMANTIC;
+        }
+        // 3. 默认使用语义切分（比 Token 切分更智能）
+        return AiDocumentSplitStrategyEnum.SEMANTIC;
+    }
+
+    /**
+     * 检测是否为 Markdown QA 格式
+     * 特征：包含多个二级标题（## ）且标题后紧跟答案内容
+     */
+    private boolean isMarkdownQaFormat(String content, String url) {
+        // 文件扩展名判断
+        if (StrUtil.isNotEmpty(url) && !url.toLowerCase().endsWith(".md")) {
+            return false;
+        }
+
+        // 统计二级标题数量
+        long h2Count = content.lines()
+                .filter(line -> line.trim().startsWith("## "))
+                .count();
+
+        // 要求一：至少包含 2 个二级标题才认为是 QA 格式
+        if (h2Count < 2) {
+            return false;
+        }
+
+        // 要求二：检查标题占比（QA 文档标题行数相对较多），如果二级标题占比超过 10%，认为是 QA 格式
+        long totalLines = content.lines().count();
+        double h2Ratio = (double) h2Count / totalLines;
+        return h2Ratio > 0.1;
+    }
+
+    /**
+     * 检测是否为 Markdown 文档
+     */
+    private boolean isMarkdownDocument(String url) {
+        return StrUtil.endWithAnyIgnoreCase(url, ".md", ".markdown");
+    }
+
+    /**
+     * 构建基于 Token 的文本切片器（原有逻辑保留）
+     */
     private static TextSplitter buildTokenTextSplitter(Integer segmentMaxTokens) {
         return TokenTextSplitter.builder()
                 .withChunkSize(segmentMaxTokens)
