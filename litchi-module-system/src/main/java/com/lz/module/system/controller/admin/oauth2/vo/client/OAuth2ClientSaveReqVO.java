@@ -32,7 +32,7 @@ public class OAuth2ClientSaveReqVO {
 
     @Schema(description = "应用图标", requiredMode = Schema.RequiredMode.REQUIRED, example = "https://www.iocoder.cn/xx.png")
     @I18nNotNull(i18nKey = "system.oauth2Client.back.logo.notNull", message = "应用图标不能为空")
-    @I18nURL(i18nKey = "system.oauth2Client.back.logo.url", message = "应用图标的地址不正确")
+//    @I18nURL(i18nKey = "system.oauth2Client.back.logo.url", message = "应用图标的地址不正确")
     private String logo;
 
     @Schema(description = "应用描述", example = "我是一个应用")
