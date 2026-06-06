@@ -16,7 +16,7 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.ExecutionListener;
-import org.flowable.engine.impl.el.FixedValue;
+import org.flowable.common.engine.impl.el.FixedValue;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.springframework.stereotype.Component;
 
