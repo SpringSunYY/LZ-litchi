@@ -2,7 +2,7 @@
 """
 i18n SQL Consolidation Script
 
-直接拼接所有 i18n/*.sql 文件内容到一个文件。
+直接拼接各模块下Resources下所有 i18n/*.sql 文件内容到一个文件。
 
 Usage:
     python consolidate_i18n_sql.py [project_root] [output_path]
