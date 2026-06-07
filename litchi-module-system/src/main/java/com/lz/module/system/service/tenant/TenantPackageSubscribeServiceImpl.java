@@ -66,6 +66,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         DateTime endDateTime = DateUtils.endOfDay(DateUtils.of(endLocalDateTime));
         tenantPackageSubscribe.setStartTime(LocalDateTimeUtils.of(startDateTime));
         tenantPackageSubscribe.setEndTime(LocalDateTimeUtils.of(endDateTime));
+        //为订略的租户套餐订阅
         TenantUtils.execute(tenantDO.getId(), () -> {
             tenantService.updateTenantMenuByTenantAndPackageAndSubscribe(tenantDO, tenantPackageDO, tenantPackageSubscribe);
             transactionTemplate.executeWithoutResult(status -> {
@@ -117,7 +118,21 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
     }
 
     @Override
+    @TenantIgnore
     public void updateTenantPackageSubscribe(TenantPackageSubscribeSaveReqVO updateReqVO) {
+        //这里必须是系统租户才可以操作所有的租户，如果不是系统租户，他有权限的话也只能操作自己的
+        //因为如果是所有租户都可以不限制操作的话，会影响数据的一致性，越权等风险
+        Long tenantId = TenantContextHolder.getTenantId();
+        if (tenantService.isSystemTenantById(tenantId)) {
+            updateTenantPackageSubscribeByTenant(updateReqVO);
+        } else {
+            TenantUtils.execute(tenantId, () -> {
+                updateTenantPackageSubscribeByTenant(updateReqVO);
+            });
+        }
+    }
+
+    private void updateTenantPackageSubscribeByTenant(TenantPackageSubscribeSaveReqVO updateReqVO) {
         // 校验存在
         TenantPackageSubscribeDO tenantPackageSubscribeDO = validateTenantPackageSubscribeExists(updateReqVO.getId());
         //租户、租户套餐不可改变
@@ -131,7 +146,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
 
         //如果传过来的是关闭，但是数据库之前不是关闭
         if (!tenantPackageSubscribeDO.getStatus().equals(updateObj.getStatus())
-            && updateObj.getStatus().equals(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_4.getStatus())) {
+                && updateObj.getStatus().equals(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_4.getStatus())) {
             //查询到租户
             TenantDO tenant = tenantService.selectByCode(tenantPackageSubscribeDO.getTenantCode());
             //更新租户权限

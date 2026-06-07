@@ -111,6 +111,4 @@ public interface TenantPackageSubscribeMapper extends BaseMapperX<TenantPackageS
                         .ge(TenantPackageSubscribeDO::getEndTime, LocalDateTimeUtil.now())
         );
     }
-
-    ;
 }
