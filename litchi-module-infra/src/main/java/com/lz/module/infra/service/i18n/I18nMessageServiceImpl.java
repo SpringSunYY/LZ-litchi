@@ -138,7 +138,7 @@ public class I18nMessageServiceImpl implements I18nMessageService {
         return i18nMessageMapper.selectPage(pageReqVO);
     }
 
-    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE, key = "#localeTarget + ':' + #acceptLanguage")
     @Override
     public List<I18nMessageSimpVO> getI18nLocaleByLocaleTargetAndLocale(Integer localeTarget, String acceptLanguage) {
         //查询通用和类型是这个的target
@@ -166,13 +166,13 @@ public class I18nMessageServiceImpl implements I18nMessageService {
     }
 
     @Override
-    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE, key = "#messageKey + ':list'")
     public List<I18nMessageDO> getMessageListByMessageKey(String messageKey) {
         return i18nMessageMapper.selectListByMessageKey(messageKey);
     }
 
     @Override
-    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE, key = "#messageKey + ':' + #locale")
     public I18nMessageDO getMessageByMessageKeyAndLocale(String messageKey, String locale) {
         return i18nMessageMapper.selectByMessageKey(messageKey, locale);
     }

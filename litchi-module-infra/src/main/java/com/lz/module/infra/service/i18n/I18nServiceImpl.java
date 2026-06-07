@@ -35,7 +35,7 @@ public class I18nServiceImpl implements I18nService {
     private I18nMessageService i18nMessageService;
 
     @Override
-    @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE)
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE, key = "#localeTarget")
     public List<I18nLocaleSimpRespVO> getI18nLocale(Integer localeTarget) {
         List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleService.getI18nLocaleByLocaleTarget(localeTarget);
         //如果存在多个端，且查的那个端有默认语言，优先使用查的那个端的默认语言，而不是common的默认语言
@@ -78,7 +78,7 @@ public class I18nServiceImpl implements I18nService {
     }
 
     @Override
-    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE)
+    @Cacheable(cacheNames = RedisKeyConstants.I18N_MESSAGE, key = "#messageKey + ':' + #acceptLanguage")
     public String getMessageByMessageKey(String messageKey, String acceptLanguage) {
         I18nMessageDO i18nMessage = i18nMessageService.getMessageByMessageKey(messageKey, acceptLanguage);
         return i18nMessage != null ? i18nMessage.getMessage() : null;

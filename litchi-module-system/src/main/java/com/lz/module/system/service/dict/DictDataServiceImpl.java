@@ -56,7 +56,7 @@ public class DictDataServiceImpl implements DictDataService {
     private I18nApi i18nApi;
 
     @Override
-    @Cacheable(cacheNames = {RedisKeyConstants.DICT})
+    @Cacheable(cacheNames = {RedisKeyConstants.DICT},key = "#status+':'+#dictType")
     public List<DictDataDO> getDictDataList(Integer status, String dictType) {
         List<DictDataDO> list = dictDataMapper.selectListByStatusAndDictType(status, dictType);
         list.sort(COMPARATOR_TYPE_AND_SORT);
