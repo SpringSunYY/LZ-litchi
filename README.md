@@ -14,7 +14,11 @@
 </div>
 
 
-# **严肃声明：现在、未来都不会有商业版本，所有代码全部开源!！**
+<div align="center">
+  <a href="https://github.com/SpringSunYY">
+    <img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&weight=600&size=28&pause=1000&color=F70000&width=800&lines=%E4%B8%A5%E8%82%83%E5%A3%B0%E6%98%8E%EF%BC%9A%E7%8E%B0%E5%9C%A8%E3%80%81%E6%9C%AA%E6%9D%A5%E9%83%BD%E4%B8%8D%E4%BC%9A%E6%9C%89%E5%95%86%E4%B8%9A%E7%89%88%E6%9C%AC%EF%BC%8C%E6%89%80%E6%9C%89%E4%BB%A3%E7%A0%81%E5%85%A8%E9%83%A8%E5%BC%80%E6%BA%90%EF%BC%81" alt="Typing SVG" />
+  </a>
+</div>
 
 
 
@@ -40,7 +44,7 @@
 
 ## 🐶 新手必读
 
-* 演示地址：https://www.litchi.work【租户编码：litchi、账号：admin、密码：admin123】
+* 演示地址：https://www.litchi.work   【租户编码：litchi、账号：admin、密码：admin123】
 * 演示视频：待定待定
 * 启动教程：待定待定
 * 视频教程：待定待定
