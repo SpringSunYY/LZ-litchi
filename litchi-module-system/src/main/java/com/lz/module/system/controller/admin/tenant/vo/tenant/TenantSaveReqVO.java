@@ -46,7 +46,12 @@ public class TenantSaveReqVO {
     @I18nNotNull(i18nKey = "system.tenant.back.type.notNull", message = "类型不能为空")
     private Integer type;
 
+    @Schema(description = "账号数量", example = "30", requiredMode = Schema.RequiredMode.REQUIRED)
+    @I18nNotNull(i18nKey = "system.tenant.back.accountCount.notNull", message = "账号数量不能为空")
+    private Integer accountCount;
+
     @Schema(description = "租户状态", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
+    @I18nNotNull(i18nKey = "system.tenant.back.status.notNull", message = "租户状态不能为空")
     private Integer status;
 
     @Schema(description = "地区")

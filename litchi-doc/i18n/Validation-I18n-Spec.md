@@ -311,7 +311,7 @@ VALUES ('{name}', '{i18nKey}', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM
 
 > **变量定义强制要求**：INSERT 语句中所有可变量化的字段必须使用 `SET` 定义的变量，**禁止写死具体值**。
 > 需要定义的变量共 9 个（见下方模板），INSERT 中对应的字段：
-> - `use_type` → 必须用 `@USE_TYPE_FORM`（值为 2）
+> - `use_type` → 必须用 `@USE_TYPE_FILED`（值为 2）
 > - `locale_target` → 必须用 `@LOCALE_TARGET_BACKEND`（值为 1）
 > - `locale` → 必须用 `@LOCALE_EN` / `@LOCALE_ZH_CN`
 > - `remark` → 必须用 `@REMARK`（禁止写 `'field'` 等具体值）
@@ -331,7 +331,7 @@ VALUES ('{name}', '{i18nKey}', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM
 -- 变量定义（必须全部定义，INSERT 中必须全部使用变量）
 -- ---------------------------------------------
 SET @IS_SYSTEM = 0;
-SET @USE_TYPE_FORM = 2;
+SET @USE_TYPE_FILED = 3;
 SET @MODULE_TYPE = '{module}';
 SET @LOCALE_TARGET_BACKEND = 1;
 SET @LOCALE_EN = 'en-US';
@@ -347,17 +347,17 @@ SET @ORDER_NUM = 5;
 -- {序号}. {message_name}
 DELETE FROM infra_i18n_key WHERE message_key = '{i18nKey}';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('{name}', '{i18nKey}', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FORM, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('{name}', '{i18nKey}', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- {序号}. {message_name} - en-US
 DELETE FROM infra_i18n_message WHERE message_key = '{i18nKey}' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('{name}', '{i18nKey}', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FORM, '{enMessage}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('{name}', '{i18nKey}', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '{enMessage}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- {序号}. {message_name} - zh-CN
 DELETE FROM infra_i18n_message WHERE message_key = '{i18nKey}' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('{name}', '{i18nKey}', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FORM, '{zhMessage}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('{name}', '{i18nKey}', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '{zhMessage}', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 ```
 
 ### 6.4 SQL 生成示例（规范版本：v6.1）
