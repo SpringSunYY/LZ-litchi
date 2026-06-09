@@ -66,27 +66,11 @@ public class FileServiceImpl implements FileService {
     public PageResult<FileRespVO> getFilePage(FilePageReqVO pageReqVO) {
         PageResult<FileDO> pageResult = fileMapper.selectPage(pageReqVO);
         // 根据配置的返回类型，组装 url
-        return new PageResult<>(pageResult.getList().stream().map(this::convertToRespVO).toList(),
+        return new PageResult<>(
+                BeanUtils.toBean(pageResult.getList(), FileRespVO.class),
                 pageResult.getTotal());
     }
 
-    /**
-     * 根据配置的 pathType，转换 FileDO 为 FileRespVO
-     */
-    private FileRespVO convertToRespVO(FileDO file) {
-        FileRespVO respVO = BeanUtils.toBean(file, FileRespVO.class);
-        // 获取配置
-        FileConfigDO config = fileConfigService.getFileConfig(file.getConfigKey());
-        if (config != null) {
-            // 根据 pathType 返回绝对路径或相对路径
-            if (InfraFilePathTypeEnum.FILE_PATH_TYPE_1.getStatus().equals(config.getPathType())) {
-                respVO.setUrl(file.getAbsolutePath());
-            } else {
-                respVO.setUrl(file.getRelativePath());
-            }
-        }
-        return respVO;
-    }
 
     @Override
     @SneakyThrows
@@ -132,8 +116,8 @@ public class FileServiceImpl implements FileService {
         // 4. 拼接绝对路径和相对路径
         String absolutePath = url; // 绝对路径（完整URL）
         String relativePath = FileConstants.getFileGetPath(client.getConfigKey(), path); // 相对路径
-        // 4.1 拿到文件类型
-        String fileType = FileTypeUtils.getFileExtension(type);
+        // 4.1 拿到文件类型，只需要文件的.后缀
+        String fileType = FileUtil.extName(name);
         // 5. 保存到数据库
         fileMapper.insert(new FileDO().setConfigKey(client.getConfigKey())
                 .setName(name).setPath(path).setRelativePath(relativePath).setAbsolutePath(absolutePath)

@@ -27,9 +27,6 @@ public class FileRespVO {
     @Schema(description = "相对路径", requiredMode = Schema.RequiredMode.REQUIRED)
     private String relativePath;
 
-    @Schema(description = "文件URL，根据配置返回相对或绝对路径")
-    private String url;
-
     @Schema(description = "文件类型", example = "1")
     private String type;
 

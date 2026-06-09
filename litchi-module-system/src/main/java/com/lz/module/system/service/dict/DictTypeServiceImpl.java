@@ -12,7 +12,6 @@ import com.lz.module.system.dal.mysql.dict.DictTypeMapper;
 import com.lz.module.system.dal.redis.RedisKeyConstants;
 import jakarta.annotation.Resource;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,7 +51,8 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public Long createDictType(DictTypeSaveReqVO createReqVO) {
         // 校验字典类型的名字的唯一性
         validateDictTypeNameUnique(null, createReqVO.getName());
@@ -83,7 +83,8 @@ public class DictTypeServiceImpl implements DictTypeService {
 
     @Transactional
     @Override
-    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public void deleteDictType(Long id, Boolean isDeleteChildren) {
         // 校验是否存在
         DictTypeDO dictType = validateDictTypeExists(id);
@@ -92,7 +93,7 @@ public class DictTypeServiceImpl implements DictTypeService {
             throw exception(DICT_TYPE_HAS_CHILDREN);
         }
         // 删除字典数据
-        if (isDeleteChildren){
+        if (isDeleteChildren) {
             dictDataService.deleteDictDataByDictType(dictType.getType());
         }
         // 删除字典类型
@@ -100,7 +101,8 @@ public class DictTypeServiceImpl implements DictTypeService {
     }
 
     @Override
-    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public void deleteDictTypeList(List<Long> ids) {
         // 1. 校验是否有字典数据
         List<DictTypeDO> dictTypes = dictTypeMapper.selectByIds(ids);

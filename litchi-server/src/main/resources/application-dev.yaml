@@ -182,3 +182,22 @@ justauth:
     type: REDIS
     prefix: 'social_auth_state:' # 缓存前缀，目前只对 Redis 缓存生效，默认 JUSTAUTH::STATE::
     timeout: 24h # 超时时长，目前只对 Redis 缓存生效，默认 3 分钟
+
+--- #################### 微信公众号相关配置 ####################
+wx: # 参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-starters/wx-java-mp-spring-boot-starter/README.md 文档
+  mp:
+    # 公众号配置(必填)
+    app-id: wx041349c6f39b268b
+    secret: 5abee519483bc9f8cb37ce280e814bd0
+    # 存储配置，解决 AccessToken 的跨节点的共享
+    config-storage:
+      type: RedisTemplate # 采用 RedisTemplate 操作 Redis，会自动从 Spring 中获取
+      key-prefix: wx # Redis Key 的前缀
+      http-client-type: HttpClient # 采用 HttpClient 请求微信公众号平台
+  miniapp: # 小程序配置（必填），参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-starters/wx-java-miniapp-spring-boot-starter/README.md 文档
+    appid: wx63c280fe3248a3e7
+    secret: 6f270509224a7ae1296bbf1c8cb97aed
+    config-storage:
+      type: RedisTemplate # 采用 RedisTemplate 操作 Redis，会自动从 Spring 中获取
+      key-prefix: wa # Redis Key 的前缀
+      http-client-type: HttpClient # 采用 HttpClient 请求微信公众号平台

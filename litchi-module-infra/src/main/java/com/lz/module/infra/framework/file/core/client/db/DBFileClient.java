@@ -1,6 +1,7 @@
 package com.lz.module.infra.framework.file.core.client.db;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.lz.module.infra.dal.dataobject.file.FileContentDO;
 import com.lz.module.infra.dal.mysql.file.FileContentMapper;
@@ -31,7 +32,7 @@ public class DBFileClient extends AbstractFileClient<DBFileClientConfig> {
     public String upload(byte[] content, String path, String type, String moduleType) {
         String name = cn.hutool.core.io.FileUtil.mainName(path);
         String absolutePath = super.formatFileUrl(config.getDomain(), path);
-        String relativePath = cn.hutool.core.util.StrUtil.appendIfMissing(config.getDomain(), "/") + path;
+        String relativePath = StrUtil.appendIfMissing(config.getDomain(), "/") + path;
 
         FileContentDO contentDO = new FileContentDO().setConfigKey(getConfigKey())
                 .setName(name).setPath(path)

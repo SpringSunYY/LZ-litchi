@@ -74,7 +74,8 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
-    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public Long createDictData(DictDataSaveReqVO createReqVO) {
         // 校验字典类型有效
         validateDictTypeExists(createReqVO.getDictType());
@@ -88,7 +89,8 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
-    @CacheEvict(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public void updateDictData(DictDataSaveReqVO updateReqVO) {
         // 校验自己存在
         validateDictDataExists(updateReqVO.getId());
@@ -103,7 +105,8 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
-    @Cacheable(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public void deleteDictData(Long id) {
         // 校验是否存在
         validateDictDataExists(id);
@@ -113,7 +116,8 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
-    @Cacheable(cacheNames = {RedisKeyConstants.DICT})
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public void deleteDictDataList(List<Long> ids) {
         dictDataMapper.deleteByIds(ids);
     }
@@ -237,6 +241,4 @@ public class DictDataServiceImpl implements DictDataService {
             dictDataMapper.updateBatch(dictDataList);
         }
     }
-
-
 }
