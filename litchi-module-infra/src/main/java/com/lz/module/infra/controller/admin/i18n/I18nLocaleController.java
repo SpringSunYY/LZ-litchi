@@ -51,7 +51,7 @@ public class I18nLocaleController {
     @Operation(summary = "清理国际化国家缓存")
     @PreAuthorize("@ss.hasPermission('infra:locale:delete')")
     public CommonResult<Boolean> clearI18nLocaleCache() {
-        i18nLocaleService.clearI18nCache(null);
+        i18nLocaleService.clearI18nCache(null, null);
         return success(true);
     }
 

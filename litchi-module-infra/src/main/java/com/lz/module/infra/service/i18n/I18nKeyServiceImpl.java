@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.infra.enums.ErrorCodeConstants.*;
@@ -79,9 +77,17 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         //如果需要删除子集
         if (isDeleteChildren) {
             List<I18nMessageDO> i18nMessageDOS = i18nMessageMapper.selectList(I18nMessageDO::getMessageKey, i18nKeyDO.getMessageKey());
-            Set<String> collect = i18nMessageDOS.stream().map(I18nMessageDO::getLocale).collect(Collectors.toSet());
-            collect.forEach(locale -> {
-                i18nLocaleService.clearI18nCache(locale);
+            //收集语言和端
+            Map<Integer, Set<String>> localeAndTargetMap = new HashMap<>();
+            i18nMessageDOS.forEach(i18nMessageDO -> {
+                boolean b = localeAndTargetMap.containsKey(i18nMessageDO.getLocaleTarget());
+                if (!b) {
+                    localeAndTargetMap.put(i18nMessageDO.getLocaleTarget(), new HashSet<>());
+                }
+                localeAndTargetMap.get(i18nMessageDO.getLocaleTarget()).add(i18nMessageDO.getLocale());
+            });
+            localeAndTargetMap.forEach((localeTarget, localeSet) -> {
+                localeSet.forEach(locale -> i18nLocaleService.clearI18nCache(localeTarget, locale));
             });
             i18nMessageMapper.delete(I18nMessageDO::getMessageKey, i18nKeyDO.getMessageKey());
         }

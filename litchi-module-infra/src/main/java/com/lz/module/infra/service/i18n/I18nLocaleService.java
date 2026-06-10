@@ -71,17 +71,17 @@ public interface I18nLocaleService {
     /**
      * 清理国际化缓存，同时传递更改国际化是否修改
      */
-    void clearI18nCache(String locale);
+    void clearI18nCache(Integer localeTarget, String locale);
 
 
     /**
      * 获得国际化国家是否更新
      *
-     * @param updated 是否更新，和旧数据对比
-     * @param locale
+     * @param locale       语言
+     * @param localeTarget 使用端
      * @return 是否更新
      */
-    Boolean getI18nUpdate(boolean updated, String locale);
+    Boolean getI18nUpdate(Integer localeTarget, String locale);
 
     /**
      * 获得国际化国家默认语言
@@ -90,12 +90,4 @@ public interface I18nLocaleService {
      * @return 默认语言
      */
     String getI18nLocaleDefaultLangByLocalTarget(Integer localeTarget);
-
-    /**
-     * 获得国际化国家状态
-     *
-     * @return 状态
-     */
-    Boolean getI18nStatus(String locale);
-
 }

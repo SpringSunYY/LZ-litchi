@@ -1,5 +1,6 @@
 package com.lz.module.infra.service.i18n;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
@@ -73,7 +74,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                             .set(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()));
         }
         i18nLocaleMapper.insert(i18nLocale);
-        this.clearI18nCache(i18nLocale.getLocale());
+        this.clearI18nCache(i18nLocale.getLocaleTarget(), i18nLocale.getLocale());
         // 返回
         return i18nLocale.getId();
     }
@@ -105,7 +106,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
                             .set(I18nLocaleDO::getIsDefault, InfraI18nLocaleIsDefaultEnum.IS_DEFAULT_1.getStatus()));
         }
         i18nLocaleMapper.updateById(updateObj);
-        this.clearI18nCache(updateObj.getLocale());
+        this.clearI18nCache(updateObj.getLocaleTarget(), updateObj.getLocale());
     }
 
     @Override
@@ -118,7 +119,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
         }
         // 删除
         i18nLocaleMapper.deleteById(id);
-        this.clearI18nCache(i18nLocaleDO.getLocale());
+        this.clearI18nCache(i18nLocaleDO.getLocaleTarget(), i18nLocaleDO.getLocale());
     }
 
     @Override
@@ -166,70 +167,49 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     }
 
     @Override
-    public void clearI18nCache(String locale) {
+    public void clearI18nCache(Integer localeTarget, String locale) {
         //虽然删除了所有的key，但是不修改对应语言是否更新，前端还是可以拿自己的缓存
         redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE, RedisKeyConstants.I18N_MESSAGE);
         //重新缓存一次国际化信息
         //查询到国家，每个国家都要缓存
-        boolean isEmpty = StrUtil.isEmpty(locale);
+        boolean isEmpty = StrUtil.isEmpty(locale) || ObjectUtil.isNull(localeTarget);
         List<I18nLocaleDO> i18nLocaleDOList = i18nLocaleMapper.selectList();
         for (I18nLocaleDO i18nLocaleDO : i18nLocaleDOList) {
             i18nMessageService.getI18nLocaleByLocaleTargetAndLocale(i18nLocaleDO.getLocaleTarget(), i18nLocaleDO.getLocale());
-            //是空，每个国家都要改
-            if (isEmpty) {
-                resetI18nStatus(i18nLocaleDO.getLocale());
-            }
+
         }
         if (isEmpty) {
-            return;
-        }
-        //拿到是否更新
-        resetI18nStatus(locale);
-    }
-
-    private void resetI18nStatus(String locale) {
-        String key = RedisKeyConstants.I18N_UPDATED + locale;
-        Boolean updatedB = redisUtils.get(key);
-        if (ObjectUtils.isNull(updatedB)) {
-            updatedB = true;
+            resetI18nStatus(null, null);
         } else {
-            updatedB = !updatedB;
+            //拿到是否更新
+            resetI18nStatus(localeTarget, locale);
         }
-        redisUtils.set(key, updatedB);
+    }
+
+    private void resetI18nStatus(Integer localeTarget, String locale) {
+        if (locale == null
+                || localeTarget == null
+                || localeTarget.equals(InfraI18nLocaleTargetEnum.LOCALE_TARGET_0.getStatus())) {
+            redisUtils.deleteByPatterns(RedisKeyConstants.I18N_UPDATED);
+        } else {
+            redisUtils.deleteByPatterns(RedisKeyConstants.I18N_UPDATED + localeTarget + ":" + locale);
+        }
     }
 
     @Override
-    public Boolean getI18nUpdate(boolean updated, String locale) {
+    public Boolean getI18nUpdate(Integer localeTarget, String locale) {
         //拿到是否更新
-        String key = RedisKeyConstants.I18N_UPDATED + locale;
+        String key = RedisKeyConstants.I18N_UPDATED + locale + ":" + localeTarget;
         Boolean updatedB = redisUtils.get(key);
         //如果为空先设置,提示已经更新
         if (ObjectUtils.isNull(updatedB)) {
             updatedB = true;
             redisUtils.set(key, updatedB);
             return true;
+        } else {
+            //因为更新直接删除，所以这里直接返回false
+            return false;
         }
-        //如果为空则直接返回更新
-        if (ObjectUtils.isNull(updated)) {
-            updated = true;
-        }
-        //对比两次值，如果相同则返回false，否则返回true
-        return updatedB != updated;
-    }
-
-
-    @Override
-    public Boolean getI18nStatus(String locale) {
-        //拿到是否更新
-        String key = RedisKeyConstants.I18N_UPDATED + locale;
-        Boolean updatedB = redisUtils.get(key);
-        //如果为空先设置,提示已经更新
-        if (ObjectUtils.isNull(updatedB)) {
-            updatedB = true;
-            redisUtils.set(key, updatedB);
-            return true;
-        }
-        return updatedB;
     }
 
     @Cacheable(cacheNames = RedisKeyConstants.I18N_LOCALE, key = "#localeTarget")
