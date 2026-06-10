@@ -47,7 +47,7 @@ public class TenantController {
         return success(tenant != null ? tenant.getId() : null);
     }
 
-    @GetMapping({ "simple-list" })
+    @GetMapping({"simple-list"})
     @PermitAll
     @TenantIgnore
     @Operation(summary = "获取租户精简信息列表", description = "只包含被开启的租户，用于【首页】功能的选择租户选项")
@@ -104,8 +104,7 @@ public class TenantController {
     @Operation(summary = "更新所有租户菜单")
     @PreAuthorize("@ss.hasPermission('system:tenant:update')")
     public CommonResult<Boolean> updateAllTenantMenu() {
-        tenantService.updateAllTenantMenu();
-        return success(true);
+        return success(tenantService.updateAllTenantMenu());
     }
 
     @Operation(summary = "更新租户菜单")

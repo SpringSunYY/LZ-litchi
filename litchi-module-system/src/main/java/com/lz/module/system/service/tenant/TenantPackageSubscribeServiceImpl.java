@@ -1,6 +1,7 @@
 package com.lz.module.system.service.tenant;
 
 import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.LocalDateTimeUtil;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.collection.CollectionUtils;
 import com.lz.framework.common.util.date.DateUtils;
@@ -22,6 +23,7 @@ import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.validation.annotation.Validated;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -59,13 +61,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         TenantDO tenantDO = initTenantPackageSubscribeByTenant(tenantPackageSubscribe);
         //为租户重新授权，这里主要是给租户授权
         TenantPackageDO tenantPackageDO = initTenantPackageSubscribeByPackage(tenantPackageSubscribe);
-        //开始时间是订阅开始时间的今天
-        DateTime startDateTime = DateUtils.beginOfDay(DateUtils.of(tenantPackageSubscribe.getStartTime()));
-        //结束时间是订阅结束时间的最后时间
-        LocalDateTime endLocalDateTime = tenantPackageSubscribe.getStartTime().plusDays(tenantPackageSubscribe.getDays());
-        DateTime endDateTime = DateUtils.endOfDay(DateUtils.of(endLocalDateTime));
-        tenantPackageSubscribe.setStartTime(LocalDateTimeUtils.of(startDateTime));
-        tenantPackageSubscribe.setEndTime(LocalDateTimeUtils.of(endDateTime));
+        initTenantPackageSubscribeStatus(tenantPackageSubscribe);
         //为订略的租户套餐订阅
         TenantUtils.execute(tenantDO.getId(), () -> {
             tenantService.updateTenantMenuByTenantAndPackageAndSubscribe(tenantDO, tenantPackageDO, tenantPackageSubscribe);
@@ -77,6 +73,29 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         });
         // 返回
         return tenantPackageSubscribe.getId();
+    }
+
+    private static void initTenantPackageSubscribeStatus(TenantPackageSubscribeDO tenantPackageSubscribe) {
+        //开始时间是订阅开始时间的那一天
+        DateTime startDateTime = DateUtils.beginOfDay(DateUtils.of(tenantPackageSubscribe.getStartTime()));
+        //结束时间是订阅结束时间的最后时间
+        LocalDateTime endLocalDateTime = tenantPackageSubscribe.getStartTime().plusDays(tenantPackageSubscribe.getDays());
+        DateTime endDateTime = DateUtils.endOfDay(DateUtils.of(endLocalDateTime));
+        tenantPackageSubscribe.setStartTime(LocalDateTimeUtils.of(startDateTime));
+        tenantPackageSubscribe.setEndTime(LocalDateTimeUtils.of(endDateTime));
+        //如果关闭不管
+        if (tenantPackageSubscribe.getStatus()
+                .equals(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_4.getStatus())) {
+            return;
+        }
+        //首先判断开始结束时间，是否在内,如果不在
+        else if (LocalDateTimeUtil.isIn(LocalDateTimeUtil.now(), tenantPackageSubscribe.getStartTime(), tenantPackageSubscribe.getEndTime())) {
+            tenantPackageSubscribe.setStatus(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_2.getStatus());
+        } else if (tenantPackageSubscribe.getStartTime().isAfter(LocalDateTimeUtil.now())) {
+            tenantPackageSubscribe.setStatus(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_1.getStatus());
+        } else {
+            tenantPackageSubscribe.setStatus(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_3.getStatus());
+        }
     }
 
     @Override
@@ -101,7 +120,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         } else {
             tenantPackageSubscribe.setTotalPrice(tenantPackage.getPrice()
                     .multiply(daysDecimal)
-                    .divide(new BigDecimal(30), java.math.RoundingMode.HALF_UP)
+                    .divide(new BigDecimal(30), RoundingMode.HALF_UP)
                     .subtract(tenantPackageSubscribe.getDiscountPrice()));
         }
         tenantPackage.setSubscriptionNum(tenantPackage.getSubscriptionNum() + 1);
@@ -143,17 +162,17 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         TenantPackageSubscribeDO updateObj = BeanUtils.toBean(updateReqVO, TenantPackageSubscribeDO.class);
         initTenantPackageSubscribeByTenant(updateObj);
         initTenantPackageSubscribeByPackage(updateObj);
-
-        //如果传过来的是关闭，但是数据库之前不是关闭
-        if (!tenantPackageSubscribeDO.getStatus().equals(updateObj.getStatus())
-                && updateObj.getStatus().equals(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_4.getStatus())) {
-            //查询到租户
-            TenantDO tenant = tenantService.selectByCode(tenantPackageSubscribeDO.getTenantCode());
-            //更新租户权限
-            tenantService.updateTenantMenuByTenant(tenant);
-        }
-
-        tenantPackageSubscribeMapper.updateById(updateObj);
+        initTenantPackageSubscribeStatus(updateObj);
+        transactionTemplate.executeWithoutResult(result -> {
+            //这里必须开启事物，因为需要先更新
+            tenantPackageSubscribeMapper.updateById(updateObj);
+            if (!tenantPackageSubscribeDO.getStatus().equals(updateObj.getStatus())) {
+                //查询到租户
+                TenantDO tenant = tenantService.selectByCode(tenantPackageSubscribeDO.getTenantCode());
+                //更新租户权限
+                tenantService.updateTenantMenuByTenant(tenant);
+            }
+        });
     }
 
     @Override

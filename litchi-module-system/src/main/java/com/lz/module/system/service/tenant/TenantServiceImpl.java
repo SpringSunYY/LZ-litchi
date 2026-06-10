@@ -125,6 +125,11 @@ public class TenantServiceImpl implements TenantService {
         if (!LocalDateTimeUtil.isIn(LocalDateTimeUtil.now(), tenantPackageSubscribe.getStartTime(), tenantPackageSubscribe.getEndTime())) {
             return;
         }
+        //判断传过来的套餐是否是关闭
+        if (tenantPackageSubscribe.getStatus()
+                .equals(SystemTenantPackageSubscribeStatusEnum.SYSTEM_TENANT_PACKAGE_SUBSCRIBE_STATUS_ENUM_4.getStatus())) {
+            return;
+        }
         //判断套餐是否关闭
         if (tenantPackageDO.getStatus().equals(CommonStatusEnum.DISABLE.getStatus())) {
             throw exception(TENANT_PACKAGE_DISABLE);
@@ -160,6 +165,7 @@ public class TenantServiceImpl implements TenantService {
             }
             menuIds.addAll(packageDO.getMenuIds());
         }
+        //先事物
         updateTenantRoleMenu(tenant.getId(), menuIds);
         //更新租户权限
         tenant.setMenuIds(menuIds);
