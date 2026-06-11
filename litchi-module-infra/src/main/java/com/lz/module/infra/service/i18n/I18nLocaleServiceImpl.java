@@ -168,7 +168,6 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
 
     @Override
     public void clearI18nCache(Integer localeTarget, String locale) {
-        //虽然删除了所有的key，但是不修改对应语言是否更新，前端还是可以拿自己的缓存
         redisUtils.deleteByPatterns(RedisKeyConstants.I18N_LOCALE, RedisKeyConstants.I18N_MESSAGE);
         //重新缓存一次国际化信息
         //查询到国家，每个国家都要缓存
@@ -199,7 +198,7 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     @Override
     public Boolean getI18nUpdate(Integer localeTarget, String locale) {
         //拿到是否更新
-        String key = RedisKeyConstants.I18N_UPDATED + locale + ":" + localeTarget;
+        String key = RedisKeyConstants.I18N_UPDATED + localeTarget + ":" + locale;
         Boolean updatedB = redisUtils.get(key);
         //如果为空先设置,提示已经更新
         if (ObjectUtils.isNull(updatedB)) {

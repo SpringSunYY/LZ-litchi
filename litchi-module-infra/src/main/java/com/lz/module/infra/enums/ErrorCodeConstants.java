@@ -88,4 +88,12 @@ public interface ErrorCodeConstants {
     ErrorCode I18N_MESSAGE_EXISTS = new ErrorCode(1_001_008_009, "infra.i18nMessage.back.exists", "国际化信息已存在");
     ErrorCode I18N_MESSAGE_NOT_EXISTS = new ErrorCode(1_001_008_010, "infra.i18nMessage.back.notExists", "国际化信息不存在");
     ErrorCode I18N_MESSAGE_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100, "infra.back.import.dataEmpty", "导入数据不能为空！");
+
+    // ========== 地区信息 1-001-009-000 ==========
+    ErrorCode AREA_NOT_EXISTS = new ErrorCode(1_001_009_000, "infra.area.back.notExists", "area not exists");
+    ErrorCode AREA_EXITS_CHILDREN = new ErrorCode(1_001_009_001, "infra.area.back.hasChildren", "area has children, cannot delete");
+    ErrorCode AREA_PARENT_NOT_EXITS = new ErrorCode(1_001_009_002, "infra.area.back.parentNotExists", "parent area not exists");
+    ErrorCode AREA_PARENT_ERROR = new ErrorCode(1_001_009_003, "infra.area.back.parentSelfError", "cannot set itself as parent area");
+    ErrorCode AREA_NAME_DUPLICATE = new ErrorCode(1_001_009_004, "infra.area.back.nameDuplicate", "area name already exists");
+    ErrorCode AREA_PARENT_IS_CHILD = new ErrorCode(1_001_009_005, "infra.area.back.parentChildError", "cannot set child area as parent");
 }

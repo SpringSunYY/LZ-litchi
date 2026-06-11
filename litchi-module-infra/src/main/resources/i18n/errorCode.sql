@@ -987,3 +987,103 @@ VALUES ('国际化信息-不存在', 'infra.i18nMessage.back.notExists', @LOCALE
 DELETE FROM infra_i18n_message WHERE message_key = 'infra.i18nMessage.back.notExists' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('国际化信息-不存在', 'infra.i18nMessage.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '国际化信息不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- =============================================
+-- 地区信息（1-002-029-000）
+-- =============================================
+
+-- 117. 地区信息不存在
+
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.notExists';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不存在', 'infra.area.back.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 117. 地区信息不存在 - en-US
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.notExists' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不存在', 'infra.area.back.notExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'area not exists', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 117. 地区信息不存在 - zh-CN
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.notExists' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不存在', 'infra.area.back.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '地区信息不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 118. 存在子地区信息无法删除
+
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.hasChildren';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-存在子级', 'infra.area.back.hasChildren', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 118. 存在子地区信息无法删除 - en-US
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.hasChildren' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-存在子级', 'infra.area.back.hasChildren', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'area has children, cannot delete', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 118. 存在子地区信息无法删除 - zh-CN
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.hasChildren' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-存在子级', 'infra.area.back.hasChildren', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '存在子地区信息，无法删除', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 119. 父级地区信息不存在
+
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.parentNotExists';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-父级不存在', 'infra.area.back.parentNotExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 119. 父级地区信息不存在 - en-US
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentNotExists' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-父级不存在', 'infra.area.back.parentNotExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'parent area not exists', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 119. 父级地区信息不存在 - zh-CN
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentNotExists' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-父级不存在', 'infra.area.back.parentNotExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '父级地区信息不存在', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 120. 不能设置自己为父地区信息
+
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.parentSelfError';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不能设置自己为父级', 'infra.area.back.parentSelfError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 120. 不能设置自己为父地区信息 - en-US
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentSelfError' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不能设置自己为父级', 'infra.area.back.parentSelfError', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'cannot set itself as parent area', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 120. 不能设置自己为父地区信息 - zh-CN
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentSelfError' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不能设置自己为父级', 'infra.area.back.parentSelfError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '不能设置自己为父地区信息', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 121. 地区名称已存在
+
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.nameDuplicate';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-名称已存在', 'infra.area.back.nameDuplicate', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 121. 地区名称已存在 - en-US
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.nameDuplicate' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-名称已存在', 'infra.area.back.nameDuplicate', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'area name already exists', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 121. 地区名称已存在 - zh-CN
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.nameDuplicate' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-名称已存在', 'infra.area.back.nameDuplicate', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '已经存在该地区名称的地区信息', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 122. 不能设置子地区为父地区
+
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.parentChildError';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不能设置子级为父级', 'infra.area.back.parentChildError', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 122. 不能设置子地区为父地区 - en-US
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentChildError' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不能设置子级为父级', 'infra.area.back.parentChildError', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'cannot set child area as parent', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 122. 不能设置子地区为父地区 - zh-CN
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentChildError' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('地区信息-不能设置子级为父级', 'infra.area.back.parentChildError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '不能设置自己的子Area为父Area', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

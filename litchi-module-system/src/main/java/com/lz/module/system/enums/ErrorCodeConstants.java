@@ -176,12 +176,4 @@ public interface ErrorCodeConstants {
 
     // ========== 站内信发送 1-002-028-000 ==========
     ErrorCode NOTIFY_SEND_TEMPLATE_PARAM_MISS = new ErrorCode(1_002_028_000, "system.notifySend.back.paramMissing", "template param ({}) missing");
-
-    // ========== 地区信息 1-002-029-000 ==========
-    ErrorCode AREA_NOT_EXISTS = new ErrorCode(1_002_029_000, "system.area.back.notExists", "area not exists");
-    ErrorCode AREA_EXITS_CHILDREN = new ErrorCode(1_002_029_001, "system.area.back.hasChildren", "area has children, cannot delete");
-    ErrorCode AREA_PARENT_NOT_EXITS = new ErrorCode(1_002_029_002, "system.area.back.parentNotExists", "parent area not exists");
-    ErrorCode AREA_PARENT_ERROR = new ErrorCode(1_002_029_003, "system.area.back.parentSelfError", "cannot set itself as parent area");
-    ErrorCode AREA_NAME_DUPLICATE = new ErrorCode(1_002_029_004, "system.area.back.nameDuplicate", "area name already exists");
-    ErrorCode AREA_PARENT_IS_CHILD = new ErrorCode(1_002_029_005, "system.area.back.parentChildError", "cannot set child area as parent");
 }
