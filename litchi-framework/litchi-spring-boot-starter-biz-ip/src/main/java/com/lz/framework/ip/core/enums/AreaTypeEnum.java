@@ -15,10 +15,10 @@ import java.util.Arrays;
 @Getter
 public enum AreaTypeEnum implements ArrayValuable<Integer> {
 
-    COUNTRY(1, "国家"),
-    PROVINCE(2, "省份"),
-    CITY(3, "城市"),
-    DISTRICT(4, "地区"), // 县、镇、区等
+    COUNTRY(0, "国家"),
+    PROVINCE(1, "省份"),
+    CITY(2, "城市"),
+    DISTRICT(3, "地区"), // 县、镇、区等
     ;
 
     public static final Integer[] ARRAYS = Arrays.stream(values()).map(AreaTypeEnum::getType).toArray(Integer[]::new);

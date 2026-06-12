@@ -26,6 +26,12 @@
             <artifactId>litchi-common</artifactId>
         </dependency>
 
+        <!-- Spring 核心 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+        </dependency>
+
         <!-- IP地址检索 -->
         <dependency>
             <groupId>org.lionsoul</groupId>

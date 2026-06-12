@@ -5,6 +5,7 @@ import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.framework.common.util.validation.ValidationUtils;
+import com.lz.framework.ip.core.utils.AreaUtils;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.redis.core.RedisUtils;
 import com.lz.module.infra.constants.RedisKeyConstants;
@@ -168,6 +169,12 @@ public class AreaServiceImpl implements AreaService {
         return areaMapper.selectById(id);
     }
 
+    @Override
+    @Cacheable(cacheNames = RedisKeyConstants.AREA_CODE, key = "#code")
+    public AreaDO selectAreaByCode(String code) {
+        return areaMapper.selectByCode(code);
+    }
+
     @Cacheable(cacheNames = {RedisKeyConstants.AREA_LIST})
     @Override
     public List<AreaDO> getAreaList(AreaListReqVO listReqVO) {
@@ -190,6 +197,8 @@ public class AreaServiceImpl implements AreaService {
     public void clearCache() {
         //虽然删除了所有的key，但是不修改对应语言是否更新，前端还是可以拿自己的缓存
         redisUtils.deleteByPatterns(RedisKeyConstants.AREA_LIST, RedisKeyConstants.AREA_TREE);
+        //重新初始化地区
+        AreaUtils.initAreas();
     }
 
     @Override

@@ -31,4 +31,11 @@ public interface RedisKeyConstants {
      * VALUE 数据格式：String 地区树
      */
     String AREA_TREE = "area:tree";
+    /**
+     * 地区缓存
+     * <p>
+     * KEY ：area:
+     * VALUE 数据格式：String 地区信息
+     */
+    String AREA_CODE = "area:";
 }

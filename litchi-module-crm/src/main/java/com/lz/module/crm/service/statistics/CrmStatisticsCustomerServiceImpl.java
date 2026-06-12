@@ -311,11 +311,11 @@ public class CrmStatisticsCustomerServiceImpl implements CrmStatisticsCustomerSe
         }
 
         // 3. 拼接数据
-        Map<Integer, Area> areaMap = convertMap(AreaUtils.getByType(AreaTypeEnum.PROVINCE, Function.identity()), Area::getId);
+        Map<String, Area> areaMap = convertMap(AreaUtils.getByType(AreaTypeEnum.PROVINCE, Function.identity()), Area::getCode);
         return convertList(dealCycleByAreaList, vo -> {
             if (vo.getAreaCode() != null) {
-                Integer parentId = AreaUtils.getParentIdByType(Integer.parseInt(vo.getAreaCode()), AreaTypeEnum.PROVINCE);
-                findAndThen(areaMap, parentId, area -> vo.setAreaCode(String.valueOf(parentId)).setAreaName(area.getName()));
+                String parentCode = AreaUtils.getParentCodeByType(vo.getAreaCode(), AreaTypeEnum.PROVINCE);
+                findAndThen(areaMap, parentCode, area -> vo.setAreaCode(parentCode).setAreaName(area.getName()));
             }
             return vo;
         });

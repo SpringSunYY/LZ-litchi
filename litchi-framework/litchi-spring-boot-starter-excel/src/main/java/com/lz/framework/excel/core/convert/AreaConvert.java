@@ -40,7 +40,7 @@ public class AreaConvert implements Converter<Object> {
         }
         // 将 value 转换成对应的属性
         Class<?> fieldClazz = contentProperty.getField().getType();
-        return Convert.convert(fieldClazz, area.getId());
+        return Convert.convert(fieldClazz, area.getCode());
     }
 
 }

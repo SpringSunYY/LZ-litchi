@@ -26,7 +26,7 @@ public class AreaExcelColumnSelectFunction implements ExcelColumnSelectFunction 
     public List<String> getOptions() {
         // 获取地区下拉数据
         // TODO @puhui999：嘿嘿，这里改成省份、城市、区域，三个选项，难度大么？
-        Area area = AreaUtils.getArea(Area.ID_CHINA);
+        Area area = AreaUtils.getArea(Area.CODE_CHINA);
         return AreaUtils.getAreaNodePathList(area.getChildren());
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * 区域节点，包括国家、省份、城市、地区等信息
  *
- * 数据可见 resources/area.csv 文件
+ * 数据来源：数据库中的 infra_area 表
  *
  * @author 荔枝源码
  */
@@ -24,22 +24,24 @@ import java.util.List;
 public class Area {
 
     /**
-     * 编号 - 全球，即根目录
+     * 编码 - 全球，即根目录
      */
-    public static final Integer ID_GLOBAL = 0;
+    public static final String CODE_GLOBAL = "0";
     /**
-     * 编号 - 中国
+     * 编码 - 中国
      */
-    public static final Integer ID_CHINA = 1;
+    public static final String CODE_CHINA = "1";
 
     /**
-     * 编号
+     * 行政编码（唯一标识）
      */
-    private Integer id;
+    private String code;
+
     /**
      * 名字
      */
     private String name;
+
     /**
      * 类型
      *
@@ -52,6 +54,7 @@ public class Area {
      */
     @JsonManagedReference
     private Area parent;
+
     /**
      * 子节点
      */

@@ -28,7 +28,7 @@ public class AppAreaController {
     @Operation(summary = "获得地区树")
     @PermitAll
     public CommonResult<List<AppAreaNodeRespVO>> getAreaTree() {
-        Area area = AreaUtils.getArea(Area.ID_CHINA);
+        Area area = AreaUtils.getArea(Area.CODE_CHINA);
         Assert.notNull(area, "获取不到中国");
         return success(BeanUtils.toBean(area.getChildren(), AppAreaNodeRespVO.class));
     }

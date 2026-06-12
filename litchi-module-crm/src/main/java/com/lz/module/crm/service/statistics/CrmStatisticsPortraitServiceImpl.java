@@ -55,13 +55,13 @@ public class CrmStatisticsPortraitServiceImpl implements CrmStatisticsPortraitSe
 
         // 3. 拼接数据
         List<Area> areaList = AreaUtils.getByType(AreaTypeEnum.PROVINCE, area -> area);
-        Map<Integer, Area> areaMap = convertMap(areaList, Area::getId);
+        Map<String, Area> areaMap = convertMap(areaList, Area::getCode);
         return convertList(list, item -> {
-            Integer parentId = AreaUtils.getParentIdByType(Integer.parseInt(item.getAreaCode()), AreaTypeEnum.PROVINCE);
-            if (parentId != null) {
-                Area area = areaMap.get(parentId);
+            String parentCode = AreaUtils.getParentCodeByType(item.getAreaCode(), AreaTypeEnum.PROVINCE);
+            if (parentCode != null) {
+                Area area = areaMap.get(parentCode);
                 if (area != null) {
-                    item.setAreaCode(String.valueOf(parentId)).setAreaName(area.getName());
+                    item.setAreaCode(parentCode).setAreaName(area.getName());
                     return item;
                 }
             }

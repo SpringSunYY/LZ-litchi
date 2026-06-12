@@ -3,6 +3,7 @@ package com.lz.module.infra.controller.admin.ip;
 import com.lz.framework.apilog.core.annotation.ApiAccessLog;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.common.util.servlet.ServletUtils;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.ip.core.Area;
 import com.lz.framework.ip.core.utils.AreaUtils;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,17 +50,20 @@ public class AreaController {
     @Operation(summary = "获得 IP 对应的地区名")
     @Parameter(name = "ip", description = "IP", required = true)
     public CommonResult<String> getAreaByIp(@RequestParam("ip") String ip) {
-        // 获得城市
-        Area area = IPUtils.getArea(ip);
-        if (area == null) {
-            return success("未知");
-        }
-        // 格式化返回
-        return success(AreaUtils.format(area.getId()));
+        return success(IPUtils.getIpAddr(ip));
     }
+
+    @GetMapping("/get-ip-addr")
+    @Operation(summary = "获得当前请求的 IP 属地")
+    public CommonResult<String> getIpAddr() {
+        String ip = ServletUtils.getClientIP();
+        return success(ip != null ? IPUtils.getIpAddr(ip) : "未知");
+    }
+
 
     /**
      * 清除缓存
+     *
      * @return
      */
     @DeleteMapping("/clear-cache")
@@ -147,7 +152,7 @@ public class AreaController {
                         .ancestors(null)
                         .build());
         // 输出
-        ExcelUtils.write(response, "地区信息导入模板.xls", "地区信息模板", AreaExcelVO.class, list,ONLY_IMPORT);
+        ExcelUtils.write(response, "地区信息导入模板.xls", "地区信息模板", AreaExcelVO.class, list, ONLY_IMPORT);
     }
 
     /**

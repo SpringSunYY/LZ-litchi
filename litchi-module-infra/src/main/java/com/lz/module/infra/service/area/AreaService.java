@@ -44,6 +44,14 @@ public interface AreaService {
      */
     AreaDO getArea(Long id);
 
+
+    /**
+     * 根据编码查询地区信息
+     *
+     * @param code 编码
+     * @return 地区信息
+     */
+    AreaDO selectAreaByCode(String code);
     /**
      * 获得地区信息列表
      *
