@@ -58,7 +58,7 @@ function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
     ElMessage.warning($t('common.selectFirst', [
       #if($isI18n)
-        $t('${i18nModuleType}.${table.businessName}')
+        $t('${i18nModuleType}.${table.businessName}.${table.businessName}')
       #else
         '${table.classComment}'
       #end

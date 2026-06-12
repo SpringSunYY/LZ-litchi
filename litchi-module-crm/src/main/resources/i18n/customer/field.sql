@@ -198,15 +198,15 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('客户-email', 'crm.customer.field.email', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '邮箱', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 17. 地区编号
-DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.field.areaId';
+DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.field.areaCode';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('客户-地区编号', 'crm.customer.field.areaId', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = 'crm.customer.field.areaId' AND locale = @LOCALE_EN;
+VALUES ('客户-地区编号', 'crm.customer.field.areaCode', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = 'crm.customer.field.areaCode' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('客户-地区编号', 'crm.customer.field.areaId', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, 'area id', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = 'crm.customer.field.areaId' AND locale = @LOCALE_ZH_CN;
+VALUES ('客户-地区编号', 'crm.customer.field.areaCode', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, 'area id', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = 'crm.customer.field.areaCode' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('客户-地区编号', 'crm.customer.field.areaId', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '地区编号', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('客户-地区编号', 'crm.customer.field.areaCode', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '地区编号', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 18. 地区名称
 DELETE FROM infra_i18n_key WHERE message_key = 'crm.customer.field.areaName';

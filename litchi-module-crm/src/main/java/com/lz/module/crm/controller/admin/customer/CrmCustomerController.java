@@ -113,7 +113,7 @@ public class CrmCustomerController {
         if (customer == null) {
             return null;
         }
-        return buildCustomerDetailList(singletonList(customer)).get(0);
+        return buildCustomerDetailList(singletonList(customer)).getFirst();
     }
 
     @GetMapping("/page")
@@ -141,7 +141,9 @@ public class CrmCustomerController {
         Map<Long, Long> poolDayMap = getPoolDayMap(list);
         // 2. 转换成 VO
         return BeanUtils.toBean(list, CrmCustomerRespVO.class, customerVO -> {
-            customerVO.setAreaName(AreaUtils.format(customerVO.getAreaId()));
+            if (customerVO.getAreaCode()!= null){
+                customerVO.setAreaName(AreaUtils.format(Integer.parseInt(customerVO.getAreaCode())));
+            }
             // 2.1 设置创建人、负责人名称
             MapUtils.findAndThen(userMap, NumberUtils.parseLong(customerVO.getCreator()),
                     user -> customerVO.setCreatorName(user.getNickname()));
@@ -251,10 +253,10 @@ public class CrmCustomerController {
         List<CrmCustomerImportExcelVO> list = Arrays.asList(
                 CrmCustomerImportExcelVO.builder().name("荔枝").industryId(1).level(1).source(1)
                         .mobile("15601691300").telephone("").qq("").wechat("").email("yunai@iocoder.cn")
-                        .areaId(null).detailAddress("").remark("").build(),
+                        .areaCode(null).detailAddress("").remark("").build(),
                 CrmCustomerImportExcelVO.builder().name("源码").industryId(1).level(1).source(1)
                         .mobile("15601691300").telephone("").qq("").wechat("").email("yunai@iocoder.cn")
-                        .areaId(null).detailAddress("").remark("").build()
+                        .areaCode(null).detailAddress("").remark("").build()
         );
         // 输出
         ExcelUtils.write(response, "客户导入模板.xls", "客户列表", CrmCustomerImportExcelVO.class, list);

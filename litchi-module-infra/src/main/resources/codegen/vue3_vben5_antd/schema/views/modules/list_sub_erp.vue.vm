@@ -52,7 +52,7 @@ function handleCreate() {
   if (!props.${subJoinColumn.javaField}){
     message.warning($t('common.selectFirst', [
       #if($isI18n)
-        $t('${i18nModuleType}.${table.businessName}')
+        $t('${i18nModuleType}.${table.businessName}.${table.businessName}')
       #else
         '${table.classComment}'
       #end
@@ -214,7 +214,7 @@ watch(
             :actions="[
               {
 #if($isI18n)
-                label: $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]),
+                label: $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]),
 #else
                 label: $t('ui.actionTitle.create', ['${table.classComment}']),
 #end
@@ -225,7 +225,7 @@ watch(
               },
               #if ($table.templateType == 11 && $deleteBatchEnable)
               {
-                label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${i18nModuleType}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
+                label: #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end,
                 type: 'primary',
                 danger: true,
                 icon: ACTION_ICON.DELETE,
@@ -254,7 +254,7 @@ watch(
                 icon: ACTION_ICON.DELETE,
                 auth: ['${table.moduleName}:${simpleClassName_strikeCase}:delete'],
                 popConfirm: {
-                  title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${i18nModuleType}.${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
+                  title: #if($isI18n)$t('ui.actionMessage.deleteConfirm', [row.id, $t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('ui.actionMessage.deleteConfirm', [row.id, '${table.classComment}'])#end,
                   confirm: handleDelete.bind(null, row),
                 },
               },

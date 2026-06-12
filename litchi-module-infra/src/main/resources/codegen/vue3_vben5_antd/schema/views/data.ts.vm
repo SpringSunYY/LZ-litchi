@@ -887,7 +887,7 @@ export function use${simpleClassName}ImportSchema(): VbenFormSchema[] {
     {
       fieldName: 'file',
     #if($isI18n)
-      label: $t('ui.actionTitle.import', [$t('${i18nModuleType}.${table.businessName}')]),
+      label: $t('ui.actionTitle.import', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]),
     #else
       label: $t('ui.actionTitle.import', ['${table.classComment}']),
     #end

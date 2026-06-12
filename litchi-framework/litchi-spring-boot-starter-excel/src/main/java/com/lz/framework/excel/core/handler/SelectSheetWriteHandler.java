@@ -216,6 +216,11 @@ public class SelectSheetWriteHandler implements SheetWriteHandler {
         int colIndex = keyValue.getKey();
         int optionCount = keyValue.getValue().size();
 
+        // 无下拉选项，跳过
+        if (optionCount == 0) {
+            return;
+        }
+
         // 1. 创建名称
         Name name = workbook.createName();
         String excelColumn = ExcelUtil.indexToColName(colIndex);

@@ -85,7 +85,7 @@ public class CrmContactRespVO {
     private String wechat;
 
     @Schema(description = "地区编号", example = "20158")
-    private Integer areaId;
+    private String areaCode;
     @Schema(description = "地区名", example = "上海上海市浦东新区")
     @ExcelProperty(value = "地区", order = 5)
     @ExcelI18n(i18nKey = "crm.contact.field.areaName")

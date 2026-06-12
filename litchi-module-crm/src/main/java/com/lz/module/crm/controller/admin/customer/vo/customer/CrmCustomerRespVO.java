@@ -103,8 +103,8 @@ public class CrmCustomerRespVO {
     @Schema(description = "地区编号", example = "1024")
     @ExcelProperty(value = "地区", converter = AreaConvert.class)
     @ExcelColumnSelect(functionName = AreaExcelColumnSelectFunction.NAME, i18n = true)
-    @ExcelI18n(i18nKey = "crm.customer.field.areaId")
-    private Integer areaId;
+    @ExcelI18n(i18nKey = "crm.customer.field.areaCode")
+    private String areaCode;
     @Schema(description = "地区名称", example = "北京市")
     @ExcelProperty("地区名称")
     @ExcelI18n(i18nKey = "crm.customer.field.areaName")

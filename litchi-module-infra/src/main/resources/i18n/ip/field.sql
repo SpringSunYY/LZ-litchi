@@ -55,15 +55,15 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('地区-邮政编码', 'infra.area.field.postalCode', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '邮政编码', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 4. parentId - 父级ID
-DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.field.parentId';
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.field.parentCode';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('地区-父级ID', 'infra.area.field.parentId', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.field.parentId' AND locale = @LOCALE_EN;
+VALUES ('地区-父级ID', 'infra.area.field.parentCode', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.field.parentCode' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('地区-父级ID', 'infra.area.field.parentId', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, 'parent id', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.field.parentId' AND locale = @LOCALE_ZH_CN;
+VALUES ('地区-父级ID', 'infra.area.field.parentCode', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, 'parent id', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.field.parentCode' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('地区-父级ID', 'infra.area.field.parentId', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '父级ID', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('地区-父级ID', 'infra.area.field.parentCode', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '父级ID', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 5. level - 层级
 DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.field.level';

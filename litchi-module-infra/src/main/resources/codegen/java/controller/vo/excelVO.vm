@@ -1,6 +1,8 @@
 package ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo;
 #set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 import com.alibaba.excel.annotation.ExcelProperty;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.common.validation.i18n.I18nNotNull;
 import ${ExcelColumnSelectClassName};
 import ${ExcelI18nClassName};
 import ${DictConvertClassName};

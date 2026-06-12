@@ -18,21 +18,24 @@ public interface AreaMapper extends BaseMapperX<AreaDO> {
 
     default List<AreaDO> selectList(AreaListReqVO reqVO) {
         return selectList(new LambdaQueryWrapperX<AreaDO>()
-                .eqIfPresent(AreaDO::getAdministrativeCode, reqVO.getAdministrativeCode())
+                .eqIfPresent(AreaDO::getCode, reqVO.getCode())
                 .likeIfPresent(AreaDO::getName, reqVO.getName())
                 .eqIfPresent(AreaDO::getPostalCode, reqVO.getPostalCode())
-                .eqIfPresent(AreaDO::getParentId, reqVO.getParentId())
+                .eqIfPresent(AreaDO::getParentCode, reqVO.getParentCode())
                 .eqIfPresent(AreaDO::getLevel, reqVO.getLevel())
                 .betweenIfPresent(AreaDO::getCreateTime, reqVO.getCreateTime())
-                .orderByDesc(AreaDO::getId));
+                .orderByAsc(AreaDO::getSortNum));
     }
 
-    default AreaDO selectByParentIdAndName(Long parentId, String name) {
-        return selectOne(AreaDO::getParentId, parentId, AreaDO::getName, name);
+    default AreaDO selectByParentCodeAndName(String parentCode, String name) {
+        return selectOne(AreaDO::getParentCode, parentCode, AreaDO::getName, name);
     }
 
-    default Long selectCountByParentId(Long parentId) {
-        return selectCount(AreaDO::getParentId, parentId);
+    default Long selectCountByParentCode(String parentCode) {
+        return selectCount(AreaDO::getParentCode, parentCode);
     }
 
+    default AreaDO selectByCode(String code) {
+        return selectOne(AreaDO::getCode, code);
+    }
 }

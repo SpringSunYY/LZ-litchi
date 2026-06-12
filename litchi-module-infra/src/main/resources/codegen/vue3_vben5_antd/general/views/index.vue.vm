@@ -345,7 +345,7 @@ onMounted(() => {
               @click="handleCreate"
               v-access:code="['${permissionPrefix}:create']"
           >
-            #if($isI18n){{ $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]) }}#else {{ $t('ui.actionTitle.create', ['${table.classComment}']) }}#end
+            #if($isI18n){{ $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]) }}#else {{ $t('ui.actionTitle.create', ['${table.classComment}']) }}#end
           </Button>
           <Button
               :icon="h(Download)"
@@ -355,7 +355,7 @@ onMounted(() => {
               @click="onExport"
               v-access:code="['${permissionPrefix}:export']"
           >
-            {{ #if($isI18n)$t('ui.actionTitle.export', [$t('${i18nModuleType}.${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end }}
+            {{ #if($isI18n)$t('ui.actionTitle.export', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('ui.actionTitle.export', ['${table.classComment}'])#end }}
           </Button>
         #if ($table.templateType != 2 && $deleteBatchEnable)
           <Button
@@ -367,7 +367,7 @@ onMounted(() => {
               @click="handleDeleteBatch"
               v-access:code="['${table.moduleName}:${simpleClassName_strikeCase}:delete']"
           >
-            {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${i18nModuleType}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end }}
+            {{ #if($isI18n)$t('ui.actionTitle.deleteBatch', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('ui.actionTitle.deleteBatch', ['${table.classComment}'])#end }}
           </Button>
         #end
         </TableToolbar>
@@ -456,7 +456,7 @@ onMounted(() => {
       @click="handleAppend(row as any)"
       v-access:code="['${permissionPrefix}:create']"
   >
-            {{ #if($isI18n)$t('common.append', [$t('${i18nModuleType}.${table.businessName}')])#else $t('common.append', ['${table.classComment}'])#end }}
+            {{ #if($isI18n)$t('common.append', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('common.append', ['${table.classComment}'])#end }}
   </Button>
 #end
             <Button
@@ -465,7 +465,7 @@ onMounted(() => {
                 @click="handleEdit(row as any)"
                 v-access:code="['${permissionPrefix}:update']"
             >
-              {{ #if($isI18n)$t('common.edit', [$t('${i18nModuleType}.${table.businessName}')])#else $t('common.edit', ['${table.classComment}'])#end }}
+              {{ #if($isI18n)$t('common.edit', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('common.edit', ['${table.classComment}'])#end }}
             </Button>
             <Button
                 size="small"
@@ -478,7 +478,7 @@ onMounted(() => {
                 @click="handleDelete(row as any)"
                 v-access:code="['${permissionPrefix}:delete']"
             >
-              {{ #if($isI18n)$t('common.delete', [$t('${i18nModuleType}.${table.businessName}')])#else $t('common.delete', ['${table.classComment}'])#end }}
+              {{ #if($isI18n)$t('common.delete', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])#else $t('common.delete', ['${table.classComment}'])#end }}
             </Button>
           </template>
         </vxe-column>

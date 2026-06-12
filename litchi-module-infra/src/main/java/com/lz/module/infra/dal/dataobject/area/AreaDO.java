@@ -25,7 +25,7 @@ import java.math.BigDecimal;
 @TenantIgnore
 public class AreaDO extends BaseDO {
 
-    public static final Long PARENT_ID_ROOT = 0L;
+    public static final String PARENT_CODE_ROOT = "0";
 
     /**
      * ID
@@ -35,7 +35,7 @@ public class AreaDO extends BaseDO {
     /**
      * 行政编码
      */
-    private String administrativeCode;
+    private String code;
     /**
      * 地区名称
      */
@@ -45,13 +45,12 @@ public class AreaDO extends BaseDO {
      */
     private String postalCode;
     /**
-     * 父级ID
+     * 父级编号
      */
-    private Long parentId;
+    private String parentCode;
     /**
      * 层级
      * <p>
-     * 枚举 {@link TODO system_area_level 对应的类}
      */
     private Integer level;
     /**

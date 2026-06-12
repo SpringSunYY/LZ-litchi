@@ -77,7 +77,7 @@ public class CrmClueSaveReqVO {
 
     @Schema(description = "地区编号", example = "20158")
     @DiffLogField(name = "地区编号", function = SysAreaParseFunction.NAME)
-    private Integer areaId;
+    private String areaCode;
 
     @Schema(description = "详细地址", example = "北京市海淀区")
     @DiffLogField(name = "详细地址")

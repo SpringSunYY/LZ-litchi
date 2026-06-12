@@ -24,8 +24,8 @@ import { useFormSchema } from '../data';
 const emit = defineEmits(['success']);
 const formData = ref<${simpleClassName}Api.${simpleClassName}>();
 #if($isI18n)
-  const titleEdit = $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}')]);
-  const titleCreate = $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]);
+  const titleEdit = $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]);
+  const titleCreate = $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]);
 #else
   const titleEdit = $t('ui.actionTitle.edit', ['${table.classComment}']);
   const titleCreate = $t('ui.actionTitle.create', ['${table.classComment}']);

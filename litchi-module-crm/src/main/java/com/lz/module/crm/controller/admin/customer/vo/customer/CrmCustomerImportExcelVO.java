@@ -51,8 +51,8 @@ public class CrmCustomerImportExcelVO {
 
     @ExcelProperty(value = "地区", converter = AreaConvert.class)
     @ExcelColumnSelect(functionName = AreaExcelColumnSelectFunction.NAME, i18n = true)
-    @ExcelI18n(i18nKey = "crm.customer.field.areaId")
-    private Integer areaId;
+    @ExcelI18n(i18nKey = "crm.customer.field.areaCode")
+    private String areaCode;
 
     @ExcelProperty("详细地址")
     @ExcelI18n(i18nKey = "crm.customer.field.detailAddress")

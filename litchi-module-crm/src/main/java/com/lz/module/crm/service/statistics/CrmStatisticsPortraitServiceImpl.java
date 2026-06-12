@@ -48,7 +48,7 @@ public class CrmStatisticsPortraitServiceImpl implements CrmStatisticsPortraitSe
         reqVO.setUserIds(userIds);
 
         // 2. 获取客户地区统计数据
-        List<CrmStatisticCustomerAreaRespVO> list = portraitMapper.selectSummaryListGroupByAreaId(reqVO);
+        List<CrmStatisticCustomerAreaRespVO> list = portraitMapper.selectSummaryListGroupByareaCode(reqVO);
         if (CollUtil.isEmpty(list)) {
             return Collections.emptyList();
         }
@@ -57,16 +57,16 @@ public class CrmStatisticsPortraitServiceImpl implements CrmStatisticsPortraitSe
         List<Area> areaList = AreaUtils.getByType(AreaTypeEnum.PROVINCE, area -> area);
         Map<Integer, Area> areaMap = convertMap(areaList, Area::getId);
         return convertList(list, item -> {
-            Integer parentId = AreaUtils.getParentIdByType(item.getAreaId(), AreaTypeEnum.PROVINCE);
+            Integer parentId = AreaUtils.getParentIdByType(Integer.parseInt(item.getAreaCode()), AreaTypeEnum.PROVINCE);
             if (parentId != null) {
                 Area area = areaMap.get(parentId);
                 if (area != null) {
-                    item.setAreaId(parentId).setAreaName(area.getName());
+                    item.setAreaCode(String.valueOf(parentId)).setAreaName(area.getName());
                     return item;
                 }
             }
             // 找不到，归到未知
-            return item.setAreaId(null).setAreaName("未知");
+            return item.setAreaCode(null).setAreaName("未知");
         });
     }
 

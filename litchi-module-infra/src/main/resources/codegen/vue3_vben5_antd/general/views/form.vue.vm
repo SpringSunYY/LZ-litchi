@@ -60,8 +60,8 @@ const ${classNameVar}Tree = ref<any[]>([]) // 树形结构
   const getTitle = computed(() => {
 #if($isI18n)
     return formData.value?.id
-        ? $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}')])
-        : $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]);
+        ? $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]);
 #else
     return formData.value?.id
         ? $t('ui.actionTitle.edit', ['${table.classComment}'])

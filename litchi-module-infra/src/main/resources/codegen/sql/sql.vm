@@ -59,9 +59,9 @@ VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.menu',
 -- 表单（use_type = 2）
 -- key: ${module}.${business}
 -- -----------------------------------------
-DELETE FROM infra_i18n_key WHERE message_key = '${i18nModuleType}.${table.businessName}';
+DELETE FROM infra_i18n_key WHERE message_key = '${i18nModuleType}.${table.businessName}.${table.businessName}';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, 'form', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.${table.businessName}', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, @ORDER_NUM, 'form', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- -----------------------------------------
 -- 功能（use_type = 4）
@@ -108,9 +108,9 @@ VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.menu',
 -- -----------------------------------------
 -- 表单（use_type = 2）
 -- -----------------------------------------
-DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}' AND locale = @LOCALE_ZH_EN;
+DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}.${table.businessName}' AND locale = @LOCALE_ZH_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}', @LOCALE_ZH_EN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '${businessNameReadable}', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.${table.businessName}', @LOCALE_ZH_EN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '${businessNameReadable}', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- -----------------------------------------
 -- 功能（use_type = 4）
@@ -152,9 +152,9 @@ VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.menu',
 -- -----------------------------------------
 -- 表单（use_type = 2）
 -- -----------------------------------------
-DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}' AND locale = @LOCALE_ZH_CN;
+DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}.${table.businessName}' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '${table.classComment}', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('${table.classComment}', '${i18nModuleType}.${table.businessName}.${table.businessName}', @LOCALE_ZH_CN, @LOCALE_TARGET_PC, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_FILED, '${table.classComment}', 'menu', @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- -----------------------------------------
 -- 功能（use_type = 4）

@@ -33,15 +33,15 @@ INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target
 VALUES ('地区-地区名称不能为空白', 'infra.area.back.name.notBlank', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '地区名称不能为空', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 2. parentId - 不能为空
-DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.parentId.notNull';
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.parentCode.notNull';
 INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('地区-父级ID不能为空', 'infra.area.back.parentId.notNull', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentId.notNull' AND locale = @LOCALE_EN;
+VALUES ('地区-父级ID不能为空', 'infra.area.back.parentCode.notNull', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentCode.notNull' AND locale = @LOCALE_EN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('地区-父级ID不能为空', 'infra.area.back.parentId.notNull', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'area parent id cannot be empty', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
-DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentId.notNull' AND locale = @LOCALE_ZH_CN;
+VALUES ('地区-父级ID不能为空', 'infra.area.back.parentCode.notNull', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'area parent id cannot be empty', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentCode.notNull' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
-VALUES ('地区-父级ID不能为空', 'infra.area.back.parentId.notNull', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '父级ID不能为空', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+VALUES ('地区-父级ID不能为空', 'infra.area.back.parentCode.notNull', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '父级ID不能为空', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
 
 -- 3. level - 不能为空
 DELETE FROM infra_i18n_key WHERE message_key = 'infra.area.back.level.notNull';

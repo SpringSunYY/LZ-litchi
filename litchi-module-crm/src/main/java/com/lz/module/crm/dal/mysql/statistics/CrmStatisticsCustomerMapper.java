@@ -198,7 +198,7 @@ public interface CrmStatisticsCustomerMapper {
      * @param reqVO 请求参数
      * @return 统计数据
      */
-    List<CrmStatisticsCustomerDealCycleByAreaRespVO> selectCustomerDealCycleGroupByAreaId(CrmStatisticsCustomerReqVO reqVO);
+    List<CrmStatisticsCustomerDealCycleByAreaRespVO> selectCustomerDealCycleGroupByareaCode(CrmStatisticsCustomerReqVO reqVO);
 
     /**
      * 客户成交周期(按产品)

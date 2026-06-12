@@ -10,7 +10,7 @@ public class CrmStatisticsCustomerDealCycleByAreaRespVO {
 
     @Schema(description = "省份编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")
     @JsonIgnore
-    private Integer areaId;
+    private String areaCode;
 
     @Schema(description = "省份名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "浙江省")
     private String areaName;

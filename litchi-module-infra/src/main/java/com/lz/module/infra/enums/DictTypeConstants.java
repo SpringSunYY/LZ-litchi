@@ -29,5 +29,5 @@ public interface DictTypeConstants {
 
     String SYSTEM_MODULE_TYPE = "system_module_type";//
 
-    String SYSTEM_AREA_LEVEL = "system_area_level"; // 地区层级// 系统模块
+    String INFRA_AREA_LEVEL = "system_area_level"; // 地区层级// 系统模块
 }

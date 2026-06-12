@@ -13,7 +13,7 @@ import java.util.List;
 @Mapper
 public interface CrmStatisticsPortraitMapper {
 
-    List<CrmStatisticCustomerAreaRespVO> selectSummaryListGroupByAreaId(CrmStatisticsPortraitReqVO reqVO);
+    List<CrmStatisticCustomerAreaRespVO> selectSummaryListGroupByareaCode(CrmStatisticsPortraitReqVO reqVO);
 
     List<CrmStatisticCustomerIndustryRespVO> selectCustomerIndustryListGroupByIndustryId(CrmStatisticsPortraitReqVO reqVO);
 

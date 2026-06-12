@@ -26,8 +26,8 @@ const formData = ref<${simpleClassName}Api.${simpleClassName}>();
 #if($isI18n)
   const getTitle = computed(() => {
     return formData.value?.id
-        ? $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}')])
-        : $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}')]);
+        ? $t('ui.actionTitle.edit', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])
+        : $t('ui.actionTitle.create', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]);
   });
 #else
   const getTitle = computed(() => {

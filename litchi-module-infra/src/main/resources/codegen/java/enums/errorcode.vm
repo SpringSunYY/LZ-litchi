@@ -22,4 +22,4 @@ ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS = new ErrorCode(1
 #end
 #end
 // ========== 导入通用错误码（可自行配置国际化） ==========
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100#if ($isI18n), "${i18nModuleType}.back.import.dataEmpty",#end, "${subTable.classComment}导入数据不能为空！");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100#if ($isI18n), "${i18nModuleType}.back.import.dataEmpty"#end, "${table.classComment}导入数据不能为空！");

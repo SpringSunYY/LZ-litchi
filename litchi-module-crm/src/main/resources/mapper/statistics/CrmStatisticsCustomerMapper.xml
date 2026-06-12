@@ -222,9 +222,9 @@
          GROUP BY customer.owner_user_id
     </select>
 
-    <select id="selectCustomerDealCycleGroupByAreaId"
+    <select id="selectCustomerDealCycleGroupByareaCode"
             resultType="com.lz.module.crm.controller.admin.statistics.vo.customer.CrmStatisticsCustomerDealCycleByAreaRespVO">
-        SELECT customer.area_id AS area_id,
+        SELECT customer.area_code AS area_code,
                IFNULL(TRUNCATE(AVG(TIMESTAMPDIFF(DAY, customer.create_time, contract.order_date)), 1), 0) AS customer_deal_cycle,
                COUNT(DISTINCT customer.id) AS customer_deal_count
         FROM crm_customer AS customer
@@ -238,7 +238,7 @@
                 </foreach>
           AND customer.create_time BETWEEN #{times[0],javaType=java.time.LocalDateTime} AND #{times[1],javaType=java.time.LocalDateTime}
         GROUP BY
-            customer.area_id
+            customer.area_code
     </select>
 
     <select id="selectCustomerDealCycleGroupByProductId"

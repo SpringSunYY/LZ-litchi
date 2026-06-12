@@ -18,14 +18,14 @@ const emit = defineEmits(['success']);
 <template>
   <ImportExcel
       #if($isI18n)
-          :title="$t('ui.actionTitle.import', [$t('${i18nModuleType}.${table.businessName}')])"
+          :title="$t('ui.actionTitle.import', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')])"
       #else
           :title="$t('ui.actionTitle.import', ['${table.classComment}'])"
       #end
           :import-api="import${simpleClassName}"
           :template-api="import${simpleClassName}Template"
       #if($isI18n)
-          :template-file-name="$t('ui.actionTitle.importTemplate', [$t('${i18nModuleType}.${table.businessName}')]) + '.xlsx'"
+          :template-file-name="$t('ui.actionTitle.importTemplate', [$t('${i18nModuleType}.${table.businessName}.${table.businessName}')]) + '.xlsx'"
       #else
           :template-file-name="$t('ui.actionTitle.importTemplate', ['${table.classComment}']) + '.xlsx'"
       #end

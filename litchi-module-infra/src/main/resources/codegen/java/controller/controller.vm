@@ -223,7 +223,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
                         .${column.javaField}(LocalDate.now())
 #elseif ($column.javaType == "Boolean")
                         .${column.javaField}(true)
-#elseif ($column.javaType == "Integer" || $column.javaType == "Long" || $column.javaType == "Short" || $column.javaType == "Byte" || $column.javaType == "Double" || $column.javaType == "BigDecimal")
+#elseif ($column.javaType == "Long")
+                        .${column.javaField}(0L)
+#elseif ($column.javaType == "Integer"  || $column.javaType == "Short" || $column.javaType == "Byte" || $column.javaType == "Double" || $column.javaType == "BigDecimal")
                         .${column.javaField}(0)
 #else
                         .${column.javaField}(${column.example})

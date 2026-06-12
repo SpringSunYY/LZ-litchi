@@ -99,7 +99,7 @@ public class CrmCustomerCreateReqBO {
      *
      * 关联 {@link com.lz.framework.ip.core.Area#getId()} 字段
      */
-    private Integer areaId;
+    private String areaCode;
     /**
      * 详细地址
      */

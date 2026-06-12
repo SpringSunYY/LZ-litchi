@@ -10,7 +10,7 @@ import java.util.List;
 public class AreaNodeRespVO {
 
     @Schema(description = "编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "110000")
-    private Integer id;
+    private String code;
 
     @Schema(description = "名字", requiredMode = Schema.RequiredMode.REQUIRED, example = "北京")
     private String name;

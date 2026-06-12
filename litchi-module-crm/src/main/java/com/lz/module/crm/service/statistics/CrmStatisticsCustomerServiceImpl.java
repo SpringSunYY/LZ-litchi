@@ -305,7 +305,7 @@ public class CrmStatisticsCustomerServiceImpl implements CrmStatisticsCustomerSe
         reqVO.setUserIds(userIds);
 
         // 2. 获取客户地区统计数据
-        List<CrmStatisticsCustomerDealCycleByAreaRespVO> dealCycleByAreaList = customerMapper.selectCustomerDealCycleGroupByAreaId(reqVO);
+        List<CrmStatisticsCustomerDealCycleByAreaRespVO> dealCycleByAreaList = customerMapper.selectCustomerDealCycleGroupByareaCode(reqVO);
         if (CollUtil.isEmpty(dealCycleByAreaList)) {
             return Collections.emptyList();
         }
@@ -313,9 +313,9 @@ public class CrmStatisticsCustomerServiceImpl implements CrmStatisticsCustomerSe
         // 3. 拼接数据
         Map<Integer, Area> areaMap = convertMap(AreaUtils.getByType(AreaTypeEnum.PROVINCE, Function.identity()), Area::getId);
         return convertList(dealCycleByAreaList, vo -> {
-            if (vo.getAreaId() != null) {
-                Integer parentId = AreaUtils.getParentIdByType(vo.getAreaId(), AreaTypeEnum.PROVINCE);
-                findAndThen(areaMap, parentId, area -> vo.setAreaId(parentId).setAreaName(area.getName()));
+            if (vo.getAreaCode() != null) {
+                Integer parentId = AreaUtils.getParentIdByType(Integer.parseInt(vo.getAreaCode()), AreaTypeEnum.PROVINCE);
+                findAndThen(areaMap, parentId, area -> vo.setAreaCode(String.valueOf(parentId)).setAreaName(area.getName()));
             }
             return vo;
         });

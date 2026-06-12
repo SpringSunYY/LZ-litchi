@@ -66,7 +66,7 @@ public class CrmContactSaveReqVO {
 
     @Schema(description = "地区编号", example = "20158")
     @DiffLogField(name = "所在地", function = SysAreaParseFunction.NAME)
-    private Integer areaId;
+    private String areaCode;
 
     @Schema(description = "地址")
     @DiffLogField(name = "地址")

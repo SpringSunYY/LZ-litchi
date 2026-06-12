@@ -2,18 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.lz.module.crm.dal.mysql.statistics.CrmStatisticsPortraitMapper">
 
-    <select id="selectSummaryListGroupByAreaId"
+    <select id="selectSummaryListGroupByareaCode"
             resultType="com.lz.module.crm.controller.admin.statistics.vo.portrait.CrmStatisticCustomerAreaRespVO">
-        SELECT area_id, COUNT(*) AS customerCount, SUM(deal_status) AS dealCount
+        SELECT area_code, COUNT(*) AS customerCount, SUM(deal_status) AS dealCount
         FROM crm_customer
-        WHERE deleted = 0 AND area_id IS NOT NULL
+        WHERE deleted = 0 AND area_code IS NOT NULL
         AND owner_user_id IN
         <foreach collection="userIds" item="userId" open="(" close=")" separator=",">
             #{userId}
         </foreach>
         AND create_time BETWEEN #{times[0],javaType=java.time.LocalDateTime}
         AND #{times[1],javaType=java.time.LocalDateTime}
-        GROUP BY area_id
+        GROUP BY area_code
     </select>
 
     <select id="selectCustomerIndustryListGroupByIndustryId"

@@ -1,8 +1,6 @@
 package com.lz.module.infra.service.area;
 
-import com.lz.module.infra.controller.admin.ip.vo.AreaListReqVO;
-import com.lz.module.infra.controller.admin.ip.vo.AreaNodeRespVO;
-import com.lz.module.infra.controller.admin.ip.vo.AreaSaveReqVO;
+import com.lz.module.infra.controller.admin.ip.vo.*;
 import com.lz.module.infra.dal.dataobject.area.AreaDO;
 import jakarta.validation.Valid;
 
@@ -65,4 +63,13 @@ public interface AreaService {
      * 清理缓存
      */
     void clearCache();
+
+
+    /**
+     * 导入地区信息
+     *
+     * @param list 导入列表
+     * @return 导入结果
+     */
+    AreaExcelRespVO importAreaList(List<AreaExcelVO> list);
 }

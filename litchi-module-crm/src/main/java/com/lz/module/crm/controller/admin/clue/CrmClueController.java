@@ -98,7 +98,7 @@ public class CrmClueController {
         if (clue == null) {
             return null;
         }
-        return buildClueDetailList(singletonList(clue)).get(0);
+        return buildClueDetailList(singletonList(clue)).getFirst();
     }
 
     @GetMapping("/page")
@@ -133,7 +133,9 @@ public class CrmClueController {
         Map<Long, DeptRespDTO> deptMap = deptApi.getDeptMap(convertSet(userMap.values(), AdminUserRespDTO::getDeptId));
         // 2. 转换成 VO
         return BeanUtils.toBean(list, CrmClueRespVO.class, clueVO -> {
-            clueVO.setAreaName(AreaUtils.format(clueVO.getAreaId()));
+            if (clueVO.getAreaCode() != null){
+                clueVO.setAreaName(AreaUtils.format(Integer.parseInt(clueVO.getAreaCode())));
+            }
             // 2.1 设置客户名称
             MapUtils.findAndThen(customerMap, clueVO.getCustomerId(), customer -> clueVO.setCustomerName(customer.getName()));
             // 2.2 设置创建人、负责人名称

@@ -100,8 +100,8 @@ public class CrmClueRespVO {
 
     @Schema(description = "地区编号", example = "1024")
     @ExcelProperty("地区编号")
-    @ExcelI18n(i18nKey = "crm.clue.field.areaId")
-    private Integer areaId;
+    @ExcelI18n(i18nKey = "crm.clue.field.areaCode")
+    private String areaCode;
     @Schema(description = "地区名称", example = "北京市")
     @ExcelProperty("地区名称")
     @ExcelI18n(i18nKey = "crm.clue.field.areaName")

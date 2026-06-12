@@ -14,11 +14,9 @@ public class AreaSaveReqVO {
     @Schema(description = "ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "11928")
     private Long id;
 
-
     @Schema(description = "行政编码", requiredMode = Schema.RequiredMode.REQUIRED, example = "1020")
-    @I18nNotNull(i18nKey = "infra.area.back.administrativeCode.notNull", message = "行政编码不能为空")
-    private String administrativeCode;
-
+    @I18nNotNull(i18nKey = "infra.area.back.code.notNull", message = "行政编码不能为空")
+    private String code;
 
     @Schema(description = "地区名称", requiredMode = Schema.RequiredMode.REQUIRED, example = "张三")
     @I18nNotBlank(i18nKey = "infra.area.back.name.notBlank", message = "地区名称不能为空")
@@ -27,9 +25,9 @@ public class AreaSaveReqVO {
     @Schema(description = "邮政编码")
     private String postalCode;
 
-    @Schema(description = "父级ID", requiredMode = Schema.RequiredMode.REQUIRED, example = "9750")
-    @I18nNotNull(i18nKey = "infra.area.back.parentId.notNull", message = "父级ID不能为空")
-    private Long parentId;
+    @Schema(description = "父级编号", requiredMode = Schema.RequiredMode.REQUIRED, example = "9750")
+    @I18nNotNull(i18nKey = "infra.area.back.parentCode.notNull", message = "父级编号不能为空")
+    private String parentCode;
 
     @Schema(description = "层级", requiredMode = Schema.RequiredMode.REQUIRED)
     @I18nNotNull(i18nKey = "infra.area.back.level.notNull", message = "层级不能为空")

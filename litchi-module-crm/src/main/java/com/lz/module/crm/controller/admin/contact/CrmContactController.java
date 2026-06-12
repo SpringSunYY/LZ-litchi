@@ -101,7 +101,7 @@ public class CrmContactController {
         if (contact == null) {
             return null;
         }
-        return buildContactDetailList(singletonList(contact)).get(0);
+        return buildContactDetailList(singletonList(contact)).getFirst();
     }
 
     @GetMapping("/simple-all-list")
@@ -165,7 +165,9 @@ public class CrmContactController {
                 convertSet(contactList, CrmContactDO::getParentId));
         // 2. 转换成 VO
         return BeanUtils.toBean(contactList, CrmContactRespVO.class, contactVO -> {
-            contactVO.setAreaName(AreaUtils.format(contactVO.getAreaId()));
+            if (contactVO.getAreaCode() != null){
+                contactVO.setAreaName(AreaUtils.format(Integer.parseInt(contactVO.getAreaCode())));
+            }
             // 2.1 设置客户名称
             MapUtils.findAndThen(customerMap, contactVO.getCustomerId(), customer -> contactVO.setCustomerName(customer.getName()));
             // 2.2 设置创建人、负责人名称

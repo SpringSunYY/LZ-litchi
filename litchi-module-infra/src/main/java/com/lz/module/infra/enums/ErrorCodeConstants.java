@@ -95,5 +95,7 @@ public interface ErrorCodeConstants {
     ErrorCode AREA_PARENT_NOT_EXITS = new ErrorCode(1_001_009_002, "infra.area.back.parentNotExists", "parent area not exists");
     ErrorCode AREA_PARENT_ERROR = new ErrorCode(1_001_009_003, "infra.area.back.parentSelfError", "cannot set itself as parent area");
     ErrorCode AREA_NAME_DUPLICATE = new ErrorCode(1_001_009_004, "infra.area.back.nameDuplicate", "area name already exists");
+    ErrorCode AREA_CODE_DUPLICATE = new ErrorCode(1_001_009_005, "infra.area.back.codeDuplicate", "area code already exists");
     ErrorCode AREA_PARENT_IS_CHILD = new ErrorCode(1_001_009_005, "infra.area.back.parentChildError", "cannot set child area as parent");
+    ErrorCode AREA_IMPORT_DATA_EMPTY = new ErrorCode(1_001_009_005, "infra.back.import.dataEmpty", "地区信息导入数据不能为空！");
 }
