@@ -98,6 +98,8 @@ spring:
           scheduler:
             instanceName: schedulerName
             instanceId: AUTO # 自动生成 instance ID
+            classLoadHelper:
+              class: com.lz.framework.quartz.core.handler.SafeClassLoadHelper
           # JobStore 相关配置
           jobStore:
             # JobStore 实现类。可见博客：https://blog.csdn.net/weixin_42458219/article/details/122247162
