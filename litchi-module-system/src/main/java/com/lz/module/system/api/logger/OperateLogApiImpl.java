@@ -3,6 +3,7 @@ package com.lz.module.system.api.logger;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.biz.system.logger.dto.OperateLogCreateReqDTO;
+import com.lz.framework.ip.core.utils.IPUtils;
 import com.lz.module.system.api.logger.dto.OperateLogPageReqDTO;
 import com.lz.module.system.api.logger.dto.OperateLogRespDTO;
 import com.lz.module.system.dal.dataobject.logger.OperateLogDO;
@@ -26,6 +27,8 @@ public class OperateLogApiImpl implements OperateLogApi {
 
     @Override
     public void createOperateLog(OperateLogCreateReqDTO createReqDTO) {
+        //因为common拿不到ip地址，所以这里补全
+        createReqDTO.setUserIpAddr(IPUtils.getIpAddr(createReqDTO.getUserIp()));
         operateLogService.createOperateLog(createReqDTO);
     }
 

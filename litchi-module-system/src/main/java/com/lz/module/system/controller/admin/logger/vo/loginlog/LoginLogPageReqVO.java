@@ -1,6 +1,8 @@
 package com.lz.module.system.controller.admin.logger.vo.loginlog;
 
+import com.lz.framework.common.annotation.Sortable;
 import com.lz.framework.common.pojo.PageParam;
+import com.lz.framework.common.validation.i18n.I18nSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,7 +26,37 @@ public class LoginLogPageReqVO extends PageParam {
     @Schema(description = "操作状态", example = "true")
     private Boolean status;
 
-    @Schema(description = "登录时间", example = "[2022-07-01 00:00:00,2022-07-01 23:59:59]")
+
+    /**
+     * IP属地
+     */
+    @Schema(description = "IP属地")
+    private String userIpAddr;
+
+    /**
+     * 浏览器 UA
+     */
+    @Schema(description = "浏览器 UA")
+    private String userAgent;
+
+    /**
+     * 浏览器
+     */
+    @Schema(description = "浏览器")
+    private String userBrowser;
+
+    /**
+     * 操作系统
+     */
+    @Schema(description = "操作系统")
+    private String userPlatform;
+
+    /**
+     * 创建时间
+     */
+    @Sortable(value = "create_time")
+    @I18nSize(i18nKey = "system.loginLog.back.createTime.size", min = 0, max = 2, message = "创建时间长度不能超过2")
+    @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 

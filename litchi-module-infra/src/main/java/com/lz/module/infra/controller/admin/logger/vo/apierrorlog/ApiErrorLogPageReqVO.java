@@ -1,6 +1,8 @@
 package com.lz.module.infra.controller.admin.logger.vo.apierrorlog;
 
+import com.lz.framework.common.annotation.Sortable;
 import com.lz.framework.common.pojo.PageParam;
+import com.lz.framework.common.validation.i18n.I18nSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,9 +27,15 @@ public class ApiErrorLogPageReqVO extends PageParam {
     @Schema(description = "请求地址", example = "/xx/yy")
     private String requestUrl;
 
-    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    /**
+     * 异常发生时间
+     */
+    @Sortable(value = "exception_time")
+    @I18nSize(i18nKey = "infra.apiErrorLog.back.exceptionTime.size", min = 0, max = 2, message = "异常发生时间长度不能超过2")
     @Schema(description = "异常发生时间")
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] exceptionTime;
+
 
     @Schema(description = "处理状态", example = "0")
     private Integer processStatus;

@@ -1,5 +1,6 @@
 package com.lz.framework.operatelog.core.service;
 
+import cn.hutool.http.useragent.UserAgent;
 import com.lz.framework.common.biz.system.logger.OperateLogCommonApi;
 import com.lz.framework.common.biz.system.logger.dto.OperateLogCreateReqDTO;
 import com.lz.framework.common.util.monitor.TracerUtils;
@@ -74,7 +75,9 @@ public class LogRecordServiceImpl implements ILogRecordService {
         // 补全请求信息
         reqDTO.setRequestMethod(request.getMethod());
         reqDTO.setRequestUrl(request.getRequestURI());
-        reqDTO.setUserIp(ServletUtils.getClientIP(request));
+        UserAgent userAgentInfo = ServletUtils.getUserAgentInfo();
+        reqDTO.setUserPlatform(userAgentInfo.getPlatform().getName());
+        reqDTO.setUserBrowser(userAgentInfo.getBrowser().getName());
         reqDTO.setUserAgent(ServletUtils.getUserAgent(request));
     }
 

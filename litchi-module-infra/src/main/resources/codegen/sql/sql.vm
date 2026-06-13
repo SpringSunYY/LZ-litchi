@@ -214,6 +214,33 @@ VALUES ('${TABLE_REMARK}-${column.columnComment}不能为空', '${i18nModuleType
 #end
 
 -- =========================================
+-- PageReqVO BETWEEN 字段 @I18nSize 校验国际化
+-- key: ${i18nModuleType}.${business}.back.xxx.size
+-- =========================================
+#set ($sizeIndex = 1)
+#foreach ($column in $columns)
+#if (${column.listOperation} && ${column.listOperationCondition} == "BETWEEN")
+#set ($_fieldReadable = $column.javaField.replaceAll('([A-Z])', ' $1').replace('_', ' ').trim().toLowerCase())
+#set ($_zhMsg = "${TABLE_REMARK}${column.columnComment}长度不能超过2")
+#set ($_enMsg = "${businessNameReadable} ${_fieldReadable} size cannot exceed 2")
+-- ${sizeIndex}. ${TABLE_REMARK}-${column.columnComment} size
+DELETE FROM infra_i18n_key WHERE message_key = '${i18nModuleType}.${table.businessName}.back.${column.javaField}.size';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('${TABLE_REMARK}-${column.columnComment}长度不能超过2', '${i18nModuleType}.${table.businessName}.back.${column.javaField}.size', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, 'size', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}.back.${column.javaField}.size' AND locale = @LOCALE_ZH_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('${TABLE_REMARK}-${column.columnComment}长度不能超过2', '${i18nModuleType}.${table.businessName}.back.${column.javaField}.size', @LOCALE_ZH_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${_enMsg}', 'size', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = '${i18nModuleType}.${table.businessName}.back.${column.javaField}.size' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('${TABLE_REMARK}-${column.columnComment}长度不能超过2', '${i18nModuleType}.${table.businessName}.back.${column.javaField}.size', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '${_zhMsg}', 'size', @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+#set ($sizeIndex = $sizeIndex + 1)
+#end
+#end
+
+-- =========================================
 -- 后端错误码国际化键名表（infra_i18n_key）- 异常
 -- key: ${module}.${business}.back.xxx
 -- =========================================

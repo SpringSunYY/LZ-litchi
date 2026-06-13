@@ -1,13 +1,13 @@
 package com.lz.module.system.controller.admin.logger.vo.operatelog;
 
-import com.lz.framework.common.validation.i18n.I18nNotEmpty;
-import com.lz.module.system.dal.dataobject.user.AdminUserDO;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
-import com.lz.framework.excel.core.annotations.ExcelI18n;
 import com.fhs.core.trans.anno.Trans;
 import com.fhs.core.trans.constant.TransType;
 import com.fhs.core.trans.vo.VO;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
+import com.lz.framework.excel.core.annotations.ExcelI18n;
+import com.lz.module.system.dal.dataobject.user.AdminUserDO;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -62,13 +62,41 @@ public class OperateLogRespVO implements VO {
     @Schema(description = "请求地址", requiredMode = Schema.RequiredMode.REQUIRED, example = "/xxx/yyy")
     private String requestUrl;
 
-    @Schema(description = "用户 IP", requiredMode = Schema.RequiredMode.REQUIRED, example = "127.0.0.1")
+    /**
+     * 用户 IP
+     */
+    @Schema(description = "用户 IP", requiredMode = Schema.RequiredMode.REQUIRED)
     private String userIp;
 
-    @Schema(description = "浏览器 UserAgent", requiredMode = Schema.RequiredMode.REQUIRED, example = "Mozilla/5.0")
+    /**
+     * IP属地
+     */
+    @Schema(description = "IP属地", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String userIpAddr;
+
+    /**
+     * 浏览器 UA
+     */
+    @Schema(description = "浏览器 UA", requiredMode = Schema.RequiredMode.REQUIRED)
     private String userAgent;
 
+    /**
+     * 浏览器
+     */
+    @Schema(description = "浏览器", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String userBrowser;
+
+    /**
+     * 操作系统
+     */
+    @Schema(description = "操作系统", requiredMode = Schema.RequiredMode.REQUIRED)
+    private String userPlatform;
+
+    /**
+     * 创建时间
+     */
     @Schema(description = "创建时间", requiredMode = Schema.RequiredMode.REQUIRED)
     private LocalDateTime createTime;
+
 
 }

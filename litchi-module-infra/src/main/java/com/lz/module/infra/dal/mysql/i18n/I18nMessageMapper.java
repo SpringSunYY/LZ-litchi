@@ -34,7 +34,8 @@ public interface I18nMessageMapper extends BaseMapperX<I18nMessageDO> {
     default I18nMessageDO selectByMessageKey(String messageKey, String locale) {
         return selectOne(new LambdaQueryWrapperX<I18nMessageDO>()
                 .eq(I18nMessageDO::getMessageKey, messageKey)
-                .eq(I18nMessageDO::getLocale, locale));
+                .eq(I18nMessageDO::getLocale, locale)
+                .last("LIMIT 1"));
     }
 
     /**

@@ -15,6 +15,9 @@ public interface LoginLogMapper extends BaseMapperX<LoginLogDO> {
         LambdaQueryWrapperX<LoginLogDO> query = new LambdaQueryWrapperX<LoginLogDO>()
                 .likeIfPresent(LoginLogDO::getUserIp, reqVO.getUserIp())
                 .likeIfPresent(LoginLogDO::getUsername, reqVO.getUsername())
+                .likeIfPresent(LoginLogDO::getUserIpAddr, reqVO.getUserIpAddr())
+                .eqIfPresent(LoginLogDO::getUserPlatform, reqVO.getUserPlatform())
+                .eqIfPresent(LoginLogDO::getUserBrowser, reqVO.getUserBrowser())
                 .betweenIfPresent(LoginLogDO::getCreateTime, reqVO.getCreateTime());
         if (Boolean.TRUE.equals(reqVO.getStatus())) {
             query.eq(LoginLogDO::getResult, LoginResultEnum.SUCCESS.getResult());

@@ -33,7 +33,7 @@ public class AreaParseFunction implements IParseFunction {
         if (StrUtil.isEmptyIfStr(value)) {
             return "";
         }
-        return AreaUtils.format(Convert.toInt(value));
+        return AreaUtils.format(value.toString());
     }
 
 }

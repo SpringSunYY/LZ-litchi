@@ -149,7 +149,6 @@ public class IPUtils {
     public static Area getArea(String ip) {
         try {
             String result = SEARCHER.search(ip.trim());
-            log.info("IP={}, ip2region原始={}", ip, result);
             String[] parts = result.split(REGION_SEPARATOR);
 
             // 只取前3段：国家|省份|城市，跳过0，去掉连续重复
@@ -161,18 +160,14 @@ public class IPUtils {
                         validNames.add(name);
                     }
                 }
-                log.debug("IP={}, 字段[{}]={}, 跳过={}", ip, i, name, name.isEmpty() || name.equals("0"));
             }
-            log.info("IP={}, 有效字段={}", ip, validNames);
 
             if (validNames.isEmpty()) {
                 log.info("IP={}, 前3段全为0或空, 返回未知", ip);
                 return new Area(null, "未知", 0, null, new ArrayList<>());
             }
 
-            String fullPath = String.join(" ", validNames);
-            log.info("IP={}, fullPath={}", ip, fullPath);
-            Area leaf = new Area(null, validNames.get(validNames.size() - 1), 0, null, new ArrayList<>());
+            Area leaf = new Area(null, validNames.getLast(), 0, null, new ArrayList<>());
             // 构建 parent 链：正序遍历，前面的是后面的 parent
             Area parent = null;
             for (int i = 0; i < validNames.size() - 1; i++) {
@@ -182,7 +177,11 @@ public class IPUtils {
             leaf.setParent(parent);
             return leaf;
         } catch (Exception e) {
-            log.error("查询IP地区失败: {}", ip, e);
+            //如果是本地
+            if (ip.equals("0:0:0:0:0:0:0:1")) {
+                return new Area(null, "本地", 0, null, new ArrayList<>());
+            }
+            log.error("查询IP地区失败: {}", ip);
             return new Area(null, "未知", 0, null, new ArrayList<>());
         }
     }

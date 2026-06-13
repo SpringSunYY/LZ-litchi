@@ -55,6 +55,21 @@ public class ApiAccessLogCreateReqDTO {
     @NotNull(message = "ip 不能为空")
     private String userIp;
     /**
+     * 用户ip地理位置
+     */
+    @NotNull(message = "ip 地理位置不能为空")
+    private String userIpAddr;
+    /**
+     * 浏览器
+     */
+    @NotNull(message = "浏览器不能为空")
+    private String userBrowser;
+    /**
+     * 操作系统
+     */
+    @NotNull(message = "操作系统不能为空")
+    private String userPlatform;
+    /**
      * 浏览器 UA
      */
     @NotNull(message = "User-Agent 不能为空")
@@ -70,7 +85,7 @@ public class ApiAccessLogCreateReqDTO {
     private String operateName;
     /**
      * 操作分类
-     *
+     * <p>
      * 枚举，参见 OperateTypeEnum 类
      */
     private Integer operateType;

@@ -65,8 +65,20 @@ public class LoginLogDO extends BaseDO {
      */
     private String userIp;
     /**
+     * IP属地
+     */
+    private String userIpAddr;
+    /**
      * 浏览器 UA
      */
     private String userAgent;
+    /**
+     * 浏览器
+     */
+    private String userBrowser;
+    /**
+     * 操作系统
+     */
+    private String userPlatform;
 
 }

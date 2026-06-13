@@ -1,6 +1,8 @@
 package com.lz.module.system.controller.admin.logger.vo.operatelog;
 
+import com.lz.framework.common.annotation.Sortable;
 import com.lz.framework.common.pojo.PageParam;
+import com.lz.framework.common.validation.i18n.I18nSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -28,7 +30,12 @@ public class OperateLogPageReqVO extends PageParam {
     @Schema(description = "操作明细，模拟匹配", example = "修改编号为 1 的用户信息")
     private String action;
 
-    @Schema(description = "开始时间", example = "[2022-07-01 00:00:00,2022-07-01 23:59:59]")
+    /**
+     * 创建时间
+     */
+    @Sortable(value = "create_time")
+    @I18nSize(i18nKey = "system.operateLog.back.createTime.size", min = 0, max = 2, message = "创建时间长度不能超过2")
+    @Schema(description = "创建时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] createTime;
 

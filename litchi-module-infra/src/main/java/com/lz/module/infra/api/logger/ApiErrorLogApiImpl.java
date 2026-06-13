@@ -2,6 +2,7 @@ package com.lz.module.infra.api.logger;
 
 import com.lz.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
 import com.lz.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
+import com.lz.framework.ip.core.utils.IPUtils;
 import com.lz.module.infra.service.logger.ApiErrorLogService;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -22,6 +23,8 @@ public class ApiErrorLogApiImpl implements ApiErrorLogCommonApi {
 
     @Override
     public void createApiErrorLog(ApiErrorLogCreateReqDTO createDTO) {
+        //因为拿不到ip地址，所以这里补全
+        createDTO.setUserIpAddr(IPUtils.getIpAddr(createDTO.getUserIp()));
         apiErrorLogService.createApiErrorLog(createDTO);
     }
 

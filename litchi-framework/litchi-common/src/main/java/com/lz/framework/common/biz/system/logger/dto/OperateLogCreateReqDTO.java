@@ -75,10 +75,24 @@ public class OperateLogCreateReqDTO {
      */
     @NotEmpty(message = "用户 IP 不能为空")
     private String userIp;
+
+    @NotEmpty(message = "用户IP地址不能为空")
+    private String userIpAddr;
     /**
      * 浏览器 UA
      */
     @NotEmpty(message = "浏览器 UA 不能为空")
     private String userAgent;
+    /**
+     * user os
+     */
+    @NotEmpty(message = "user os 不能为空")
+    private String userPlatform;
+    /**
+     * user browser
+     */
+    @NotEmpty(message = "user browser 不能为空")
+    private String userBrowser;
+
 
 }

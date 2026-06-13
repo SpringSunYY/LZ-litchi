@@ -7,6 +7,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.BooleanUtil;
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.http.useragent.UserAgent;
 import com.lz.framework.apilog.core.annotation.ApiAccessLog;
 import com.lz.framework.apilog.core.enums.OperateTypeEnum;
 import com.lz.framework.common.biz.infra.logger.ApiAccessLogCommonApi;
@@ -123,9 +124,12 @@ public class ApiAccessLogFilter extends ApiRequestFilter {
             accessLog.setResultCode(GlobalErrorCodeConstants.SUCCESS.getCode()).setResultMsg("");
         }
         // 设置请求字段
+        UserAgent userAgentInfo = ServletUtils.getUserAgentInfo();
         accessLog.setTraceId(TracerUtils.getTraceId()).setApplicationName(applicationName)
                 .setRequestUrl(request.getRequestURI()).setRequestMethod(request.getMethod())
-                .setUserAgent(ServletUtils.getUserAgent(request)).setUserIp(ServletUtils.getClientIP(request));
+                .setUserAgent(ServletUtils.getUserAgent(request)).setUserPlatform(userAgentInfo.getPlatform().getName())
+                .setUserBrowser(userAgentInfo.getBrowser().getName())
+                .setUserIp(ServletUtils.getClientIP(request));
         String[] sanitizeKeys = accessLogAnnotation != null ? accessLogAnnotation.sanitizeKeys() : null;
         Boolean requestEnable = accessLogAnnotation != null ? accessLogAnnotation.requestEnable() : Boolean.TRUE;
         if (!BooleanUtil.isFalse(requestEnable)) { // 默认记录，所以判断 !false

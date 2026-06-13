@@ -32,7 +32,7 @@ public class SysAreaParseFunction implements IParseFunction {
         if (StrUtil.isEmptyIfStr(value)) {
             return "";
         }
-        return AreaUtils.format(Integer.parseInt(value.toString()));
+        return AreaUtils.format(value.toString());
     }
 
 }

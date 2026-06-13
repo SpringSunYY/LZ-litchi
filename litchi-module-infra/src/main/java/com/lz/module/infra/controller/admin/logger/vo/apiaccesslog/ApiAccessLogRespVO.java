@@ -62,15 +62,45 @@ public class ApiAccessLogRespVO {
     @ExcelI18n(i18nKey = "infra.apiAccessLog.field.responseBody")
     private String responseBody;
 
-    @Schema(description = "用户 IP", requiredMode = Schema.RequiredMode.REQUIRED, example = "127.0.0.1")
+    /**
+     * 用户 IP
+     */
+    @Schema(description = "用户 IP", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("用户 IP")
     @ExcelI18n(i18nKey = "infra.apiAccessLog.field.userIp")
     private String userIp;
 
-    @Schema(description = "浏览器 UA", requiredMode = Schema.RequiredMode.REQUIRED, example = "Mozilla/5.0")
+    /**
+     * IP属地
+     */
+    @Schema(description = "IP属地", requiredMode = Schema.RequiredMode.REQUIRED)
+    @ExcelProperty("IP属地")
+    @ExcelI18n(i18nKey = "infra.apiAccessLog.field.userIpAddr")
+    private String userIpAddr;
+
+    /**
+     * 浏览器 UA
+     */
+    @Schema(description = "浏览器 UA", requiredMode = Schema.RequiredMode.REQUIRED)
     @ExcelProperty("浏览器 UA")
     @ExcelI18n(i18nKey = "infra.apiAccessLog.field.userAgent")
     private String userAgent;
+
+    /**
+     * 浏览器
+     */
+    @Schema(description = "浏览器", requiredMode = Schema.RequiredMode.REQUIRED)
+    @ExcelProperty("浏览器")
+    @ExcelI18n(i18nKey = "infra.apiAccessLog.field.userBrowser")
+    private String userBrowser;
+
+    /**
+     * 操作系统
+     */
+    @Schema(description = "操作系统", requiredMode = Schema.RequiredMode.REQUIRED)
+    @ExcelProperty("操作系统")
+    @ExcelI18n(i18nKey = "infra.apiAccessLog.field.userOs")
+    private String userPlatform;
 
     @Schema(description = "操作模块", requiredMode = Schema.RequiredMode.REQUIRED, example = "商品模块")
     @ExcelProperty("操作模块")

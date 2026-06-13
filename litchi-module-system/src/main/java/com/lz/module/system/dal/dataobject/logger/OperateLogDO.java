@@ -74,12 +74,20 @@ public class OperateLogDO extends BaseDO {
      */
     private String requestUrl;
     /**
-     * 用户 IP
+     * IP属地
      */
-    private String userIp;
+    private String userIpAddr;
     /**
      * 浏览器 UA
      */
     private String userAgent;
+    /**
+     * 浏览器
+     */
+    private String userBrowser;
+    /**
+     * 操作系统
+     */
+    private String userPlatform;
 
 }

@@ -142,7 +142,7 @@ public class CrmCustomerController {
         // 2. 转换成 VO
         return BeanUtils.toBean(list, CrmCustomerRespVO.class, customerVO -> {
             if (customerVO.getAreaCode()!= null){
-                customerVO.setAreaName(AreaUtils.format(Integer.parseInt(customerVO.getAreaCode())));
+                customerVO.setAreaName(AreaUtils.format(customerVO.getAreaCode()));
             }
             // 2.1 设置创建人、负责人名称
             MapUtils.findAndThen(userMap, NumberUtils.parseLong(customerVO.getCreator()),

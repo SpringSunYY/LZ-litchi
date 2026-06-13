@@ -6,6 +6,7 @@ import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.servlet.JakartaServletUtil;
+import cn.hutool.http.useragent.UserAgent;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.lz.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
 import com.lz.framework.common.biz.infra.logger.dto.ApiErrorLogCreateReqDTO;
@@ -365,6 +366,9 @@ public class GlobalExceptionHandler {
         errorLog.setRequestParams(JsonUtils.toJsonString(requestParams));
         errorLog.setRequestMethod(request.getMethod());
         errorLog.setUserAgent(ServletUtils.getUserAgent(request));
+        UserAgent userAgentInfo = ServletUtils.getUserAgentInfo();
+        errorLog.setUserBrowser(userAgentInfo.getBrowser().getName());
+        errorLog.setUserPlatform(userAgentInfo.getPlatform().getName());
         errorLog.setUserIp(JakartaServletUtil.getClientIP(request));
         errorLog.setExceptionTime(LocalDateTime.now());
     }

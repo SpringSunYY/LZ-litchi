@@ -166,7 +166,7 @@ public class CrmContactController {
         // 2. 转换成 VO
         return BeanUtils.toBean(contactList, CrmContactRespVO.class, contactVO -> {
             if (contactVO.getAreaCode() != null){
-                contactVO.setAreaName(AreaUtils.format(Integer.parseInt(contactVO.getAreaCode())));
+                contactVO.setAreaName(AreaUtils.format(contactVO.getAreaCode()));
             }
             // 2.1 设置客户名称
             MapUtils.findAndThen(customerMap, contactVO.getCustomerId(), customer -> contactVO.setCustomerName(customer.getName()));

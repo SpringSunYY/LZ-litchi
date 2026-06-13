@@ -2,10 +2,8 @@ package com.lz.module.system.api.logger.dto;
 
 import lombok.Data;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 
 /**
  * 登录日志创建 Request DTO
@@ -53,10 +51,22 @@ public class LoginLogCreateReqDTO {
     @NotEmpty(message = "用户 IP 不能为空")
     private String userIp;
     /**
+     * 用户Ip地理位置
+     */
+    private String userIpAddr;
+    /**
      * 浏览器 UserAgent
      *
      * 允许空，原因：Job 过期登出时，是无法传递 UserAgent 的
      */
     private String userAgent;
+    /**
+     * 用户OS
+     */
+    private String userPlatform;
+    /**
+     * 用户浏览器
+     */
+    private String userBrowser;
 
 }

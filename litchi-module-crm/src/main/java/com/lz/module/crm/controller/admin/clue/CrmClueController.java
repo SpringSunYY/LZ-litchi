@@ -134,7 +134,7 @@ public class CrmClueController {
         // 2. 转换成 VO
         return BeanUtils.toBean(list, CrmClueRespVO.class, clueVO -> {
             if (clueVO.getAreaCode() != null){
-                clueVO.setAreaName(AreaUtils.format(Integer.parseInt(clueVO.getAreaCode())));
+                clueVO.setAreaName(AreaUtils.format(clueVO.getAreaCode()));
             }
             // 2.1 设置客户名称
             MapUtils.findAndThen(customerMap, clueVO.getCustomerId(), customer -> clueVO.setCustomerName(customer.getName()));

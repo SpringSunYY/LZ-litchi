@@ -1,6 +1,7 @@
 package com.lz.module.system.service.auth;
 
 import cn.hutool.core.util.ObjectUtil;
+import cn.hutool.http.useragent.UserAgent;
 import com.anji.captcha.model.common.ResponseModel;
 import com.anji.captcha.model.vo.CaptchaVO;
 import com.anji.captcha.service.CaptchaService;
@@ -10,6 +11,7 @@ import com.lz.framework.common.enums.UserTypeEnum;
 import com.lz.framework.common.util.monitor.TracerUtils;
 import com.lz.framework.common.util.servlet.ServletUtils;
 import com.lz.framework.common.util.validation.ValidationUtils;
+import com.lz.framework.ip.core.utils.IPUtils;
 import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.api.logger.dto.LoginLogCreateReqDTO;
 import com.lz.module.system.api.sms.SmsCodeApi;
@@ -163,12 +165,17 @@ public class AdminAuthServiceImpl implements AdminAuthService {
         reqDTO.setUserType(getUserType().getValue());
         reqDTO.setUsername(username);
         reqDTO.setUserAgent(ServletUtils.getUserAgent());
-        reqDTO.setUserIp(ServletUtils.getClientIP());
+        String clientIP = getClientIP();
+        reqDTO.setUserIp(clientIP);
+        UserAgent userAgentInfo = ServletUtils.getUserAgentInfo();
+        reqDTO.setUserPlatform(userAgentInfo.getPlatform().getName());
+        reqDTO.setUserBrowser(userAgentInfo.getBrowser().getName());
+        reqDTO.setUserIpAddr(IPUtils.getIpAddr(clientIP));
         reqDTO.setResult(loginResult.getResult());
         loginLogService.createLoginLog(reqDTO);
         // 更新最后登录时间
         if (userId != null && Objects.equals(LoginResultEnum.SUCCESS.getResult(), loginResult.getResult())) {
-            userService.updateUserLogin(userId, ServletUtils.getClientIP());
+            userService.updateUserLogin(userId, clientIP);
         }
     }
 

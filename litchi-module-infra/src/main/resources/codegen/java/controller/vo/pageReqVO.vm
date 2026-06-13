@@ -5,6 +5,11 @@ import java.util.*;
 import io.swagger.v3.oas.annotations.media.Schema;
 import ${PageParamClassName};
 import com.lz.framework.common.annotation.Sortable;
+#set ($isI18n = $extendConfig.get('isI18n') == '0')
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
+#if ($isI18n)
+import com.lz.framework.common.validation.i18n.I18nSize;
+#end
 import jakarta.validation.constraints.Size;
 #foreach ($column in $columns)
 #if (${column.javaType} == "BigDecimal")
@@ -49,7 +54,11 @@ public class ${sceneEnum.prefixClass}${table.className}PageReqVO extends PagePar
     #if(${column.sortOperation})
     @Sortable(value = "${column.columnName}")
     #end
+#if ($isI18n)
+    @I18nSize(i18nKey = "${i18nModuleType}.${table.businessName}.back.${column.javaField}.size", min = 0, max = 2, message = "${column.columnComment}长度不能超过2")
+#else
     @Size(max = 2, message = "${column.columnComment}长度不能超过2")
+#end
     @Schema(description = "${column.columnComment}"#if ("$!column.example" != ""), example = "${column.example}"#end)
 #if (${column.javaType} == "LocalDateTime")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)

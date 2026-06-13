@@ -1,6 +1,8 @@
 package com.lz.module.infra.controller.admin.logger.vo.apiaccesslog;
 
+import com.lz.framework.common.annotation.Sortable;
 import com.lz.framework.common.pojo.PageParam;
+import com.lz.framework.common.validation.i18n.I18nSize;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -25,10 +27,23 @@ public class ApiAccessLogPageReqVO extends PageParam {
     @Schema(description = "请求地址，模糊匹配", example = "/xxx/yyy")
     private String requestUrl;
 
-    @Schema(description = "开始时间", example = "[2022-07-01 00:00:00, 2022-07-01 23:59:59]")
+    /**
+     * 开始请求时间
+     */
+    @Sortable(value = "begin_time")
+    @I18nSize(i18nKey = "infra.apiAccessLog.back.beginTime.size", min = 0, max = 2, message = "开始请求时间长度不能超过2")
+    @Schema(description = "开始请求时间")
     @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
     private LocalDateTime[] beginTime;
 
+    /**
+     * 结束请求时间
+     */
+    @Sortable(value = "end_time")
+    @I18nSize(i18nKey = "infra.apiAccessLog.back.endTime.size", min = 0, max = 2, message = "结束请求时间长度不能超过2")
+    @Schema(description = "结束请求时间")
+    @DateTimeFormat(pattern = FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND)
+    private LocalDateTime[] endTime;
     @Schema(description = "执行时长,大于等于，单位：毫秒", example = "100")
     private Integer duration;
 
