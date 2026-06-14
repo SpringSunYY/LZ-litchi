@@ -1,5 +1,6 @@
 package com.lz.module.infra.service.i18n;
 
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -19,6 +20,7 @@ import com.lz.module.infra.enums.i18n.InfraI18nLocaleStatusEnum;
 import com.lz.module.infra.enums.i18n.InfraI18nLocaleTargetEnum;
 import com.lz.module.infra.framework.i18n.config.I18nProperties;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +35,7 @@ import static com.lz.module.infra.enums.ErrorCodeConstants.*;
  *
  * @author 荔枝软件
  */
+@Slf4j
 @Service
 @Validated
 public class I18nLocaleServiceImpl implements I18nLocaleService {
@@ -196,18 +199,23 @@ public class I18nLocaleServiceImpl implements I18nLocaleService {
     }
 
     @Override
-    public Boolean getI18nUpdate(Integer localeTarget, String locale) {
-        //拿到是否更新
+    public String getI18nUpdateKey(Integer localeTarget, String locale) {
+        //拿到key
         String key = RedisKeyConstants.I18N_UPDATED + localeTarget + ":" + locale;
-        Boolean updatedB = redisUtils.get(key);
-        //如果为空先设置,提示已经更新
-        if (ObjectUtils.isNull(updatedB)) {
-            updatedB = true;
-            redisUtils.set(key, updatedB);
-            return true;
-        } else {
-            //因为更新直接删除，所以这里直接返回false
-            return false;
+        try {
+            String updateKeyDb = redisUtils.get(key);
+            //如果为空重新设置
+            if (StrUtil.isEmpty(updateKeyDb)) {
+                updateKeyDb = IdUtil.fastSimpleUUID();
+                redisUtils.set(key, updateKeyDb);
+            }
+            return updateKeyDb;
+        } catch (Exception e) {
+            //缓存异常，重新缓存降级
+            log.warn("i18n缓存异常，重新缓存降级,{}", key);
+            String randomKey = IdUtil.fastSimpleUUID();
+            redisUtils.set(key, randomKey);
+            return randomKey;
         }
     }
 

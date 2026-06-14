@@ -39,11 +39,11 @@ public interface I18nService {
     String getMessageByMessageKey(String messageKey, String acceptLanguage);
 
     /**
-     * 获取国际化更新状态
+     * 获得国际化国家当前缓存的key，用于判断是否有更新
      *
-     * @param locale       语言
      * @param localeTarget 使用端
+     * @param locale       语言
      * @return true 表示有更新
      */
-    Boolean getI18nUpdate(Integer localeTarget, String locale);
+    String getI18nUpdateKey(Integer localeTarget, String locale);
 }

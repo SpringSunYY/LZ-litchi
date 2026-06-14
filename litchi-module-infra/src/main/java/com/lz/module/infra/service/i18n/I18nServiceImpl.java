@@ -85,7 +85,7 @@ public class I18nServiceImpl implements I18nService {
     }
 
     @Override
-    public Boolean getI18nUpdate(Integer localeTarget, String locale) {
-        return i18nLocaleService.getI18nUpdate(localeTarget, locale);
+    public String getI18nUpdateKey(Integer localeTarget, String locale) {
+        return i18nLocaleService.getI18nUpdateKey(localeTarget, locale);
     }
 }
