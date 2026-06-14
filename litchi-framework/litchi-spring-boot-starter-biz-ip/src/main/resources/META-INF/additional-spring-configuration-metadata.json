@@ -1,27 +1,45 @@
 {
   "properties": [
     {
-      "name": "litchi.ip.area",
+      "name": "litchi.ip.area.type",
       "type": "java.lang.String",
-      "description": "IP 地址数据源类型.",
-      "sourceType": "com.lz.framework.ip.core.config.IpProperties"
+      "description": "地区信息数据源类型：database-数据库查询，ip2region-离线库查询.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties$AreaConfig"
     },
     {
-      "name": "litchi.ip.ip",
+      "name": "litchi.ip.ip.type",
       "type": "java.lang.String",
-      "description": "IP 地址.",
-      "sourceType": "com.lz.framework.ip.core.config.IpProperties"
+      "description": "IP地址数据源类型：ip2region-离线库，ipJson-在线接口(支持降级到ip2region).",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties$IpConfig"
     },
     {
-      "name": "litchi.ip.ipUrl",
+      "name": "litchi.ip.ip.ip-url",
       "type": "java.lang.String",
-      "description": "ipJson链接.",
-      "sourceType": "com.lz.framework.ip.core.config.IpProperties"
+      "description": "ipJson在线查询接口URL.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties$IpConfig"
+    },
+    {
+      "name": "litchi.ip.ip.cache",
+      "type": "java.lang.Boolean",
+      "description": "是否启用本地缓存，防止频繁请求同一IP.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties$IpConfig"
+    },
+    {
+      "name": "litchi.ip.ip.cacheTime",
+      "type": "java.lang.Integer",
+      "description": "本地缓存时间，单位：秒，默认60秒.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties$IpConfig"
+    },
+    {
+      "name": "litchi.ip.ip.rollback",
+      "type": "java.lang.String",
+      "description": "降级方案：当ipJson查询失败时自动降级到指定数据源，目前仅支持ip2region.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties$IpConfig"
     }
   ],
   "hints": [
     {
-      "name": "litchi.ip.area",
+      "name": "litchi.ip.area.type",
       "providers": [
         {
           "name": "ip2region"
@@ -32,16 +50,16 @@
       "values": [
         {
           "value": "database",
-          "description": "默认使用数据库的方式查询 IP 地址."
+          "description": "使用数据库查询地区信息."
         },
         {
           "value": "ip2region",
-          "description": "使用 ip2region 离线库查询 IP 地址."
+          "description": "使用 ip2region 离线库查询地区信息."
         }
       ]
     },
     {
-      "name": "litchi.ip.ip",
+      "name": "litchi.ip.ip.type",
       "providers": [
         {
           "name": "ip2region"
@@ -53,11 +71,32 @@
       "values": [
         {
           "value": "ipJson",
-          "description": "使用在线http ipJson，不推荐，可能会限流."
+          "description": "使用在线HTTP接口查询IP，失败后降级到ip2region离线库."
         },
         {
           "value": "ip2region",
-          "description": "使用 ip2region 离线库查询 IP 地址."
+          "description": "使用 ip2region 离线库查询IP地址."
+        }
+      ]
+    },
+    {
+      "name": "litchi.ip.ip.rollback",
+      "providers": [
+        {
+          "name": "ip2region"
+        },
+        {
+          "name": "ipJson"
+        }
+      ],
+      "values": [
+        {
+          "value": "ip2region",
+          "description": "当ipJson查询失败时降级到ip2region离线库."
+        },
+        {
+          "value": "ipJson",
+          "description": "当ip2region查询失败时降级到ipJson在线接口."
         }
       ]
     }

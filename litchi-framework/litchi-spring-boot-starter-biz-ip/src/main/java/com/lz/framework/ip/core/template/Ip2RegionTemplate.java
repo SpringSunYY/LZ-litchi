@@ -34,7 +34,9 @@ public class Ip2RegionTemplate extends IpTemplate {
         }
     }
 
-    @Override
+    /**
+     * 查询IP对应的region数据
+     */
     protected String getRegionData(String ip) {
         try {
             return searcher.search(ip.trim());
@@ -42,6 +44,15 @@ public class Ip2RegionTemplate extends IpTemplate {
             log.error("查询IP地区失败: {}", ip, e);
             return null;
         }
+    }
+
+    @Override
+    protected Area doQuery(String ip) {
+        String regionData = getRegionData(ip);
+        if (regionData == null) {
+            return null;
+        }
+        return parseAreaFromRegionData(regionData);
     }
 
     public Area getAreaByLong(long ip) {

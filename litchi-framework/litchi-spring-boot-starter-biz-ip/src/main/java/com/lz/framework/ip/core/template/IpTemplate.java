@@ -8,6 +8,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
 
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 /**
  * IP信息提供者模板（模板方法模式）
@@ -29,6 +33,44 @@ public abstract class IpTemplate {
      */
     protected IpProperties ipProperties;
 
+    /**
+     * IP缓存
+     */
+    private static final ConcurrentHashMap<String, CacheEntry> IP_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * 定时清理过期缓存的调度器
+     */
+    private static final ScheduledExecutorService CLEANUP_EXECUTOR = Executors.newSingleThreadScheduledExecutor(r -> {
+        Thread t = new Thread(r, "ip-cache-cleanup");
+        t.setDaemon(true);
+        return t;
+    });
+
+    static {
+        // 每分钟清理一次过期缓存
+        CLEANUP_EXECUTOR.scheduleAtFixedRate(() -> {
+            try {
+                long now = System.currentTimeMillis();
+                IP_CACHE.entrySet().removeIf(entry -> entry.getValue().expireTime < now);
+            } catch (Exception e) {
+                log.warn("清理IP缓存失败", e);
+            }
+        }, 1, 1, TimeUnit.MINUTES);
+    }
+
+    /**
+     * 缓存条目
+     */
+    private static class CacheEntry {
+        final Area area;
+        final long expireTime;
+
+        CacheEntry(Area area, long expireTime) {
+            this.area = area;
+            this.expireTime = expireTime;
+        }
+    }
 
     /**
      * 初始化
@@ -49,16 +91,97 @@ public abstract class IpTemplate {
 
     /**
      * 获取IP对应的地区（模板方法）
+     * <p>
+     * 流程：缓存 → 当前模式查询 → 降级（可选） → 缓存结果
      */
     public Area getArea(String ip) {
         if (internalIp(ip)) {
             return new Area(null, IpConstants.LOCAL, 0, null, new ArrayList<>());
         }
-        String regionData = getRegionData(ip);
-        if (regionData == null) {
-            return null;
+
+        // 1. 先走缓存
+        if (isCacheEnabled()) {
+            Area cached = getCachedArea(ip);
+            if (cached != null) {
+                return cached;
+            }
         }
-        return parseAreaFromRegionData(regionData);
+
+        // 2. 当前模式查询
+        Area area = doQuery(ip);
+
+        // 3. 当前模式失败，尝试降级
+        if (area == null && shouldFallback()) {
+            area = doFallback(ip);
+        }
+
+        // 4. 结果写入缓存
+        if (area != null) {
+            cacheArea(ip, area);
+        }
+
+        return area;
+    }
+
+    /**
+     * 执行实际的IP查询（子类实现）
+     */
+    protected abstract Area doQuery(String ip);
+
+    /**
+     * 执行降级查询（子类可覆盖）
+     * <p>
+     * 默认返回 null，表示不降级
+     */
+    protected Area doFallback(String ip) {
+        return null;
+    }
+
+    /**
+     * 检查是否应该降级（子类可覆盖）
+     */
+    protected boolean shouldFallback() {
+        return false;
+    }
+
+    /**
+     * 检查是否启用缓存
+     */
+    protected boolean isCacheEnabled() {
+        return ipProperties != null
+                && ipProperties.getIp() != null
+                && Boolean.TRUE.equals(ipProperties.getIp().getCache());
+    }
+
+    /**
+     * 获取缓存时间（秒）
+     */
+    protected int getCacheTimeSeconds() {
+        if (ipProperties != null && ipProperties.getIp() != null && ipProperties.getIp().getCacheTime() != null) {
+            return ipProperties.getIp().getCacheTime();
+        }
+        return 60;
+    }
+
+    /**
+     * 从缓存获取Area
+     */
+    protected Area getCachedArea(String ip) {
+        CacheEntry cached = IP_CACHE.get(ip);
+        if (cached != null && cached.expireTime > System.currentTimeMillis()) {
+            return cached.area;
+        }
+        return null;
+    }
+
+    /**
+     * 缓存Area
+     */
+    protected void cacheArea(String ip, Area area) {
+        if (area != null && isCacheEnabled()) {
+            int cacheTime = getCacheTimeSeconds();
+            IP_CACHE.put(ip, new CacheEntry(area, System.currentTimeMillis() + cacheTime * 1000L));
+        }
     }
 
     /**

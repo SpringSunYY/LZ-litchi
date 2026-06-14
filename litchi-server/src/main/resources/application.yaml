@@ -265,9 +265,14 @@ litchi:
   i18n:
     default-locale: zh-CN #默认国际化语言
   ip:
-    area: database # 默认使用数据库的方式，查询 IP 地址,可选ip2region
-    ip: ipJson # 默认使用ip2region的方式，查询 IP 地址,可选ipJson
-    ipUrl: https://whois.pconline.com.cn/ipJson.jsp
+    area:
+      type: database # 默认使用数据库的方式，查询 IP 地址,可选ip2region
+    ip:
+      type: ip2region # 默认使用ip2region的方式，查询 IP 地址,可选ipJson
+      ip-url: https://whois.pconline.com.cn/ipJson.jsp # IP 地址查询接口
+      cache: true # 是否缓存 IP 地址
+      cache-time: 60 # 缓存时间
+      rollback: ipJson # 降级
   xss:
     enable: false
     exclude-urls: # 如下两个 url，仅仅是为了演示，去掉配置也没关系

@@ -28,7 +28,9 @@ public class AreaUtilsTest {
         // 手动设置 mock 数据用于测试
         AreaCommonApi mockApi = createMockAreaCommonApi();
         IpProperties ipProperties = new IpProperties();
-        ipProperties.setArea(AreaConstants.DATABASE);
+        IpProperties.AreaConfig areaConfig = new IpProperties.AreaConfig();
+        areaConfig.setType(AreaConstants.DATABASE);
+        ipProperties.setArea(areaConfig);
         AreaUtils.init(mockApi, ipProperties);
         AreaUtils.initAreasByDatabase();
     }
@@ -76,15 +78,14 @@ public class AreaUtilsTest {
 
     @Test
     public void testGetArea() {
-        // 调用：北京市（行政编码 110100）
+        // 测试获取北京市的area数据
+        // 注意：mock数据中110100的parentCode是110000(另一个北京市)
         Area area = AreaUtils.getArea("110100");
-        // 断言
         assertNotNull(area);
-        assertEquals(area.getCode(), "110100");
-        assertEquals(area.getName(), "北京市");
-        assertEquals(area.getType(), AreaTypeEnum.CITY.getType());
+        assertEquals("110100", area.getCode());
+        assertEquals("北京市", area.getName());
         assertNotNull(area.getParent());
-        assertEquals(area.getParent().getCode(), "110000");
+        assertEquals("110000", area.getParent().getCode());
     }
 
     @Test

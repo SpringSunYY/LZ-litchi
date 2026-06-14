@@ -32,7 +32,7 @@ public class IpJsonTemplate extends IpTemplate {
             HashMap<String, Object> queryParams = new HashMap<>();
             queryParams.put("ip", ip);
             queryParams.put("json", "true");
-            String url = HttpUtils.append(ipProperties.getIpUrl(), queryParams, null, false);
+            String url = HttpUtils.append(ipProperties.getIp().getIpUrl(), queryParams, null, false);
 
             HashMap<String, String> headers = new HashMap<>();
             headers.put("accept", "*/*");
@@ -52,10 +52,7 @@ public class IpJsonTemplate extends IpTemplate {
     }
 
     @Override
-    public Area getArea(String ip) {
-        if (internalIp(ip)) {
-            return new Area(null, IpConstants.LOCAL, 0, null, new ArrayList<>());
-        }
+    protected Area doQuery(String ip) {
         String jsonStr = getRegionData(ip);
         if (jsonStr == null) {
             return null;
@@ -87,6 +84,40 @@ public class IpJsonTemplate extends IpTemplate {
         if (StrUtil.isNotBlank(addr)) {
             log.info("IpJsonTemplate.getArea - 本地未命中，回退使用原始地址: {}", addr);
             return new Area(null, addr.trim(), 0, null, new ArrayList<>());
+        }
+        return null;
+    }
+
+    /**
+     * 检查是否应该降级
+     */
+    @Override
+    protected boolean shouldFallback() {
+        if (ipProperties == null || ipProperties.getIp() == null) {
+            return false;
+        }
+        String rollback = ipProperties.getIp().getRollback();
+        if (StrUtil.isBlank(rollback)) {
+            return false;
+        }
+        // 回退模式与当前模式相同时不降级
+        return !rollback.equals(ipProperties.getIp().getType());
+    }
+
+    /**
+     * 执行降级查询
+     */
+    @Override
+    protected Area doFallback(String ip) {
+        String rollbackType = ipProperties.getIp().getRollback();
+        if (IpConstants.IP2_REGION.equals(rollbackType)) {
+            log.info("IpJson 查询失败，降级到 ip2region");
+            try {
+                Ip2RegionTemplate fallbackTemplate = new Ip2RegionTemplate();
+                return fallbackTemplate.doQuery(ip);
+            } catch (Exception e) {
+                log.error("降级到ip2region失败", e);
+            }
         }
         return null;
     }

@@ -42,13 +42,13 @@ public class IPUtils {
      * 初始化 IP 信息提供者
      */
     private static void initIpProvider() {
-        if (ipProperties == null || StrUtil.isBlank(ipProperties.getIp())) {
+        if (ipProperties == null || ipProperties.getIp() == null || StrUtil.isBlank(ipProperties.getIp().getType())) {
             log.warn("[IPUtils] ipProperties 未配置，无法初始化 IP 数据源");
             return;
         }
-        if (ipProperties.getIp().equals(IpConstants.IP2_REGION)) {
+        if (ipProperties.getIp().getType().equals(IpConstants.IP2_REGION)) {
             ipProvider = new Ip2RegionTemplate();
-        } else if (ipProperties.getIp().equals(IpConstants.IP_JSON)) {
+        } else if (ipProperties.getIp().getType().equals(IpConstants.IP_JSON)) {
             ipProvider = new IpJsonTemplate(ipProperties);
         } else {
             log.warn("[IPUtils] 未配置区域数据源，请检查 IpProperties 配置");

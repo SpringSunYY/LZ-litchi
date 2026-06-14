@@ -58,9 +58,13 @@ public class AreaUtils {
 
     public AreaUtils() {
         // 等待 API 初始化后再加载数据
-        if (ipProperties.getArea().equals(AreaConstants.DATABASE)) {
+        if (ipProperties.getArea() == null || ipProperties.getArea().getType() == null) {
+            log.warn("[AreaUtils] 未配置区域数据源，请检查 IpProperties 配置");
+            return;
+        }
+        if (ipProperties.getArea().getType().equals(AreaConstants.DATABASE)) {
             initAreasByDatabase();
-        } else if (ipProperties.getArea().equals(AreaConstants.IP2_REGION)) {
+        } else if (ipProperties.getArea().getType().equals(AreaConstants.IP2_REGION)) {
             initAreasByIp2Region();
         } else {
             log.warn("[AreaUtils] 未配置区域数据源，请检查 IpProperties 配置");
@@ -70,7 +74,7 @@ public class AreaUtils {
 
     private static void initAreasByIp2Region() {
         //如果当前配置不是ip2region，返回，防止误初始化
-        if (!ipProperties.getArea().equals(AreaConstants.IP2_REGION)) {
+        if (ipProperties.getArea() == null || !ipProperties.getArea().getType().equals(AreaConstants.IP2_REGION)) {
             return;
         }
         try {
@@ -93,7 +97,7 @@ public class AreaUtils {
                 area.setParent(parent);
                 parent.getChildren().add(area);
             }
-            log.info("启动加载 AreaUtils 成功，使用{}，耗时 ({}) 毫秒", ipProperties.getArea(), System.currentTimeMillis() - now);
+            log.info("启动加载 AreaUtils 成功，使用{}，耗时 ({}) 毫秒", ipProperties.getArea().getType(), System.currentTimeMillis() - now);
         } catch (Exception e) {
             throw new RuntimeException("AreaUtils 初始化失败", e);
         }
@@ -105,7 +109,7 @@ public class AreaUtils {
      */
     public static synchronized void initAreasByDatabase() {
         //如果当前配置不是数据库，返回，防止误初始化
-        if (!ipProperties.getArea().equals(AreaConstants.DATABASE)) {
+        if (ipProperties.getArea() == null || !ipProperties.getArea().getType().equals(AreaConstants.DATABASE)) {
             return;
         }
         if (areaCommonApi == null) {

@@ -32,8 +32,12 @@ public class IPUtilsTest {
         // 手动设置 mock 数据用于测试
         AreaCommonApi mockApi = createMockAreaCommonApi();
         IpProperties ipProperties = new IpProperties();
-        ipProperties.setArea(AreaConstants.DATABASE);
-        ipProperties.setIp(IpConstants.IP2_REGION);
+        IpProperties.AreaConfig areaConfig = new IpProperties.AreaConfig();
+        areaConfig.setType(AreaConstants.DATABASE);
+        ipProperties.setArea(areaConfig);
+        IpProperties.IpConfig ipConfig = new IpProperties.IpConfig();
+        ipConfig.setType(IpConstants.IP2_REGION);
+        ipProperties.setIp(ipConfig);
         AreaUtils.init(mockApi, ipProperties);
         AreaUtils.initAreasByDatabase();
         IPUtils.init(ipProperties);
