@@ -1,9 +1,15 @@
 package com.lz.framework.ip.core.utils;
 
+import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.lang.Assert;
+import cn.hutool.core.text.csv.CsvRow;
+import cn.hutool.core.text.csv.CsvUtil;
 import cn.hutool.core.util.StrUtil;
 import com.lz.framework.common.biz.infra.area.AreaCommonApi;
 import com.lz.framework.common.biz.infra.area.dto.AreaSimpleVO;
 import com.lz.framework.ip.core.Area;
+import com.lz.framework.ip.core.config.IpProperties;
+import com.lz.framework.ip.core.constants.AreaConstants;
 import com.lz.framework.ip.core.enums.AreaTypeEnum;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -19,10 +25,10 @@ import static com.lz.framework.common.util.collection.CollectionUtils.findFirst;
 
 /**
  * 区域工具类
- *
+ * <p>
  * 数据来源：数据库中的 infra_area 表，通过 AreaCommonApi 获取
  *
- * @author 荔枝源码
+ * @author YY
  */
 @Slf4j
 public class AreaUtils {
@@ -37,23 +43,71 @@ public class AreaUtils {
      * 静态 API 引用
      */
     private static AreaCommonApi areaCommonApi;
+    /**
+     * 静态 API 引用
+     */
+    private static IpProperties ipProperties;
 
     /**
      * 设置 API 实现（供外部调用初始化）
      */
-    public static void init(AreaCommonApi api) {
-        AreaUtils.areaCommonApi = api;
+    public static void init(AreaCommonApi areaCommonApi, IpProperties ipProperties) {
+        AreaUtils.areaCommonApi = areaCommonApi;
+        AreaUtils.ipProperties = ipProperties;
     }
 
     public AreaUtils() {
         // 等待 API 初始化后再加载数据
-        initAreas();
+        if (ipProperties.getArea().equals(AreaConstants.DATABASE)) {
+            initAreasByDatabase();
+        } else if (ipProperties.getArea().equals(AreaConstants.IP2_REGION)) {
+            initAreasByIp2Region();
+        } else {
+            log.warn("[AreaUtils] 未配置区域数据源，请检查 IpProperties 配置");
+        }
+
     }
+
+    private static void initAreasByIp2Region() {
+        //如果当前配置不是ip2region，返回，防止误初始化
+        if (!ipProperties.getArea().equals(AreaConstants.IP2_REGION)) {
+            return;
+        }
+        try {
+            long now = System.currentTimeMillis();
+            areas = new HashMap<>();
+            areas.put(Area.CODE_GLOBAL, new Area(Area.CODE_GLOBAL, "全球", 0, null, new ArrayList<>()));
+            // 从 csv 中加载数据
+            List<CsvRow> rows = CsvUtil.getReader().read(ResourceUtil.getUtf8Reader("area.csv")).getRows();
+            rows.removeFirst(); // 删除 header
+            for (CsvRow row : rows) {
+                Area area = new Area(row.get(0), row.get(1), Integer.valueOf(row.get(2)), null, new ArrayList<>());
+                areas.put(area.getCode(), area);
+            }
+
+            // 构建父子关系：因为 Area 中没有 parentId 字段,所以需要重复读取
+            for (CsvRow row : rows) {
+                Area area = areas.get(row.get(0)); // 自己
+                Area parent = areas.get(row.get(3)); // 父
+                Assert.isTrue(area != parent, "{}:父子节点相同", area.getName());
+                area.setParent(parent);
+                parent.getChildren().add(area);
+            }
+            log.info("启动加载 AreaUtils 成功，使用{}，耗时 ({}) 毫秒", ipProperties.getArea(), System.currentTimeMillis() - now);
+        } catch (Exception e) {
+            throw new RuntimeException("AreaUtils 初始化失败", e);
+        }
+    }
+
 
     /**
      * 初始化地区数据
      */
-    public static synchronized void initAreas() {
+    public static synchronized void initAreasByDatabase() {
+        //如果当前配置不是数据库，返回，防止误初始化
+        if (!ipProperties.getArea().equals(AreaConstants.DATABASE)) {
+            return;
+        }
         if (areaCommonApi == null) {
             log.warn("[AreaUtils] AreaCommonApi 未设置，无法加载地区数据");
             return;
@@ -94,8 +148,7 @@ public class AreaUtils {
                 }
             }
         }
-
-        log.info("[AreaUtils] 启动加载地区数据成功，共 {} 条，耗时 ({}) 毫秒", areas.size(), System.currentTimeMillis() - now);
+        log.info("启动加载 AreaUtils 成功，使用{}，耗时 ({}) 毫秒", ipProperties.getArea(), System.currentTimeMillis() - now);
     }
 
     /**
@@ -237,7 +290,6 @@ public class AreaUtils {
 
     /**
      * 格式化区域
-     *
      * 例如说：
      * 1. code = "静安区编码"时：上海 上海市 静安区
      * 2. code = "上海市编码"时：上海 上海市
@@ -274,6 +326,7 @@ public class AreaUtils {
         }
         return sb.toString();
     }
+
     /**
      * 获取指定类型的区域列表
      *

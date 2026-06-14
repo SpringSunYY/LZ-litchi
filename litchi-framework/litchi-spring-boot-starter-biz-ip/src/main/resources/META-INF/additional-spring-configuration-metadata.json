@@ -1,0 +1,65 @@
+{
+  "properties": [
+    {
+      "name": "litchi.ip.area",
+      "type": "java.lang.String",
+      "description": "IP 地址数据源类型.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties"
+    },
+    {
+      "name": "litchi.ip.ip",
+      "type": "java.lang.String",
+      "description": "IP 地址.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties"
+    },
+    {
+      "name": "litchi.ip.ipUrl",
+      "type": "java.lang.String",
+      "description": "ipJson链接.",
+      "sourceType": "com.lz.framework.ip.core.config.IpProperties"
+    }
+  ],
+  "hints": [
+    {
+      "name": "litchi.ip.area",
+      "providers": [
+        {
+          "name": "ip2region"
+        },{
+          "name": "database"
+        }
+      ],
+      "values": [
+        {
+          "value": "database",
+          "description": "默认使用数据库的方式查询 IP 地址."
+        },
+        {
+          "value": "ip2region",
+          "description": "使用 ip2region 离线库查询 IP 地址."
+        }
+      ]
+    },
+    {
+      "name": "litchi.ip.ip",
+      "providers": [
+        {
+          "name": "ip2region"
+        },
+        {
+          "name": "ipJson"
+        }
+      ],
+      "values": [
+        {
+          "value": "ipJson",
+          "description": "使用在线http ipJson，不推荐，可能会限流."
+        },
+        {
+          "value": "ip2region",
+          "description": "使用 ip2region 离线库查询 IP 地址."
+        }
+      ]
+    }
+  ]
+}

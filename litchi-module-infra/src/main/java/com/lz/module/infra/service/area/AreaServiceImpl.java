@@ -198,7 +198,7 @@ public class AreaServiceImpl implements AreaService {
         //虽然删除了所有的key，但是不修改对应语言是否更新，前端还是可以拿自己的缓存
         redisUtils.deleteByPatterns(RedisKeyConstants.AREA_LIST, RedisKeyConstants.AREA_TREE);
         //重新初始化地区
-        AreaUtils.initAreas();
+        AreaUtils.initAreasByDatabase();
     }
 
     @Override

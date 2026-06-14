@@ -261,9 +261,13 @@ litchi:
     base-package: com.lz
   web:
     admin-ui:
-      url: http://dashboard.litchi.iocoder.cn # Admin 管理后台 UI 的地址
+      url: https://www.litchi.work/ # Admin 管理后台 UI 的地址
   i18n:
     default-locale: zh-CN #默认国际化语言
+  ip:
+    area: database # 默认使用数据库的方式，查询 IP 地址,可选ip2region
+    ip: ipJson # 默认使用ip2region的方式，查询 IP 地址,可选ipJson
+    ipUrl: https://whois.pconline.com.cn/ipJson.jsp
   xss:
     enable: false
     exclude-urls: # 如下两个 url，仅仅是为了演示，去掉配置也没关系

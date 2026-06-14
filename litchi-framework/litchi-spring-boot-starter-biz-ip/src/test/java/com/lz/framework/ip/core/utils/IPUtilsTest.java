@@ -3,6 +3,9 @@ package com.lz.framework.ip.core.utils;
 import com.lz.framework.common.biz.infra.area.AreaCommonApi;
 import com.lz.framework.common.biz.infra.area.dto.AreaSimpleVO;
 import com.lz.framework.ip.core.Area;
+import com.lz.framework.ip.core.config.IpProperties;
+import com.lz.framework.ip.core.constants.AreaConstants;
+import com.lz.framework.ip.core.constants.IpConstants;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.lionsoul.ip2region.xdb.Searcher;
@@ -28,8 +31,12 @@ public class IPUtilsTest {
     public static void setup() {
         // 手动设置 mock 数据用于测试
         AreaCommonApi mockApi = createMockAreaCommonApi();
-        AreaUtils.init(mockApi);
-        AreaUtils.initAreas();
+        IpProperties ipProperties = new IpProperties();
+        ipProperties.setArea(AreaConstants.DATABASE);
+        ipProperties.setIp(IpConstants.IP2_REGION);
+        AreaUtils.init(mockApi, ipProperties);
+        AreaUtils.initAreasByDatabase();
+        IPUtils.init(ipProperties);
     }
 
     /**
@@ -111,7 +118,7 @@ public class IPUtilsTest {
     @Test
     public void testGetArea_long() throws Exception {
         // 120.203.123.0|120.203.133.255|360900 (宜春市)
-        long ip = Searcher.checkIP("103.151.173.202");
+        long ip = Searcher.checkIP("120.203.123.250");
         Area area = IPUtils.getArea(ip);
         assertEquals("宜春市", area.getName());
     }

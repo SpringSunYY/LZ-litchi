@@ -4,6 +4,8 @@ package com.lz.framework.ip.core.utils;
 import com.lz.framework.common.biz.infra.area.AreaCommonApi;
 import com.lz.framework.common.biz.infra.area.dto.AreaSimpleVO;
 import com.lz.framework.ip.core.Area;
+import com.lz.framework.ip.core.config.IpProperties;
+import com.lz.framework.ip.core.constants.AreaConstants;
 import com.lz.framework.ip.core.enums.AreaTypeEnum;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -25,8 +27,10 @@ public class AreaUtilsTest {
     public static void setup() {
         // 手动设置 mock 数据用于测试
         AreaCommonApi mockApi = createMockAreaCommonApi();
-        AreaUtils.init(mockApi);
-        AreaUtils.initAreas();
+        IpProperties ipProperties = new IpProperties();
+        ipProperties.setArea(AreaConstants.DATABASE);
+        AreaUtils.init(mockApi, ipProperties);
+        AreaUtils.initAreasByDatabase();
     }
 
     /**
