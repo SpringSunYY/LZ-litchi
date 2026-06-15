@@ -5,6 +5,7 @@ import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSimpRespVO;
 import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.I18nMessageSimpVO;
 import com.lz.module.infra.service.i18n.I18nService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
@@ -36,6 +37,7 @@ public class I18nController {
      * 获取是否更新国际化
      */
     @GetMapping("/locale/update-key")
+    @Operation(summary = "获取是否更新国际化")
     @Parameter(name = "localeTarget", description = "端", required = true)
     @Parameter(name = "locale", description = "语言", required = true, example = "zh-CN")
     @PermitAll
@@ -53,6 +55,7 @@ public class I18nController {
      * @return 键名编号
      */
     @GetMapping("/locale/target")
+    @Operation(summary = "获取国家地区")
     @Parameter(name = "localeTarget", description = "使用端", required = true, example = "1024")
     @PermitAll
     @TenantIgnore
@@ -65,6 +68,7 @@ public class I18nController {
      * 获取国际化语言
      */
     @GetMapping("/locale/message")
+    @Operation(summary = "获取国际化语言")
     @Parameter(name = "localeTarget", description = "使用端", required = true, example = "1024")
     @Parameter(name = "acceptLanguage", description = "语言", required = true, example = "zh-CN")
     @PermitAll
