@@ -291,6 +291,8 @@ public class AdminAuthServiceImpl implements AdminAuthService {
             createReqVO.setPassword(registerReqVO.getPassword());
             createReqVO.setType(SystemTenantTypeEnum.SYSTEM_TENANT_TYPE_ENUM_0.getStatus());
             createReqVO.setIndustry(SystemTenantIndustryEnumEnum.SYSTEM_TENANT_INDUSTRY_ENUM_0.getStatus());
+            createReqVO.setStatus(CommonStatusEnum.ENABLE.getStatus());
+            createReqVO.setAccountCount(30);
             TenantSaveRespVO tenant = tenantService.createTenant(createReqVO);
             return TenantUtils.execute(tenant.getTenantId(), () -> {
                 // 4. 创建 Token 令牌，记录登录日志

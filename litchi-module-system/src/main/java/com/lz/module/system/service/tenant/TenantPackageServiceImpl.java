@@ -68,11 +68,12 @@ public class TenantPackageServiceImpl implements TenantPackageService {
         // 插入
         TenantPackageDO tenantPackage = BeanUtils.toBean(createReqVO, TenantPackageDO.class);
 
-        //如果是内置套餐，则需要给所有的租户都订阅
+        //如果不是内置套餐，则直接返回
         if (!Objects.equals(tenantPackage.getType(), SystemTenantPackageTypeEnum.SYSTEM_TENANT_PACKAGE_TYPE_ENUM_0.getStatus())) {
             tenantPackageMapper.insert(tenantPackage);
             return tenantPackage.getId();
         }
+        //是内置套餐，创建订阅
         //查询到所有的租户
         List<TenantDO> tenantDOS = tenantService.getTenantListByStatus(CommonStatusEnum.ENABLE.getStatus());
         tenantDOS.forEach(tenant -> {

@@ -12,6 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * IP信息提供者模板（模板方法模式）
@@ -39,24 +41,38 @@ public abstract class IpTemplate {
     private static final ConcurrentHashMap<String, CacheEntry> IP_CACHE = new ConcurrentHashMap<>();
 
     /**
-     * 定时清理过期缓存的调度器
+     * 定时清理过期缓存的调度器（懒加载：首次缓存数据时才启动）
      */
-    private static final ScheduledExecutorService CLEANUP_EXECUTOR = Executors.newSingleThreadScheduledExecutor(r -> {
-        Thread t = new Thread(r, "ip-cache-cleanup");
-        t.setDaemon(true);
-        return t;
-    });
+    private static volatile ScheduledExecutorService cleanupExecutor;
 
-    static {
-        // 每分钟清理一次过期缓存
-        CLEANUP_EXECUTOR.scheduleAtFixedRate(() -> {
-            try {
-                long now = System.currentTimeMillis();
-                IP_CACHE.entrySet().removeIf(entry -> entry.getValue().expireTime < now);
-            } catch (Exception e) {
-                log.warn("清理IP缓存失败", e);
-            }
-        }, 1, 1, TimeUnit.MINUTES);
+    /**
+     * 清理任务是否已启动
+     */
+    private static final AtomicBoolean cleanupStarted = new AtomicBoolean(false);
+
+    /**
+     * 确保清理任务已启动（首次缓存数据时调用）
+     */
+    private static void ensureCleanupStarted() {
+        if (cleanupStarted.compareAndSet(false, true)) {
+            cleanupExecutor = Executors.newSingleThreadScheduledExecutor(r -> {
+                Thread t = new Thread(r, "ip-cache-cleanup");
+                t.setDaemon(true);
+                return t;
+            });
+            // 每分钟清理一次过期缓存
+            cleanupExecutor.scheduleAtFixedRate(() -> {
+                try {
+                    if (IP_CACHE.isEmpty()) {
+                        return;
+                    }
+                    long now = System.currentTimeMillis();
+                    IP_CACHE.entrySet().removeIf(entry -> entry.getValue().expireTime < now);
+                } catch (Exception e) {
+                    log.warn("清理IP缓存失败", e);
+                }
+            }, 60, 60, TimeUnit.SECONDS);
+        }
     }
 
     /**
@@ -179,6 +195,7 @@ public abstract class IpTemplate {
      */
     protected void cacheArea(String ip, Area area) {
         if (area != null && isCacheEnabled()) {
+            ensureCleanupStarted();
             int cacheTime = getCacheTimeSeconds();
             IP_CACHE.put(ip, new CacheEntry(area, System.currentTimeMillis() + cacheTime * 1000L));
         }

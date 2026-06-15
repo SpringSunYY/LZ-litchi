@@ -197,7 +197,7 @@ public class GlobalExceptionHandler {
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException) {
             Class<?> targetType = invalidFormatException.getTargetType();
             String needType = targetType != null ? targetType.getSimpleName() : "未知";
-            System.out.println("ex = " + ex);
+            System.out.println("needType = " + needType);
             String message = StrUtils.format(
                     I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR,
                             "请求参数类型错误，需要的类型为{}，当前类型为{}"),
@@ -215,11 +215,9 @@ public class GlobalExceptionHandler {
     public CommonResult<?> constraintViolationExceptionHandler(ConstraintViolationException ex) {
         log.warn("[constraintViolationExceptionHandler]", ex);
         ConstraintViolation<?> constraintViolation = ex.getConstraintViolations().iterator().next();
-        String paramName = constraintViolation.getPropertyPath().toString();
         String errorMsg = constraintViolation.getMessage();
-        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR,
-                "请求参数类型错误，需要的类型为{}，当前类型为{}");
-        message = StrUtils.format(message, paramName, paramName);
+        String message = I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_MISSING,
+                "请求参数缺失。");
         return CommonResult.error(BAD_REQUEST.getCode(),
                 message + errorMsg);
     }
