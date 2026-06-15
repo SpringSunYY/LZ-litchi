@@ -519,6 +519,10 @@ public class TenantServiceImpl implements TenantService {
     }
 
     @Override
+    public boolean isSystemTenant() {
+        return isSystemTenantById(TenantContextHolder.getTenantId());
+    }
+    @Override
     public boolean isSystemTenantById(Long id) {
         return Objects.equals(id, TenantDO.PACKAGE_ID_SYSTEM);
 

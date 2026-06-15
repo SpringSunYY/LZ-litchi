@@ -171,10 +171,35 @@ public interface TenantService {
     boolean updateAllTenantMenu();
 
 
+    /**
+     * 获得租户的菜单权限
+     *
+     * @param code 租户编号
+     * @return 菜单权限
+     */
     Set<Long> getTenantMenu(String code);
 
+    /**
+     * 是否是系统租户
+     *
+     * @param tenant 租户
+     * @return 是否是系统租户
+     */
     boolean isSystemTenant(TenantDO tenant);
 
+    /**
+     * 是否是系统租户
+     *
+     * @return 是否是系统租户
+     */
+    boolean isSystemTenant();
+
+    /**
+     * 是否是系统租户
+     *
+     * @param id 租户编号
+     * @return 是否是系统租户
+     */
     boolean isSystemTenantById(Long id);
 
     /**

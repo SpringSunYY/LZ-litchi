@@ -16,7 +16,7 @@ public class TenantUtils {
 
     /**
      * 使用指定租户，执行对应的逻辑
-     *
+     * <p>
      * 注意，如果当前是忽略租户的情况下，会被强制设置成不忽略租户
      * 当然，执行完成后，还是会恢复回去
      *
@@ -39,7 +39,7 @@ public class TenantUtils {
 
     /**
      * 使用指定租户，执行对应的逻辑
-     *
+     * <p>
      * 注意，如果当前是忽略租户的情况下，会被强制设置成不忽略租户
      * 当然，执行完成后，还是会恢复回去
      *
@@ -60,6 +60,56 @@ public class TenantUtils {
         } finally {
             TenantContextHolder.setTenantId(oldTenantId);
             TenantContextHolder.setIgnore(oldIgnore);
+        }
+    }
+
+    /**
+     * 系统租户和普通租户的差异化执行
+     *
+     * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
+     * 如果是普通租户，则强制使用当前租户编号执行（确保只操作自己的数据，防止越权）。
+     *
+     * <p>典型使用场景：
+     * <pre>{@code
+     * Long tenantId = TenantContextHolder.getTenantId();
+     * TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
+     *     () -> doSomething());
+     * }</pre>
+     *
+     * @param tenantId       租户编号
+     * @param isSystemTenant 是否为系统租户
+     * @param runnable       逻辑
+     */
+    public static void executeSystemOrTenant(Long tenantId, boolean isSystemTenant, Runnable runnable) {
+        if (isSystemTenant) {
+            TenantContextHolder.setIgnore(true);
+            runnable.run();
+        } else {
+            execute(tenantId, runnable);
+        }
+    }
+
+    /**
+     * 系统租户和普通租户的差异化执行，如果是系统租户去除租户隔离
+     *
+     * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
+     * 如果是普通租户，则强制使用当前租户编号执行（确保只操作自己的数据，防止越权）。
+     *
+     * @param tenantId       租户编号
+     * @param isSystemTenant 是否为系统租户
+     * @param callable       逻辑
+     * @return 结果
+     */
+    public static <V> V executeSystemOrTenant(Long tenantId, boolean isSystemTenant, Callable<V> callable) {
+        if (isSystemTenant) {
+            try {
+                TenantContextHolder.setIgnore(true);
+                return callable.call();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return execute(tenantId, callable);
         }
     }
 
@@ -101,7 +151,7 @@ public class TenantUtils {
     /**
      * 将多租户编号，添加到 header 中
      *
-     * @param headers HTTP 请求 headers
+     * @param headers  HTTP 请求 headers
      * @param tenantId 租户编号
      */
     public static void addTenantHeader(Map<String, String> headers, Long tenantId) {
