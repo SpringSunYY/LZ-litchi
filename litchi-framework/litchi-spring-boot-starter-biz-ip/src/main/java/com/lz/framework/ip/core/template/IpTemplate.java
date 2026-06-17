@@ -1,5 +1,6 @@
 package com.lz.framework.ip.core.template;
 
+import cn.hutool.core.util.StrUtil;
 import com.lz.framework.ip.core.Area;
 import com.lz.framework.ip.core.config.IpProperties;
 import com.lz.framework.ip.core.constants.IpConstants;
@@ -8,11 +9,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.lionsoul.ip2region.xdb.Searcher;
 
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -39,6 +40,50 @@ public abstract class IpTemplate {
      * IP缓存
      */
     private static final ConcurrentHashMap<String, CacheEntry> IP_CACHE = new ConcurrentHashMap<>();
+
+    /**
+     * 模板类型注册表：类型标识 → 模板实例工厂
+     */
+    private static final Map<String, TemplateFactory> TEMPLATE_FACTORIES = new ConcurrentHashMap<>();
+
+    /**
+     * 模板工厂接口
+     */
+    @FunctionalInterface
+    public interface TemplateFactory {
+        IpTemplate create(IpProperties ipProperties);
+    }
+
+    /**
+     * 注册IP模板
+     *
+     * @param type     模板类型标识（如 "ipJson"、"ip2region"）
+     * @param factory  模板实例工厂
+     */
+    public static void registerTemplate(String type, TemplateFactory factory) {
+        TEMPLATE_FACTORIES.put(type, factory);
+    }
+
+    /**
+     * 获取指定类型的模板实例
+     *
+     * @param type          模板类型
+     * @param ipProperties  配置参数
+     * @return 模板实例，如果类型未注册则返回 null
+     */
+    protected IpTemplate getTemplate(String type, IpProperties ipProperties) {
+        TemplateFactory factory = TEMPLATE_FACTORIES.get(type);
+        if (factory != null) {
+            return factory.create(ipProperties);
+        }
+        log.warn("未找到类型为 [{}] 的IP模板，请检查是否已注册", type);
+        return null;
+    }
+
+    static {
+        registerTemplate(IpConstants.IP_JSON, IpJsonTemplate::new);
+        registerTemplate(IpConstants.IP2_REGION, Ip2RegionTemplate::new);
+    }
 
     /**
      * 定时清理过期缓存的调度器（懒加载：首次缓存数据时才启动）
@@ -107,7 +152,6 @@ public abstract class IpTemplate {
 
     /**
      * 获取IP对应的地区（模板方法）
-     * <p>
      * 流程：缓存 → 当前模式查询 → 降级（可选） → 缓存结果
      */
     public Area getArea(String ip) {
@@ -146,18 +190,46 @@ public abstract class IpTemplate {
 
     /**
      * 执行降级查询（子类可覆盖）
-     * <p>
-     * 默认返回 null，表示不降级
+     * 默认实现：根据配置创建降级模板并执行查询
      */
     protected Area doFallback(String ip) {
+        if (ipProperties == null || ipProperties.getIp() == null) {
+            return null;
+        }
+        String rollbackType = ipProperties.getIp().getRollback();
+        if (StrUtil.isBlank(rollbackType)) {
+            return null;
+        }
+        String currentType = ipProperties.getIp().getType();
+        if (rollbackType.equals(currentType)) {
+            return null;
+        }
+        log.info("[{}] 查询失败，降级到 [{}]", currentType, rollbackType);
+        try {
+            IpTemplate fallbackTemplate = getTemplate(rollbackType, ipProperties);
+            if (fallbackTemplate != null) {
+                return fallbackTemplate.doQuery(ip);
+            }
+        } catch (Exception e) {
+            log.error("降级到 [{}] 失败", rollbackType, e);
+        }
         return null;
     }
 
     /**
-     * 检查是否应该降级（子类可覆盖）
+     * 检查是否应该降级
+     * 默认实现：当配置了 rollback 且与当前模式不同时返回 true
      */
     protected boolean shouldFallback() {
-        return false;
+        if (ipProperties == null || ipProperties.getIp() == null) {
+            return false;
+        }
+        String rollback = ipProperties.getIp().getRollback();
+        if (StrUtil.isBlank(rollback)) {
+            return false;
+        }
+        String currentType = ipProperties.getIp().getType();
+        return !rollback.equals(currentType);
     }
 
     /**

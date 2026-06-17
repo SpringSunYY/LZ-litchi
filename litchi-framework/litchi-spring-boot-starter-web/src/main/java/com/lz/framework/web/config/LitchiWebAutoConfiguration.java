@@ -3,16 +3,15 @@ package com.lz.framework.web.config;
 import com.lz.framework.common.biz.infra.logger.ApiErrorLogCommonApi;
 import com.lz.framework.common.enums.WebFilterOrderEnum;
 import com.lz.framework.web.core.filter.CacheRequestBodyFilter;
-import com.lz.framework.web.core.filter.DemoFilter;
 import com.lz.framework.web.core.handler.GlobalExceptionHandler;
 import com.lz.framework.web.core.handler.GlobalResponseBodyHandler;
+import com.lz.framework.web.core.interceptor.DemoModeInterceptor;
 import com.lz.framework.web.core.util.WebFrameworkUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.autoconfigure.web.client.RestTemplateAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
@@ -24,11 +23,12 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @AutoConfiguration
-@EnableConfigurationProperties(WebProperties.class)
+@EnableConfigurationProperties({WebProperties.class, DemoModeProperties.class})
 public class LitchiWebAutoConfiguration implements WebMvcConfigurer {
 
     @Resource
@@ -102,13 +102,17 @@ public class LitchiWebAutoConfiguration implements WebMvcConfigurer {
         return createFilterBean(new CacheRequestBodyFilter(), WebFilterOrderEnum.REQUEST_BODY_CACHE_FILTER);
     }
 
-    /**
-     * 创建 DemoFilter Bean，演示模式
-     */
+    // ========== Interceptor 相关 ==========
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        // 演示模式拦截器：基于 @DemoMode 注解的细粒度操作控制
+        registry.addInterceptor(new DemoModeInterceptor(demoModeProperties()));
+    }
+
     @Bean
-    @ConditionalOnProperty(value = "litchi.demo", havingValue = "true")
-    public FilterRegistrationBean<DemoFilter> demoFilter() {
-        return createFilterBean(new DemoFilter(), WebFilterOrderEnum.DEMO_FILTER);
+    public DemoModeProperties demoModeProperties() {
+        return new DemoModeProperties();
     }
 
     public static <T extends Filter> FilterRegistrationBean<T> createFilterBean(T filter, Integer order) {

@@ -2,6 +2,7 @@ package com.lz.framework.ip.core.template;
 
 import cn.hutool.core.io.resource.ResourceUtil;
 import com.lz.framework.ip.core.Area;
+import com.lz.framework.ip.core.config.IpProperties;
 import com.lz.framework.ip.core.constants.IpConstants;
 import com.lz.framework.ip.core.utils.AreaUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +23,11 @@ public class Ip2RegionTemplate extends IpTemplate {
         super();
     }
 
+    public Ip2RegionTemplate(IpProperties ipProperties) {
+        this.ipProperties = ipProperties;
+        init();
+    }
+
     @Override
     protected void init() {
         try {
@@ -34,9 +40,7 @@ public class Ip2RegionTemplate extends IpTemplate {
         }
     }
 
-    /**
-     * 查询IP对应的region数据
-     */
+    @Override
     protected String getRegionData(String ip) {
         try {
             return searcher.search(ip.trim());

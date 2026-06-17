@@ -47,7 +47,7 @@ public class IPUtils {
             return;
         }
         if (ipProperties.getIp().getType().equals(IpConstants.IP2_REGION)) {
-            ipProvider = new Ip2RegionTemplate();
+            ipProvider = new Ip2RegionTemplate(ipProperties);
         } else if (ipProperties.getIp().getType().equals(IpConstants.IP_JSON)) {
             ipProvider = new IpJsonTemplate(ipProperties);
         } else {

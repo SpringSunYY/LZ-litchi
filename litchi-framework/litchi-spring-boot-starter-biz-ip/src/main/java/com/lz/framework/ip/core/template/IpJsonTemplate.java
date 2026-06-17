@@ -6,7 +6,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.lz.framework.common.util.http.HttpUtils;
 import com.lz.framework.ip.core.Area;
 import com.lz.framework.ip.core.config.IpProperties;
-import com.lz.framework.ip.core.constants.IpConstants;
 import com.lz.framework.ip.core.utils.AreaUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -15,7 +14,7 @@ import java.util.HashMap;
 
 /**
  * HTTP API模式IP提供者（模板方法模式实现）
- *
+ * 飞不进你梦中有一点感受
  * @author YY
  */
 @Slf4j
@@ -82,42 +81,7 @@ public class IpJsonTemplate extends IpTemplate {
         // 最终回退：直接用API返回的地址信息构建Area
         String addr = obj.getString("addr");
         if (StrUtil.isNotBlank(addr)) {
-            log.info("IpJsonTemplate.getArea - 本地未命中，回退使用原始地址: {}", addr);
             return new Area(null, addr.trim(), 0, null, new ArrayList<>());
-        }
-        return null;
-    }
-
-    /**
-     * 检查是否应该降级
-     */
-    @Override
-    protected boolean shouldFallback() {
-        if (ipProperties == null || ipProperties.getIp() == null) {
-            return false;
-        }
-        String rollback = ipProperties.getIp().getRollback();
-        if (StrUtil.isBlank(rollback)) {
-            return false;
-        }
-        // 回退模式与当前模式相同时不降级
-        return !rollback.equals(ipProperties.getIp().getType());
-    }
-
-    /**
-     * 执行降级查询
-     */
-    @Override
-    protected Area doFallback(String ip) {
-        String rollbackType = ipProperties.getIp().getRollback();
-        if (IpConstants.IP2_REGION.equals(rollbackType)) {
-            log.info("IpJson 查询失败，降级到 ip2region");
-            try {
-                Ip2RegionTemplate fallbackTemplate = new Ip2RegionTemplate();
-                return fallbackTemplate.doQuery(ip);
-            } catch (Exception e) {
-                log.error("降级到ip2region失败", e);
-            }
         }
         return null;
     }
