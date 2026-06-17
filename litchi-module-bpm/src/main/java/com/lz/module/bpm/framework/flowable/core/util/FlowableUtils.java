@@ -32,6 +32,8 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.stream.Collectors;
 
+import com.lz.framework.common.exception.ServiceException;
+
 import static com.lz.framework.common.util.collection.CollectionUtils.convertList;
 
 /**
@@ -55,6 +57,8 @@ public class FlowableUtils {
         setAuthenticatedUserId(userId);
         try {
             return callable.call();
+        } catch (ServiceException e) {
+            throw e;
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
