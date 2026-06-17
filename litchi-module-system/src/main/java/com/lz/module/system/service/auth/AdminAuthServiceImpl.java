@@ -259,7 +259,12 @@ public class AdminAuthServiceImpl implements AdminAuthService {
             reqDTO.setUsername(memberService.getMemberUserMobile(userId));
         }
         reqDTO.setUserAgent(ServletUtils.getUserAgent());
-        reqDTO.setUserIp(ServletUtils.getClientIP());
+        String clientIP = getClientIP();
+        reqDTO.setUserIp(clientIP);
+        UserAgent userAgentInfo = ServletUtils.getUserAgentInfo();
+        reqDTO.setUserPlatform(userAgentInfo.getPlatform().getName());
+        reqDTO.setUserBrowser(userAgentInfo.getBrowser().getName());
+        reqDTO.setUserIpAddr(IPUtils.getIpAddr(clientIP));
         reqDTO.setResult(LoginResultEnum.SUCCESS.getResult());
         loginLogService.createLoginLog(reqDTO);
     }
