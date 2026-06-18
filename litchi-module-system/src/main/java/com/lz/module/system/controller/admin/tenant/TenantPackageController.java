@@ -3,6 +3,8 @@ package com.lz.module.system.controller.admin.tenant;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
+import com.lz.framework.demoMode.enums.DemoModeEnum;
 import com.lz.module.system.controller.admin.tenant.vo.packages.*;
 import com.lz.module.system.dal.dataobject.tenant.TenantPackageDO;
 import com.lz.module.system.service.tenant.TenantPackageService;
@@ -38,6 +40,7 @@ public class TenantPackageController {
     @PutMapping("/update")
     @Operation(summary = "更新租户套餐")
     @PreAuthorize("@ss.hasPermission('system:tenant-package:update')")
+    @DemoMode(allowed = DemoModeEnum.PUT, forbiddenFieldValues = {"id=1","id=2","id=3","id=4","id=5"})
     public CommonResult<Boolean> updateTenantPackage(@Valid @RequestBody TenantPackageSaveReqVO updateReqVO) {
         tenantPackageService.updateTenantPackage(updateReqVO);
         return success(true);
@@ -46,6 +49,7 @@ public class TenantPackageController {
     @PutMapping("/grant")
     @Operation(summary = "授权租户套餐")
     @PreAuthorize("@ss.hasPermission('system:tenant-package:update')")
+    @DemoMode(allowed = DemoModeEnum.PUT, forbiddenFieldValues = {"id=1","id=2","id=3","id=4","id=5"})
     public CommonResult<Boolean> grantTenantPackage(@Valid @RequestBody TenantPackageGrantReqVO grantReqVO) {
         tenantPackageService.grantTenantPackage(grantReqVO);
         return success(true);
@@ -55,6 +59,7 @@ public class TenantPackageController {
     @Operation(summary = "删除租户套餐")
     @Parameter(name = "id", description = "编号", required = true)
     @PreAuthorize("@ss.hasPermission('system:tenant-package:delete')")
+    @DemoMode(allowed = DemoModeEnum.DELETE, forbiddenDeleteIds = {"1","2","3","4","5"})
     public CommonResult<Boolean> deleteTenantPackage(@RequestParam("id") Long id) {
         tenantPackageService.deleteTenantPackage(id);
         return success(true);
@@ -64,6 +69,7 @@ public class TenantPackageController {
     @Parameter(name = "ids", description = "编号列表", required = true)
     @Operation(summary = "批量删除租户套餐")
     @PreAuthorize("@ss.hasPermission('system:tenant-package:delete')")
+    @DemoMode(allowed = DemoModeEnum.DELETE, forbiddenDeleteIds = {"1","2","3","4","5"})
     public CommonResult<Boolean> deleteTenantPackageList(@RequestParam("ids") List<Long> ids) {
         tenantPackageService.deleteTenantPackageList(ids);
         return success(true);

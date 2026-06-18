@@ -3,6 +3,7 @@ package com.lz.module.system.controller.admin.oauth2;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.system.controller.admin.oauth2.vo.client.OAuth2ClientPageReqVO;
 import com.lz.module.system.controller.admin.oauth2.vo.client.OAuth2ClientRespVO;
 import com.lz.module.system.controller.admin.oauth2.vo.client.OAuth2ClientSaveReqVO;
@@ -25,6 +26,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/system/oauth2-client")
 @Validated
+@DemoMode
 public class OAuth2ClientController {
 
     @Resource

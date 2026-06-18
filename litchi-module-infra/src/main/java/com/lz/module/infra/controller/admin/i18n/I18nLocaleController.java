@@ -1,5 +1,6 @@
 package com.lz.module.infra.controller.admin.i18n;
 
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocalePageReqVO;
 import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleRespVO;
 import com.lz.module.infra.controller.admin.i18n.vo.i18nLocale.I18nLocaleSaveReqVO;
@@ -34,6 +35,7 @@ import com.lz.module.infra.service.i18n.I18nLocaleService;
 @RestController
 @RequestMapping("/infra/i18n/locale")
 @Validated
+@DemoMode
 public class I18nLocaleController {
 
     @Resource

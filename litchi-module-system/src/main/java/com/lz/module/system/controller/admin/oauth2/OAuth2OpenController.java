@@ -8,6 +8,7 @@ import com.lz.framework.common.enums.UserTypeEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.util.http.HttpUtils;
 import com.lz.framework.common.util.json.JsonUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.system.controller.admin.oauth2.vo.open.OAuth2OpenAccessTokenRespVO;
 import com.lz.module.system.controller.admin.oauth2.vo.open.OAuth2OpenAuthorizeInfoRespVO;
 import com.lz.module.system.controller.admin.oauth2.vo.open.OAuth2OpenCheckTokenRespVO;
@@ -136,6 +137,7 @@ public class OAuth2OpenController {
     @PermitAll
     @Operation(summary = "删除访问令牌")
     @Parameter(name = "token", required = true, description = "访问令牌", example = "biu")
+    @DemoMode
     public CommonResult<Boolean> revokeToken(HttpServletRequest request,
                                              @RequestParam("token") String token) {
         // 校验客户端

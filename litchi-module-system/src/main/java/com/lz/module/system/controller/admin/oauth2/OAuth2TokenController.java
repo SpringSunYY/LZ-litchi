@@ -3,6 +3,7 @@ package com.lz.module.system.controller.admin.oauth2;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.system.controller.admin.oauth2.vo.token.OAuth2AccessTokenPageReqVO;
 import com.lz.module.system.controller.admin.oauth2.vo.token.OAuth2AccessTokenRespVO;
 import com.lz.module.system.dal.dataobject.oauth2.OAuth2AccessTokenDO;
@@ -43,6 +44,7 @@ public class OAuth2TokenController {
     @Operation(summary = "删除访问令牌")
     @Parameter(name = "accessToken", description = "访问令牌", required = true, example = "tudou")
     @PreAuthorize("@ss.hasPermission('system:oauth2-token:delete')")
+    @DemoMode
     public CommonResult<Boolean> deleteAccessToken(@RequestParam("accessToken") String accessToken) {
         authService.logout(accessToken, LoginLogTypeEnum.LOGOUT_DELETE.getType());
         return success(true);
@@ -52,6 +54,7 @@ public class OAuth2TokenController {
     @Operation(summary = "批量删除访问令牌")
     @Parameter(name = "accessTokens", description = "访问令牌数组", required = true)
     @PreAuthorize("@ss.hasPermission('system:oauth2-token:delete')")
+    @DemoMode
     public CommonResult<Boolean> deleteAccessTokenList(@RequestParam("accessTokens") List<String> accessTokens) {
         accessTokens.forEach(accessToken ->
                 authService.logout(accessToken, LoginLogTypeEnum.LOGOUT_DELETE.getType()));

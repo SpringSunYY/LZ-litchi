@@ -34,7 +34,6 @@ public interface GlobalErrorCodeConstants {
 
     // ========== 自定义错误段 ==========
     ErrorCode REPEATED_REQUESTS = new ErrorCode(900, "common.common.back.repeatedRequest", "重复请求，请稍后重试"); // 重复请求
-    ErrorCode DEMO_DENY = new ErrorCode(901, "common.common.back.demoDeny", "演示模式，禁止写操作");
 
     ErrorCode UNKNOWN = new ErrorCode(999, "common.common.back.unknown", "未知错误");
 
@@ -53,6 +52,9 @@ public interface GlobalErrorCodeConstants {
     String VALIDATION_IN_DICT = "validation.in.dict"; // 字典值不合法，请在{}中选择 / invalid dict value, must be one of {}
     String VALIDATION_SORT = "validation.sort"; // 排序字段不合法，请在{}中选择 / invalid sort field, must be one of {}
     String VALIDATION_SORT_BY = "validation.sort.by"; // 排序字段或排序方式不合法 / invalid sort field or order, field must be one of {}, order must be asc or desc
+
+    // ========== 演示模式 ==========
+    String DEMO_MODE_ERROR = "demo.mode.error"; // 演示模式禁止操作 / demo mode, operation not allowed
 
     // ========== 导入异常 ==========
     String IMPORT_ROW_ERROR = "validation.import.row.error"; // 第{}行 / row {}

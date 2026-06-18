@@ -4,6 +4,7 @@ import com.lz.framework.apilog.core.annotation.ApiAccessLog;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.module.infra.controller.admin.config.vo.ConfigPageReqVO;
 import com.lz.module.infra.controller.admin.config.vo.ConfigRespVO;
@@ -33,6 +34,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/infra/config")
 @Validated
+@DemoMode
 public class ConfigController {
 
     @Resource

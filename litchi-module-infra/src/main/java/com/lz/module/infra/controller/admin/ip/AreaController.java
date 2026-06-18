@@ -4,6 +4,7 @@ import com.lz.framework.apilog.core.annotation.ApiAccessLog;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.servlet.ServletUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.ip.core.Area;
 import com.lz.framework.ip.core.utils.AreaUtils;
@@ -36,6 +37,7 @@ import static com.lz.framework.excel.core.annotations.ExcelDirection.ONLY_IMPORT
 @RestController
 @RequestMapping("/infra/area")
 @Validated
+@DemoMode
 public class AreaController {
     @Resource
     private AreaService areaService;
@@ -63,8 +65,6 @@ public class AreaController {
 
     /**
      * 清除缓存
-     *
-     * @return
      */
     @DeleteMapping("/clear-cache")
     @Operation(summary = "清除缓存")

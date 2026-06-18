@@ -3,6 +3,7 @@ package com.lz.module.infra.controller.admin.file;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.infra.controller.admin.file.vo.config.FileConfigPageReqVO;
 import com.lz.module.infra.controller.admin.file.vo.config.FileConfigRespVO;
 import com.lz.module.infra.controller.admin.file.vo.config.FileConfigSaveReqVO;
@@ -25,6 +26,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/infra/file-config")
 @Validated
+@DemoMode
 public class FileConfigController {
 
     @Resource

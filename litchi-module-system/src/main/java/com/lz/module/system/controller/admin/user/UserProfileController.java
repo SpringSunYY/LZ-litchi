@@ -3,6 +3,7 @@ package com.lz.module.system.controller.admin.user;
 import cn.hutool.core.collection.CollUtil;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.datapermission.core.annotation.DataPermission;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.system.controller.admin.user.vo.profile.UserProfileRespVO;
 import com.lz.module.system.controller.admin.user.vo.profile.UserProfileUpdatePasswordReqVO;
 import com.lz.module.system.controller.admin.user.vo.profile.UserProfileUpdateReqVO;
@@ -34,6 +35,7 @@ import static com.lz.framework.security.core.util.SecurityFrameworkUtils.getLogi
 @RequestMapping("/system/user/profile")
 @Validated
 @Slf4j
+@DemoMode
 public class UserProfileController {
 
     @Resource

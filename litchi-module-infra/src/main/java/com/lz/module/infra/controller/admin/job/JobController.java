@@ -5,6 +5,7 @@ import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.quartz.core.util.CronUtils;
 import com.lz.module.infra.controller.admin.job.vo.job.JobPageReqVO;
@@ -36,6 +37,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/infra/job")
 @Validated
+@DemoMode
 public class JobController {
 
     @Resource

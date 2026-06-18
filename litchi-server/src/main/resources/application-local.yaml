@@ -232,7 +232,8 @@ litchi:
     transfer-notify-url: https://yutou.mynatapp.cc/admin-api/pay/notify/transfer # 支付渠道的【转账】回调地址
   access-log: # 访问日志的配置项
     enable: false
-  demo: false # 关闭演示模式
+  demo:
+    enabled: false # 是否开启防傻逼演示模式，开启后默认禁止写操作，可通过 @DemoMode 注解细粒度放行
   wxa-code:
     env-version: develop # 小程序版本: 正式版为 "release"；体验版为 "trial"；开发版为 "develop"
   wxa-subscribe-message:

@@ -5,7 +5,6 @@ import com.lz.framework.common.enums.WebFilterOrderEnum;
 import com.lz.framework.web.core.filter.CacheRequestBodyFilter;
 import com.lz.framework.web.core.handler.GlobalExceptionHandler;
 import com.lz.framework.web.core.handler.GlobalResponseBodyHandler;
-import com.lz.framework.web.core.interceptor.DemoModeInterceptor;
 import com.lz.framework.web.core.util.WebFrameworkUtils;
 import jakarta.annotation.Resource;
 import jakarta.servlet.Filter;
@@ -28,7 +27,7 @@ import org.springframework.web.servlet.config.annotation.PathMatchConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @AutoConfiguration
-@EnableConfigurationProperties({WebProperties.class, DemoModeProperties.class})
+@EnableConfigurationProperties({WebProperties.class})
 public class LitchiWebAutoConfiguration implements WebMvcConfigurer {
 
     @Resource
@@ -103,17 +102,6 @@ public class LitchiWebAutoConfiguration implements WebMvcConfigurer {
     }
 
     // ========== Interceptor 相关 ==========
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        // 演示模式拦截器：基于 @DemoMode 注解的细粒度操作控制
-        registry.addInterceptor(new DemoModeInterceptor(demoModeProperties()));
-    }
-
-    @Bean
-    public DemoModeProperties demoModeProperties() {
-        return new DemoModeProperties();
-    }
 
     public static <T extends Filter> FilterRegistrationBean<T> createFilterBean(T filter, Integer order) {
         FilterRegistrationBean<T> bean = new FilterRegistrationBean<>(filter);

@@ -28,6 +28,11 @@ public interface ApiAccessLogMapper extends BaseMapperX<ApiAccessLogDO> {
                 .betweenIfPresent(ApiAccessLogDO::getBeginTime, reqVO.getBeginTime())
                 .geIfPresent(ApiAccessLogDO::getDuration, reqVO.getDuration())
                 .eqIfPresent(ApiAccessLogDO::getResultCode, reqVO.getResultCode())
+                .eqIfPresent(ApiAccessLogDO::getUserIp, reqVO.getUserIp())
+                .likeIfPresent(ApiAccessLogDO::getUserIpAddr, reqVO.getUserIpAddr())
+                .likeIfPresent(ApiAccessLogDO::getRequestMethod, reqVO.getRequestMethod())
+                .eqIfPresent(ApiAccessLogDO::getUserBrowser, reqVO.getUserBrowser())
+                .eqIfPresent(ApiAccessLogDO::getUserPlatform, reqVO.getUserPlatform())
                 .orderByDesc(ApiAccessLogDO::getId)
         );
     }

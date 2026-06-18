@@ -27,6 +27,21 @@ public class ApiAccessLogPageReqVO extends PageParam {
     @Schema(description = "请求地址，模糊匹配", example = "/xxx/yyy")
     private String requestUrl;
 
+    @Schema(description = "请求方法名，模糊匹配", example = "GET")
+    private String requestMethod;
+
+    @Schema(description = "用户 IP", example = "127.0.0.1")
+    private String userIp;
+
+    @Schema(description = "用户 IP 地理位置", example = "中国")
+    private String userIpAddr;
+
+    @Schema(description = "浏览器", example = "Chrome")
+    private String userBrowser;
+
+    @Schema(description = "平台", example = "Windows")
+    private String userPlatform;
+
     /**
      * 开始请求时间
      */

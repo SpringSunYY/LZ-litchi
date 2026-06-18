@@ -4,6 +4,7 @@ import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.mybatis.core.mapper.BaseMapperX;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.infra.controller.admin.logger.vo.apierrorlog.ApiErrorLogPageReqVO;
+import com.lz.module.infra.dal.dataobject.logger.ApiAccessLogDO;
 import com.lz.module.infra.dal.dataobject.logger.ApiErrorLogDO;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
@@ -27,6 +28,11 @@ public interface ApiErrorLogMapper extends BaseMapperX<ApiErrorLogDO> {
                 .likeIfPresent(ApiErrorLogDO::getRequestUrl, reqVO.getRequestUrl())
                 .betweenIfPresent(ApiErrorLogDO::getExceptionTime, reqVO.getExceptionTime())
                 .eqIfPresent(ApiErrorLogDO::getProcessStatus, reqVO.getProcessStatus())
+                .eqIfPresent(ApiErrorLogDO::getUserIp, reqVO.getUserIp())
+                .likeIfPresent(ApiErrorLogDO::getUserIpAddr, reqVO.getUserIpAddr())
+                .likeIfPresent(ApiErrorLogDO::getRequestMethod, reqVO.getRequestMethod())
+                .eqIfPresent(ApiErrorLogDO::getUserBrowser, reqVO.getUserBrowser())
+                .eqIfPresent(ApiErrorLogDO::getUserPlatform, reqVO.getUserPlatform())
                 .orderByDesc(ApiErrorLogDO::getId)
         );
     }

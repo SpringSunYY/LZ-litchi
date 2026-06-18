@@ -6,6 +6,7 @@ import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.module.system.controller.admin.dict.vo.data.DictDataPageReqVO;
 import com.lz.module.system.controller.admin.dict.vo.data.DictDataRespVO;
@@ -33,6 +34,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/system/dict-data")
 @Validated
+@DemoMode
 public class DictDataController {
 
     @Resource

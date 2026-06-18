@@ -4,6 +4,8 @@ import com.lz.framework.common.enums.UserTypeEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
+import com.lz.framework.demoMode.enums.DemoModeEnum;
 import com.lz.module.system.controller.admin.notify.vo.template.NotifyTemplatePageReqVO;
 import com.lz.module.system.controller.admin.notify.vo.template.NotifyTemplateRespVO;
 import com.lz.module.system.controller.admin.notify.vo.template.NotifyTemplateSaveReqVO;
@@ -46,6 +48,7 @@ public class NotifyTemplateController {
     @PutMapping("/update")
     @Operation(summary = "更新站内信模版")
     @PreAuthorize("@ss.hasPermission('system:notify-template:update')")
+    @DemoMode(allowed = DemoModeEnum.PUT, forbiddenFieldValues = {"id=7","id=8","id=9","id=10","id=11"})
     public CommonResult<Boolean> updateNotifyTemplate(@Valid @RequestBody NotifyTemplateSaveReqVO updateReqVO) {
         notifyTemplateService.updateNotifyTemplate(updateReqVO);
         return success(true);
@@ -55,6 +58,7 @@ public class NotifyTemplateController {
     @Operation(summary = "删除站内信模版")
     @Parameter(name = "id", description = "编号", required = true)
     @PreAuthorize("@ss.hasPermission('system:notify-template:delete')")
+    @DemoMode(allowed = DemoModeEnum.DELETE, forbiddenDeleteIds = {"7","8","9","10","11"})
     public CommonResult<Boolean> deleteNotifyTemplate(@RequestParam("id") Long id) {
         notifyTemplateService.deleteNotifyTemplate(id);
         return success(true);
@@ -64,6 +68,7 @@ public class NotifyTemplateController {
     @Operation(summary = "批量删除站内信模版")
     @Parameter(name = "ids", description = "编号列表", required = true)
     @PreAuthorize("@ss.hasPermission('system:notify-template:delete')")
+    @DemoMode(allowed = DemoModeEnum.DELETE, forbiddenDeleteIds = {"7","8","9","10","11"})
     public CommonResult<Boolean> deleteNotifyTemplateList(@RequestParam("ids") List<Long> ids) {
         notifyTemplateService.deleteNotifyTemplateList(ids);
         return success(true);

@@ -6,6 +6,8 @@ import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.demoMode.annotation.DemoMode;
+import com.lz.framework.demoMode.enums.DemoModeEnum;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.module.system.controller.admin.user.vo.UserSimplePageRespVO;
 import com.lz.module.system.controller.admin.user.vo.user.*;
@@ -58,6 +60,7 @@ public class UserController {
     @PutMapping("update")
     @Operation(summary = "修改用户")
     @PreAuthorize("@ss.hasPermission('system:user:update')")
+    @DemoMode(allowed = {DemoModeEnum.PUT}, forbiddenFieldValues={"id=1"})
     public CommonResult<Boolean> updateUser(@Valid @RequestBody UserSaveReqVO reqVO) {
         userService.updateUser(reqVO);
         return success(true);
@@ -67,6 +70,7 @@ public class UserController {
     @Operation(summary = "删除用户")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('system:user:delete')")
+    @DemoMode(allowed = {DemoModeEnum.DELETE}, forbiddenDeleteIds = {"1"})
     public CommonResult<Boolean> deleteUser(@RequestParam("id") Long id) {
         userService.deleteUser(id);
         return success(true);
@@ -76,6 +80,7 @@ public class UserController {
     @Parameter(name = "ids", description = "编号列表", required = true)
     @Operation(summary = "批量删除用户")
     @PreAuthorize("@ss.hasPermission('system:user:delete')")
+    @DemoMode(allowed = {DemoModeEnum.DELETE}, forbiddenDeleteIds = {"1"})
     public CommonResult<Boolean> deleteUserList(@RequestParam("ids") List<Long> ids) {
         userService.deleteUserList(ids);
         return success(true);
@@ -84,6 +89,7 @@ public class UserController {
     @PutMapping("/update-password")
     @Operation(summary = "重置用户密码")
     @PreAuthorize("@ss.hasPermission('system:user:update-password')")
+    @DemoMode(allowed = {DemoModeEnum.PUT}, forbiddenFieldValues = {"id=1"})
     public CommonResult<Boolean> updateUserPassword(@Valid @RequestBody UserUpdatePasswordReqVO reqVO) {
         userService.updateUserPassword(reqVO.getId(), reqVO.getPassword());
         return success(true);
@@ -92,6 +98,7 @@ public class UserController {
     @PutMapping("/update-status")
     @Operation(summary = "修改用户状态")
     @PreAuthorize("@ss.hasPermission('system:user:update')")
+    @DemoMode(allowed = {DemoModeEnum.PUT}, forbiddenFieldValues = {"id=1"})
     public CommonResult<Boolean> updateUserStatus(@Valid @RequestBody UserUpdateStatusReqVO reqVO) {
         userService.updateUserStatus(reqVO.getId(), reqVO.getStatus());
         return success(true);
@@ -189,6 +196,7 @@ public class UserController {
             @Parameter(name = "updateSupport", description = "是否支持更新，默认为 false", example = "true")
     })
     @PreAuthorize("@ss.hasPermission('system:user:import')")
+    @DemoMode
     public CommonResult<UserImportRespVO> importExcel(@RequestParam("file") MultipartFile file,
                                                       @RequestParam(value = "updateSupport", required = false, defaultValue = "false") Boolean updateSupport) throws Exception {
         List<UserImportExcelVO> list = ExcelUtils.read(file, UserImportExcelVO.class);

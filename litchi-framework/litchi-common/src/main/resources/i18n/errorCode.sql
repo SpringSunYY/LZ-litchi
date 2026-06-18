@@ -180,3 +180,20 @@ VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_EN, @LOCALE_TARGET_B
 DELETE FROM infra_i18n_message WHERE message_key = 'validation.in.dict' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('字典值不合法', 'validation.in.dict', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '字典值不合法，请在{}中选择', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- =============================================
+-- 演示模式
+-- =============================================
+
+-- 演示模式禁止操作
+DELETE FROM infra_i18n_key WHERE message_key = 'demo.mode.error';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('演示模式禁止操作', 'demo.mode.error', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'demo.mode.error' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('演示模式禁止操作', 'demo.mode.error', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'demo mode, sensitive or key information cannot be modified.', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'demo.mode.error' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('演示模式禁止操作', 'demo.mode.error', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '演示模式，敏感或关键信息不可以操作', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

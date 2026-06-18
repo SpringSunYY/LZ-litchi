@@ -6,6 +6,8 @@ import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
+import com.lz.framework.demoMode.enums.DemoModeEnum;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.framework.tenant.core.aop.TenantIgnore;
 import com.lz.module.system.controller.admin.tenant.vo.tenant.*;
@@ -95,6 +97,7 @@ public class TenantController {
     @PutMapping("/update")
     @Operation(summary = "更新租户")
     @PreAuthorize("@ss.hasPermission('system:tenant:update')")
+    @DemoMode(allowed = DemoModeEnum.PUT, forbiddenFieldValues = {"id=1"})
     public CommonResult<Boolean> updateTenant(@Valid @RequestBody TenantSaveReqVO updateReqVO) {
         tenantService.updateTenant(updateReqVO);
         return success(true);
@@ -119,6 +122,7 @@ public class TenantController {
     @Operation(summary = "删除租户")
     @Parameter(name = "id", description = "编号", required = true, example = "1024")
     @PreAuthorize("@ss.hasPermission('system:tenant:delete')")
+    @DemoMode(allowed = DemoModeEnum.DELETE, forbiddenDeleteIds = {"1"})
     public CommonResult<Boolean> deleteTenant(@RequestParam("id") Long id) {
         tenantService.deleteTenant(id);
         return success(true);
@@ -128,6 +132,7 @@ public class TenantController {
     @Parameter(name = "ids", description = "编号列表", required = true)
     @Operation(summary = "批量删除租户")
     @PreAuthorize("@ss.hasPermission('system:tenant:delete')")
+    @DemoMode(allowed = DemoModeEnum.DELETE, forbiddenDeleteIds = {"1"})
     public CommonResult<Boolean> deleteTenantList(@RequestParam("ids") List<Long> ids) {
         tenantService.deleteTenantList(ids);
         return success(true);

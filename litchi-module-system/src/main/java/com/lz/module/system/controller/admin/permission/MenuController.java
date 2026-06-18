@@ -3,6 +3,7 @@ package com.lz.module.system.controller.admin.permission;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.module.system.controller.admin.permission.vo.menu.MenuListReqVO;
 import com.lz.module.system.controller.admin.permission.vo.menu.MenuRespVO;
 import com.lz.module.system.controller.admin.permission.vo.menu.MenuSaveVO;
@@ -27,6 +28,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/system/menu")
 @Validated
+@DemoMode
 public class MenuController {
 
     @Resource

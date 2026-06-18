@@ -5,6 +5,7 @@ import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageParam;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.demoMode.annotation.DemoMode;
 import com.lz.framework.excel.core.util.ExcelUtils;
 import com.lz.module.infra.controller.admin.i18n.vo.i18nMessage.*;
 import com.lz.module.infra.dal.dataobject.i18n.I18nMessageDO;
@@ -35,6 +36,7 @@ import static com.lz.framework.excel.core.annotations.ExcelDirection.ONLY_IMPORT
 @RequestMapping("/infra/i18n/message")
 @Validated
 @Slf4j
+@DemoMode
 public class I18nMessageController {
 
     @Resource
