@@ -206,6 +206,8 @@ public class DictDataServiceImpl implements DictDataService {
     }
 
     @Override
+    @CacheEvict(cacheNames = {RedisKeyConstants.DICT},
+            allEntries = true)// allEntries 清空所有缓存，因为字典数据需要用到，只清除一部分缓存不能实时更新
     public void generateDictI18n() {
         // 1、拿到所有字典数据
         List<DictDataDO> dictDataList = dictDataMapper.selectList();

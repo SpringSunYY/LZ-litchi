@@ -157,7 +157,7 @@ public class GlobalExceptionHandler {
             // 组合校验，参考自 https://t.zsxq.com/3HVTx
             List<ObjectError> allErrors = ex.getBindingResult().getAllErrors();
             if (CollUtil.isNotEmpty(allErrors)) {
-                errorMessage = allErrors.get(0).getDefaultMessage();
+                errorMessage = allErrors.getFirst().getDefaultMessage();
             }
         } else {
             errorMessage = fieldError.getDefaultMessage();
@@ -197,7 +197,6 @@ public class GlobalExceptionHandler {
         if (ex.getCause() instanceof InvalidFormatException invalidFormatException) {
             Class<?> targetType = invalidFormatException.getTargetType();
             String needType = targetType != null ? targetType.getSimpleName() : "未知";
-            System.out.println("needType = " + needType);
             String message = StrUtils.format(
                     I18nUtils.getMessage(GlobalErrorCodeConstants.REQUEST_PARAMETER_TYPE_ERROR,
                             "请求参数类型错误，需要的类型为{}，当前类型为{}"),

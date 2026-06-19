@@ -31,7 +31,6 @@ public class DictFrameworkUtils {
     private static final LoadingCache<String, List<DictDataRespDTO>> GET_DICT_DATA_CACHE = CacheUtils.buildAsyncReloadingCache(
             Duration.ofMinutes(1L), // 过期时间 1 分钟
             new CacheLoader<String, List<DictDataRespDTO>>() {
-
                 @Override
                 public List<DictDataRespDTO> load(String dictType) {
                     return DictUtils.getDictDataList(dictType);
