@@ -42,6 +42,18 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
         buildI18nHeadMap(head, direction);
     }
 
+    /**
+     * 扫描指定VO类的所有字段，构建列索引到i18n翻译表头的映射
+     * <p>
+     * 列索引计算规则：
+     * <ul>
+     *   <li>若{@link ExcelProperty#index()}显式指定了非-1的值，使用该值作为列索引</li>
+     *   <li>否则使用自动递增的{@code colIndex}</li>
+     * </ul>
+     *
+     * @param head      待扫描的Excel VO类
+     * @param direction 当前Excel操作方向，用于排除相反方向的字段
+     */
     private void buildI18nHeadMap(Class<?> head, ExcelDirection direction) {
         int colIndex = 0;
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
@@ -63,9 +75,11 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
             ExcelI18n excelI18n = field.getAnnotation(ExcelI18n.class);
             ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
 
+            // 确定当前字段的列索引：优先使用@ExcelProperty显式指定值，否则使用自动递增序号
             int explicitIndex = excelProperty != null ? excelProperty.index() : -1;
             int fieldColIndex = explicitIndex != -1 ? explicitIndex : colIndex;
 
+            // 仅当存在@ExcelI18n注解且翻译文本非空时记录映射
             if (excelI18n != null) {
                 String translated = I18nUtils.getMessage(excelI18n.i18nKey());
                 if (StrUtil.isNotEmpty(translated)) {
@@ -77,11 +91,26 @@ public class I18nHeadWriteHandler implements RowWriteHandler {
         }
     }
 
+
+    /**
+     * 判断字段是否为静态常量或transient字段，这些字段不参与Excel序列化
+     *
+     * @param field 待检查的字段对象
+     * @return 若字段为static final修饰的编译期常量，或为transient修饰的字段，返回true；
+     *         否则返回false
+     */
     private static boolean isStaticFinalOrTransient(Field field) {
         return (Modifier.isStatic(field.getModifiers()) && Modifier.isFinal(field.getModifiers()))
                 || Modifier.isTransient(field.getModifiers());
     }
 
+    /**
+     * 判断字段是否应该被排除（列方向）
+     *
+     * @param field      待检查的字段对象
+     * @param direction  当前Excel操作方向
+     * @return 若字段被排除，返回true；否则返回false
+     */
     private static boolean shouldExcludeByDirection(Field field, ExcelDirection direction) {
         ExcelType excelType = field.getAnnotation(ExcelType.class);
         if (excelType == null) {

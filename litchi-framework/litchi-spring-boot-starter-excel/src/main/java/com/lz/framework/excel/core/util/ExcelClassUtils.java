@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,28 +48,34 @@ public class ExcelClassUtils {
      * @return 需要排除的字段名集合
      */
     public static List<String> getExcludeColumnFiledNames(Class<?> head, ExcelDirection direction) {
-        List<String> excludeFields = new java.util.ArrayList<>();
+        List<String> excludeFields = new ArrayList<>();
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
 
         for (Field field : head.getDeclaredFields()) {
+            // 静态、常量、 transient
             if (isStaticFinalOrTransient(field)) {
                 continue;
             }
+            // 判断是否忽略
             if (field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
+            // 判断是否忽略
             if (ignoreUnannotated && !field.isAnnotationPresent(ExcelProperty.class)) {
                 continue;
             }
 
+            // 判断是否忽略
             ExcelType excelType = field.getAnnotation(ExcelType.class);
             if (excelType == null) {
                 continue;
             }
 
-            if (direction == ExcelDirection.ONLY_EXPORT && excelType.value() == ExcelDirection.ONLY_IMPORT) {
+            if (direction == ExcelDirection.ONLY_EXPORT
+                    && excelType.value() == ExcelDirection.ONLY_IMPORT) {
                 excludeFields.add(field.getName());
-            } else if (direction == ExcelDirection.ONLY_IMPORT && excelType.value() == ExcelDirection.ONLY_EXPORT) {
+            } else if (direction == ExcelDirection.ONLY_IMPORT
+                    && excelType.value() == ExcelDirection.ONLY_EXPORT) {
                 excludeFields.add(field.getName());
             }
         }
@@ -76,12 +83,20 @@ public class ExcelClassUtils {
     }
 
     /**
-     * 构建 i18n VO 类（将 @ExcelProperty value 替换为 i18n 翻译后的值，排除 direction 方向的字段）
+     * 构建 i18n VO 子类——将 {@link ExcelProperty} 的 value 替换为 i18n 翻译后的文本，
+     * 并排除与当前方向相反的字段
+     * <p>
+     * 子类通过 ASM 动态生成，继承原始 VO 类，利用 shadow field 覆盖父类注解，
+     * 避免修改原始字节码，对 EasyExcel 完全透明。
+     * <p>
+     * 结果会按 {@code 原始类名_direction} 缓存，重复调用直接返回缓存值。
      *
      * @param head      原始 VO 类
-     * @param direction 方向：IMPORT=导入（排除 EXPORT 字段），EXPORT=导出（排除 IMPORT 字段）
+     * @param direction 操作方向：{@code ONLY_IMPORT} 导入时排除导出字段，
+     *                  {@code ONLY_EXPORT} 导出时排除导入字段
      * @param <T>       VO 类型
-     * @return i18n VO 子类，如果无需国际化则返回原始类
+     * @return i18n VO 子类；若无需国际化且无排除字段，直接返回原始类；
+     *         生成失败时降级返回原始类
      */
     @SuppressWarnings("unchecked")
     public static <T> Class<? extends T> buildI18nClass(Class<T> head, ExcelDirection direction) {
@@ -92,10 +107,14 @@ public class ExcelClassUtils {
         }
 
         List<String> excludeFields = getExcludeColumnFiledNames(head, direction);
-        Map<String, I18nFieldInfo> i18nFieldInfos = FIELD_INFO_CACHE.computeIfAbsent(head, k -> buildI18nFieldInfos0(head));
+        Map<String, I18nFieldInfo> i18nFieldInfos = FIELD_INFO_CACHE.computeIfAbsent(head,
+                k -> buildI18nFieldInfos0(head));
+
+        // 检查是否存在实际需要翻译的字段（翻译值与原值不同）
         boolean hasTranslation = !i18nFieldInfos.isEmpty() && i18nFieldInfos.keySet().stream()
                 .anyMatch(headStr -> !headStr.equals(i18nFieldInfos.get(headStr).originalValue()));
 
+        // 无需翻译且无方向排除字段时，直接返回原始类，跳过字节码生成
         if (!hasTranslation && excludeFields.isEmpty()) {
             return head;
         }
@@ -106,6 +125,7 @@ public class ExcelClassUtils {
             CLASS_CACHE.put(cacheKey, result);
             return result;
         } catch (Exception e) {
+            // 生成失败时降级返回原始类，不影响业务正常运行
             log.warn("[ExcelClassUtils] generate i18n class failed: {}", e.getMessage());
             return head;
         }
@@ -131,27 +151,48 @@ public class ExcelClassUtils {
      */
     private record I18nFieldInfo(Field field, String originalValue) {}
 
+    /**
+     * 扫描指定VO类的所有字段，收集需要进行i18n国际化替换的列头信息
+     * <p>
+     * 仅收集同时满足以下条件的字段：
+     * <ul>
+     *   <li>非static final、非transient字段</li>
+     *   <li>未被{@link ExcelIgnore}或{@link ExcelIgnoreUnannotated}排除</li>
+     *   <li>未被{@link ExcelType}标记为ONLY_IMPORT</li>
+     *   <li>标注了{@link ExcelProperty}且未指定index（即按名称匹配列）</li>
+     *   <li>标注了{@link ExcelI18n}且i18n翻译值与原始列头值不同</li>
+     * </ul>
+     *
+     * @param head 待扫描的Excel VO类
+     * @return 以i18n翻译后的列头为key、{@link I18nFieldInfo}为value的有序Map；
+     *         若无需要国际化的字段，返回空Map
+     */
     private static Map<String, I18nFieldInfo> buildI18nFieldInfos0(Class<?> head) {
         Map<String, I18nFieldInfo> map = new LinkedHashMap<>();
         boolean ignoreUnannotated = head.isAnnotationPresent(ExcelIgnoreUnannotated.class);
 
         for (Field field : head.getDeclaredFields()) {
+            // 过滤static final和transient字段
             if (isStaticFinalOrTransient(field)) {
                 continue;
             }
+            // 过滤被忽略或未标注@ExcelProperty的字段
             if ((ignoreUnannotated && !field.isAnnotationPresent(ExcelProperty.class))
                     || field.isAnnotationPresent(ExcelIgnore.class)) {
                 continue;
             }
+            // 过滤仅导入方向的字段
             if (isIgnoreByExcelType(field, ExcelDirection.ONLY_IMPORT)) {
                 continue;
             }
 
+            // 仅处理按名称匹配列的字段（排除index索引匹配的字段）
             ExcelProperty excelProperty = field.getAnnotation(ExcelProperty.class);
             if (excelProperty == null || excelProperty.index() != -1) {
                 continue;
             }
 
+            // 收集i18n翻译值与原始值不同的字段
             ExcelI18n excelI18n = field.getAnnotation(ExcelI18n.class);
             if (excelI18n != null) {
                 String i18nValue = I18nUtils.getMessage(excelI18n.i18nKey());
@@ -164,12 +205,28 @@ public class ExcelClassUtils {
         return map;
     }
 
+
+    /**
+     * 判断字段是否为静态常量或transient字段，这些字段不参与Excel序列化
+     *
+     * @param field 待检查的字段对象
+     * @return 若字段为static final修饰的编译期常量，或为transient修饰的字段，返回true；
+     *         否则返回false
+     */
     private static boolean isStaticFinalOrTransient(Field field) {
         int modifiers = field.getModifiers();
         return (Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers))
                 || Modifier.isTransient(modifiers);
     }
 
+    /**
+     * 根据{@link ExcelType}注解判断字段在指定Excel操作方向下是否需要忽略
+     *
+     * @param field       待检查的字段对象
+     * @param excludeType 当前操作的Excel方向（导入或导出）
+     * @return 若字段标注了{@link ExcelType}注解且其值与excludeType一致，返回true；
+     *         若未标注该注解或注解值不匹配，返回false
+     */
     private static boolean isIgnoreByExcelType(Field field, ExcelDirection excludeType) {
         ExcelType excelType = field.getAnnotation(ExcelType.class);
         if (excelType == null) {
@@ -198,6 +255,15 @@ public class ExcelClassUtils {
             }
         }
 
+        /**
+         * 生成i18n VO子类：使用ASM动态生成字节码，通过自定义ClassLoader加载为Class对象
+         * <p>
+         * 子类命名规则为 {@code 原类名_I18nImport}，继承原始VO类，
+         * 通过shadow field覆盖父类的{@link ExcelProperty}注解值为i18n翻译文本
+         *
+         * @return 动态生成并加载的i18n VO子类
+         * @throws Exception 字节码生成或类加载失败时抛出
+         */
         Class<?> generate() throws Exception {
             String className = original.getName() + "_I18nImport";
             byte[] bytecode = generateBytecode(className);
@@ -205,6 +271,19 @@ public class ExcelClassUtils {
             return classLoader.loadClass(className, bytecode);
         }
 
+        /**
+         * 使用ASM动态生成i18n VO子类的字节码
+         * <p>
+         * 生成的子类继承原始VO类，通过声明同名字段（shadow field）覆盖父类注解：
+         * <ul>
+         *   <li>需排除的字段 → 添加 {@code @ExcelIgnore} 注解</li>
+         *   <li>需i18n翻译的字段 → 替换 {@code @ExcelProperty} 的value为翻译后文本</li>
+         *   <li>其余字段 → 不生成shadow field，复用父类定义</li>
+         * </ul>
+         *
+         * @param className 待生成的子类全限定名
+         * @return 编译后的字节码数组
+         */
         byte[] generateBytecode(String className) {
             ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
             String superClassName = original.getName().replace('.', '/');
@@ -212,6 +291,7 @@ public class ExcelClassUtils {
             cw.visit(Opcodes.V1_8, Opcodes.ACC_SUPER + Opcodes.ACC_PUBLIC,
                     className.replace('.', '/'), null, superClassName, null);
 
+            // 生成无参构造方法，直接调用父类构造器
             MethodVisitor mv = cw.visitMethod(Opcodes.ACC_PUBLIC, "<init>", "()V", null, null);
             mv.visitCode();
             mv.visitVarInsn(Opcodes.ALOAD, 0);

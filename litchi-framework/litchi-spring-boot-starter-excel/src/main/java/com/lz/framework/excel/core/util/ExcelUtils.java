@@ -66,7 +66,7 @@ public class ExcelUtils {
                     .registerConverter(new LongStringConverter());
 
             if (!excludeFields.isEmpty()) {
-                builder.excludeColumnFiledNames(excludeFields);
+                builder.excludeColumnFieldNames(excludeFields);
             }
 
             builder.sheet(sheetName).doWrite(data);

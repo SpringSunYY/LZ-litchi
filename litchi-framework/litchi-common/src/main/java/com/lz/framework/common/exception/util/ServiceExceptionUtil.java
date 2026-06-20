@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
  * 目的在于，格式化异常信息提示。
  * 考虑到 String.format 在参数不正确时会报错，因此使用 {} 作为占位符，并使用 {@link #doFormat(int, String, Object...)} 方法来格式化
  * <p>
- * 支持国际化：当 {@link ErrorCode#getI18n()} 不为空时，优先从 I18nUtils 获取翻译后的消息模板，再进行格式化。
+ * 支持国际化：当 {@link ErrorCode#getI18nKey()} 不为空时，优先从 I18nUtils 获取翻译后的消息模板，再进行格式化。
  *
  */
 @Slf4j
@@ -54,7 +54,7 @@ public class ServiceExceptionUtil {
 
     public static void exceptionExcel(ErrorCode errorCode, Integer rowNum, String message) {
         //拿到错误码的国际化
-        String resolvedPattern = resolveI18nPattern(errorCode.getI18n(), errorCode.getMsg());
+        String resolvedPattern = resolveI18nPattern(errorCode.getI18nKey(), errorCode.getMsg());
         //拿到行异常
         String rowNumError = I18nUtils.getMessage(GlobalErrorCodeConstants.IMPORT_ROW_ERROR, "第{}行");
         //格式化行异常
@@ -71,7 +71,7 @@ public class ServiceExceptionUtil {
     // ========== 国际化消息解析 ==========
 
     private static String resolveMessage(ErrorCode errorCode, Object... params) {
-        String i18n = errorCode.getI18n();
+        String i18n = errorCode.getI18nKey();
         String messagePattern = resolveI18nPattern(i18n, errorCode.getMsg());
         return doFormat(errorCode.getCode(), messagePattern, params);
     }

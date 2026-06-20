@@ -21,7 +21,8 @@ public class ErrorCode {
     /**
      * i18n 国际化
      */
-    private final String i18n;
+    private final String i18nKey;
+
     /**
      * 错误提示
      */
@@ -31,9 +32,9 @@ public class ErrorCode {
         this(code, null, message);
     }
 
-    public ErrorCode(Integer code, String i18n, String message) {
+    public ErrorCode(Integer code, String i18nKey, String message) {
         this.code = code;
-        this.i18n = i18n;
+        this.i18nKey = i18nKey;
         this.msg = message;
     }
 

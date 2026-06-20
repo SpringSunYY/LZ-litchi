@@ -76,7 +76,7 @@ public class ValidationUtils {
             if (CollUtil.isNotEmpty(violations)) {
                 StringBuilder message= new StringBuilder();
                 for (ConstraintViolation<Object> v : violations) {
-                    message.append(v.getMessage()).append("、");
+                    message.append(v.getMessage()).append(" ");
                 }
                 message.deleteCharAt(message.length() - 1);
                 ServiceExceptionUtil.exceptionExcel(errorCode, index, message.toString());

@@ -111,7 +111,7 @@ export function useFormSchema(): VbenFormSchema[] {
         moduleType: '$extendConfig.get('i18nModuleType')',
       },
 #elseif($column.htmlType == "select")## 下拉框
-      component: #if($isI18n)'I18nSelect#else Select'#end,
+      component: #if($isI18n)'I18nSelect'#else Select'#end,
       componentProps: {
         #if ("" != $dictType)## 有数据字典
         options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -224,7 +224,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
         ]),
       },
 #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
-      component: #if($isI18n)'I18nSelect#else Select'#end,
+      component: #if($isI18n)'I18nSelect'#else Select'#end,
       componentProps: {
         allowClear: true,
         #if ("" != $dictType)## 设置了 dictType 数据字典的情况
@@ -411,7 +411,7 @@ export function use${subSimpleClassName}FormSchema(): VbenFormSchema[] {
                         #elseif($column.htmlType == "editor")## 文本编辑器
                             component: 'RichTextarea',
                         #elseif($column.htmlType == "select")## 下拉框
-                            component: #if($isI18n)'I18nSelect#else Select'#end,
+                            component: #if($isI18n)'I18nSelect'#else Select'#end,
                             componentProps: {
                                 #if ("" != $dictType)## 有数据字典
                                     options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),
@@ -525,7 +525,7 @@ export function use${subSimpleClassName}GridFormSchema(): VbenFormSchema[] {
                         ]),
                     },
                 #elseif ($column.htmlType == "select" || $column.htmlType == "radio")
-                    component: #if($isI18n)'I18nSelect#else Select'#end,
+                    component: #if($isI18n)'I18nSelect'#else Select'#end,
                     componentProps: {
                         allowClear: true,
                         #if ("" != $dictType)## 设置了 dictType 数据字典的情况
@@ -752,7 +752,7 @@ export function use${subSimpleClassName}GridColumns(): VxeTableGridOptions<${sim
                                 #elseif($column.htmlType == "editor")## 文本编辑器
                                     component: 'RichTextarea',
                                 #elseif($column.htmlType == "select")## 下拉框
-                                    component: #if($isI18n)'I18nSelect#else Select'#end,
+                                    component: #if($isI18n)'I18nSelect'#else Select'#end,
                                     componentProps: {
                                         #if ("" != $dictType)## 有数据字典
                                             options: getDictOptions(DICT_TYPE.$dictType.toUpperCase(), '$dictMethod'),

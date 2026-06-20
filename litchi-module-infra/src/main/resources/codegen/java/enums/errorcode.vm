@@ -1,23 +1,23 @@
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
 #set (${i18nModuleType} = $extendConfig.get('i18nModuleType'))
 // ========== ${table.classComment} ==========
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS = new ErrorCode(1_003_000_001#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.notExists",#end, "${table.classComment}不存在");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS = new ErrorCode(1_003_000_001#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.notExists"#end, "${table.classComment}不存在");
 ## 特殊：树表专属逻辑
 #if ( $table.templateType == 2 )
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN = new ErrorCode(1_003_000_002#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.existChildren",#end, "存在子${table.classComment}，无法删除");
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXISTS = new ErrorCode(1_003_000_003#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.parentNotExists",#end, "父级${table.classComment}不存在");
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_PARENT_ERROR = new ErrorCode(1_003_000_004#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.parentError",#end, "不能设置自己为父${table.classComment}");
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_DUPLICATE = new ErrorCode(1_003_000_005#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.${treeNameColumn_javaField_underlineCase}Duplicate",#end, "已经存在该${treeNameColumn.columnComment}的${table.classComment}");
-ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_PARENT_IS_CHILD = new ErrorCode(1_003_000_006#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.parentIsChild",#end, "不能设置自己的子${treeNameColumn.columnComment}为父${treeNameColumn.columnComment}");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_EXIST_CHILDREN = new ErrorCode(1_003_000_002#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.existChildren"#end, "存在子${table.classComment}，无法删除");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_PARENT_NOT_EXISTS = new ErrorCode(1_003_000_003#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.parentNotExists"#end, "父级${table.classComment}不存在");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_PARENT_ERROR = new ErrorCode(1_003_000_004#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.parentError"#end, "不能设置自己为父${table.classComment}");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_DUPLICATE = new ErrorCode(1_003_000_005#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.${treeNameColumn_javaField_underlineCase}Duplicate"#end, "已经存在该${treeNameColumn.columnComment}的${table.classComment}");
+ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_PARENT_IS_CHILD = new ErrorCode(1_003_000_006#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.parentIsChild"#end, "不能设置自己的子${treeNameColumn.columnComment}为父${treeNameColumn.columnComment}");
 #end
 ## 特殊：主子表专属逻辑（ERP 情况）
 #if ( $table.templateType == 11 )
 #foreach ($subTable in $subTables)
 #set ($index = $foreach.count - 1)
 
-ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_NOT_EXISTS = new ErrorCode(1_003_000_007#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.notExists",#end, "${subTable.classComment}不存在");
+ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_NOT_EXISTS = new ErrorCode(1_003_000_007#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.notExists"#end, "${subTable.classComment}不存在");
 #if ( !$subTable.subJoinMany )
-ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS = new ErrorCode(1_003_000_008#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.exists",#end, "${subTable.classComment}已存在");
+ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS = new ErrorCode(1_003_000_008#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.exists"#end, "${subTable.classComment}已存在");
 #end
 #end
 #end
