@@ -377,3 +377,19 @@ litchi:
 ### 测试是否成功
 
 ![项目部署-测试](assets/项目部署-测试.jpg)
+
+
+
+## 🌟 致谢
+
+感谢芋道框架，感谢所有贡献者和使用者！如果这个项目对您有帮助，欢迎给个Star⭐，这样就对我很有帮助了。
+## Star History
+
+<p align="center">
+  <a href="https://github.com/SpringSunYY">
+    <img
+      src="https://api.star-history.com/svg?repos=SpringSunYY/LZ-litchi,SpringSunYY/LZ-litchi-ui-admin-vben,SpringSunYY/LZ-Picture,SpringSunYY/LZ-RuoYi,SpringSunYY/LZ-RuoYi-App,SpringSunYY/RuoYi_vue_flask&type=Date"
+      alt="Star History Chart"
+    />
+  </a>
+</p>
