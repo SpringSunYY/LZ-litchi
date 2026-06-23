@@ -45,9 +45,9 @@
 ## 🐶 新手必读
 
 * 演示地址：https://www.litchi.work   【租户编码：litchi、账号：admin、密码：admin123】
-* 演示视频：待定待定
-* 启动教程：待定待定
-* 视频教程：待定待定
+* 演示视频：https://www.bilibili.com/video/BV1RR7N6QEZo/?vd_source=c8ae193313b392ba04cef0f904b7106f
+* 启动教程：https://www.bilibili.com/video/BV1GMjm6cENu/?vd_source=c8ae193313b392ba04cef0f904b7106f
+* 视频教程：https://space.bilibili.com/3546627304327173/lists/8392666?type=season
 * 前端代码：https://github.com/SpringSunYY/LZ-litchi-ui-admin-vben
 
 ## 🐯 平台简介
