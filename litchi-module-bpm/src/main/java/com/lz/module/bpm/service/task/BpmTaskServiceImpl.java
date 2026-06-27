@@ -1518,6 +1518,17 @@ public class BpmTaskServiceImpl implements BpmTaskService {
                 () -> runtimeService.trigger(execution.getId()));
     }
 
+    @Override
+    public List<HistoricTaskInstance> getFinishedTaskListByProcessInstanceIdWithoutCancel(String processInstanceId) {
+        return historyService.createHistoricTaskInstanceQuery()
+                .finished()
+                .includeTaskLocalVariables()
+                .processInstanceId(processInstanceId)
+                .taskVariableValueNotEquals(BpmnVariableConstants.TASK_VARIABLE_STATUS,
+                        BpmTaskStatusEnum.CANCEL.getStatus())
+                .orderByHistoricTaskInstanceStartTime().asc().list();
+    }
+
     /**
      * 重置多实例计数器
      * 当退回发起人时，需要将所有多实例节点的计数器重置为 0，否则会导致审批人漏掉

@@ -219,4 +219,9 @@ public class BpmProcessDefinitionInfoDO extends BaseDO {
     @TableField(typeHandler = JacksonTypeHandler.class)
     private BpmModelMetaInfoVO.HttpRequestSetting taskAfterTriggerSetting;
 
+    /**
+     * 自定义打印模板设置
+     */
+    @TableField(typeHandler = JacksonTypeHandler.class)
+    private BpmModelMetaInfoVO.PrintTemplateSetting printTemplateSetting;
 }

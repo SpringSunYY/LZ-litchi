@@ -179,4 +179,17 @@ public class BpmModelMetaInfoVO {
 
     }
 
+    @Schema(description = "自定义打印模板设置")
+    @Data
+    public static class PrintTemplateSetting {
+
+        @Schema(description = "是否自定义打印模板", example = "false")
+        @NotNull(message = "是否自定义打印模板不能为空")
+        private Boolean enable;
+
+        @Schema(description = "打印模板", example = "<p></p>")
+        private String template;
+
+    }
+
 }
