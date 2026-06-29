@@ -1,5 +1,6 @@
 package com.lz.framework.tenant.core.util;
 
+import com.lz.framework.tenant.config.TenantProperties;
 import com.lz.framework.tenant.core.context.TenantContextHolder;
 
 import java.util.Map;
@@ -13,6 +14,12 @@ import static com.lz.framework.web.core.util.WebFrameworkUtils.HEADER_TENANT_ID;
  * @author 荔枝源码
  */
 public class TenantUtils {
+
+    private static TenantProperties tenantProperties;
+
+    public TenantUtils(TenantProperties tenantProperties) {
+        TenantUtils.tenantProperties = tenantProperties;
+    }
 
     /**
      * 使用指定租户，执行对应的逻辑
@@ -90,6 +97,64 @@ public class TenantUtils {
     }
 
     /**
+     * 系统租户和普通租户的差异化执行
+     *
+     * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
+     * 不传递系统租户参数，使用配置获取
+     *
+     * <p>典型使用场景：
+     * <pre>{@code
+     * Long tenantId = TenantContextHolder.getTenantId();
+     * TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
+     *     () -> doSomething());
+     * }</pre>
+     *
+     * @param tenantId 租户编号
+     * @param runnable 逻辑
+     */
+    public static void executeSystemOrTenant(Long tenantId, Runnable runnable) {
+        boolean isSystemTenant = false;
+        if (tenantProperties.getSystemTenantId() != null) {
+            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
+        }
+        if (isSystemTenant) {
+            TenantContextHolder.setIgnore(true);
+            runnable.run();
+        } else {
+            execute(tenantId, runnable);
+        }
+    }
+
+    /**
+     * 系统租户和普通租户的差异化执行
+     *
+     * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
+     * 不传递系统租户参数，使用配置获取，也不传递租户编号，使用当前租户编号
+     *
+     * <p>典型使用场景：
+     * <pre>{@code
+     * Long tenantId = TenantContextHolder.getTenantId();
+     * TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
+     *     () -> doSomething());
+     * }</pre>
+     *
+     * @param runnable 逻辑
+     */
+    public static void executeSystemOrTenant(Runnable runnable) {
+        boolean isSystemTenant = false;
+        Long tenantId = TenantContextHolder.getTenantId();
+        if (tenantProperties.getSystemTenantId() != null && tenantId != null) {
+            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
+        }
+        if (isSystemTenant) {
+            TenantContextHolder.setIgnore(true);
+            runnable.run();
+        } else {
+            execute(tenantId, runnable);
+        }
+    }
+
+    /**
      * 系统租户和普通租户的差异化执行，如果是系统租户去除租户隔离
      *
      * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
@@ -101,6 +166,60 @@ public class TenantUtils {
      * @return 结果
      */
     public static <V> V executeSystemOrTenant(Long tenantId, boolean isSystemTenant, Callable<V> callable) {
+        if (isSystemTenant) {
+            try {
+                TenantContextHolder.setIgnore(true);
+                return callable.call();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return execute(tenantId, callable);
+        }
+    }
+
+    /**
+     * 系统租户和普通租户的差异化执行，如果是系统租户去除租户隔离
+     *
+     * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
+     * 不传递系统租户参数，使用配置获取
+     *
+     * @param tenantId 租户编号
+     * @param callable 逻辑
+     * @return 结果
+     */
+    public static <V> V executeSystemOrTenant(Long tenantId, Callable<V> callable) {
+        boolean isSystemTenant = false;
+        if (tenantProperties.getSystemTenantId() != null) {
+            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
+        }
+        if (isSystemTenant) {
+            try {
+                TenantContextHolder.setIgnore(true);
+                return callable.call();
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            return execute(tenantId, callable);
+        }
+    }
+
+    /**
+     * 系统租户和普通租户的差异化执行，如果是系统租户去除租户隔离
+     *
+     * <p>如果当前是系统租户，则直接执行（忽略租户隔离，可操作所有租户数据）；
+     * 不传递系统租户参数，使用配置获取，不传递租户编号，使用当前租户编号
+     *
+     * @param callable 逻辑
+     * @return 结果
+     */
+    public static <V> V executeSystemOrTenant(Callable<V> callable) {
+        boolean isSystemTenant = false;
+        Long tenantId = TenantContextHolder.getTenantId();
+        if (tenantProperties.getSystemTenantId() != null && tenantId != null) {
+            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
+        }
         if (isSystemTenant) {
             try {
                 TenantContextHolder.setIgnore(true);

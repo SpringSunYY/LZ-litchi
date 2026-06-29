@@ -515,16 +515,25 @@ public class TenantServiceImpl implements TenantService {
 
     @Override
     public boolean isSystemTenant(TenantDO tenant) {
-        return Objects.equals(tenant.getId(), TenantDO.PACKAGE_ID_SYSTEM);
+        // 如果禁用，则不执行逻辑，表示没有多租户
+        if (tenantProperties == null){
+            return true;
+        }
+        return Objects.equals(tenant.getId(), tenantProperties.getSystemTenantId());
     }
 
     @Override
     public boolean isSystemTenant() {
         return isSystemTenantById(TenantContextHolder.getTenantId());
     }
+
     @Override
     public boolean isSystemTenantById(Long id) {
-        return Objects.equals(id, TenantDO.PACKAGE_ID_SYSTEM);
+        // 如果禁用，则不执行逻辑，表示没有多租户
+        if (tenantProperties == null){
+            return true;
+        }
+        return Objects.equals(id, tenantProperties.getSystemTenantId());
 
     }
 

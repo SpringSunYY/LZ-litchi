@@ -7,7 +7,6 @@ import com.lz.framework.common.util.collection.CollectionUtils;
 import com.lz.framework.common.util.date.DateUtils;
 import com.lz.framework.common.util.date.LocalDateTimeUtils;
 import com.lz.framework.common.util.object.BeanUtils;
-import com.lz.framework.tenant.core.context.TenantContextHolder;
 import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.system.controller.admin.tenant.vo.packageSubscribe.TenantPackageSubscribePageReqVO;
 import com.lz.module.system.controller.admin.tenant.vo.packageSubscribe.TenantPackageSubscribeSaveReqVO;
@@ -139,9 +138,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
     public void updateTenantPackageSubscribe(TenantPackageSubscribeSaveReqVO updateReqVO) {
         //这里必须是系统租户才可以操作所有的租户，如果不是系统租户，他有权限的话也只能操作自己的
         //因为如果是所有租户都可以不限制操作的话，会影响数据的一致性，越权等风险
-        Long tenantId = TenantContextHolder.getTenantId();
-        TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
-                () -> updateTenantPackageSubscribeByTenant(updateReqVO));
+        TenantUtils.executeSystemOrTenant(() -> updateTenantPackageSubscribeByTenant(updateReqVO));
     }
 
     private void updateTenantPackageSubscribeByTenant(TenantPackageSubscribeSaveReqVO updateReqVO) {
@@ -170,8 +167,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
 
     @Override
     public void deleteTenantPackageSubscribe(Long id) {
-        Long tenantId = TenantContextHolder.getTenantId();
-        TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
+        TenantUtils.executeSystemOrTenant(
                 () -> {
                     // 校验存在
                     TenantPackageSubscribeDO tenantPackageSubscribeDO = validateTenantPackageSubscribeExists(id);
@@ -185,8 +181,7 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
         if (CollectionUtils.isEmpty(ids)) {
             return;
         }
-        Long tenantId = TenantContextHolder.getTenantId();
-        TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
+        TenantUtils.executeSystemOrTenant(
                 () -> {
                     //先查询所有的订阅
                     List<TenantPackageSubscribeDO> tenantPackageSubscribes = tenantPackageSubscribeMapper.selectByIds(ids);
@@ -212,18 +207,16 @@ public class TenantPackageSubscribeServiceImpl implements TenantPackageSubscribe
     //查询时是需要去掉租户来保证可以看到所有的套餐订阅
     @Override
     public TenantPackageSubscribeDO getTenantPackageSubscribe(Long id) {
-        Long tenantId = TenantContextHolder.getTenantId();
-        return TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
-                () -> tenantPackageSubscribeMapper.selectById(id));
+        return TenantUtils.executeSystemOrTenant(
+                () -> tenantPackageSubscribeMapper.selectById(id)
+        );
     }
 
 
     //查询时是需要去掉租户来保证可以看到所有的套餐订阅
     @Override
     public PageResult<TenantPackageSubscribeDO> getTenantPackageSubscribePage(TenantPackageSubscribePageReqVO pageReqVO) {
-        Long tenantId = TenantContextHolder.getTenantId();
-        return TenantUtils.executeSystemOrTenant(tenantId, tenantService.isSystemTenantById(tenantId),
-                () -> tenantPackageSubscribeMapper.selectPage(pageReqVO));
+        return TenantUtils.executeSystemOrTenant(() -> tenantPackageSubscribeMapper.selectPage(pageReqVO));
     }
 
     @Override

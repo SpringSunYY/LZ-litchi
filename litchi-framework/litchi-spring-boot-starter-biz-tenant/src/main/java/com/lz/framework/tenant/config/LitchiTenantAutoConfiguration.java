@@ -16,6 +16,7 @@ import com.lz.framework.tenant.core.redis.TenantRedisCacheManager;
 import com.lz.framework.tenant.core.security.TenantSecurityWebFilter;
 import com.lz.framework.tenant.core.service.TenantFrameworkService;
 import com.lz.framework.tenant.core.service.TenantFrameworkServiceImpl;
+import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.framework.tenant.core.web.TenantContextWebFilter;
 import com.lz.framework.tenant.core.web.TenantVisitContextInterceptor;
 import com.lz.framework.web.config.WebProperties;
@@ -194,4 +195,9 @@ public class LitchiTenantAutoConfiguration {
         return new TenantRedisCacheManager(cacheWriter, redisCacheConfiguration, tenantProperties.getIgnoreCaches());
     }
 
+    // ========== Utils ==========
+    @Bean
+    public TenantUtils tenantUtils(TenantProperties tenantProperties) {
+        return new TenantUtils(tenantProperties);
+    }
 }

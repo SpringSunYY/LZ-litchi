@@ -314,6 +314,7 @@ litchi:
     popup-type: drawer # 弹窗类型（drawer/modal）
   tenant: # 多租户相关配置项
     enable: true
+    system-tenant-id: 1
     enable-user: false
     user-prefix: /app-api
     ignore-urls:

@@ -27,13 +27,6 @@ import java.util.Set;
 @NoArgsConstructor
 @TenantIgnore
 public class TenantDO extends BaseDO {
-
-    /**
-     * 套餐编号 - 系统
-     */
-    public static final Long PACKAGE_ID_SYSTEM = 1L;
-
-
     /**
      * 租户编号
      */
