@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lz.module.infra.dal.mysql.file.FileMapper">
+
+    <!--
+        一般情况下，尽可能使用 Mapper 进行 CRUD 增删改查即可。
+        无法满足的场景，例如说多表关联查询，才使用 XML 编写 SQL。
+        代码生成器暂时只生成 Mapper XML 文件本身，更多推荐 MybatisX 快速开发插件来生成查询。
+        文档可见：https://www.iocoder.cn/MyBatis/x-plugins/
+     -->
+
+    <select id="selectFileCount"
+            resultType="com.lz.module.infra.controller.admin.file.vo.file.FileCountRespVO">
+        SELECT
+            COUNT(*) AS fileCount,
+            COALESCE(SUM(size), 0) AS fileSize
+        FROM infra_file
+        WHERE deleted = false
+        <if test="@com.lz.framework.tenant.core.context.TenantContextHolder@getTenantId() != null">
+            AND tenant_id = ${@com.lz.framework.tenant.core.context.TenantContextHolder@getTenantId()}
+        </if>
+        <if test="configKey != null and configKey != ''">
+            AND config_id = (SELECT id FROM infra_file_config WHERE config_key = #{configKey} AND deleted = false)
+        </if>
+        <if test="name != null and name != ''">
+            AND name LIKE CONCAT('%', #{name}, '%')
+        </if>
+        <if test="path != null and path != ''">
+            AND path LIKE CONCAT('%', #{path}, '%')
+        </if>
+        <if test="absolutePath != null and absolutePath != ''">
+            AND path LIKE CONCAT(#{absolutePath}, '%')
+        </if>
+        <if test="relativePath != null and relativePath != ''">
+            AND path LIKE CONCAT('%', #{relativePath})
+        </if>
+        <if test="type != null and type != ''">
+            AND type = #{type}
+        </if>
+        <if test="size != null and size.length > 0">
+            <if test="size.length == 1">
+                AND size = #{size[0]}
+            </if>
+            <if test="size.length == 2">
+                AND size BETWEEN #{size[0]} AND #{size[1]}
+            </if>
+        </if>
+        <if test="moduleType != null and moduleType != ''">
+            AND name LIKE CONCAT('%', #{moduleType}, '%')
+        </if>
+        <if test="createTime != null and createTime.length == 2">
+            AND create_time BETWEEN #{createTime[0]} AND #{createTime[1]}
+        </if>
+    </select>
+</mapper>

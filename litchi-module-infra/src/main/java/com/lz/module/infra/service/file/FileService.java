@@ -1,11 +1,9 @@
 package com.lz.module.infra.service.file;
 
 import com.lz.framework.common.pojo.PageResult;
-import com.lz.module.infra.controller.admin.file.vo.file.FileCreateReqVO;
-import com.lz.module.infra.controller.admin.file.vo.file.FilePageReqVO;
-import com.lz.module.infra.controller.admin.file.vo.file.FilePresignedUrlRespVO;
-import com.lz.module.infra.controller.admin.file.vo.file.FileRespVO;
+import com.lz.module.infra.controller.admin.file.vo.file.*;
 import com.lz.module.infra.dal.dataobject.file.FileDO;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotEmpty;
 
 import java.util.List;
@@ -111,4 +109,11 @@ public interface FileService {
      */
     String buildFileAccessUrl(String configKey, String path, String scheme, String serverName, int serverPort);
 
+    /**
+     * 获得文件总数
+     *
+     * @param pageVO 分页查询
+     * @return 文件数量
+     */
+    FileCountRespVO getFileCount(@Valid FilePageReqVO pageVO);
 }

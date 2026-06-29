@@ -8,11 +8,9 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.infra.constants.FileConstants;
-import com.lz.module.infra.controller.admin.file.vo.file.FileCreateReqVO;
-import com.lz.module.infra.controller.admin.file.vo.file.FilePageReqVO;
-import com.lz.module.infra.controller.admin.file.vo.file.FilePresignedUrlRespVO;
-import com.lz.module.infra.controller.admin.file.vo.file.FileRespVO;
+import com.lz.module.infra.controller.admin.file.vo.file.*;
 import com.lz.module.infra.dal.dataobject.file.FileConfigDO;
 import com.lz.module.infra.dal.dataobject.file.FileDO;
 import com.lz.module.infra.dal.mysql.file.FileMapper;
@@ -279,6 +277,13 @@ public class FileServiceImpl implements FileService {
     public String buildFileAccessUrl(String configKey, String path, String scheme, String serverName, int serverPort) {
         String domain = scheme + "://" + serverName + (serverPort == 80 || serverPort == 443 ? "" : ":" + serverPort);
         return buildFileAccessUrl(configKey, path, domain);
+    }
+
+    @Override
+    public FileCountRespVO getFileCount(FilePageReqVO pageVO) {
+        return TenantUtils.executeSystemOrTenant(() ->
+                fileMapper.selectFileCount(pageVO)
+        );
     }
 
 }

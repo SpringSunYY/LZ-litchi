@@ -133,4 +133,11 @@ public class FileController {
         return success(fileService.getFilePage(pageVO));
     }
 
+    @GetMapping("/count")
+    @Operation(summary = "获得文件数量")
+    @PreAuthorize("@ss.hasPermission('infra:file:query')")
+    public CommonResult<FileCountRespVO> getFileCount(@Valid FilePageReqVO pageVO) {
+        return success(fileService.getFileCount(pageVO));
+    }
+
 }
