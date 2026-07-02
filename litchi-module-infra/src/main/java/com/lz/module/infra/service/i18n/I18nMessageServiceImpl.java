@@ -67,26 +67,40 @@ public class I18nMessageServiceImpl implements I18nMessageService {
 
     @Override
     public Long createI18nMessage(I18nMessageSaveReqVO createReqVO) {
-        // 插入
-        I18nMessageDO i18nMessage = BeanUtils.toBean(createReqVO, I18nMessageDO.class);
+        initByKey(createReqVO);
         //根据简称、key、使用端查询是否存在
         I18nMessageDO dbI18nMessage = i18nMessageMapper.selectByMessageKey(
-                i18nMessage.getMessageKey(),
-                i18nMessage.getLocale()
+                createReqVO.getMessageKey(),
+                createReqVO.getLocale()
         );
         if (ObjectUtils.isNotNull(dbI18nMessage)) {
             throw exception(I18N_MESSAGE_EXISTS);
         }
+        // 插入
+        I18nMessageDO i18nMessage = BeanUtils.toBean(createReqVO, I18nMessageDO.class);
         i18nMessageMapper.insert(i18nMessage);
         i18nLocaleService.clearI18nCache(i18nMessage.getLocaleTarget(), createReqVO.getLocale());
         // 返回
         return i18nMessage.getId();
     }
 
+    private void initByKey(I18nMessageSaveReqVO createReqVO) {
+        //校验key是否存在
+        I18nKeyDO i18nKeyDO = i18nKeyMapper.selectByMessageKey(createReqVO.getMessageKey());
+        if (ObjectUtils.isNull(i18nKeyDO)) {
+            throw exception(I18N_KEY_NOT_EXISTS);
+        }
+        createReqVO.setMessageKey(i18nKeyDO.getMessageKey());
+        createReqVO.setUseType(i18nKeyDO.getUseType());
+        createReqVO.setModuleType(i18nKeyDO.getModuleType());
+        createReqVO.setIsSystem(i18nKeyDO.getIsSystem());
+    }
+
     @Override
     public void updateI18nMessage(I18nMessageSaveReqVO updateReqVO) {
         // 校验存在
         I18nMessageDO i18nMessageDO = validateI18nMessageExists(updateReqVO.getId());
+        initByKey(updateReqVO);
         // 更新
         I18nMessageDO updateObj = BeanUtils.toBean(updateReqVO, I18nMessageDO.class);
         I18nMessageDO dbI18nMessage = i18nMessageMapper.selectByMessageKey(

@@ -1,6 +1,7 @@
 package com.lz.module.infra.dal.mysql.i18n;
 
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.common.validation.i18n.I18nNotEmpty;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.mybatis.core.mapper.BaseMapperX;
 import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyPageReqVO;
@@ -26,4 +27,8 @@ public interface I18nKeyMapper extends BaseMapperX<I18nKeyDO> {
                 .orderByAsc(I18nKeyDO::getOrderNum));
     }
 
+    default I18nKeyDO selectByMessageKey(@I18nNotEmpty(i18nKey = "infra.i18nMessage.back.messageKey.notEmpty", message = "键不能为空") String messageKey){
+        return selectOne(new LambdaQueryWrapperX<I18nKeyDO>()
+                .eq(I18nKeyDO::getMessageKey, messageKey));
+    };
 }

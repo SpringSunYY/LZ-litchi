@@ -1,6 +1,7 @@
 package com.lz.module.infra.service.i18n;
 
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.common.util.collection.ArrayUtils;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.common.util.object.ObjectUtils;
 import com.lz.module.infra.controller.admin.i18n.vo.i8nKey.I18nKeyPageReqVO;
@@ -62,6 +63,17 @@ public class I18nKeyServiceImpl implements I18nKeyService {
         }
         // 更新
         I18nKeyDO updateObj = BeanUtils.toBean(updateReqVO, I18nKeyDO.class);
+        //更新对应的message信息
+        List<I18nMessageDO> i18nMessageDOS = i18nMessageMapper.selectListByMessageKey(updateReqVO.getMessageKey());
+        if (ArrayUtils.isNotEmpty(i18nMessageDOS)) {
+            i18nMessageDOS.forEach(i18nMessageDO ->{
+                i18nMessageDO.setMessageKey(updateReqVO.getMessageKey());
+                i18nMessageDO.setUseType(updateReqVO.getUseType());
+                i18nMessageDO.setModuleType(updateReqVO.getModuleType());
+                i18nMessageDO.setIsSystem(updateReqVO.getIsSystem());
+            });
+            i18nMessageMapper.updateBatch(i18nMessageDOS);
+        }
         i18nKeyMapper.updateById(updateObj);
     }
 
