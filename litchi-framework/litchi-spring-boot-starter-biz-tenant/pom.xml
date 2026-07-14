@@ -66,6 +66,13 @@
             <optional>true</optional>
         </dependency>
 
+        <!-- 向量模块 -->
+        <dependency>
+            <groupId>com.lz.litchi</groupId>
+            <artifactId>litchi-spring-boot-starter-vector</artifactId>
+            <optional>true</optional>
+        </dependency>
+
         <!-- Test 测试相关 -->
         <dependency>
             <groupId>com.lz.litchi</groupId>

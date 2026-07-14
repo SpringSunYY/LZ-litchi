@@ -87,10 +87,10 @@
             <artifactId>litchi-spring-boot-starter-excel</artifactId>
         </dependency>
 
-        <!-- 国际化相关 -->
+        <!-- 向量检索模块（CLIP/DINOv2/SigLIP 特征提取 + Milvus） -->
         <dependency>
             <groupId>com.lz.litchi</groupId>
-            <artifactId>litchi-spring-boot-starter-i18n</artifactId>
+            <artifactId>litchi-spring-boot-starter-vector</artifactId>
         </dependency>
 
         <dependency>

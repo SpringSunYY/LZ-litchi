@@ -8,6 +8,7 @@ import cn.hutool.crypto.digest.DigestUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
+import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.tenant.core.util.TenantUtils;
 import com.lz.module.infra.constants.FileConstants;
 import com.lz.module.infra.controller.admin.file.vo.file.*;
@@ -24,7 +25,7 @@ import lombok.SneakyThrows;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.List;
+import java.util.*;
 
 import static com.lz.framework.common.exception.util.ServiceExceptionUtil.exception;
 import static com.lz.module.infra.enums.ErrorCodeConstants.*;
@@ -51,6 +52,12 @@ public class FileServiceImpl implements FileService {
      */
     static boolean PATH_SUFFIX_TIMESTAMP_ENABLE = true;
 
+
+    /**
+     * 大多数数据库对 SQL IN 列表的上限在 1000。批量查的 IN 一次不超过这个数。
+     */
+    int BATCH_IN_LIMIT = 1000;
+
     @Resource
     private FileConfigService fileConfigService;
 
@@ -72,7 +79,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @SneakyThrows
-    public String createFile(byte[] content, String name, String directory, String type, String moduleType) {
+    public FileUploadRespVO createFile(byte[] content, String name, String directory, String type, String moduleType) {
         // 0. 获取配置并进行文件校验
         FileConfigDO config = fileConfigService.getMasterFileConfig();
         Assert.notNull(config, "文件配置不存在");
@@ -117,12 +124,14 @@ public class FileServiceImpl implements FileService {
         // 4.1 拿到文件类型，只需要文件的.后缀
         String fileType = FileUtil.extName(name);
         // 5. 保存到数据库
-        fileMapper.insert(new FileDO().setConfigKey(client.getConfigKey())
+        FileDO fileDO = new FileDO();
+        fileMapper.insert(fileDO.setConfigKey(client.getConfigKey())
                 .setName(name).setPath(path).setRelativePath(relativePath).setAbsolutePath(absolutePath)
                 .setType(fileType).setSize(content.length).setModuleType(moduleType));
 
         // 6. 根据配置返回路径
-        return buildReturnPath(config, relativePath, absolutePath);
+        String resultUrl = buildReturnPath(config, relativePath, absolutePath);
+        return new FileUploadRespVO(fileDO.getId(), fileDO.getName(), resultUrl);
     }
 
     /**
@@ -284,6 +293,43 @@ public class FileServiceImpl implements FileService {
         return TenantUtils.executeSystemOrTenant(() ->
                 fileMapper.selectFileCount(pageVO)
         );
+    }
+
+    @Override
+    public Set<String> getExistingFileNames(Collection<String> fileNames) {
+        if (fileNames == null || fileNames.isEmpty()) {
+            return Collections.emptySet();
+        }
+        // 去空 + 去重，避免 IN 列表中出现 NULL
+        Set<String> distinct = new LinkedHashSet<>();
+        for (String n : fileNames) {
+            if (n != null && !n.isEmpty()) {
+                distinct.add(n);
+            }
+        }
+        if (distinct.isEmpty()) {
+            return Collections.emptySet();
+        }
+        Set<String> existed = new HashSet<>();
+        List<String> snapshot = new ArrayList<>(distinct);
+        for (int from = 0; from < snapshot.size(); from += BATCH_IN_LIMIT) {
+            int to = Math.min(from + BATCH_IN_LIMIT, snapshot.size());
+            List<String> chunk = snapshot.subList(from, to);
+            List<FileDO> hits = fileMapper.selectList(
+                    new LambdaQueryWrapperX<FileDO>()
+                            .in(FileDO::getName, chunk)
+                            .select(FileDO::getName));
+            for (FileDO f : hits) {
+                if (f.getName() != null) {
+                    existed.add(f.getName());
+                }
+            }
+        }
+        return existed;
+    }
+
+    public FileDO getFileByFileName(String originalFilename) {
+        return fileMapper.selectOne(FileDO::getName, originalFilename);
     }
 
 }

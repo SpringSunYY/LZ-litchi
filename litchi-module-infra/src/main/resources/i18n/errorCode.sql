@@ -1087,3 +1087,98 @@ VALUES ('地区信息-不能设置子级为父级', 'infra.area.back.parentChild
 DELETE FROM infra_i18n_message WHERE message_key = 'infra.area.back.parentChildError' AND locale = @LOCALE_ZH_CN;
 INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
 VALUES ('地区信息-不能设置子级为父级', 'infra.area.back.parentChildError', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '不能设置自己的子Area为父Area', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- =============================================
+-- 以图搜图（1-001-010-100）
+-- =============================================
+
+-- 123. 目录不能为空
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.dir.empty';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-目录不能为空', 'infra.vectorImage.back.dir.empty', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.dir.empty' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-目录不能为空', 'infra.vectorImage.back.dir.empty', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'Directory cannot be empty', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.dir.empty' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-目录不能为空', 'infra.vectorImage.back.dir.empty', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '目录不能为空', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 124. 目录不存在或不是文件夹
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.dir.notExists';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-目录不存在或不是文件夹', 'infra.vectorImage.back.dir.notExists', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.dir.notExists' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-目录不存在或不是文件夹', 'infra.vectorImage.back.dir.notExists', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'Directory does not exist or is not a folder', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.dir.notExists' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-目录不存在或不是文件夹', 'infra.vectorImage.back.dir.notExists', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '目录不存在或不是文件夹', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 125. 扫描目录失败
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.dir.scanFailed';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-扫描目录失败', 'infra.vectorImage.back.dir.scanFailed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.dir.scanFailed' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-扫描目录失败', 'infra.vectorImage.back.dir.scanFailed', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'Failed to scan directory', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.dir.scanFailed' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-扫描目录失败', 'infra.vectorImage.back.dir.scanFailed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '扫描目录失败', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 126. 图片下载失败
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.url.downloadFailed';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片下载失败', 'infra.vectorImage.back.url.downloadFailed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.url.downloadFailed' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片下载失败', 'infra.vectorImage.back.url.downloadFailed', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'Image download failed', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.url.downloadFailed' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片下载失败', 'infra.vectorImage.back.url.downloadFailed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '图片下载失败', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 127. 图片处理失败
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.file.processFailed';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片处理失败', 'infra.vectorImage.back.file.processFailed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.file.processFailed' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片处理失败', 'infra.vectorImage.back.file.processFailed', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'Image processing failed', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.file.processFailed' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片处理失败', 'infra.vectorImage.back.file.processFailed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '图片处理失败', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 128. 文件为空
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.file.empty';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-文件为空', 'infra.vectorImage.back.file.empty', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.file.empty' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-文件为空', 'infra.vectorImage.back.file.empty', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'File is empty', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.file.empty' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-文件为空', 'infra.vectorImage.back.file.empty', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '文件为空', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+-- 129. 图片特征提取失败
+DELETE FROM infra_i18n_key WHERE message_key = 'infra.vectorImage.back.feature.extractFailed';
+INSERT INTO infra_i18n_key (message_name, message_key, is_system, module_type, use_type, order_num, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片特征提取失败', 'infra.vectorImage.back.feature.extractFailed', @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, @ORDER_NUM, @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.feature.extractFailed' AND locale = @LOCALE_EN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片特征提取失败', 'infra.vectorImage.back.feature.extractFailed', @LOCALE_EN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, 'Image feature extraction failed', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);
+
+DELETE FROM infra_i18n_message WHERE message_key = 'infra.vectorImage.back.feature.extractFailed' AND locale = @LOCALE_ZH_CN;
+INSERT INTO infra_i18n_message (message_name, message_key, locale, locale_target, is_system, module_type, use_type, message, remark, creator, create_time, updater, update_time, deleted)
+VALUES ('以图搜图-图片特征提取失败', 'infra.vectorImage.back.feature.extractFailed', @LOCALE_ZH_CN, @LOCALE_TARGET_BACKEND, @IS_SYSTEM, @MODULE_TYPE, @USE_TYPE_EXCEPTION, '图片特征提取失败', @REMARK, @CREATOR, NOW(), @CREATOR, NOW(), 0);

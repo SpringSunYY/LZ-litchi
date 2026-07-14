@@ -25,7 +25,7 @@ public class FileApiImpl implements FileApi {
 
     @Override
     public String createFile(byte[] content, String name, String directory, String type, String moduleType) {
-        return fileService.createFile(content, name, directory, type, moduleType);
+        return fileService.createFile(content, name, directory, type, moduleType).getUrl();
     }
 
     @Override

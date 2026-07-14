@@ -51,7 +51,7 @@ public class FileController {
         MultipartFile file = uploadReqVO.getFile();
         byte[] content = IoUtil.readBytes(file.getInputStream());
         return success(fileService.createFile(content, file.getOriginalFilename(),
-                uploadReqVO.getDirectory(), file.getContentType(), uploadReqVO.getModuleType()));
+                uploadReqVO.getDirectory(), file.getContentType(), uploadReqVO.getModuleType()).getUrl());
     }
 
     @GetMapping("/presigned-url")

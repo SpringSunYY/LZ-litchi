@@ -80,6 +80,11 @@
         <justauth-starter.version>1.4.0</justauth-starter.version>
         <jimureport.version>1.9.4</jimureport.version>
         <weixin-java.version>4.7.5.B</weixin-java.version>
+        <!--向量vector-->
+        <milvus.version>2.6.22</milvus.version>
+        <onnx.version>1.18.0</onnx.version>
+        <opencv.version>4.9.0-0</opencv.version>
+        <webp-imageio.version>0.1.6</webp-imageio.version>
     </properties>
 
     <dependencyManagement>
@@ -451,12 +456,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.lz.litchi</groupId>
-                <artifactId>litchi-spring-boot-starter-i18n</artifactId>
-                <version>${revision}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>org.projectlombok</groupId>
                 <artifactId>lombok</artifactId>
                 <version>${lombok.version}</version>
@@ -656,6 +655,41 @@
                 <groupId>org.eclipse.paho</groupId>
                 <artifactId>org.eclipse.paho.client.mqttv3</artifactId>
                 <version>${mqtt.version}</version>
+            </dependency>
+
+            <!--vector-->
+            <!-- 向量检索模块（CLIP/DINOv2/SigLIP 特征提取 + Milvus） -->
+            <dependency>
+                <groupId>com.lz.litchi</groupId>
+                <artifactId>litchi-spring-boot-starter-vector</artifactId>
+                <version>${revision}</version>
+            </dependency>
+            <!-- Milvus Java SDK -->
+            <dependency>
+                <groupId>io.milvus</groupId>
+                <artifactId>milvus-sdk-java</artifactId>
+                <version>${milvus.version}</version>
+            </dependency>
+
+            <!-- ONNX Runtime 用于本地推理 CLIP 模型 -->
+            <dependency>
+                <groupId>com.microsoft.onnxruntime</groupId>
+                <artifactId>onnxruntime</artifactId>
+                <version>${onnx.version}</version>
+            </dependency>
+
+            <!-- OpenCV 用于图像处理 -->
+            <dependency>
+                <groupId>org.openpnp</groupId>
+                <artifactId>opencv</artifactId>
+                <version>${opencv.version}</version>
+            </dependency>
+
+            <!-- webp-imageio：补 JDK ImageIO 不识别的 webp 格式（SPI 自动注册 WEBP ImageReader） -->
+            <dependency>
+                <groupId>org.sejda.imageio</groupId>
+                <artifactId>webp-imageio</artifactId>
+                <version>${webp-imageio.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -62,13 +62,6 @@
             <optional>true</optional> <!-- 设置为 optional，只有在 AreaConvert 的时候使用 -->
         </dependency>
 
-        <!-- 国际化相关 -->
-        <dependency>
-            <groupId>com.lz.litchi</groupId>
-            <artifactId>litchi-spring-boot-starter-i18n</artifactId>
-            <optional>true</optional> <!-- 设置为 optional，只有 Excel I18n 功能使用 -->
-        </dependency>
-
         <!-- Test 测试相关 -->
         <dependency>
             <groupId>com.lz.litchi</groupId>

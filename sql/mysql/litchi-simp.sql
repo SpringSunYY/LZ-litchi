@@ -8795,6 +8795,9 @@ INSERT INTO `infra_i18n_key` VALUES (25136, '站内信', 'system.notify.message.
 INSERT INTO `infra_i18n_key` VALUES (25144, '我的站内信', 'system.notify.my.menu', 0, 'system', 6, 6, 'ai auto generate', '0', '2026-07-02 17:08:41', '0', '2026-07-02 17:08:41', b'0');
 INSERT INTO `infra_i18n_key` VALUES (25167, '站内信模板', 'system.notify.template.menu', 0, 'system', 6, 6, 'ai auto generate', '0', '2026-07-02 17:08:41', '0', '2026-07-02 17:08:41', b'0');
 INSERT INTO `infra_i18n_key` VALUES (25291, '短信渠道', 'system.sms.channel.menu', 0, 'system', 6, 6, 'ai auto generate', '0', '2026-07-02 17:08:44', '0', '2026-07-02 17:08:44', b'0');
+INSERT INTO `infra_i18n_key` VALUES (32909, '特征向量-菜单', 'infra.vector.menu', 0, 'infra', 6, NULL, NULL, '1', '2026-07-05 17:51:10', '1', '2026-07-05 17:51:10', b'0');
+INSERT INTO `infra_i18n_key` VALUES (32910, '以图搜图-菜单', 'infra.vector.image.menu', 0, 'infra', 6, NULL, NULL, '1', '2026-07-05 17:52:07', '1', '2026-07-05 17:52:07', b'0');
+INSERT INTO `infra_i18n_key` VALUES (32911, '以图搜图-新增搜图', 'infra.vector.image.action.add', 0, 'infra', 4, NULL, NULL, '1', '2026-07-05 18:04:38', '1', '2026-07-05 18:04:38', b'0');
 
 -- ----------------------------
 -- Table structure for infra_i18n_locale
@@ -10278,6 +10281,12 @@ INSERT INTO `infra_i18n_message` VALUES (50335, '站内信模板', 'system.notif
 INSERT INTO `infra_i18n_message` VALUES (50336, '站内信模板', 'system.notify.template.menu', 'zh-CN', 2, 0, 'system', 6, '站内信模板', 'ai auto generate', '0', '2026-07-02 17:08:41', '0', '2026-07-02 17:08:41', b'0');
 INSERT INTO `infra_i18n_message` VALUES (50583, '短信渠道', 'system.sms.channel.menu', 'en-US', 2, 0, 'system', 6, 'sms channel', 'ai auto generate', '0', '2026-07-02 17:08:44', '0', '2026-07-02 17:08:44', b'0');
 INSERT INTO `infra_i18n_message` VALUES (50584, '短信渠道', 'system.sms.channel.menu', 'zh-CN', 2, 0, 'system', 6, '短信渠道', 'ai auto generate', '0', '2026-07-02 17:08:44', '0', '2026-07-02 17:08:44', b'0');
+INSERT INTO `infra_i18n_message` VALUES (65818, '特征向量-菜单', 'infra.vector.menu', 'en-US', 2, 0, 'infra', 6, 'vector', NULL, '1', '2026-07-05 17:51:26', '1', '2026-07-05 17:51:26', b'0');
+INSERT INTO `infra_i18n_message` VALUES (65819, '特征向量-菜单', 'infra.vector.menu', 'zh-CN', 2, 0, 'infra', 6, '特征向量', NULL, '1', '2026-07-05 17:51:37', '1', '2026-07-05 17:51:37', b'0');
+INSERT INTO `infra_i18n_message` VALUES (65820, '以图搜图-菜单', 'infra.vector.image.menu', 'zh-CN', 2, 0, 'infra', 6, '以图搜图', NULL, '1', '2026-07-05 17:52:21', '1', '2026-07-05 17:52:21', b'0');
+INSERT INTO `infra_i18n_message` VALUES (65821, '以图搜图-菜单', 'infra.vector.image.menu', 'en-US', 2, 0, 'infra', 6, 'Image search', NULL, '1', '2026-07-05 17:53:41', '1', '2026-07-05 17:53:41', b'0');
+INSERT INTO `infra_i18n_message` VALUES (65822, '以图搜图-新增搜图', 'infra.vector.image.action.add', 'zh-CN', 2, 0, 'infra', 4, '新增搜图', NULL, '1', '2026-07-05 18:04:50', '1', '2026-07-05 18:04:50', b'0');
+INSERT INTO `infra_i18n_message` VALUES (65823, '以图搜图-新增搜图', 'infra.vector.image.action.add', 'en-US', 2, 0, 'infra', 4, 'Add Images', NULL, '1', '2026-07-05 18:05:13', '1', '2026-07-05 18:05:13', b'0');
 
 -- ----------------------------
 -- Table structure for infra_job
@@ -11623,36 +11632,37 @@ INSERT INTO `system_mail_template` VALUES (13, '后台用户短信登录', 'admi
 INSERT INTO `system_mail_template` VALUES (14, '测试模版', 'test_01', 2, '荔枝', '一个标题', '<p>你是 {key01} 吗？</p><p><br></p><p>是的话，赶紧 {key02} 一下！</p>', '[\"key01\",\"key02\"]', 0, NULL, '1', '2023-01-26 01:27:40', '1', '2026-06-07 16:02:14', b'0');
 INSERT INTO `system_mail_template` VALUES (15, '3', '2', 2, '7', '4', '<p>45</p>', '[]', 1, '80', '1', '2023-01-27 15:50:35', '1', '2023-01-27 16:34:49', b'0');
 
+
 -- ----------------------------
 -- Table structure for system_menu
 -- ----------------------------
 DROP TABLE IF EXISTS `system_menu`;
 CREATE TABLE `system_menu`  (
-  `id` bigint NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
-  `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '菜单名称',
-  `i18n` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '国际化',
-  `permission` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '权限标识',
-  `type` tinyint NOT NULL COMMENT '菜单类型',
-  `sort` int NOT NULL DEFAULT 0 COMMENT '显示顺序',
-  `parent_id` bigint NOT NULL DEFAULT 0 COMMENT '父菜单ID',
-  `path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '路由地址',
-  `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '#' COMMENT '菜单图标',
-  `component` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '组件路径',
-  `component_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '组件名',
-  `status` tinyint NOT NULL DEFAULT 0 COMMENT '菜单状态',
-  `visible` bit(1) NOT NULL DEFAULT b'1' COMMENT '是否可见',
-  `keep_alive` bit(1) NOT NULL DEFAULT b'1' COMMENT '是否缓存',
-  `always_show` bit(1) NOT NULL DEFAULT b'1' COMMENT '是否总是显示',
-  `layout` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'BasicLayout' COMMENT '布局',
-  `new_windows` bit(1) NULL DEFAULT b'0' COMMENT '新窗口',
-  `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
-  `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
-  `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-  `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
-  `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-  `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
-  PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5084 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
+                                `id` bigint NOT NULL AUTO_INCREMENT COMMENT '菜单ID',
+                                `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL COMMENT '菜单名称',
+                                `i18n` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '国际化',
+                                `permission` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL DEFAULT '' COMMENT '权限标识',
+                                `type` tinyint NOT NULL COMMENT '菜单类型',
+                                `sort` int NOT NULL DEFAULT 0 COMMENT '显示顺序',
+                                `parent_id` bigint NOT NULL DEFAULT 0 COMMENT '父菜单ID',
+                                `path` varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '路由地址',
+                                `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '#' COMMENT '菜单图标',
+                                `component` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '组件路径',
+                                `component_name` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '组件名',
+                                `status` tinyint NOT NULL DEFAULT 0 COMMENT '菜单状态',
+                                `visible` bit(1) NOT NULL DEFAULT b'1' COMMENT '是否可见',
+                                `keep_alive` bit(1) NOT NULL DEFAULT b'1' COMMENT '是否缓存',
+                                `always_show` bit(1) NOT NULL DEFAULT b'1' COMMENT '是否总是显示',
+                                `layout` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT 'BasicLayout' COMMENT '布局',
+                                `new_windows` bit(1) NULL DEFAULT b'0' COMMENT '新窗口',
+                                `remark` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT NULL COMMENT '备注',
+                                `creator` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '创建者',
+                                `create_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                `updater` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NULL DEFAULT '' COMMENT '更新者',
+                                `update_time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                `deleted` bit(1) NOT NULL DEFAULT b'0' COMMENT '是否删除',
+                                PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 5090 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_unicode_ci COMMENT = '菜单权限表' ROW_FORMAT = DYNAMIC;
 
 -- ----------------------------
 -- Records of system_menu
@@ -12224,6 +12234,12 @@ INSERT INTO `system_menu` VALUES (5080, '国际化信息导入', 'infra.i18nMess
 INSERT INTO `system_menu` VALUES (5081, '后端源码', 'back.code.menu', '', 2, 0, 0, 'https://github.com/SpringSunYY/LZ-litchi', 'carbon:code', NULL, NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-06-08 17:34:23', '1', '2026-06-08 17:41:04', b'0');
 INSERT INTO `system_menu` VALUES (5082, '前端源码', 'front.code.menu', '', 2, 0, 0, 'https://github.com/SpringSunYY/LZ-litchi-ui-admin-vben', 'carbon:ibm-watsonx-code-assistant-for-z-understand', NULL, NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-06-08 17:40:50', '1', '2026-06-08 17:40:50', b'0');
 INSERT INTO `system_menu` VALUES (5083, '地区信息导入', 'infra.area.action.import', 'infra:area:import', 3, 5, 2083, '', '', '', NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '', '2026-06-11 19:59:35', '', '2026-06-11 19:59:35', b'0');
+INSERT INTO `system_menu` VALUES (5084, '特征向量', 'infra.vector.menu', '', 1, 13, 2, 'vector', 'carbon:support-vector-machine', NULL, NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-07-05 17:44:55', '1', '2026-07-05 17:46:19', b'0');
+INSERT INTO `system_menu` VALUES (5085, '以图搜图', 'infra.vector.image.menu', 'infra:vectorImage:query', 2, 0, 5084, 'image', 'carbon:image-search', 'infra/vector/image/index', 'VectorImage', 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-07-05 17:50:41', '1', '2026-07-06 15:54:40', b'0');
+INSERT INTO `system_menu` VALUES (5086, '新增搜图', 'infra.vector.image.action.add', 'infra:vectorImage:add', 3, 0, 5085, '', '', '', '', 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-07-05 18:03:59', '1', '2026-07-05 18:03:59', b'0');
+INSERT INTO `system_menu` VALUES (5087, '查询', 'infra.vectorImage.action.query', 'infra:vectorImage:query', 3, 1, 5085, '', '', '', NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-07-05 19:09:00', '1', '2026-07-05 19:09:00', b'0');
+INSERT INTO `system_menu` VALUES (5088, '删除', 'infra.vectorImage.action.delete', 'infra:vectorImage:delete', 3, 3, 5085, '', '', '', NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-07-05 19:09:00', '1', '2026-07-05 19:09:00', b'0');
+INSERT INTO `system_menu` VALUES (5089, '以图搜图', 'infra.vectorImage.action.search', 'infra:vectorImage:search', 3, 4, 5085, '', '', '', NULL, 0, b'1', b'1', b'1', 'BasicLayout', b'0', NULL, '1', '2026-07-05 19:09:00', '1', '2026-07-05 19:09:00', b'0');
 
 -- ----------------------------
 -- Table structure for system_notice

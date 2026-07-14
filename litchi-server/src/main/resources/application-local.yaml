@@ -267,3 +267,139 @@ justauth:
     prefix: 'social_auth_state:' # 缓存前缀，目前只对 Redis 缓存生效，默认 JUSTAUTH::STATE::
     timeout: 24h # 超时时长，目前只对 Redis 缓存生效，默认 3 分钟
 
+--- #################### 向量相关配置 ####################
+litchi:
+  vector:
+    enable: true # 是否启用向量，默认关闭，避免不使用向量也创建bean
+    milvus:
+      # ==============================================================
+      # Milvus 连接配置
+      # ==============================================================
+      # Milvus 服务地址
+      host: 192.168.100.10
+      port: 19530
+      # Milvus 数据库名
+      # dynamic-database=true 时自动拼接为 ${database}_${embedding.model}（如 vector_image_search_dino）
+      database: vector_image_search
+      # 是否开启动态数据库名：true = database 自动拼接当前激活的模型名（默认开启）
+      # 开启后切换模型时 database 会自动切换，数据天然隔离，无需手动清库
+      dynamic-database: true
+
+      # 启动时检测到 schema 不兼容时是否重建集合（数据会丢；改 schema 后临时打开跑一次）
+      recreate-on-schema-change: true
+      # 单次 Milvus insert RPC 的最大条数；超过会拆批打多次 RPC
+      insert-batch-size: 64
+
+      # ============================================================
+      # 多租户隔离配置
+      #   strategy=collection → 每租户一个独立 collection（默认）
+      #   strategy=database   → 每租户一个独立 Milvus database（物理强隔离）
+      #   strategy=partition  → 单 collection 内按 tenantId 建 partition
+      # ============================================================
+      isolation: collection
+
+    # ==============================================================
+    # 特征提取配置（支持多模型扩展：CLIP / DINOv2 / SigLIP 等）
+    # ==============================================================
+    embedding:
+      # 当前激活的模型
+      model: dino
+      # 推理设备：cpu / cuda
+      device: cpu
+      # 批量推理 batch size
+      batch-size: 8
+      # 批量入库时的特征提取并行线程数（与 dino.session-pool-size 对齐）
+      feature-threads: 8
+      # ============================================================
+      # ONNX Runtime IntraOp 策略（启动期一次性选定，运行时不可改）
+      # ============================================================
+      # 批量入库场景（同时跑批量 + 搜图或者又高并发场景）→ 设 true：IntraOp=1，16 张图并发时不抢 CPU
+      # 纯搜图场景（只用搜图）        → 设 false：IntraOp=CPU/6，让 session 内部多线程榨干 CPU
+      batch-mode: false
+      # ============================================================
+      # 性能日志开关（默认开启）
+      # 控制三个 extractor 内部的性能摘要日志（单图耗时/多尺度并发等待/批量性能摘要/DINO 五段诊断）
+      # 异常日志（模型加载失败/推理失败）不受此开关影响，异常始终打印
+      # ============================================================
+      perf-log-enabled: false
+      # ==============================================================
+      # CLIP 模型配置（OpenAI 双塔模型，同时支持视觉塔和文本塔）
+      # CLIP ViT-B/32 = 512 维向量（ViT-L/14 = 768 维）
+      # 推荐下载：https://huggingface.co/onnx-community/openai-clip-vit-base-patch32-ONNX
+      # 特点：支持以图搜图 + 文搜图，多模态检索首选
+      # ==============================================================
+      clip:
+        # ONNX 视觉塔模型路径
+        vision-model-path: E:\Java\Code\MyStudy\Milvus\Models\clip\vision_model.onnx
+        # ONNX 文本塔模型路径（文搜图场景需要，纯图搜可不配置）
+        text-model-path: E:\Java\Code\MyStudy\Milvus\Models\clip\text_model.onnx
+        # 是否启用视觉塔（以图搜图）
+        use-vision: true
+        # 是否启用文本塔（文搜图，需配合 text-model-path 使用）
+        use-text: false
+        # 视觉塔 OrtSession 池大小
+        # 关键：pool × intraOp 不能超过 CPU 物理核数。
+        # pool 太大 + intraOp 太大会导致线程切换风暴，反而比少量 session 多线程慢。
+        # 推荐：0 = 自动 min(CPU 核数, 8)；手工指定时建议 ≤ CPU 核数 / 2
+        session-pool-size: 8
+        # 输出向量维度（ViT-B/32 = 512，ViT-B/16 = 512，ViT-L/14 = 768）
+        feature-dim: 512
+        # 多尺度推理的短边尺寸列表
+        # [224]           最快但召回略低
+        # [224, 256]      推荐：平衡速度与精度
+        # [192, 224, 256, 288] 召回最高但 CPU 开销更大
+        scales:
+          - 192
+          - 224
+          - 256
+          - 288
+        # 水平翻转增强（CLIP 对翻转鲁棒，建议开启可补回 1-2% 召回）
+        hflip-enabled: true
+      # ==============================================================
+      # SigLIP 2 模型配置（Google 2025 新模型，精度比 CLIP 高 1-3%）
+      # SigLIP ViT-B/16 = 768 维向量
+      # 推荐下载：https://huggingface.co/onnx-community/siglip2-base-patch16-256-ONNX
+      # ==============================================================
+      siglip:
+        # ONNX 模型路径
+        vision-model-path: E:\Java\Code\MyStudy\Milvus\Models\siglip\vision_model.onnx
+        # 视觉塔 OrtSession 池大小
+        session-pool-size: 8
+        # 输出向量维度
+        feature-dim: 768
+        # 模型输入图片尺寸（必须与 ONNX 模型训练分辨率一致）
+        # patch16-224 -> 224，patch16-256 -> 256，patch16-384 -> 384
+        input-size: 256
+        # 多尺度推理的短边尺寸列表
+        scales:
+          - 224
+          - 256
+          - 384
+        # 水平翻转增强
+        hflip-enabled: true
+      # ==============================================================
+      # DINOv2 模型配置（Meta 纯视觉模型，细粒度特征提取最强）
+      # DINOv2 ViT-B/14 = 768 维向量；ViT-L/14 = 1024 维向量
+      # 推荐下载：https://huggingface.co/onnx-community/dinov2-base-ONNX
+      # 以图搜图 / 服装商品检索首选此模型
+      # ==============================================================
+      dino:
+        # ONNX 模型路径
+        vision-model-path: E:\Java\Code\MyStudy\Milvus\Models\dino\model.onnx
+        # 视觉塔 OrtSession 池大小
+        # 关键：pool × intraOp 不能超过 CPU 物理核数。
+        # pool 太大 + intraOp 太大会导致线程切换风暴，反而比少量 session 多线程慢。
+        # 推荐：0 = 自动 min(CPU 核数, 8)；手工指定时建议 ≤ CPU 核数 / 2
+        session-pool-size: 8
+        # 输出向量维度（启动期 probeHeads 会自动校验）
+        feature-dim: 768
+        # 多尺度推理的短边尺寸列表
+        # [224]  最快但召回 -2%
+        # [224, 336] 推荐：平衡速度与精度，补回 1-2% 召回
+        # [224, 336, 448] 召回最高但 CPU 慢 1.5 倍
+        # 注意：DINOv2 模型必须能整除 14（patch size），518 也合法但单尺度太慢
+        scales:
+          - 224
+          - 336
+        # 水平翻转增强（不建议开启，DINOv2 对翻转敏感）
+        hflip-enabled: false

@@ -100,7 +100,7 @@ public class FileServiceImplTest extends BaseDbUnitTest {
         }), eq(type), eq(null))).thenReturn(url);
         when(client.getConfigKey()).thenReturn("local");
         // 调用
-        String result = fileService.createFile(content, name, directory, type, null);
+        String result = fileService.createFile(content, name, directory, type, null).getUrl();
         // 断言
         assertEquals(result, url);
         // 校验数据
@@ -133,7 +133,7 @@ public class FileServiceImplTest extends BaseDbUnitTest {
         }), eq(type), eq(null))).thenReturn(url);
         when(client.getConfigKey()).thenReturn("local");
         // 调用
-        String result = fileService.createFile(content, null, null, null, null);
+        String result = fileService.createFile(content, null, null, null, null).getUrl();
         // 断言
         assertEquals(result, url);
         // 校验数据

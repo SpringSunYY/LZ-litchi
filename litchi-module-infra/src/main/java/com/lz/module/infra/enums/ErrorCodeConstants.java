@@ -98,4 +98,13 @@ public interface ErrorCodeConstants {
     ErrorCode AREA_CODE_DUPLICATE = new ErrorCode(1_001_009_005, "infra.area.back.codeDuplicate", "area code already exists");
     ErrorCode AREA_PARENT_IS_CHILD = new ErrorCode(1_001_009_005, "infra.area.back.parentChildError", "cannot set child area as parent");
     ErrorCode AREA_IMPORT_DATA_EMPTY = new ErrorCode(1_001_009_005, "infra.back.import.dataEmpty", "地区信息导入数据不能为空！");
+
+    // ========== 以图搜图 1-001-010-100 ==========
+    ErrorCode VECTOR_IMAGE_DIR_EMPTY = new ErrorCode(1_001_010_105, "infra.vectorImage.back.dir.empty", "目录不能为空");
+    ErrorCode VECTOR_IMAGE_DIR_NOT_EXISTS = new ErrorCode(1_001_010_106, "infra.vectorImage.back.dir.notExists", "目录不存在或不是文件夹");
+    ErrorCode VECTOR_IMAGE_DIR_SCAN_FAILED = new ErrorCode(1_001_010_107, "infra.vectorImage.back.dir.scanFailed", "扫描目录失败");
+    ErrorCode VECTOR_IMAGE_URL_DOWNLOAD_FAILED = new ErrorCode(1_001_010_108, "infra.vectorImage.back.url.downloadFailed", "图片下载失败");
+    ErrorCode VECTOR_IMAGE_FILE_PROCESS_FAILED = new ErrorCode(1_001_010_109, "infra.vectorImage.back.file.processFailed", "图片处理失败");
+    ErrorCode VECTOR_IMAGE_FILE_EMPTY = new ErrorCode(1_001_010_110, "infra.vectorImage.back.file.empty", "文件为空");
+    ErrorCode VECTOR_IMAGE_FEATURE_EXTRACT_FAILED = new ErrorCode(1_001_010_111, "infra.vectorImage.back.feature.extractFailed", "图片特征提取失败");
 }

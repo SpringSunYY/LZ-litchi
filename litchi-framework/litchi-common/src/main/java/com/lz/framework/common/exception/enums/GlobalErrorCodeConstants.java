@@ -34,6 +34,7 @@ public interface GlobalErrorCodeConstants {
 
     // ========== 自定义错误段 ==========
     ErrorCode REPEATED_REQUESTS = new ErrorCode(900, "common.common.back.repeatedRequest", "重复请求，请稍后重试"); // 重复请求
+    ErrorCode VECTOR_NOT_ENABLED = new ErrorCode(901, "vector.vector.back.notEnabled", "向量模块未启用，无法执行操作: {}");
 
     ErrorCode UNKNOWN = new ErrorCode(999, "common.common.back.unknown", "未知错误");
 

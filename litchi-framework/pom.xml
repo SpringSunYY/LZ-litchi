@@ -28,6 +28,8 @@
         <module>litchi-spring-boot-starter-biz-tenant</module>
         <module>litchi-spring-boot-starter-biz-data-permission</module>
         <module>litchi-spring-boot-starter-biz-ip</module>
+
+        <module>litchi-spring-boot-starter-vector</module>
     </modules>
 
     <artifactId>litchi-framework</artifactId>
