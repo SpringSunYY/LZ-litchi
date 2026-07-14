@@ -74,6 +74,10 @@ public class OperateLogDO extends BaseDO {
      */
     private String requestUrl;
     /**
+     * IP
+     */
+    private String userIp;
+    /**
      * IP属地
      */
     private String userIpAddr;

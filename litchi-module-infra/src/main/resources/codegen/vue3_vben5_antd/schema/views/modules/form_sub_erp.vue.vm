@@ -5,20 +5,20 @@
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
 #set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 <script lang="ts" setup>
-  import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
+import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
-  import { useVbenModelDrawer } from '@vben/common-ui';
-  import { message } from 'ant-design-vue';
+import { useVbenModelDrawer } from '@vben/common-ui';
+import { message } from 'ant-design-vue';
 
-  import { computed, ref } from 'vue';
-  import { $t } from '#/locales';
-  import { useVbenForm } from '#/adapter/form';
-  import { get${subSimpleClassName}, create${subSimpleClassName}, update${subSimpleClassName} } from '#/api/${table.moduleName}/${table.businessName}';
+import { computed, ref } from 'vue';
+import { $t } from '#/locales';
+import { useVbenForm } from '#/adapter/form';
+import { get${subSimpleClassName}, create${subSimpleClassName}, update${subSimpleClassName} } from '#/api/${table.moduleName}/${table.businessName}';
 
-  import { use${subSimpleClassName}FormSchema } from '../data';
+import { use${subSimpleClassName}FormSchema } from '../data';
 
-  const emit = defineEmits(['success']);
-  const formData = ref<${simpleClassName}Api.${subSimpleClassName}>();
+const emit = defineEmits(['success']);
+const formData = ref<${simpleClassName}Api.${subSimpleClassName}>();
 #if($isI18n)
   const getTitle = computed(() => {
     return formData.value?.id

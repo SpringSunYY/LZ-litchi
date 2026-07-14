@@ -134,6 +134,14 @@ public interface AdminUserService {
      */
     AdminUserDO getUser(Long id);
 
+
+    /**
+     * 获得用户精简信息列表
+     *
+     * @param ids 新用户编号数组
+     * @return 用户精简信息列表
+     */
+    List<AdminUserDO> getUserSimpList(List<Long> ids);
     /**
      * 获得指定部门的用户数组
      *

@@ -30,8 +30,11 @@ import org.springframework.web.bind.annotation.*;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.zip.ZipOutputStream;
 
 import static com.lz.framework.common.pojo.CommonResult.success;
 import static com.lz.framework.security.core.util.SecurityFrameworkUtils.getLoginUserNickname;
@@ -165,10 +168,16 @@ public class CodegenController {
                                       HttpServletResponse response) throws IOException {
         // 生成所有表的代码
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        try (java.util.zip.ZipOutputStream zipOut = new java.util.zip.ZipOutputStream(outputStream)) {
+        try (ZipOutputStream zipOut = new ZipOutputStream(outputStream)) {
+            Set<String> addedPaths = new HashSet<>();
             for (Long tableId : tableIds) {
                 Map<String, String> codes = codegenService.generationCodes(tableId);
                 for (Map.Entry<String, String> entry : codes.entrySet()) {
+                    // 跳过重复的路径
+                    if (addedPaths.contains(entry.getKey())) {
+                        continue;
+                    }
+                    addedPaths.add(entry.getKey());
                     zipOut.putNextEntry(new java.util.zip.ZipEntry(entry.getKey()));
                     zipOut.write(entry.getValue().getBytes(java.nio.charset.StandardCharsets.UTF_8));
                     zipOut.closeEntry();

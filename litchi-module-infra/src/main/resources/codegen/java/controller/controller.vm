@@ -32,12 +32,11 @@ import static ${OperateTypeEnumClassName}.*;
 
 import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.*;
 ## 导入功能专属 VO 导入
-import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${excelReqVOClass};
-import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${excelRespVOClass};
 import ${basePackage}.module.${table.moduleName}.dal.dataobject.${table.businessName}.${table.className}DO;
 ## 特殊：主子表专属逻辑
 #foreach ($subTable in $subTables)
 import ${basePackage}.module.${subTable.moduleName}.dal.dataobject.${subTable.businessName}.${subTable.className}DO;
+import ${basePackage}.module.${subTable.moduleName}.controller.${sceneEnum.basePackage}.${subTable.businessName}.vo.${sceneEnum.prefixClass}${subTable.className}RespVO;
 #end
 import ${basePackage}.module.${table.moduleName}.service.${table.businessName}.${table.className}Service;
 import static com.lz.framework.excel.core.annotations.ExcelDirection.ONLY_IMPORT;
@@ -281,9 +280,9 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:query')")
 #end
-    public CommonResult<PageResult<${subTable.className}DO>> get${subSimpleClassName}Page(PageParam pageReqVO,
+    public CommonResult<PageResult<${sceneEnum.prefixClass}${subTable.className}RespVO>> get${subSimpleClassName}Page(PageParam pageReqVO,
                                                                                         @RequestParam("${subJoinColumn.javaField}") ${subJoinColumn.javaType} ${subJoinColumn.javaField}) {
-        return success(${classNameVar}Service.get${subSimpleClassName}Page(pageReqVO, ${subJoinColumn.javaField}));
+        return success(BeanUtils.toBean(${classNameVar}Service.get${subSimpleClassName}Page(pageReqVO, ${subJoinColumn.javaField}), ${sceneEnum.prefixClass}${subTable.className}RespVO.class));
     }
 
 ## 情况二：非 MASTER_ERP 时，需要列表查询子表
@@ -298,8 +297,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:query')")
 #end
-    public CommonResult<List<${subTable.className}DO>> get${subSimpleClassName}ListBy${SubJoinColumnName}(@RequestParam("${subJoinColumn.javaField}") ${subJoinColumn.javaType} ${subJoinColumn.javaField}) {
-        return success(${classNameVar}Service.get${subSimpleClassName}ListBy${SubJoinColumnName}(${subJoinColumn.javaField}));
+    public CommonResult<List<${sceneEnum.prefixClass}${subTable.className}RespVO>> get${subSimpleClassName}ListBy${SubJoinColumnName}(@RequestParam("${subJoinColumn.javaField}") ${subJoinColumn.javaType} ${subJoinColumn.javaField}) {
+        return success(BeanUtils.toBean(${classNameVar}Service.get${subSimpleClassName}ListBy${SubJoinColumnName}(${subJoinColumn.javaField}), ${sceneEnum.prefixClass}${subTable.className}RespVO.class));
     }
 
     #else
@@ -312,8 +311,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:query')")
 #end
-    public CommonResult<${subTable.className}DO> get${subSimpleClassName}By${SubJoinColumnName}(@RequestParam("${subJoinColumn.javaField}") ${subJoinColumn.javaType} ${subJoinColumn.javaField}) {
-        return success(${classNameVar}Service.get${subSimpleClassName}By${SubJoinColumnName}(${subJoinColumn.javaField}));
+    public CommonResult<${sceneEnum.prefixClass}${subTable.className}RespVO> get${subSimpleClassName}By${SubJoinColumnName}(@RequestParam("${subJoinColumn.javaField}") ${subJoinColumn.javaType} ${subJoinColumn.javaField}) {
+        return success(BeanUtils.toBean(${classNameVar}Service.get${subSimpleClassName}By${SubJoinColumnName}(${subJoinColumn.javaField}), ${sceneEnum.prefixClass}${subTable.className}RespVO.class));
     }
 
     #end
@@ -384,8 +383,8 @@ public class ${sceneEnum.prefixClass}${table.className}Controller {
 #if ($sceneEnum.scene == 1)
     @PreAuthorize("@ss.hasPermission('${permissionPrefix}:query')")
 #end
-    public CommonResult<${subTable.className}DO> get${subSimpleClassName}(@RequestParam("id") ${subPrimaryColumn.javaType} id) {
-        return success(${classNameVar}Service.get${subSimpleClassName}(id));
+    public CommonResult<${sceneEnum.prefixClass}${subTable.className}RespVO> get${subSimpleClassName}(@RequestParam("id") ${subPrimaryColumn.javaType} id) {
+        return success(BeanUtils.toBean(${classNameVar}Service.get${subSimpleClassName}(id), ${sceneEnum.prefixClass}${subTable.className}RespVO.class));
     }
 
 #end

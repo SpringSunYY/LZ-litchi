@@ -79,11 +79,13 @@ public class CodegenEngine {
             .put(javaTemplatePath("dal/do"),
                     javaModuleImplMainFilePath("dal/dataobject/${table.businessName}/${table.className}DO"))
             .put(javaTemplatePath("dal/do_sub"), // 特殊：主子表专属逻辑
-                    javaModuleImplMainFilePath("dal/dataobject/${table.businessName}/${subTable.className}DO"))
+                    javaModuleImplMainFilePath("dal/dataobject/${subTable.businessName}/${subTable.className}DO"))
+            .put(javaTemplatePath("controller/vo/respSubVO"), // 特殊：主子表专属逻辑
+                    javaModuleImplVOFilePath("RespVO", "${subTable.businessName}"))
             .put(javaTemplatePath("dal/mapper"),
                     javaModuleImplMainFilePath("dal/mysql/${table.businessName}/${table.className}Mapper"))
             .put(javaTemplatePath("dal/mapper_sub"), // 特殊：主子表专属逻辑
-                    javaModuleImplMainFilePath("dal/mysql/${table.businessName}/${subTable.className}Mapper"))
+                    javaModuleImplMainFilePath("dal/mysql/${subTable.businessName}/${subTable.className}Mapper"))
             .put(javaTemplatePath("dal/mapper.xml"), mapperXmlFilePath())
             .put(javaTemplatePath("service/serviceImpl"),
                     javaModuleImplMainFilePath("service/${table.businessName}/${table.className}ServiceImpl"))
@@ -350,7 +352,11 @@ public class CodegenEngine {
             if (!importEnable && isExcelRespTemplate(vmPath)) {
                 return;
             }
-            // 2.4 默认生成
+            // 2.4 特殊：如果禁用 VO 类型，则移除 respSubVO 模版
+            if (isRespSubVOTemplate(vmPath) && ObjectUtil.notEqual(codegenProperties.getVoType(), CodegenVOTypeEnum.VO.getType())) {
+                return;
+            }
+            // 2.5 默认生成
             generateCode(result, vmPath, filePath, bindingMap);
         });
         return result;
@@ -593,6 +599,11 @@ public class CodegenEngine {
                 "vo/${sceneEnum.prefixClass}${table.className}" + path, "server", "main");
     }
 
+    private static String javaModuleImplVOFilePath(String path, String businessName) {
+        return javaModuleFilePath("controller/${sceneEnum.basePackage}/" + businessName + "/" +
+                "vo/${sceneEnum.prefixClass}${subTable.className}" + path, "server", "main");
+    }
+
     private static String javaModuleImplControllerFilePath() {
         return javaModuleFilePath("controller/${sceneEnum.basePackage}/${table.businessName}/" +
                 "${sceneEnum.prefixClass}${table.className}Controller", "server", "main");
@@ -661,7 +672,7 @@ public class CodegenEngine {
     }
 
     private static boolean isSubTemplate(String path) {
-        return path.contains("_sub");
+        return path.contains("_sub") || path.contains("respSubVO");
     }
 
     private static boolean isPageReqVOTemplate(String path) {
@@ -674,6 +685,10 @@ public class CodegenEngine {
 
     private static boolean isExcelRespTemplate(String path) {
         return path.contains("excelRespVO") || path.contains("import-form");
+    }
+
+    private static boolean isRespSubVOTemplate(String path) {
+        return path.contains("respSubVO");
     }
 
 }

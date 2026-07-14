@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.datapermission.core.util.DataPermissionUtils;
 import com.lz.module.system.api.user.dto.AdminUserRespDTO;
+import com.lz.module.system.api.user.dto.AdminUserSimpRespDTO;
 import com.lz.module.system.dal.dataobject.dept.DeptDO;
 import com.lz.module.system.dal.dataobject.user.AdminUserDO;
 import com.lz.module.system.service.dept.DeptService;
@@ -66,6 +67,15 @@ public class AdminUserApiImpl implements AdminUserApi {
         });
     }
 
+    @Override
+    public List<AdminUserSimpRespDTO> getUserSimpList(Collection<String> ids) {
+        return DataPermissionUtils.executeIgnore(() -> { // 禁用数据权限。原因是，一般基于指定 id 的 API 查询，都是数据拼接为主
+            //ids 转为Long
+            List<Long> newIds = ids.stream().map(Long::parseLong).toList();
+            List<AdminUserDO> users = userService.getUserSimpList(newIds);
+            return users.stream().map(AdminUserSimpRespDTO::toSimple).toList();
+        });
+    }
     @Override
     public List<AdminUserRespDTO> getUserListByDeptIds(Collection<Long> deptIds) {
         List<AdminUserDO> users = userService.getUserListByDeptIds(deptIds);

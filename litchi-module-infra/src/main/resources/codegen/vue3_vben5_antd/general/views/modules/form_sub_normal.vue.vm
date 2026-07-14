@@ -6,12 +6,12 @@
 #set ($SubJoinColumnName = $subJoinColumn.javaField.substring(0,1).toUpperCase() + ${subJoinColumn.javaField.substring(1)})##首字母大写
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
 <script lang="ts" setup>
-  import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
+import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${simpleClassName_strikeCase}';
 
-  import { message, Tabs, Form, Input, Textarea,Button, Select, RadioGroup, Radio, CheckboxGroup, Checkbox, DatePicker } from 'ant-design-vue';
-  import { computed, ref, h, onMounted,watch,nextTick } from 'vue';
-  import { $t } from '#/locales';
-  import { DICT_TYPE, getDictOptions } from '#/utils';
+import { message, Tabs, Form, Input, InputNumber, Textarea,Button, Select, RadioGroup, Radio, CheckboxGroup, Checkbox, DatePicker } from 'ant-design-vue';
+import { computed, ref, h, onMounted,watch,nextTick } from 'vue';
+import { $t } from '#/locales';
+import { DICT_TYPE, getDictOptions } from '#/utils';
 
 #if ($subTable.subJoinMany) ## 一对多
 import type { VxeTableInstance } from '#/adapter/vxe-table';
@@ -132,6 +132,12 @@ watch(
                 <vxe-column field="${javaField}" title="${comment}" align="center">
                   <template #default="{row}">
                     <Input v-model:value="row.${javaField}" />
+                  </template>
+                </vxe-column>
+              #elseif ($column.htmlType == "inputNumber" && !$column.primaryKey)## 忽略主键，不用在表单里
+                <vxe-column field="${javaField}" title="${comment}" align="center">
+                  <template #default="{row}">
+                    <InputNumber v-model:value="row.${javaField}" />
                   </template>
                 </vxe-column>
               #elseif($column.htmlType == "imageUpload")## 图片上传

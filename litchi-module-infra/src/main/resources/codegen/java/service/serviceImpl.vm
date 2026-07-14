@@ -11,8 +11,6 @@ import java.util.*;
 import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.*;
 ## 导入功能专属 VO 导入（位于 controller.vo 包下）
 #if ($extendConfig.get('isImport') != '1')
-import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importReqVOClass};
-import ${basePackage}.module.${table.moduleName}.controller.${sceneEnum.basePackage}.${table.businessName}.vo.${importRespVOClass};
 import com.lz.framework.common.util.validation.ValidationUtils;
 #end
 import ${basePackage}.module.${table.moduleName}.dal.dataobject.${table.businessName}.${table.className}DO;
@@ -200,10 +198,12 @@ public class ${table.className}ServiceImpl implements ${table.className}Service 
 
 #end
 
-    private void validate${simpleClassName}Exists(${primaryColumn.javaType} id) {
-        if (${classNameVar}Mapper.selectById(id) == null) {
+    private ${table.className}DO validate${simpleClassName}Exists(${primaryColumn.javaType} id) {
+        ${table.className}DO ${classNameVar} =${classNameVar}Mapper.selectById(id)
+        if ( == null) {
             throw exception(${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS);
         }
+        return ${classNameVar};
     }
 
 ## 特殊：树表专属逻辑

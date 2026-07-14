@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 #foreach ($column in $columns)
 #if (${column.listOperationCondition} == "BETWEEN" && ${column.javaType} == "LocalDateTime")
 import org.springframework.format.annotation.DateTimeFormat;
-import java.time.LocalDateTime;
+import java.time.${column.javaType};
 
 import static ${DateUtilsClassName}.FORMAT_YEAR_MONTH_DAY_HOUR_MINUTE_SECOND;
 #break

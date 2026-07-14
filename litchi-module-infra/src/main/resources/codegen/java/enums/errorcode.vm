@@ -1,5 +1,6 @@
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
-#set (${i18nModuleType} = $extendConfig.get('i18nModuleType'))
+#set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
+#set ($isImport=$extendConfig.get('isImport') != '1')
 // ========== ${table.classComment} ==========
 ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_NOT_EXISTS = new ErrorCode(1_003_000_001#if ($isI18n), "${i18nModuleType}.${table.businessName}.back.notExists"#end, "${table.classComment}不存在");
 ## 特殊：树表专属逻辑
@@ -21,5 +22,7 @@ ErrorCode ${simpleClassNameUnderlineCase.toUpperCase()}_EXISTS = new ErrorCode(1
 #end
 #end
 #end
+#if($isImport)
 // ========== 导入通用错误码（可自行配置国际化） ==========
 ErrorCode ${simpleClassName_underlineCase.toUpperCase()}_IMPORT_DATA_EMPTY = new ErrorCode(1_003_000_100#if ($isI18n), "${i18nModuleType}.back.import.dataEmpty"#end, "${table.classComment}导入数据不能为空！");
+#end

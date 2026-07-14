@@ -7,14 +7,14 @@
 #set ($isI18n = $extendConfig.get('isI18n') == '0')
 #set ($i18nModuleType = $extendConfig.get('i18nModuleType'))
 <script lang="ts" setup>
-  import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
+import type { ${simpleClassName}Api } from '#/api/${table.moduleName}/${table.businessName}';
 
-  import { computed, ref, h, onMounted,watch,nextTick } from 'vue';
-  import { $t } from '#/locales';
+import { computed, ref, h, onMounted,watch,nextTick } from 'vue';
+import { $t } from '#/locales';
 
 #if ($subTable.subJoinMany) ## 一对多
 import { Plus } from "@vben/icons";
-import { Button, Tabs, Checkbox, Input, Textarea, Select,RadioGroup,CheckboxGroup, DatePicker } from 'ant-design-vue';
+import { Button, Tabs, Checkbox, Input, InputNumber, Textarea, Select,RadioGroup,CheckboxGroup, DatePicker, message } from 'ant-design-vue';
 import { ImageUpload, FileUpload } from "#/components/upload";
 import type { OnActionClickParams } from '#/adapter/vxe-table';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
@@ -83,6 +83,32 @@ defineExpose({
         .filter((row) => !removeRecords.some((removed) => removed.id === row.id))
         .concat(insertRecords.map((row: any) => ({ ...row, id: undefined })));
   },
+  /** 校验子表数据：返回 true 通过；返回 string[] 所有未通过的错误信息 */
+  validate: (): boolean => {
+    // 同时取全量数据 + 当前数据，确保即便有删除/未挂载的行也能覆盖
+    const data =
+      (gridApi.grid.getTableData?.().fullData as ${simpleClassName}Api.${subSimpleClassName}[]) ||
+      (gridApi.grid.getData() as ${simpleClassName}Api.${subSimpleClassName}[]);
+    const emptyFieldLabels: Record<string, string> = {
+#foreach($column in $subColumns)
+#if ($column.createOperation || $column.updateOperation)
+#if (!$column.nullable && !$column.primaryKey && $column.id != $subJoinColumn.id)
+      ${column.javaField}: #if($isI18n)$t('${subTable.moduleName}.${subTable.businessName}.field.${column.javaField}')#else'${column.columnComment}'#end,
+#end
+#end
+#end
+    };
+    for (const [i, row] of data.entries()) {
+      for (const [field, label] of Object.entries(emptyFieldLabels)) {
+        const value = (row as any)[field];
+        if (value === undefined || value === null || value === '') {
+          message.warn($t('ui.placeholder.subTableInput', [i + 1, label]));
+          return false;
+        }
+      }
+    }
+    return true;
+  },
 });
 
 /** 监听主表的关联字段的变化，加载对应的子表数据 */
@@ -145,6 +171,10 @@ watch(
               #elseif ($column.htmlType == "input" && !$column.primaryKey)## 忽略主键，不用在表单里
                 <template #${javaField}="{ row }">
                   <Input v-model:value="row.${javaField}" />
+                </template>
+              #elseif ($column.htmlType == "inputNumber" && !$column.primaryKey)## 忽略主键，不用在表单里
+                <template #${javaField}="{ row }">
+                  <InputNumber v-model:value="row.${javaField}" />
                 </template>
               #elseif($column.htmlType == "imageUpload")## 图片上传
                 <template #${javaField}="{ row }">

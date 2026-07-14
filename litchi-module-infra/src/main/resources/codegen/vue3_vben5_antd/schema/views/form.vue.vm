@@ -73,21 +73,12 @@ const [ModalDrawer, modalDrawerApi] = useVbenModelDrawer({
     ## 特殊：主子表专属逻辑
     #if ( $table.templateType == 10 || $table.templateType == 12 )
       #if ( $subTables && $subTables.size() > 0 )
-        // 校验子表单
-        #foreach ($subTable in $subTables)
-          #set ($index = $foreach.count - 1)
-          #set ($subClassNameVar = $subClassNameVars.get($index))
-          #if ($subTable.subJoinMany) ## 一对多
-            ## TODO 列表值校验？
-          #else
-            const ${subClassNameVar}Valid = await ${subClassNameVar}FormRef.value?.validate();
-            if (!${subClassNameVar}Valid) {
+            const detailValid = ${subClassNameVar}FormRef.value?.validate();
+            if (!detailValid) {
               subTabsName.value = '${subClassNameVar}';
               return;
             }
-          #end
         #end
-      #end
     #end
     modalDrawerApi.lock();
     // 提交表单

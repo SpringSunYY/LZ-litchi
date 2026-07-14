@@ -2,6 +2,7 @@ package com.lz.module.system.api.user;
 
 import com.lz.framework.common.util.collection.CollectionUtils;
 import com.lz.module.system.api.user.dto.AdminUserRespDTO;
+import com.lz.module.system.api.user.dto.AdminUserSimpRespDTO;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -54,6 +55,14 @@ public interface AdminUserApi {
      * @return 用户数组
      */
     List<AdminUserRespDTO> getUserListByPostIds(Collection<Long> postIds);
+
+    /**
+     * 通过用户 ID 查询用户们
+     *
+     * @param ids 用户 ID 们
+     * @return 用户对象信息
+     */
+    List<AdminUserSimpRespDTO> getUserSimpList(Collection<String> ids);
 
     /**
      * 获得用户 Map

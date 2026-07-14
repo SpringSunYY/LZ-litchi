@@ -75,6 +75,7 @@ public class LogRecordServiceImpl implements ILogRecordService {
         // 补全请求信息
         reqDTO.setRequestMethod(request.getMethod());
         reqDTO.setRequestUrl(request.getRequestURI());
+        reqDTO.setUserIp(ServletUtils.getClientIP());
         UserAgent userAgentInfo = ServletUtils.getUserAgentInfo();
         reqDTO.setUserPlatform(userAgentInfo.getPlatform().getName());
         reqDTO.setUserBrowser(userAgentInfo.getBrowser().getName());

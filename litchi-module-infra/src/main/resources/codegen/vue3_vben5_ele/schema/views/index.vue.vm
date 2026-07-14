@@ -253,7 +253,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
 #if ($table.templateType == 11) ## erp情况
   <div>
 #end
-    <Grid #if($isI18n):table-title="$t('${i18nModuleType}.${table.businessName}.${table.businessName}')" #else table-title="${table.classComment}列表" #end>
+    <Grid #if($isI18n):table-title="$t('${i18nModuleType}.${table.businessName}.list')" #else table-title="${table.classComment}列表" #end>
         #if ($table.templateType == 12) ## 内嵌情况
           <template #expand_content="{ row }">
             <!-- 子表的表单 -->

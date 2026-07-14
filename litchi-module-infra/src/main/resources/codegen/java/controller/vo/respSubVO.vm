@@ -1,0 +1,29 @@
+#set ($subTable = $subTables.get($subIndex))##当前表
+#set ($subColumns = $subColumnsList.get($subIndex))##当前字段数组
+package ${basePackage}.module.${subTable.moduleName}.controller.${sceneEnum.basePackage}.${subTable.businessName}.vo;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.*;
+import java.util.*;
+
+/**
+ * ${subTable.classComment} Response VO
+ *
+ * @author ${subTable.author}
+ */
+@Schema(description = "${sceneEnum.name} - ${subTable.classComment} Response VO")
+@Data
+public class ${sceneEnum.prefixClass}${subTable.className}RespVO {
+
+## 逐个处理字段
+#foreach ($column in $subColumns)
+#if ($column.createOperation || $column.updateOperation)
+    /**
+     * ${column.columnComment}
+     */
+    @Schema(description = "${column.columnComment}"#if (!${column.nullable}), requiredMode = Schema.RequiredMode.REQUIRED#end#if ("$!column.example" != ""), example = "${column.example}"#end)
+    private ${column.javaType} ${column.javaField};
+
+#end
+#end
+}
