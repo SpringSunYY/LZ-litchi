@@ -3,6 +3,8 @@ package com.lz.module.infra.controller.admin.vector;
 import cn.hutool.core.io.IoUtil;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
+import com.lz.framework.demoMode.annotation.DemoMode;
+import com.lz.framework.demoMode.enums.DemoModeEnum;
 import com.lz.framework.vector.constants.CollectionConstants;
 import com.lz.framework.vector.pojo.SearchResult;
 import com.lz.module.infra.controller.admin.file.vo.file.FileUploadReqVO;
@@ -32,6 +34,7 @@ import static com.lz.framework.common.pojo.CommonResult.success;
 @RequestMapping("/infra/vector/image")
 @Validated
 @Slf4j
+@DemoMode
 public class VectorImageController {
 
     @Resource
@@ -179,6 +182,7 @@ public class VectorImageController {
     @PostMapping("/search/upload")
     @Operation(summary = "以图搜图（按上传图片）")
     @PreAuthorize("@ss.hasPermission('infra:vectorImage:search')")
+    @DemoMode(allowed = DemoModeEnum.POST)
     public CommonResult<List<SearchResult>> searchByUpload(@Valid VectorImageSearchReqVO reqVO)
             throws Exception {
         return success(imageSearchService

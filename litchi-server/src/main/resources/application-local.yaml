@@ -278,6 +278,8 @@ litchi:
       # Milvus 服务地址
       host: 192.168.100.10
       port: 19530
+      username:
+      password:
       # Milvus 数据库名
       # dynamic-database=true 时自动拼接为 ${database}_${embedding.model}（如 vector_image_search_dino）
       database: vector_image_search
@@ -325,7 +327,7 @@ litchi:
       # ==============================================================
       # CLIP 模型配置（OpenAI 双塔模型，同时支持视觉塔和文本塔）
       # CLIP ViT-B/32 = 512 维向量（ViT-L/14 = 768 维）
-      # 推荐下载：https://huggingface.co/onnx-community/openai-clip-vit-base-patch32-ONNX
+      # 下载地址：https://huggingface.co/Xenova/clip-vit-base-patch32/tree/main/onnx
       # 特点：支持以图搜图 + 文搜图，多模态检索首选
       # ==============================================================
       clip:
@@ -358,7 +360,7 @@ litchi:
       # ==============================================================
       # SigLIP 2 模型配置（Google 2025 新模型，精度比 CLIP 高 1-3%）
       # SigLIP ViT-B/16 = 768 维向量
-      # 推荐下载：https://huggingface.co/onnx-community/siglip2-base-patch16-256-ONNX
+      # 下载地址：https://huggingface.co/onnx-community/siglip2-base-patch16-256-ONNX/tree/main/onnx
       # ==============================================================
       siglip:
         # ONNX 模型路径
@@ -380,7 +382,7 @@ litchi:
       # ==============================================================
       # DINOv2 模型配置（Meta 纯视觉模型，细粒度特征提取最强）
       # DINOv2 ViT-B/14 = 768 维向量；ViT-L/14 = 1024 维向量
-      # 推荐下载：https://huggingface.co/onnx-community/dinov2-base-ONNX
+      # 下载地址：https://huggingface.co/onnx-community/dinov2-base-ONNX/tree/main/onnx
       # 以图搜图 / 服装商品检索首选此模型
       # ==============================================================
       dino:

@@ -114,6 +114,8 @@ public class VectorAutoConfiguration {
     public ConnectConfig milvusConnectConfig(MilvusProperties props) {
         String uri = "http://" + props.getHost() + ":" + props.getPort();
         String token = buildToken(props);
+        log.info("[VectorAutoConfiguration] Milvus 连接配置: uri={}, username='{}', password='{}', token='{}'",
+                uri, props.getUsername(), props.getPassword(), token);
         if (token != null) {
             return ConnectConfig.builder().uri(uri).token(token).build();
         }

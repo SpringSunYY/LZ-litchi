@@ -45,9 +45,9 @@
 ## 🐶 新手必读
 
 * 演示地址：https://www.litchi.work   【租户编码：litchi、账号：admin、密码：admin123】
-* 演示视频：https://www.bilibili.com/video/BV1RR7N6QEZo/?vd_source=c8ae193313b392ba04cef0f904b7106f
-* 启动教程：https://www.bilibili.com/video/BV1GMjm6cENu/?vd_source=c8ae193313b392ba04cef0f904b7106f
-* 视频教程：https://space.bilibili.com/3546627304327173/lists/8392666?type=season
+* 演示视频：https://www.bilibili.com/video/BV1RR7N6QEZo
+* 启动教程：https://www.bilibili.com/video/BV1GMjm6cENu
+* 视频教程：https://space.bilibili.com/3546627304327173/lists/8392666
 * 前端代码：https://github.com/SpringSunYY/LZ-litchi-ui-admin-vben
 
 ## 🐯 平台简介
@@ -59,7 +59,7 @@
 > 😜 给项目点点 Star 吧，这对我们真的很重要！
 
 * Java 后端：`JDK 21 + Spring Boot 3.4.5`，没错就是12345
-* 管理后台的电脑端：Vue3 、`vben(ant-design-vue)` 
+* 管理后台PC端：Vue3 、`vben(ant-design-vue)` 
 * 后端采用 Spring Boot 多模块架构、MySQL + MyBatis Plus、Redis + Redisson
 * 数据库可使用 MySQL、Oracle、PostgreSQL、SQL Server、MariaDB、国产达梦 DM、TiDB 等
 * 消息队列可使用 Event、Redis、RabbitMQ、Kafka、RocketMQ 等
@@ -71,6 +71,7 @@
 * 高效率开发，使用代码生成器可以一键生成 Java、Vue 前后端代码、SQL 脚本、接口文档，支持单表、树表、主子表、国际化
 * 实时通信，采用 Spring WebSocket 实现，内置 Token 身份校验，支持 WebSocket 集群
 * 集成阿里云、腾讯云等短信渠道，集成 MinIO、阿里云、腾讯云、七牛云等云存储服务
+* 以图搜图，集成dino、siglip、clip三大模型与milvus向量数据库实现以图搜图，不需要可以删除，参考教程视频第11集
 
 
 
@@ -307,7 +308,7 @@
 >
 > 如果看不懂这个简单的图文教程，见上面有启动教程链接，看视频就行了。
 >
-> 注意：个别步骤没有图片，自己执行即可
+> 注意：个别步骤没有图片，自己执行即可，不需要使用向量模块请查看视频【https://www.bilibili.com/video/BV131N86QE94/】
 
 - 下载源码（如下图）
 - 使用IDE打开：推荐使用Idea，当然VSCode、Cursor打开都行，我一般是IDEA+Cursor一起打开，当然当前运行IDEA一个IDE打开就行了，因为运行也没必要用那么多编辑器，后面开发推荐两个一起，IDEA用来看代码和自己写代码，Cursor用来帮您AI生成代码
@@ -388,8 +389,9 @@ litchi:
 <p align="center">
   <a href="https://github.com/SpringSunYY">
     <img
-      src="https://api.star-history.com/svg?repos=SpringSunYY/LZ-litchi,SpringSunYY/LZ-litchi-ui-admin-vben,SpringSunYY/LZ-Picture,SpringSunYY/LZ-RuoYi,SpringSunYY/LZ-RuoYi-App,SpringSunYY/RuoYi_vue_flask&type=Date"
+      src="https://api.star-history.com/svg?repos=SpringSunYY/LZ-litchi,SpringSunYY/LZ-litchi-ui-admin-vben&type=Date"
       alt="Star History Chart"
     />
   </a>
 </p>
+

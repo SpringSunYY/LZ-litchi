@@ -36,7 +36,7 @@ public final class MilvusFieldConstants {
     public static final String FEATURE_VEC_CLASS = "featureVector";
 
     /**
-     * 业务文件 ID（Int64）
+     * 业务文件 ID（String）
      */
     public static final String ORIGIN_KEY = "origin_key";
     public static final String ORIGIN_KEY_CLASS = "originKey";
