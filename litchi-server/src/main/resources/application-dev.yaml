@@ -208,7 +208,7 @@ wx: # 参见 https://github.com/Wechat-Group/WxJava/blob/develop/spring-boot-sta
 --- #################### 向量相关配置 ####################
 litchi:
   vector:
-    enable: true # 是否启用向量，默认关闭，避免不使用向量也创建bean
+    enable: false # 是否启用向量，默认关闭，避免不使用向量也创建bean
     milvus:
       # ==============================================================
       # Milvus 连接配置

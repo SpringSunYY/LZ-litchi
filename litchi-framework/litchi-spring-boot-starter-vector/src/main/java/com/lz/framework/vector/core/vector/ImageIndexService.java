@@ -316,7 +316,10 @@ public class ImageIndexService {
         if (records.isEmpty() || records.getFirst() == null) {
             new ArrayList<>();
         }
-        float[] vec = records.getFirst().getVector();
+        float[] vec = null;
+        if (records.getFirst() != null) {
+            vec = records.getFirst().getVector();
+        }
         if (vec == null || vec.length == 0) {
             return new ArrayList<>();
         }
