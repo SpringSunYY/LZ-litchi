@@ -32,13 +32,14 @@ public interface ErpStockService {
 
     /**
      * 获得产品库存数量
-     *
+     * <p>
      * 如果不存在库存记录，则返回 0
      *
-     * @param productId 产品编号
+     * @param productId   产品编号
+     * @param warehouseId
      * @return 产品库存数量
      */
-    BigDecimal getStockCount(Long productId);
+    BigDecimal getStockCount(Long productId, Long warehouseId);
 
     /**
      * 获得产品库存分页

@@ -50,8 +50,8 @@ public class ErpStockServiceImpl implements ErpStockService {
     }
 
     @Override
-    public BigDecimal getStockCount(Long productId) {
-        BigDecimal count = stockMapper.selectSumByProductId(productId);
+    public BigDecimal getStockCount(Long productId, Long warehouseId) {
+        BigDecimal count = stockMapper.selectSumByProductId(productId, warehouseId);
         return count != null ? count : BigDecimal.ZERO;
     }
 

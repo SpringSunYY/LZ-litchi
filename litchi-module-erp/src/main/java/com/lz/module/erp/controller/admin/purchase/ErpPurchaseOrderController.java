@@ -106,7 +106,7 @@ public class ErpPurchaseOrderController {
                 convertSet(purchaseOrderItemList, ErpPurchaseOrderItemDO::getProductId));
         return success(BeanUtils.toBean(purchaseOrder, ErpPurchaseOrderRespVO.class, purchaseOrderVO ->
                 purchaseOrderVO.setItems(BeanUtils.toBean(purchaseOrderItemList, ErpPurchaseOrderRespVO.Item.class, item -> {
-                    BigDecimal purchaseCount = stockService.getStockCount(item.getProductId());
+                    BigDecimal purchaseCount = stockService.getStockCount(item.getProductId(), null);
                     item.setStockCount(purchaseCount != null ? purchaseCount : BigDecimal.ZERO);
                     MapUtils.findAndThen(productMap, item.getProductId(), product -> item.setProductName(product.getName())
                             .setProductBarCode(product.getBarCode()).setProductUnitName(product.getUnitName()));

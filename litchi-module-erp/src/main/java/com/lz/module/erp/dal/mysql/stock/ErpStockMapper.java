@@ -2,13 +2,13 @@ package com.lz.module.erp.dal.mysql.stock;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.map.MapUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.mybatis.core.mapper.BaseMapperX;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.module.erp.controller.admin.stock.vo.stock.ErpStockPageReqVO;
 import com.lz.module.erp.dal.dataobject.stock.ErpStockDO;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.math.BigDecimal;
@@ -49,11 +49,12 @@ public interface ErpStockMapper extends BaseMapperX<ErpStockDO> {
         return update(null, updateWrapper);
     }
 
-    default BigDecimal selectSumByProductId(Long productId) {
+    default BigDecimal selectSumByProductId(Long productId, Long warehouseId) {
         // SQL sum 查询
         List<Map<String, Object>> result = selectMaps(new QueryWrapper<ErpStockDO>()
                 .select("SUM(count) AS sumCount")
-                .eq("product_id", productId));
+                .eq(productId != null, "product_id", productId)
+                .eq(warehouseId != null, "warehouse_id", warehouseId));
         // 获得数量
         if (CollUtil.isEmpty(result)) {
             return BigDecimal.ZERO;

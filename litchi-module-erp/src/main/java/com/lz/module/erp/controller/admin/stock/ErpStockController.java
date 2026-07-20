@@ -70,8 +70,10 @@ public class ErpStockController {
     @GetMapping("/get-count")
     @Operation(summary = "获得产品库存数量")
     @Parameter(name = "productId", description = "产品编号", example = "10")
-    public CommonResult<BigDecimal> getStockCount(@RequestParam("productId") Long productId) {
-        return success(stockService.getStockCount(productId));
+    @Parameter(name = "warehouseId", description = "仓库编号", example = "2")
+    public CommonResult<BigDecimal> getStockCount(@RequestParam("productId") Long productId,
+                                                  @RequestParam(value = "warehouseId", required = false) Long warehouseId) {
+        return success(stockService.getStockCount(productId, warehouseId));
     }
 
     @GetMapping("/page")
@@ -87,7 +89,7 @@ public class ErpStockController {
     @PreAuthorize("@ss.hasPermission('erp:stock:export')")
     @ApiAccessLog(operateType = EXPORT)
     public void exportStockExcel(@Valid ErpStockPageReqVO pageReqVO,
-              HttpServletResponse response) throws IOException {
+                                 HttpServletResponse response) throws IOException {
         pageReqVO.setPageSize(PageParam.PAGE_SIZE_NONE);
         List<ErpStockRespVO> list = buildStockVOPageResult(stockService.getStockPage(pageReqVO)).getList();
         // 导出 Excel
