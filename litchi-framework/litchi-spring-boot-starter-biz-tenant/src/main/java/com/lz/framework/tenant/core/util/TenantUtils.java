@@ -21,6 +21,20 @@ public class TenantUtils {
         TenantUtils.tenantProperties = tenantProperties;
     }
 
+
+    /**
+     * 判断是否为系统租户
+     *
+     * @param tenantId 租户编号
+     * @return 是否为系统租户
+     */
+    public static boolean isIsSystemTenant(Long tenantId) {
+        boolean isSystemTenant = false;
+        if (tenantProperties != null && tenantProperties.getSystemTenantId() != null && tenantId != null) {
+            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
+        }
+        return isSystemTenant;
+    }
     /**
      * 使用指定租户，执行对应的逻辑
      * <p>
@@ -113,10 +127,7 @@ public class TenantUtils {
      * @param runnable 逻辑
      */
     public static void executeSystemOrTenant(Long tenantId, Runnable runnable) {
-        boolean isSystemTenant = false;
-        if (tenantProperties.getSystemTenantId() != null) {
-            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
-        }
+        boolean isSystemTenant = isIsSystemTenant(tenantId);
         if (isSystemTenant) {
             TenantContextHolder.setIgnore(true);
             runnable.run();
@@ -141,12 +152,8 @@ public class TenantUtils {
      * @param runnable 逻辑
      */
     public static void executeSystemOrTenant(Runnable runnable) {
-        boolean isSystemTenant = false;
         Long tenantId = TenantContextHolder.getTenantId();
-        if (tenantProperties.getSystemTenantId() != null && tenantId != null) {
-            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
-        }
-        if (isSystemTenant) {
+        if (isIsSystemTenant(tenantId)) {
             TenantContextHolder.setIgnore(true);
             runnable.run();
         } else {
@@ -189,10 +196,7 @@ public class TenantUtils {
      * @return 结果
      */
     public static <V> V executeSystemOrTenant(Long tenantId, Callable<V> callable) {
-        boolean isSystemTenant = false;
-        if (tenantProperties.getSystemTenantId() != null) {
-            isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
-        }
+        boolean isSystemTenant = isIsSystemTenant(tenantId);
         if (isSystemTenant) {
             try {
                 TenantContextHolder.setIgnore(true);
@@ -217,7 +221,7 @@ public class TenantUtils {
     public static <V> V executeSystemOrTenant(Callable<V> callable) {
         boolean isSystemTenant = false;
         Long tenantId = TenantContextHolder.getTenantId();
-        if (tenantProperties.getSystemTenantId() != null && tenantId != null) {
+        if (tenantProperties != null && tenantProperties.getSystemTenantId() != null && tenantId != null) {
             isSystemTenant = tenantProperties.getSystemTenantId().equals(tenantId);
         }
         if (isSystemTenant) {
