@@ -5,6 +5,7 @@ import cn.hutool.core.collection.ListUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 
+import com.lz.framework.common.biz.infra.file.FileCommonApi;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -26,7 +27,6 @@ import com.alibaba.cloud.ai.dashscope.rerank.DashScopeRerankOptions;
 import com.alibaba.cloud.ai.model.RerankModel;
 import com.alibaba.cloud.ai.model.RerankRequest;
 import com.alibaba.cloud.ai.model.RerankResponse;
-import com.lz.module.infra.api.file.FileApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
@@ -85,7 +85,7 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
     private TokenCountEstimator tokenCountEstimator;
 
     @Resource
-    private FileApi fileApi;
+    private FileCommonApi fileCommonApi;
 
     @Autowired(required = false) // 由于 spring.ai.model.rerank 配置项，可以关闭 RerankModel 的功能，所以这里只能不强制注入
     private RerankModel rerankModel;
@@ -313,7 +313,7 @@ public class AiKnowledgeSegmentServiceImpl implements AiKnowledgeSegmentService 
 
     @Override
     public List<AiKnowledgeSegmentDO> splitContent(String url, Integer segmentMaxTokens) {
-        url=fileApi.getFilePath(url);
+        url= fileCommonApi.getFilePath(url);
         // 1. 读取 URL 内容
         String content = knowledgeDocumentService.readUrl(url);
 

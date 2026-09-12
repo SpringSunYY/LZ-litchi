@@ -225,13 +225,20 @@ public class DictConvert implements Converter<Object> {
      * 导出时，根据字典值查询国际化后的标签（带静态缓存）
      */
     private String translateLabelByI18n(String dictType, String value) {
+        // 空值直接返回，避免刷屏 warn 日志
+        if (StrUtil.isEmpty(value)) {
+            return value;
+        }
         String cacheKey = dictType + "::" + value;
         String translated = TRANSLATE_CACHE.getUnchecked(cacheKey);
         if (StrUtil.isNotEmpty(translated)) {
             return translated;
         }
         String label = DictFrameworkUtils.parseDictDataLabel(dictType, value);
-        log.warn("[translateLabelByI18n] dictType={}, value={}, fallback label={}", dictType, value, label);
+        if (label == null) {
+            log.warn("[translateLabelByI18n] dictType={}, value={}, fallback label=null", dictType, value);
+            return value;
+        }
         return StrUtil.isNotEmpty(label) ? label : value;
     }
 

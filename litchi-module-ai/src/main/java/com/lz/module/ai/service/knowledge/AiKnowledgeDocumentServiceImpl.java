@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
+import com.lz.framework.common.biz.infra.file.FileCommonApi;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -14,13 +15,11 @@ import com.lz.module.ai.controller.admin.knowledge.vo.document.AiKnowledgeDocume
 import com.lz.module.ai.controller.admin.knowledge.vo.knowledge.AiKnowledgeDocumentCreateReqVO;
 import com.lz.module.ai.dal.dataobject.knowledge.AiKnowledgeDocumentDO;
 import com.lz.module.ai.dal.mysql.knowledge.AiKnowledgeDocumentMapper;
-import com.lz.module.infra.api.file.FileApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.reader.tika.TikaDocumentReader;
 import org.springframework.ai.tokenizer.TokenCountEstimator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.stereotype.Service;
@@ -55,8 +54,8 @@ public class AiKnowledgeDocumentServiceImpl implements AiKnowledgeDocumentServic
     @Resource
     @Lazy // 延迟加载，避免循环依赖
     private AiKnowledgeService knowledgeService;
-    @Autowired
-    private FileApi fileApi;
+    @Resource
+    private FileCommonApi fileCommonApi;
 
     @Override
     public Long createKnowledgeDocument(AiKnowledgeDocumentCreateReqVO createReqVO) {
@@ -179,7 +178,7 @@ public class AiKnowledgeDocumentServiceImpl implements AiKnowledgeDocumentServic
         // 下载文件
         ByteArrayResource resource;
         try {
-            url = fileApi.getFilePath(url);
+            url = fileCommonApi.getFilePath(url);
             byte[] bytes = HttpUtil.downloadBytes(url);
             if (bytes.length == 0) {
                 throw exception(KNOWLEDGE_DOCUMENT_FILE_EMPTY);

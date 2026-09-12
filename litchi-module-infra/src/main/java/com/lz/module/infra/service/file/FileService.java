@@ -75,17 +75,27 @@ public interface FileService {
      * 获得文件内容
      *
      * @param configKey 配置key
-     * @param path       文件路径
+     * @param path      文件路径
      * @return 文件内容
      */
     byte[] getFileContent(String configKey, String path) throws Exception;
+
+    byte[] getFileContent(String path);
+
+    /**
+     * 根据 path 获得 FileConfigDO
+     *
+     * @param path 路径
+     * @return FileConfigDO
+     */
+    public String getFileConfigByPath(String path);
 
     /**
      * 构建文件访问的完整URL（用于重定向）
      *
      * @param configKey 配置key
-     * @param path       文件路径
-     * @param domain     域名（可选，为空时使用配置的域名）
+     * @param path      文件路径
+     * @param domain    域名（可选，为空时使用配置的域名）
      * @return 完整的文件访问URL
      */
     String buildFileAccessUrl(String configKey, String path, String domain);
@@ -102,9 +112,9 @@ public interface FileService {
     /**
      * 构建文件访问的完整URL（根据请求构建域名）
      *
-     * @param configKey 配置key
-     * @param path      文件路径
-     * @param scheme    请求协议
+     * @param configKey  配置key
+     * @param path       文件路径
+     * @param scheme     请求协议
      * @param serverName 服务器名称
      * @param serverPort 服务器端口
      * @return 完整的文件访问URL
@@ -119,18 +129,25 @@ public interface FileService {
      */
     FileCountRespVO getFileCount(@Valid FilePageReqVO pageVO);
 
-    /**
-     * 获得文件
-     *
-     * @param name 文件名
-     * @return 文件
-     */
-    FileDO getFileByFileName(String name);
+    FileDO getFileByFileName(String originalFilename);
 
     /**
-     * 批量查询 fileName 在 infra_file 中已存在的子集（避免逐个 SELECT）。
+     * 一次性查询若干 fileName 在 infra_file 中已存在的子集（避免逐个 SELECT）。
+     *
+     * <p>用于以图搜图批量入口（多文件上传 / URL 批量 / 本地目录导入），先把"待入库文件
+     * 名集合"传给本方法，回 Set 后内存里就能区分需要新建 vs 跳过。
+     *
+     * <p>超过 {@link #BATCH_IN_LIMIT} 会分批 SELECT，避免单条 SQL 的 IN 列表过大。
+     *
      * @param fileNames 待查询的文件名集合（{@code null} / 空集合返回空集）
      * @return 已经存在的文件名（小写敏感 — 与 DB 列 {@code infra_file.name} 一致）
      */
     Set<String> getExistingFileNames(Collection<String> fileNames);
+
+    /**
+     * 获得文件列表
+     *
+     * @param fileIds 文件编号列表
+     */
+    List<FileDO> getFileSimpList(List<Long> fileIds);
 }

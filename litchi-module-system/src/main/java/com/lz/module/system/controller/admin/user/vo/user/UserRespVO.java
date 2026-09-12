@@ -1,6 +1,9 @@
 package com.lz.module.system.controller.admin.user.vo.user;
 
+import com.alibaba.excel.annotation.write.style.ColumnWidth;
+import com.lz.framework.excel.core.annotations.ExcelImageProperty;
 import com.lz.framework.excel.core.convert.DictConvert;
+import com.lz.framework.excel.core.convert.ImagesConvert;
 import com.lz.module.system.enums.DictTypeConstants;
 import com.alibaba.excel.annotation.ExcelIgnoreUnannotated;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -62,6 +65,14 @@ public class UserRespVO{
     private Integer sex;
 
     @Schema(description = "用户头像", example = "https://www.iocoder.cn/xxx.png")
+    @ExcelProperty(value = "用户头像", converter = ImagesConvert.class)
+    @ColumnWidth(20)
+    @ExcelI18n(i18nKey = "system.user.field.avatar")
+    @ExcelImageProperty(
+            maxFileSizeMB = 10,           // 单 cell 上限 5MB（替代全局默认 10MB）
+            horizontalMarginChars = 1.0f,  // 水平边距 2 字符
+            verticalMarginChars = 1.0f
+    )
     private String avatar;
 
     @Schema(description = "状态，参见 CommonStatusEnum 枚举类", requiredMode = Schema.RequiredMode.REQUIRED, example = "1")

@@ -1,4 +1,4 @@
-package com.lz.module.infra.constants;
+package com.lz.framework.common.enums;
 
 /**
  * 文件相关常量
@@ -6,6 +6,16 @@ package com.lz.module.infra.constants;
  * @author 荔枝源码
  */
 public class FileConstants {
+
+    /**
+     * 文件路径分隔符
+     */
+    public static final String FILE_PATH_SEPARATOR = "\\|\\|";
+
+    /**
+     * 换行符
+     */
+    public static final String EXCEL_LINE_SEPARATOR = "\\n";
 
     /**
      * 文件类型分隔符
@@ -21,6 +31,12 @@ public class FileConstants {
      * 文件访问路径前缀
      */
     public static final String FILE_GET_PATH_PREFIX = "/admin-api/infra/file/";
+
+    /**
+     * 文件访问路径前缀
+     */
+    public static final String FILE_GET_PATH_SUFFIX = "/get/";
+
 
     /**
      * 获取文件访问路径

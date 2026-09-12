@@ -8,7 +8,6 @@ import com.lz.framework.common.util.collection.ArrayUtils;
 import com.lz.framework.common.util.collection.CollectionUtils;
 import com.lz.framework.test.core.ut.BaseDbUnitTest;
 import com.lz.module.infra.api.config.ConfigApi;
-import com.lz.module.infra.api.file.FileApi;
 import com.lz.module.system.controller.admin.user.vo.profile.UserProfileUpdatePasswordReqVO;
 import com.lz.module.system.controller.admin.user.vo.profile.UserProfileUpdateReqVO;
 import com.lz.module.system.controller.admin.user.vo.user.UserImportExcelVO;

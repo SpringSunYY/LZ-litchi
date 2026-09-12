@@ -1,11 +1,10 @@
 package com.lz.framework.dict.core;
 
 import cn.hutool.core.collection.CollUtil;
-import com.lz.framework.common.biz.system.dict.DictDataCommonApi;
-import com.lz.framework.common.util.cache.CacheUtils;
-import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import com.lz.framework.common.biz.system.dict.dto.DictDataRespDTO;
+import com.lz.framework.common.util.cache.CacheUtils;
 import com.lz.framework.common.util.dict.DictUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -79,5 +78,4 @@ public class DictFrameworkUtils {
     public static List<DictDataRespDTO> getDictDataList(String dictType) {
         return GET_DICT_DATA_CACHE.get(dictType);
     }
-
 }

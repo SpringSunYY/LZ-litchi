@@ -6,11 +6,11 @@ import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.digest.DigestUtil;
 import com.google.common.annotations.VisibleForTesting;
+import com.lz.framework.common.enums.FileConstants;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.framework.mybatis.core.query.LambdaQueryWrapperX;
 import com.lz.framework.tenant.core.util.TenantUtils;
-import com.lz.module.infra.constants.FileConstants;
 import com.lz.module.infra.controller.admin.file.vo.file.*;
 import com.lz.module.infra.dal.dataobject.file.FileConfigDO;
 import com.lz.module.infra.dal.dataobject.file.FileDO;
@@ -22,6 +22,7 @@ import com.lz.module.infra.framework.file.core.utils.FileTypeUtils;
 import com.lz.module.infra.framework.file.core.utils.FileValidationUtils;
 import jakarta.annotation.Resource;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -35,6 +36,7 @@ import static com.lz.module.infra.enums.ErrorCodeConstants.*;
  *
  * @author 荔枝源码
  */
+@Slf4j
 @Service
 public class FileServiceImpl implements FileService {
 
@@ -51,12 +53,6 @@ public class FileServiceImpl implements FileService {
      * 定制：可按需调整成 UUID、或者其他方式
      */
     static boolean PATH_SUFFIX_TIMESTAMP_ENABLE = true;
-
-
-    /**
-     * 大多数数据库对 SQL IN 列表的上限在 1000。批量查的 IN 一次不超过这个数。
-     */
-    int BATCH_IN_LIMIT = 1000;
 
     @Resource
     private FileConfigService fileConfigService;
@@ -262,6 +258,44 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public byte[] getFileContent(String path) {
+        try {
+            String configKey = getFileConfigByPath(path);
+            path = StrUtil.subAfter(path, "/get/", false);
+
+            return this.getFileContent(configKey, path);
+        } catch (Exception e) {
+            log.error("[getFileContent][path({}) 获得 FileConfigDO 失败]", path, e);
+            return null;
+        }
+    }
+
+    /**
+     * 根据 path 获得 FileConfigDO
+     *
+     * @param path 路径
+     * @return FileConfigDO
+     */
+    @Override
+    public String getFileConfigByPath(String path) {
+        //抽出文件key文件路径可能是以下两种,相对路径和全路径，其中，localhost和aliyun分别是key
+        ///admin-api/infra/file/localhost/get/2026/07/08/0e41fc368799f2f3f2fe17d2062d6295_1783494848052.jpg
+        //https://www.litchi.work/admin-api/infra/file/aliyun/get/2026/07/08/0e41fc368799f2f3f2fe17d2062d6295_1783494848052.jpg
+        int start = path.indexOf(FileConstants.FILE_GET_PATH_PREFIX);
+        if (start == -1) {
+            throw new IllegalArgumentException("非法文件路径：" + path);
+        }
+        start += FileConstants.FILE_GET_PATH_PREFIX.length();
+
+        int end = path.indexOf(FileConstants.FILE_GET_PATH_SUFFIX, start);
+        if (end == -1) {
+            throw new IllegalArgumentException("非法文件路径：" + path);
+        }
+
+        return path.substring(start, end);
+    }
+
+    @Override
     public String buildFileAccessUrl(String configKey, String path, String domain) {
         // 优先使用传入的 domain
         if (StrUtil.isEmpty(domain)) {
@@ -295,6 +329,11 @@ public class FileServiceImpl implements FileService {
         );
     }
 
+    /**
+     * 大多数数据库对 SQL IN 列表的上限在 1000。批量查的 IN 一次不超过这个数。
+     */
+    int BATCH_IN_LIMIT = 1000;
+
     @Override
     public Set<String> getExistingFileNames(Collection<String> fileNames) {
         if (fileNames == null || fileNames.isEmpty()) {
@@ -326,6 +365,14 @@ public class FileServiceImpl implements FileService {
             }
         }
         return existed;
+    }
+
+    @Override
+    public List<FileDO> getFileSimpList(List<Long> fileIds) {
+        LambdaQueryWrapperX<FileDO> queryWrapper = new LambdaQueryWrapperX<>();
+        queryWrapper.inIfPresent(FileDO::getId, fileIds);
+        queryWrapper.select(FileDO::getId, FileDO::getName, FileDO::getRelativePath);
+        return fileMapper.selectList(queryWrapper);
     }
 
     public FileDO getFileByFileName(String originalFilename) {

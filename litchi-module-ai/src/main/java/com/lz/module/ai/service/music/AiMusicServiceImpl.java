@@ -6,6 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
+import com.lz.framework.common.biz.infra.file.FileCommonApi;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.module.ai.controller.admin.music.vo.AiMusicPageReqVO;
 import com.lz.module.ai.controller.admin.music.vo.AiMusicUpdateMyReqVO;
@@ -17,7 +18,6 @@ import com.lz.module.ai.enums.music.AiMusicGenerateModeEnum;
 import com.lz.module.ai.enums.music.AiMusicStatusEnum;
 import com.lz.module.ai.framework.ai.core.model.suno.api.SunoApi;
 import com.lz.module.ai.service.model.AiModelService;
-import com.lz.module.infra.api.file.FileApi;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -47,7 +47,7 @@ public class AiMusicServiceImpl implements AiMusicService {
     private AiMusicMapper musicMapper;
 
     @Resource
-    private FileApi fileApi;
+    private FileCommonApi fileCommonApi;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -194,7 +194,7 @@ public class AiMusicServiceImpl implements AiMusicService {
         }
         try {
             byte[] bytes = HttpUtil.downloadBytes(url);
-            return fileApi.createFile(bytes);
+            return fileCommonApi.createFile(bytes);
         } catch (Exception e) {
             log.error("[downloadFile][url({}) 下载失败]", url, e);
             return url;

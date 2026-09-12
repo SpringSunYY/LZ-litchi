@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.http.HttpUtil;
 import com.google.common.collect.Maps;
+import com.lz.framework.common.biz.infra.file.FileCommonApi;
 import com.lz.framework.common.pojo.CommonResult;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
@@ -35,7 +36,6 @@ import com.lz.module.ai.service.model.AiChatRoleService;
 import com.lz.module.ai.service.model.AiModelService;
 import com.lz.module.ai.service.model.AiToolService;
 import com.lz.module.ai.util.AiUtils;
-import com.lz.module.infra.api.file.FileApi;
 import com.lz.module.infra.framework.file.core.utils.FileTypeUtils;
 import io.modelcontextprotocol.client.McpSyncClient;
 import jakarta.annotation.Resource;
@@ -124,7 +124,7 @@ public class AiChatMessageServiceImpl implements AiChatMessageService {
     private AiToolService toolService;
 
     @Resource
-    private FileApi fileApi;
+    private FileCommonApi fileCommonApi;
 
     @SuppressWarnings("SpringJavaAutowiredFieldsWarningInspection")
     @Autowired(required = false) // 由于 litchi.ai.web-search.enable 配置项，可以关闭 AiWebSearchClient 的功能，所以这里只能不强制注入
@@ -204,7 +204,7 @@ public class AiChatMessageServiceImpl implements AiChatMessageService {
         }
         ArrayList<String> filePaths = new ArrayList<>();
         for (String attachmentUrl : sendReqVO.getAttachmentUrls()) {
-            String filePath = fileApi.getFilePath(attachmentUrl);
+            String filePath = fileCommonApi.getFilePath(attachmentUrl);
             filePaths.add(filePath);
         }
         sendReqVO.setAttachmentUrls(filePaths);

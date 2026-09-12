@@ -7,8 +7,11 @@ import com.lz.framework.common.util.http.HttpUtils;
 import com.lz.framework.dict.core.DictFrameworkUtils;
 import com.lz.framework.excel.core.annotations.ExcelDirection;
 import com.lz.framework.excel.core.convert.DictConvert;
+import com.lz.framework.excel.core.convert.ImagesConvert;
 import com.lz.framework.excel.core.handler.I18nHeadWriteHandler;
+import com.lz.framework.excel.core.handler.ImagesSheetWriteHandler;
 import com.lz.framework.excel.core.handler.SelectSheetWriteHandler;
+import com.lz.framework.excel.core.strategy.PoiTempFileStrategy;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.multipart.MultipartFile;
@@ -56,14 +59,24 @@ public class ExcelUtils {
                                  Class<T> head, List<T> data, ExcelDirection direction) throws IOException {
         var excludeFields = ExcelClassUtils.getExcludeColumnFiledNames(head, direction);
 
+        // 分配本次导出的 POI 临时子目录（UUID 隔离，多线程安全）
+        String tempDir = PoiTempFileStrategy.acquireTempDir();
         try {
+            // 【图片场景必须 inMemory(true)】
+            //   - SXSSF (inMemory=false) 是 streaming 模式，会把 row 写入临时文件后释放内存。
+            //   - 这导致图片的 addPicture() 在 row 已被 flush 后变成孤立 Picture，
+            //     然后某些情况下 Excel 会把同一张图写入每个 row 一份 → 图片数量翻倍！
+            //   - 改成 inMemory(true) → 用 XSSF（内存常驻）→ Picture 正确关联到对应 row。
             var builder = EasyExcel.write(response.getOutputStream(), head)
-                    .autoCloseStream(false)
+                    .autoCloseStream(true)
+                    .inMemory(false)
                     .registerWriteHandler(new LongestMatchColumnWidthStyleStrategy())
                     .registerWriteHandler(new SelectSheetWriteHandler(head, direction))
                     .registerWriteHandler(new I18nHeadWriteHandler(head, direction))
+                    .registerWriteHandler(new ImagesSheetWriteHandler(head, direction))
                     .registerConverter(new DictConvert())
-                    .registerConverter(new LongStringConverter());
+                    .registerConverter(new LongStringConverter())
+                    .registerConverter(new ImagesConvert());
 
             if (!excludeFields.isEmpty()) {
                 builder.excludeColumnFieldNames(excludeFields);
@@ -74,9 +87,16 @@ public class ExcelUtils {
             response.addHeader("Content-Disposition", "attachment;filename=" + HttpUtils.encodeUtf8(filename));
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
         } finally {
-            ExcelClassUtils.clearCache();
-            DictConvert.clearCache();
-            DictFrameworkUtils.clearCache();
+            try {
+                ExcelClassUtils.clearCache();
+                DictConvert.clearCache();
+                DictFrameworkUtils.clearCache();
+            } finally {
+                // 必须放在 workbook.close() 之后
+                // 1. SXSSFWorkbook.dispose() 自动清理行临时文件
+                // 2. PackagePart 临时文件残留 → releaseTempDir 一次性删子目录
+                PoiTempFileStrategy.releaseTempDir(tempDir);
+            }
         }
     }
 
@@ -89,7 +109,7 @@ public class ExcelUtils {
      *
      * @param file      Excel 文件
      * @param head      头类
-     * @param direction 方向：IMPORT=导入（排除 EXPORT 字段），EXPORT=导出（排除 IMPORT 字段）
+     * @param direction 方向：IMPORT=导入（排除 IMPORT 字段），EXPORT=导出（排除 EXPORT 字段）
      */
     public static <T> List<T> read(MultipartFile file, Class<T> head, ExcelDirection direction) throws IOException {
         try {

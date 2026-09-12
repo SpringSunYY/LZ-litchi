@@ -9,9 +9,8 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import cn.hutool.http.HttpUtil;
-import com.lz.module.ai.enums.model.AiPlatformEnum;
-import com.lz.module.ai.framework.ai.core.model.midjourney.api.MidjourneyApi;
-import com.lz.module.ai.framework.ai.core.model.siliconflow.SiliconFlowImageOptions;
+import com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions;
+import com.lz.framework.common.biz.infra.file.FileCommonApi;
 import com.lz.framework.common.pojo.PageResult;
 import com.lz.framework.common.util.object.BeanUtils;
 import com.lz.module.ai.controller.admin.image.vo.AiImageDrawReqVO;
@@ -24,9 +23,10 @@ import com.lz.module.ai.dal.dataobject.image.AiImageDO;
 import com.lz.module.ai.dal.dataobject.model.AiModelDO;
 import com.lz.module.ai.dal.mysql.image.AiImageMapper;
 import com.lz.module.ai.enums.image.AiImageStatusEnum;
+import com.lz.module.ai.enums.model.AiPlatformEnum;
+import com.lz.module.ai.framework.ai.core.model.midjourney.api.MidjourneyApi;
+import com.lz.module.ai.framework.ai.core.model.siliconflow.SiliconFlowImageOptions;
 import com.lz.module.ai.service.model.AiModelService;
-import com.lz.module.infra.api.file.FileApi;
-import com.alibaba.cloud.ai.dashscope.image.DashScopeImageOptions;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springaicommunity.qianfan.QianFanImageOptions;
@@ -67,7 +67,7 @@ public class AiImageServiceImpl implements AiImageService {
     private AiImageMapper imageMapper;
 
     @Resource
-    private FileApi fileApi;
+    private FileCommonApi fileCommonApi;
 
     @Override
     public PageResult<AiImageDO> getImagePageMy(Long userId, AiImagePageReqVO pageReqVO) {
@@ -125,7 +125,7 @@ public class AiImageServiceImpl implements AiImageService {
             String b64Json = response.getResult().getOutput().getB64Json();
             byte[] fileContent = StrUtil.isNotEmpty(b64Json) ? Base64.decode(b64Json)
                     : HttpUtil.downloadBytes(response.getResult().getOutput().getUrl());
-            String filePath = fileApi.createFile(fileContent);
+            String filePath = fileCommonApi.createFile(fileContent);
 
             // 3. 更新数据库
             imageMapper.updateById(new AiImageDO().setId(image.getId()).setStatus(AiImageStatusEnum.SUCCESS.getStatus())
@@ -317,7 +317,7 @@ public class AiImageServiceImpl implements AiImageService {
         String picUrl = null;
         if (StrUtil.isNotBlank(notify.imageUrl())) {
             try {
-                picUrl = fileApi.createFile(HttpUtil.downloadBytes(notify.imageUrl()));
+                picUrl = fileCommonApi.createFile(HttpUtil.downloadBytes(notify.imageUrl()));
             } catch (Exception e) {
                 picUrl = notify.imageUrl();
                 log.warn("[updateMidjourneyStatus][图片({}) 地址({}) 上传失败]", image.getId(), notify.imageUrl(), e);
