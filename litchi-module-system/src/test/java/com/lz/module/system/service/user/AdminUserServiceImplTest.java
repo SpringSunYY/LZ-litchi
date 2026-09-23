@@ -1,6 +1,7 @@
 package com.lz.module.system.service.user;
 
 import cn.hutool.core.util.RandomUtil;
+import com.lz.framework.common.biz.infra.file.FileCommonApi;
 import com.lz.framework.common.enums.CommonStatusEnum;
 import com.lz.framework.common.exception.ServiceException;
 import com.lz.framework.common.pojo.PageResult;
@@ -78,7 +79,7 @@ public class AdminUserServiceImplTest extends BaseDbUnitTest {
     @MockBean
     private TenantService tenantService;
     @MockBean
-    private FileApi fileApi;
+    private FileCommonApi fileCommonApi;
     @MockBean
     private ConfigApi configApi;
 
