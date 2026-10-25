@@ -222,7 +222,7 @@
 
 
 
-## 🐨 技术栈
+## 🚀 技术栈
 
 ### 模块
 
@@ -267,26 +267,28 @@
 
 | 框架 | 说明 | 版本 |
 | --- | --- | --- |
+| [Vben Admin](https://doc.vben.pro/) | 后台管理框架 | 5.7.0 |
 | [Vue](https://staging-cn.vuejs.org/) | vue框架 | 3.5.40 |
 | [Vite](https://cn.vitejs.dev//) | 开发与构建工具 | 7.1.0 |
 | [Ant Design Vue](https://www.antdv.com/) | Ant Design Vue | 4.2.6 |
-| [Element Plus](https://element-plus.org/zh-CN/) | Element Plus | 2.9.9 |
-| [Naive UI](https://www.naiveui.com/) | Naive UI | 2.41.0 |
-| [TDesign](https://tdesign.tencent.com/) | TDesign | 1.18.5 |
 | [TypeScript](https://www.typescriptlang.org/docs/) | JavaScript 超集 | 5.8.3 |
-| [pinia](https://pinia.vuejs.org/) | Vue 存储库替代 vuex5 | 4.0.2 |
-| [vueuse](https://vueuse.org/) | 常用工具集 | 14.3.0 |
-| [vue-i18n](https://kazupon.github.io/vue-i18n/zh/introduction.html/) | 国际化 | 11.1.3 |
-| [vue-router](https://router.vuejs.org/) | Vue 路由 | 5.1.0 |
 | [Tailwind CSS](https://tailwindcss.com/) | 原子 CSS | 3.4.17 |
-| [Iconify](https://iconify.design/) | 图标组件 | 5.0.1 |
-| [Iconify](https://icon-sets.iconify.design/) | 在线图标库 | 2.2.334 |
-| [TinyMCE](https://www.tiny.cloud/) | 富文本编辑器 | 7.3.0 |
-| [Echarts](https://echarts.apache.org/) | 图表库 | 5.6.0 |
 | [axios](https://axios-http.com/) | http客户端 | 1.18.1 |
+| [pinia](https://pinia.vuejs.org/) | Vue 存储库替代 vuex5 | 4.0.2 |
+| [vue-router](https://router.vuejs.org/) | Vue 路由 | 5.1.0 |
+| [vue-i18n](https://kazupon.github.io/vue-i18n/zh/introduction.html/) | 国际化 | 11.1.3 |
+| [vueuse](https://vueuse.org/) | 常用工具集 | 14.3.0 |
+| [Iconify](https://iconify.design/) | 图标组件 | 5.0.1 |
 | [dayjs](https://day.js.org/) | 日期处理库 | 1.11.21 |
+| [Radix Vue](https://www.radix-vue.com/) | 无样式 UI 组件库 | 1.9.17 |
+| [vxe-table](https://vxetable.cn/#/table/start) | 表格组件 | 4.20.6 |
+| [Echarts](https://echarts.apache.org/) | 图表库 | 5.6.0 |
+| [TinyMCE](https://www.tiny.cloud/) | 富文本编辑器 | 8.5.1 |
+| [Form Create](https://form-create.elemefe.com/) | 低代码表单引擎 | 3.2.22 |
+| [bpmn-js](https://bpmn.io/toolkit/bpmn-js/) | BPMN 流程图引擎 | 17.11.1 |
 | [vee-validate](https://vee-validate.logaretm.com/) | 表单验证 | 4.15.0 |
-| [zod](https://zod.dev/) | 数据验证 | 3.24.3 |
+
+
 
 ## 🐷 演示图
 
